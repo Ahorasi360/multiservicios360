@@ -134,6 +134,31 @@ function SuccessContent() {
     };
 
     // ============================================
+    // RECORDING HEADER (for real estate POAs)
+    // ============================================
+    if (d.record_for_real_estate) {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.text("Assessor's Parcel No.: _______________________", m, y);
+      y += 8;
+      doc.text("RECORDING REQUESTED BY:", m, y);
+      y += 4;
+      doc.text(d.principal_name || '[Principal Name]', m, y);
+      y += 4;
+      doc.text(d.principal_address || '[Principal Address]', m, y);
+      y += 8;
+      doc.text("WHEN RECORDED MAIL TO:", m, y);
+      y += 4;
+      doc.text(d.principal_name || '[Principal Name]', m, y);
+      y += 4;
+      doc.text(d.principal_address || '[Principal Address]', m, y);
+      y += 12;
+      doc.setLineWidth(0.3);
+      doc.line(m, y, pw - m, y);
+      y += 10;
+    }
+
+    // ============================================
     // TITLE PAGE
     // ============================================
     doc.setFontSize(18);
@@ -152,23 +177,75 @@ function SuccessContent() {
     y += 10;
 
     // ============================================
-    // NOTICE TO PRINCIPAL
+    // ATTORNEY REVIEW NOTICE (Recommended)
     // ============================================
-    doc.setFontSize(12);
+    doc.setFillColor(240, 240, 240);
+    doc.rect(m, y, cw, 38, 'F');
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'AVISO AL PODERDANTE' : 'NOTICE TO PRINCIPAL', m, y);
+    doc.text(lang === 'es' ? 'AVISO DE REVISION DE ABOGADO (Recomendado)' : 'ATTORNEY REVIEW NOTICE (Recommended)', m + 4, y + 6);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    const attorneyNotice = lang === 'es' 
+      ? 'Este Poder Notarial General esta disenado para propositos claramente definidos. Puede desear consultar con un abogado con licencia de California si: esta otorgando autoridad sobre bienes raices, esta otorgando autoridad sobre activos financieros significativos, no esta seguro de que este documento refleje completamente sus intenciones, o tiene una estructura patrimonial o empresarial compleja. La revision de un abogado no es requerida para que este documento sea valido bajo la ley de California.'
+      : 'This General Power of Attorney is designed for clearly defined purposes. You may wish to consult with a licensed California attorney if: you are granting authority involving real estate, you are granting authority involving significant financial assets, you are uncertain whether this document fully reflects your intentions, or you have a complex estate or business structure. Attorney review is not required for this document to be valid under California law.';
+    y = wrap(attorneyNotice, m + 4, y + 12, cw - 8, 4);
+    y += 10;
+
+    // ============================================
+    // STATUTORY NOTICE TO PRINCIPAL (California Probate Code § 4128)
+    // ============================================
+    y = newPage(y, 80);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL DURADERO' : 'NOTICE TO PERSON EXECUTING DURABLE POWER OF ATTORNEY', m, y);
     y += 6;
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    const notice = lang === 'es'
-      ? 'Este Poder Notarial otorga a la persona que usted designe como su Apoderado amplia autoridad para administrar su propiedad y asuntos financieros. Esta autoridad puede incluir el poder de vender, traspasar, gravar o disponer de bienes inmuebles y personales sin aviso adicional. Este Poder Notarial no autoriza decisiones medicas o de atencion de salud. Antes de firmar este documento, debe comprender su contenido y efecto legal.'
-      : 'This Power of Attorney grants the person you designate as your Attorney-in-Fact broad authority to manage your property and financial affairs. This authority may include the power to sell, convey, encumber, or otherwise dispose of real and personal property without further notice to you. This Power of Attorney does not authorize medical or health care decisions. Before signing this document, you should understand its contents and legal effect.';
-    y = wrap(notice, m, y, cw, 5);
+    doc.setFontSize(9);
+    
+    const noticeText = lang === 'es' 
+      ? `Un poder notarial duradero es un documento legal importante. Al firmar este poder notarial duradero, usted esta autorizando a otra persona a actuar en su nombre, el poderdante. Antes de firmar este poder notarial duradero, debe conocer estos hechos importantes:
+
+Su agente (apoderado) no tiene obligacion de actuar a menos que usted y su agente acuerden lo contrario por escrito.
+
+Este documento otorga a su agente los poderes para administrar, disponer, vender y traspasar sus bienes inmuebles y personales, y para usar su propiedad como garantia si su agente pide dinero prestado en su nombre. Este documento no otorga a su agente el poder de aceptar o recibir ninguna de sus propiedades, en fideicomiso o de otra manera, como regalo, a menos que usted autorice especificamente al agente para aceptar o recibir un regalo.
+
+Su agente tendra derecho a recibir un pago razonable por los servicios prestados bajo este poder notarial duradero a menos que usted disponga lo contrario.
+
+Los poderes que otorga a su agente continuaran existiendo durante toda su vida, a menos que establezca que el poder notarial durara por un periodo mas corto o a menos que termine el poder notarial. Los poderes que otorga a su agente en este poder notarial duradero continuaran existiendo incluso si ya no puede tomar sus propias decisiones respecto a la administracion de su propiedad.
+
+Solo puede enmendar o cambiar este poder notarial duradero ejecutando un nuevo poder notarial duradero o ejecutando una enmienda con las mismas formalidades que un original.
+
+Tiene derecho a revocar o terminar este poder notarial duradero en cualquier momento, siempre que sea competente.
+
+Este poder notarial duradero debe estar fechado y debe ser reconocido ante un notario publico o firmado por dos testigos.
+
+Debe leer este poder notarial duradero cuidadosamente. El poder notarial duradero es importante para usted. Si no entiende el poder notarial duradero, o alguna disposicion del mismo, debe obtener la asistencia de un abogado u otra persona calificada.`
+      : `A durable power of attorney is an important legal document. By signing the durable power of attorney, you are authorizing another person to act for you, the principal. Before you sign this durable power of attorney, you should know these important facts:
+
+Your agent (attorney-in-fact) has no duty to act unless you and your agent agree otherwise in writing.
+
+This document gives your agent the powers to manage, dispose of, sell, and convey your real and personal property, and to use your property as security if your agent borrows money on your behalf. This document does not give your agent the power to accept or receive any of your property, in trust or otherwise, as a gift, unless you specifically authorize the agent to accept or receive a gift.
+
+Your agent will have the right to receive reasonable payment for services provided under this durable power of attorney unless you provide otherwise in this power of attorney.
+
+The powers you give your agent will continue to exist for your entire lifetime, unless you state that the durable power of attorney will last for a shorter period of time or unless you otherwise terminate the durable power of attorney. The powers you give your agent in this durable power of attorney will continue to exist even if you can no longer make your own decisions respecting the management of your property.
+
+You can amend or change this durable power of attorney only by executing a new durable power of attorney or by executing an amendment through the same formalities as an original.
+
+You have the right to revoke or terminate this durable power of attorney at any time, so long as you are competent.
+
+This durable power of attorney must be dated and must be acknowledged before a notary public or signed by two witnesses.
+
+You should read this durable power of attorney carefully. The durable power of attorney is important to you. If you do not understand the durable power of attorney, or any provision of it, then you should obtain the assistance of an attorney or other qualified person.`;
+    
+    y = wrap(noticeText, m, y, cw, 4);
     y += 8;
 
     // ============================================
     // ARTICLE I - IDENTIFICATION OF PARTIES
     // ============================================
+    y = newPage(y, 50);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(lang === 'es' ? 'ARTICULO I - IDENTIFICACION DE LAS PARTES' : 'ARTICLE I - IDENTIFICATION OF PARTIES', m, y);
@@ -274,6 +351,22 @@ function SuccessContent() {
         ? 'FECHA EFECTIVA: Este Poder Notarial es un "Poder Contingente" (Springing Power) y sera efectivo UNICAMENTE al momento de mi incapacidad, segun lo determine un medico licenciado mediante declaracion escrita.' 
         : 'EFFECTIVE DATE: This Power of Attorney is a "Springing Power" and shall become effective ONLY upon my incapacity, as determined by a licensed physician in a written declaration.');
     y = wrap(effective, m, y, cw, 5);
+    y += 8;
+
+    // ============================================
+    // HIPAA AUTHORIZATION
+    // ============================================
+    y = newPage(y, 35);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'AUTORIZACION HIPAA' : 'HIPAA AUTHORIZATION', m, y);
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    const hipaaText = lang === 'es'
+      ? 'De conformidad con la Ley de Portabilidad y Responsabilidad del Seguro de Salud de 1996 ("HIPAA") y todas las demas leyes estatales y federales aplicables, y exclusivamente con el proposito de determinar mi incapacitacion o incapacidad para administrar mis asuntos financieros y obtener una declaracion jurada de dicha incapacitacion por un medico, autorizo a cualquier proveedor de atencion medica a divulgar a la persona nombrada aqui como mi "apoderado" cualquier informacion de salud identificable individualmente pertinente suficiente para determinar si soy mental o fisicamente capaz de administrar mis asuntos financieros. Al ejercer dicha autoridad, mi apoderado constituye mi "representante personal" segun lo definido por HIPAA.'
+      : 'Pursuant to the Health Insurance Portability and Accountability Act of 1996 ("HIPAA") and all other applicable state and federal laws, and exclusively for the purpose of making a determination of my incapacitation or incapability of managing my financial affairs and obtaining an affidavit of such incapacitation by a physician, I authorize any health care provider to disclose to the person named herein as my "attorney-in-fact" any pertinent individually identifiable health information sufficient to determine whether I am mentally or physically capable of managing my financial affairs. In exercising such authority, my attorney-in-fact constitutes my "personal representative" as defined by HIPAA.';
+    y = wrap(hipaaText, m, y, cw, 4);
     y += 8;
 
     // ============================================
@@ -436,41 +529,21 @@ function SuccessContent() {
     y += 8;
 
     // ============================================
-    // ARTICLE VII - HIPAA AUTHORIZATION (if included)
+    // ARTICLE VII - HEALTHCARE EXCLUSION
     // ============================================
-    if (d.include_hipaa) {
-      y = newPage(y, 45);
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'ARTICULO VII - AUTORIZACION HIPAA' : 'ARTICLE VII - HIPAA AUTHORIZATION', m, y);
-      y += 8;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      const hipaaText = lang === 'es'
-        ? 'Autorizo a mi Apoderado a acceder, obtener y recibir informacion de salud protegida (PHI) sobre mi de cualquier proveedor de atencion medica, plan de salud u otra entidad cubierta, segun sea necesario para llevar a cabo los poderes financieros otorgados en este Poder Notarial. Esta autorizacion cumple con los requisitos de la Ley de Portabilidad y Responsabilidad del Seguro Medico de 1996 (HIPAA), 45 C.F.R. §§ 164.502 y 164.508.\n\nEsta autorizacion HIPAA es limitada a informacion financiera y de seguros, y NO autoriza a mi Apoderado a tomar decisiones de atencion medica en mi nombre. Dicha autoridad solo puede ser otorgada mediante una Directiva de Atencion Medica por Anticipado separada.'
-        : 'I authorize my Agent to access, obtain, and receive protected health information (PHI) about me from any health care provider, health plan, or other covered entity, as necessary to carry out the financial powers granted in this Power of Attorney. This authorization complies with the requirements of the Health Insurance Portability and Accountability Act of 1996 (HIPAA), 45 C.F.R. §§ 164.502 and 164.508.\n\nThis HIPAA authorization is limited to financial and insurance information, and does NOT authorize my Agent to make health care decisions on my behalf. Such authority may only be granted through a separate Advance Health Care Directive.';
-      y = wrap(hipaaText, m, y, cw, 4.5);
-      y += 8;
-    }
-
-    // ============================================
-    // ARTICLE VIII - HEALTHCARE EXCLUSION
-    // ============================================
-    const articleNum = d.include_hipaa ? 'VIII' : 'VII';
-    section(lang === 'es' ? `ARTICULO ${articleNum} - EXCLUSION DE ATENCION MEDICA` : `ARTICLE ${articleNum} - HEALTHCARE EXCLUSION`,
+    section(lang === 'es' ? 'ARTICULO VII - EXCLUSION DE ATENCION MEDICA' : 'ARTICLE VII - HEALTHCARE EXCLUSION',
       lang === 'es'
         ? 'Este Poder Notarial NO otorga autoridad para tomar decisiones medicas o de atencion de salud, incluyendo decisiones sobre tratamiento medico, hospitalizacion, cirugia, medicamentos, o atencion al final de la vida. Dicha autoridad solo puede otorgarse mediante una Directiva de Atencion Medica por Anticipado separada conforme a la Seccion 4700 y siguientes del Codigo de Sucesiones de California.'
         : 'This Power of Attorney does NOT grant authority to make medical or health care decisions, including decisions regarding medical treatment, hospitalization, surgery, medication, or end-of-life care. Such authority may be granted only by a separate Advance Health Care Directive pursuant to California Probate Code Section 4700 et seq.'
     );
 
     // ============================================
-    // ARTICLE IX - PROTECTIVE PROVISIONS
+    // ARTICLE VIII - PROTECTIVE PROVISIONS
     // ============================================
-    const articleNum2 = d.include_hipaa ? 'IX' : 'VIII';
     y = newPage(y, 50);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? `ARTICULO ${articleNum2} - DISPOSICIONES PROTECTORAS` : `ARTICLE ${articleNum2} - PROTECTIVE PROVISIONS`, m, y);
+    doc.text(lang === 'es' ? 'ARTICULO VIII - DISPOSICIONES PROTECTORAS' : 'ARTICLE VIII - PROTECTIVE PROVISIONS', m, y);
     y += 8;
 
     const provisions = [
@@ -501,10 +574,9 @@ function SuccessContent() {
     });
 
     // ============================================
-    // ARTICLE X - TERMINATION AND GOVERNING LAW
+    // ARTICLE IX - TERMINATION AND GOVERNING LAW
     // ============================================
-    const articleNum3 = d.include_hipaa ? 'X' : 'IX';
-    section(lang === 'es' ? `ARTICULO ${articleNum3} - TERMINACION Y LEY APLICABLE` : `ARTICLE ${articleNum3} - TERMINATION AND GOVERNING LAW`,
+    section(lang === 'es' ? 'ARTICULO IX - TERMINACION Y LEY APLICABLE' : 'ARTICLE IX - TERMINATION AND GOVERNING LAW',
       lang === 'es'
         ? 'Este Poder Notarial terminara automaticamente: (a) a mi fallecimiento; (b) por mi revocacion escrita entregada a mi Apoderado; (c) por orden de un tribunal de jurisdiccion competente; o (d) si este Poder Notarial no es duradero, al momento de mi incapacidad. Este Poder Notarial se regira e interpretara de acuerdo con las leyes del Estado de California.'
         : 'This Power of Attorney shall terminate automatically: (a) upon my death; (b) by my written revocation delivered to my Agent; (c) by order of a court of competent jurisdiction; or (d) if this Power of Attorney is not durable, upon my incapacity. This Power of Attorney shall be governed by and construed in accordance with the laws of the State of California.'
@@ -552,10 +624,9 @@ function SuccessContent() {
     // EXECUTION PAGE
     // ============================================
     y = newPage(y, 80);
-    const articleNum4 = d.include_hipaa ? 'XI' : 'X';
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? `ARTICULO ${articleNum4} - EJECUCION` : `ARTICLE ${articleNum4} - EXECUTION`, m, y);
+    doc.text(lang === 'es' ? 'ARTICULO X - EJECUCION' : 'ARTICLE X - EXECUTION', m, y);
     y += 8;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
@@ -576,66 +647,240 @@ function SuccessContent() {
     doc.text(lang === 'es' ? 'Poderdante (Principal)' : 'Principal', m, y);
 
     // ============================================
-    // NOTARY ACKNOWLEDGMENT - NEW PAGE
+    // NOTARY ACKNOWLEDGMENT - NEW PAGE (FIXED WITH CA SOS DISCLAIMER BOX)
+    // ============================================
+    doc.addPage();
+    y = 20;
+    
+    // Top border line
+    doc.setLineWidth(1);
+    doc.line(m, y, pw - m, y);
+    y += 8;
+    
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'RECONOCIMIENTO NOTARIAL DE CALIFORNIA' : 'CALIFORNIA ALL-PURPOSE ACKNOWLEDGMENT', pw/2, y, {align: 'center'});
+    y += 5;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(lang === 'es' ? 'CODIGO CIVIL §1189' : 'CIVIL CODE §1189', pw/2, y, {align: 'center'});
+    y += 5;
+    
+    // Bottom border line after header
+    doc.setLineWidth(1);
+    doc.line(m, y, pw - m, y);
+    y += 10;
+
+    // ===== REQUIRED DISCLAIMER BOX (California Secretary of State format) =====
+    const disclaimerBoxY = y;
+    const disclaimerBoxHeight = 18;
+    doc.setLineWidth(0.5);
+    doc.rect(m, disclaimerBoxY, cw, disclaimerBoxHeight);
+    
+    // Disclaimer text inside the box
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    const disclaimerLine1 = lang === 'es'
+      ? 'Un notario publico u otro oficial que complete este certificado verifica solamente la identidad de la persona'
+      : 'A notary public or other officer completing this certificate verifies only the identity of the individual';
+    const disclaimerLine2 = lang === 'es'
+      ? 'que firmo el documento al cual este certificado esta adjunto, y no la veracidad, exactitud o validez de ese documento.'
+      : 'who signed the document to which this certificate is attached, and not the truthfulness, accuracy, or validity of that document.';
+    
+    doc.text(disclaimerLine1, m + 2, disclaimerBoxY + 7);
+    doc.text(disclaimerLine2, m + 2, disclaimerBoxY + 12);
+    
+    y = disclaimerBoxY + disclaimerBoxHeight + 8;
+    
+    // Decorative line
+    doc.setLineWidth(0.3);
+    doc.line(m, y, pw - m, y);
+    y += 10;
+
+    // State and County
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(lang === 'es' ? 'Estado de California' : 'State of California', m, y);
+    y += 7;
+    doc.text((lang === 'es' ? 'Condado de ' : 'County of ') + (d.principal_county || '______________________________'), m, y);
+    y += 12;
+
+    // On date before me
+    doc.text((lang === 'es' ? 'El ' : 'On ') + '_________________________ ' + (lang === 'es' ? 'ante mi, ' : 'before me, ') + '_________________________________________,', m, y);
+    y += 5;
+    doc.setFontSize(8);
+    doc.text(lang === 'es' ? '                    (Fecha)                                                                        (Nombre y Titulo del Notario)' : '                    (Date)                                                                              (Notary Name and Title)', m, y);
+    y += 10;
+
+    // Personally appeared
+    doc.setFontSize(11);
+    doc.text((lang === 'es' ? 'comparecio personalmente ' : 'personally appeared ') + (d.principal_name || '________________________________________________') + ',', m, y);
+    y += 12;
+
+    // Main acknowledgment text
+    doc.setFontSize(10);
+    const notaryText = lang === 'es'
+      ? 'quien me demostro, basandose en evidencia satisfactoria, ser la(s) persona(s) cuyo(s) nombre(s) esta(n) suscrito(s) al instrumento adjunto y reconocio ante mi que el/ella/ellos ejecuto el mismo en su(s) capacidad(es) autorizada(s), y que mediante su(s) firma(s) en el instrumento, la(s) persona(s), o la entidad en nombre de la cual la(s) persona(s) actuo, ejecuto el instrumento.'
+      : 'who proved to me on the basis of satisfactory evidence to be the person(s) whose name(s) is/are subscribed to the within instrument and acknowledged to me that he/she/they executed the same in his/her/their authorized capacity(ies), and that by his/her/their signature(s) on the instrument the person(s), or the entity upon behalf of which the person(s) acted, executed the instrument.';
+    y = wrap(notaryText, m, y, cw, 5);
+    y += 10;
+
+    // Certification under penalty of perjury
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    const certifyText = lang === 'es'
+      ? 'Certifico bajo PENA DE PERJURIO bajo las leyes del Estado de California que el parrafo anterior es verdadero y correcto.'
+      : 'I certify under PENALTY OF PERJURY under the laws of the State of California that the foregoing paragraph is true and correct.';
+    y = wrap(certifyText, m, y, cw, 5);
+    y += 10;
+
+    // WITNESS my hand
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.text(lang === 'es' ? 'DOY FE con mi firma y sello oficial.' : 'WITNESS my hand and official seal.', m, y);
+    y += 15;
+
+    // Signature line
+    doc.text((lang === 'es' ? 'Firma del Notario: ' : 'Notary Public Signature: ') + '________________________________________', m, y);
+    y += 15;
+
+    // Two-column layout: Seal box on left, optional info on right
+    const sealBoxY = y;
+    
+    // Seal box (left side)
+    doc.setLineWidth(0.5);
+    doc.rect(m, sealBoxY, 55, 40);
+    doc.setFontSize(9);
+    doc.text(lang === 'es' ? 'SELLO NOTARIAL' : 'NOTARY SEAL', m + 12, sealBoxY + 22);
+    
+    // Optional information section (right side)
+    const optX = m + 65;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'INFORMACION OPCIONAL' : 'OPTIONAL INFORMATION', optX, sealBoxY + 4);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    const optText1 = lang === 'es'
+      ? 'Aunque esta seccion es opcional, completarla puede'
+      : 'Though this section is optional, completing it may';
+    const optText2 = lang === 'es'
+      ? 'disuadir alteraciones o adjuntos fraudulentos de este'
+      : 'deter alteration or fraudulent attachment of this';
+    const optText3 = lang === 'es'
+      ? 'reconocimiento a un documento no autorizado.'
+      : 'acknowledgment to an unauthorized document.';
+    doc.text(optText1, optX, sealBoxY + 10);
+    doc.text(optText2, optX, sealBoxY + 14);
+    doc.text(optText3, optX, sealBoxY + 18);
+    
+    doc.setFontSize(8);
+    doc.text((lang === 'es' ? 'Descripcion del Documento Adjunto:' : 'Description of Attached Document:'), optX, sealBoxY + 25);
+    doc.text((lang === 'es' ? 'Titulo o Tipo: Poder Notarial General Duradero' : 'Title or Type: General Durable Power of Attorney'), optX, sealBoxY + 30);
+    doc.text((lang === 'es' ? 'Numero de Paginas: _____ Fecha: _____' : 'Number of Pages: _____ Date: _____'), optX, sealBoxY + 35);
+    
+    y = sealBoxY + 48;
+
+    // Commission expires
+    doc.setFontSize(9);
+    doc.text((lang === 'es' ? 'Mi Comision Expira: ' : 'My Commission Expires: ') + '_________________________', m, y);
+    y += 8;
+    
+    // Bottom decorative line
+    doc.setLineWidth(0.3);
+    doc.line(m, y, pw - m, y);
+    y += 8;
+    
+    // ===== BOTTOM DISCLAIMER BOX (matching California SOS format) =====
+    const bottomBoxY = y;
+    const bottomBoxHeight = 32;
+    doc.setLineWidth(1);
+    doc.rect(m, bottomBoxY, cw, bottomBoxHeight);
+    
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    const impDisclaimer = lang === 'es' ? 'AVISO IMPORTANTE' : 'IMPORTANT NOTICE';
+    const impWidth = doc.getTextWidth(impDisclaimer);
+    doc.text(impDisclaimer, (pw - impWidth) / 2, bottomBoxY + 5);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    
+    const bottomLines = lang === 'es' ? [
+      'Un notario publico u otro oficial que complete este certificado verifica solamente la identidad de la persona que firmo',
+      'el documento al cual este certificado esta adjunto, y no la veracidad, exactitud o validez de ese documento.',
+      '',
+      'Este certificado esta adjunto a un documento titulado "Poder Notarial General Duradero."',
+      'El notario publico no es responsable de ninguna declaracion hecha en el documento por ninguna de las partes.',
+      'La ley estatal prohibe a un notario publico actuar como consultor de inmigracion o proporcionar asesoramiento legal.'
+    ] : [
+      'A notary public or other officer completing this certificate verifies only the identity of the individual who signed the',
+      'document to which this certificate is attached, and not the truthfulness, accuracy, or validity of that document.',
+      '',
+      'This certificate is attached to a document titled "General Durable Power of Attorney."',
+      'The notary public is not responsible for any statements made in the document by any party.',
+      'State law prohibits a notary public from acting as an immigration consultant or providing legal advice.'
+    ];
+    
+    let lineY = bottomBoxY + 10;
+    bottomLines.forEach(line => {
+      if (line === '') {
+        lineY += 2;
+      } else {
+        doc.text(line, m + 2, lineY);
+        lineY += 4;
+      }
+    });
+
+    // ============================================
+    // NOTICE TO AGENT PAGE (California Probate Code § 4128)
     // ============================================
     doc.addPage();
     y = 20;
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'RECONOCIMIENTO NOTARIAL DE CALIFORNIA' : 'CALIFORNIA ALL-PURPOSE ACKNOWLEDGMENT', pw/2, y, {align: 'center'});
+    doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE ACEPTA' : 'NOTICE TO PERSON ACCEPTING', pw/2, y, {align: 'center'});
     y += 6;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
-    doc.text(lang === 'es' ? '(Codigo Civil de California §1189)' : '(California Civil Code §1189)', pw/2, y, {align: 'center'});
-    y += 3;
-    doc.line(m, y, pw - m, y);
-    y += 10;
+    doc.text(lang === 'es' ? 'NOMBRAMIENTO COMO APODERADO' : 'APPOINTMENT AS ATTORNEY-IN-FACT', pw/2, y, {align: 'center'});
+    y += 12;
 
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    doc.text('State of California', m, y);
-    y += 7;
-    doc.text('County of ' + (d.principal_county || '______________________________'), m, y);
-    y += 12;
+    const agentNotice = lang === 'es'
+      ? `Al actuar o aceptar actuar como el agente (apoderado) bajo este poder notarial, usted asume las responsabilidades fiduciarias y otras responsabilidades legales de un agente. Estas responsabilidades incluyen:
 
-    doc.text('On _________________________ before me, _________________________________________,', m, y);
-    y += 5;
-    doc.setFontSize(9);
-    doc.text('         (Date)                                                               (Notary Name and Title)', m + 5, y);
-    y += 10;
+1. El deber legal de actuar unicamente en interes del poderdante y evitar conflictos de interes.
 
-    doc.setFontSize(11);
-    doc.text('personally appeared ' + (d.principal_name || '________________________________________________') + ',', m, y);
-    y += 12;
+2. El deber legal de mantener la propiedad del poderdante separada y distinta de cualquier otra propiedad que usted posea o controle.
 
-    doc.setFontSize(10);
-    const notaryText = 'who proved to me on the basis of satisfactory evidence to be the person(s) whose name(s) is/are subscribed to the within instrument and acknowledged to me that he/she/they executed the same in his/her/their authorized capacity(ies), and that by his/her/their signature(s) on the instrument the person(s), or the entity upon behalf of which the person(s) acted, executed the instrument.';
-    y = wrap(notaryText, m, y, cw, 5.5);
-    y += 12;
+No puede transferir la propiedad del poderdante a usted mismo sin una contraprestacion completa y adecuada, ni aceptar un regalo de la propiedad del poderdante a menos que este poder notarial lo autorice especificamente a transferir propiedad a usted mismo o aceptar un regalo de la propiedad del poderdante. Si transfiere la propiedad del poderdante a usted mismo sin autorizacion especifica en el poder notarial, puede ser procesado por fraude y/o malversacion.
+
+Si el poderdante tiene 65 anos de edad o mas en el momento en que la propiedad le es transferida sin autorizacion, tambien puede ser procesado por abuso de ancianos bajo la Seccion 368 del Codigo Penal. Ademas del enjuiciamiento penal, tambien puede ser demandado en un tribunal civil.`
+      : `By acting or agreeing to act as the agent (attorney-in-fact) under this power of attorney you assume the fiduciary and other legal responsibilities of an agent. These responsibilities include:
+
+1. The legal duty to act solely in the interest of the principal and to avoid conflicts of interest.
+
+2. The legal duty to keep the principal's property separate and distinct from any other property owned or controlled by you.
+
+You may not transfer the principal's property to yourself without full and adequate consideration or accept a gift of the principal's property unless this power of attorney specifically authorizes you to transfer property to yourself or accept a gift of the principal's property. If you transfer the principal's property to yourself without specific authorization in the power of attorney, you may be prosecuted for fraud and/or embezzlement.
+
+If the principal is 65 years of age or older at the time that the property is transferred to you without authority, you may also be prosecuted for elder abuse under Penal Code Section 368. In addition to criminal prosecution, you may also be sued in civil court.`;
+
+    y = wrap(agentNotice, m, y, cw, 5);
+    y += 15;
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text('I certify under PENALTY OF PERJURY under the laws of the State of California', m, y);
-    y += 6;
-    doc.text('that the foregoing paragraph is true and correct.', m, y);
-    y += 14;
+    const acknowledgment = lang === 'es'
+      ? 'He leido el aviso anterior y entiendo los deberes legales y fiduciarios que asumo al actuar o aceptar actuar como el agente (apoderado) bajo los terminos de este poder notarial.'
+      : 'I have read the foregoing notice and I understand the legal and fiduciary duties that I assume by acting or agreeing to act as the agent (attorney-in-fact) under the terms of this power of attorney.';
+    y = wrap(acknowledgment, m, y, cw, 5);
+    y += 20;
 
     doc.setFont('helvetica', 'normal');
-    doc.text('WITNESS my hand and official seal.', m, y);
-    y += 18;
-
-    doc.text('Notary Public Signature: ________________________________________', m, y);
-    y += 8;
-    doc.text('My Commission Expires: _________________________________________', m, y);
-    y += 25;
-
-    // Seal box
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.5);
-    doc.rect(m, y, 60, 45);
-    doc.setFontSize(10);
-    doc.text('NOTARY SEAL', m + 18, y + 20);
-    doc.text('(Sello Notarial)', m + 16, y + 26);
+    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '___________________', m, y);
+    y += 20;
+    doc.line(m, y, m + 80, y);
+    y += 5;
+    doc.text((lang === 'es' ? 'Firma de ' : 'Signature of ') + (d.agent_name || 'Agent'), m, y);
 
     // ============================================
     // OPTIONAL: WITNESS ATTESTATION PAGE
