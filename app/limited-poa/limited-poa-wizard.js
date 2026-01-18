@@ -129,8 +129,6 @@ const TRANSLATIONS = {
     notDurable: "NOT DURABLE",
     watermark: "DRAFT - PREVIEW ONLY",
     payToUnlock: "Complete payment to unlock full document",
-    notaryTitle: "ACKNOWLEDGMENT",
-    notaryText: "A notary public or other officer completing this certificate verifies only the identity of the individual who signed the document to which this certificate is attached, and not the truthfulness, accuracy, or validity of that document.",
     sections: {
       principal: "📋 Principal Information",
       agent: "👤 Agent Information",
@@ -185,8 +183,6 @@ const TRANSLATIONS = {
     notDurable: "NO DURADERO",
     watermark: "BORRADOR - SOLO VISTA PREVIA",
     payToUnlock: "Complete el pago para desbloquear el documento completo",
-    notaryTitle: "RECONOCIMIENTO NOTARIAL",
-    notaryText: "Un notario público u otro oficial que complete este certificado verifica únicamente la identidad de la persona que firmó el documento al que se adjunta este certificado, y no la veracidad, exactitud o validez de dicho documento.",
     sections: {
       principal: "📋 Información del Poderdante",
       agent: "👤 Información del Apoderado",
@@ -379,38 +375,6 @@ const DocumentPreview = ({ data, language, isPaid }) => {
         <p style={{ margin: '12px 0 3px' }}>________________________________</p>
         <p style={{ margin: '0', fontSize: '9px' }}>{data.principal_name || (language === 'en' ? 'Principal Signature' : 'Firma del Poderdante')}</p>
         <p style={{ margin: '12px 0 3px' }}>{language === 'en' ? 'Date' : 'Fecha'}: ________________</p>
-      </div>
-
-      <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '2px solid #92400E', filter: isPaid ? 'none' : 'blur(4px)' }}>
-        <h3 style={{ fontSize: '11px', fontWeight: 'bold', color: '#92400E', margin: '0 0 8px', textAlign: 'center' }}>{t.notaryTitle}</h3>
-        <p style={{ margin: '0 0 8px', fontSize: '9px', fontStyle: 'italic', textAlign: 'center', color: '#6B7280' }}>{t.notaryText}</p>
-        <div style={{ fontSize: '10px' }}>
-          <p style={{ margin: '3px 0' }}>State of California</p>
-          <p style={{ margin: '3px 0' }}>County of ________________________________</p>
-          <p style={{ margin: '8px 0 3px' }}>On ________________ before me, ________________________________,</p>
-          <p style={{ margin: '3px 0', fontSize: '9px', color: '#6B7280' }}>(insert name and title of the officer)</p>
-          <p style={{ margin: '8px 0 3px' }}>personally appeared ________________________________,</p>
-          <p style={{ margin: '3px 0', fontSize: '9px', wordWrap: 'break-word' }}>
-            {language === 'en' 
-              ? 'who proved to me on the basis of satisfactory evidence to be the person(s) whose name(s) is/are subscribed to the within instrument and acknowledged to me that he/she/they executed the same in his/her/their authorized capacity(ies), and that by his/her/their signature(s) on the instrument the person(s), or the entity upon behalf of which the person(s) acted, executed the instrument.'
-              : 'quien me demostró con base en evidencia satisfactoria ser la(s) persona(s) cuyo(s) nombre(s) está(n) suscrito(s) al instrumento adjunto y me reconoció que él/ella/ellos ejecutaron el mismo en su(s) capacidad(es) autorizada(s), y que mediante su(s) firma(s) en el instrumento, la(s) persona(s), o la entidad en nombre de la cual actuó la persona, ejecutó el instrumento.'}
-          </p>
-          <p style={{ margin: '12px 0 3px', fontSize: '9px' }}>
-            {language === 'en' 
-              ? 'I certify under PENALTY OF PERJURY under the laws of the State of California that the foregoing paragraph is true and correct.'
-              : 'Certifico bajo PENA DE PERJURIO bajo las leyes del Estado de California que el párrafo anterior es verdadero y correcto.'}
-          </p>
-          <p style={{ margin: '12px 0 3px' }}>WITNESS my hand and official seal.</p>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
-            <div>
-              <p style={{ margin: '0' }}>________________________________</p>
-              <p style={{ margin: '0', fontSize: '9px' }}>Signature of Notary Public</p>
-            </div>
-            <div style={{ width: '60px', height: '60px', border: '1px solid #D1D5DB', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px', color: '#9CA3AF' }}>
-              (Seal)
-            </div>
-          </div>
-        </div>
       </div>
 
       {!isPaid && (
