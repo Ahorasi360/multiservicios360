@@ -1,4 +1,4 @@
-import Stripe from 'stripe';
+﻿import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -18,14 +18,7 @@ export async function POST(request) {
   let event;
 
   try {
-    // For local testing without webhook signature verification
-    // In production, uncomment the signature verification below
     event = JSON.parse(body);
-    
-    // Production webhook signature verification:
-    // const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    // event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return NextResponse.json(
@@ -34,19 +27,16 @@ export async function POST(request) {
     );
   }
 
-  // Handle the event
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object;
-      
       console.log('Payment successful:', session.id);
       console.log('Metadata:', session.metadata);
 
-      // Update matter status in database
       if (session.metadata?.matterId) {
         const { error } = await supabase
           .from('poa_matters')
-          .update({ 
+          .update({
             status: 'paid',
             payment_id: session.payment_intent,
             payment_amount: session.amount_total,
@@ -62,35 +52,24 @@ export async function POST(request) {
       }
       break;
     }
-
     case 'checkout.session.expired': {
       const session = event.data.object;
       console.log('Checkout session expired:', session.id);
       break;
     }
-
     case 'payment_intent.succeeded': {
       const paymentIntent = event.data.object;
       console.log('PaymentIntent succeeded:', paymentIntent.id);
       break;
     }
-
     case 'payment_intent.payment_failed': {
       const paymentIntent = event.data.object;
       console.log('PaymentIntent failed:', paymentIntent.id);
       break;
     }
-
     default:
-      console.log(`Unhandled event type: ${event.type}`);
+      console.log("Unhandled event type: " + event.type);
   }
 
   return NextResponse.json({ received: true });
 }
-
-// Disable body parsing for webhooks (Stripe needs raw body)
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
