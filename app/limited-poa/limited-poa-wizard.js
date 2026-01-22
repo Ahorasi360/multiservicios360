@@ -514,7 +514,7 @@ export default function LimitedPOAWizard() {
     if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
     setIsLoading(true);
     try {
-      const res = await fetch('/api/poa/matters', {
+      const res = await fetch('/api/limited-poa/matters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -529,7 +529,7 @@ export default function LimitedPOAWizard() {
       });
       const result = await res.json();
       if (result.success) {
-        const stripeRes = await fetch('/api/stripe/checkout', {
+        const stripeRes = await fetch('/api/limited-poa/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
