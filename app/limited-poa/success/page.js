@@ -1,3 +1,4 @@
+// Updated: 2026-01-21 - Added all statutory sections for California compliance
 "use client";
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -177,14 +178,13 @@ function SuccessContent() {
     const cw = pw - (m * 2); // content width
     let y = 20;
 
-    // Helper function to wrap text
+    // Helper function to wrap text and handle page breaks
     const wrap = (text, x, startY, maxWidth, lineHeight = 5) => {
-      const lines = doc.splitTextToSize(text, maxWidth);
+      const lines = doc.splitTextToSize(text || '', maxWidth);
       lines.forEach((line) => {
-        if (startY > ph - 30) {
+        if (startY > ph - 25) {
           doc.addPage();
           startY = 20;
-          addFooter();
         }
         doc.text(line, x, startY);
         startY += lineHeight;
@@ -192,13 +192,18 @@ function SuccessContent() {
       return startY;
     };
 
+    // Helper function to check for new page
+    const newPage = (currentY, needed = 30) => {
+      if (currentY > ph - needed) {
+        doc.addPage();
+        return 20;
+      }
+      return currentY;
+    };
+
     // Helper function for sections
     const section = (title, content) => {
-      if (y > ph - 60) {
-        doc.addPage();
-        y = 20;
-        addFooter();
-      }
+      y = newPage(y, 40);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.text(title, m, y);
@@ -209,174 +214,290 @@ function SuccessContent() {
       y += 8;
     };
 
-    // Footer function
-    const addFooter = () => {
-      const pageCount = doc.internal.getNumberOfPages();
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`Multi Servicios 360 | www.multiservicios360.net | 855.246.7274`, pw / 2, ph - 10, { align: 'center' });
-      doc.text(`Page ${pageCount}`, pw - m, ph - 10, { align: 'right' });
-    };
-
     // Get category name
     const categoryName = getPurposeLabel(d.purpose_category, lang);
 
-    // ===== PAGE 1: TITLE AND HEADER =====
-    
-    // Recording header for real estate
+    // ============================================
+    // RECORDING HEADER (for real estate POAs)
+    // ============================================
     if (d.purpose_category === 'real_estate') {
-      doc.setFontSize(8);
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      doc.text('RECORDING REQUESTED BY:', m, y);
-      doc.text('Multi Servicios 360', m, y + 4);
-      doc.text('WHEN RECORDED MAIL TO:', m, y + 12);
-      doc.text(d.principal_name || '_______________', m, y + 16);
-      doc.text(d.principal_address || '_______________', m, y + 20);
-      
-      doc.text('APN: ' + (d.re_apn || '_______________'), pw - m - 50, y);
-      doc.text('Space Above This Line For Recorder\'s Use', pw / 2, y + 28, { align: 'center' });
-      doc.setLineWidth(0.5);
-      doc.line(m, y + 30, pw - m, y + 30);
-      y += 40;
+      doc.text("Assessor's Parcel No.: " + (d.re_apn || '_______________________'), m, y);
+      y += 8;
+      doc.text("RECORDING REQUESTED BY:", m, y);
+      y += 4;
+      doc.text(d.principal_name || '[Principal Name]', m, y);
+      y += 4;
+      doc.text(d.principal_address || '[Principal Address]', m, y);
+      y += 8;
+      doc.text("WHEN RECORDED MAIL TO:", m, y);
+      y += 4;
+      doc.text(d.principal_name || '[Principal Name]', m, y);
+      y += 4;
+      doc.text(d.principal_address || '[Principal Address]', m, y);
+      y += 10;
+      doc.setLineWidth(0.3);
+      doc.line(m, y, pw - m, y);
+      y += 8;
     }
 
-    // Title
+    // ============================================
+    // TITLE PAGE
+    // ============================================
+    doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'PODER NOTARIAL LIMITADO' : 'CALIFORNIA LIMITED', pw/2, y, {align: 'center'});
+    y += 7;
     doc.setFontSize(16);
-    doc.text(lang === 'es' ? 'PODER NOTARIAL LIMITADO' : 'CALIFORNIA LIMITED POWER OF ATTORNEY', pw / 2, y, { align: 'center' });
+    doc.text(lang === 'es' ? 'ESTADO DE CALIFORNIA' : 'POWER OF ATTORNEY', pw/2, y, {align: 'center'});
     y += 6;
     doc.setFontSize(12);
-    doc.text(`(${categoryName})`, pw / 2, y, { align: 'center' });
+    doc.setFont('helvetica', 'italic');
+    doc.text(`(${categoryName})`, pw/2, y, {align: 'center'});
+    y += 4;
+    doc.setLineWidth(0.5);
+    doc.line(m, y, pw - m, y);
     y += 10;
 
-    // Attorney Review Notice Box
-    doc.setFillColor(245, 245, 245);
-    doc.setDrawColor(200, 200, 200);
-    doc.roundedRect(m, y, cw, 35, 2, 2, 'FD');
-    doc.setFontSize(9);
+    // ============================================
+    // ATTORNEY REVIEW NOTICE
+    // ============================================
+    doc.setFillColor(240, 240, 240);
+    doc.rect(m, y, cw, 32, 'F');
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'AVISO DE REVISION DE ABOGADO' : 'ATTORNEY REVIEW NOTICE', m + 4, y + 6);
+    doc.text(lang === 'es' ? 'AVISO DE REVISION DE ABOGADO (Recomendado)' : 'ATTORNEY REVIEW NOTICE (Recommended)', m + 4, y + 6);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    const attorneyNotice = lang === 'es'
-      ? 'Este Poder Notarial Limitado esta disenado para un proposito especifico. Se recomienda consultar con un abogado si tiene preguntas sobre el alcance de la autoridad otorgada.'
-      : 'This Limited Power of Attorney is designed for a specific purpose. Attorney review is recommended if you have questions about the scope of authority granted.';
+    doc.setFontSize(9);
+    const attorneyNotice = lang === 'es' 
+      ? 'Este Poder Notarial Limitado esta disenado para un proposito especifico y claramente definido. Puede desear consultar con un abogado con licencia de California si tiene preguntas sobre el alcance de la autoridad otorgada. La revision de un abogado no es requerida para que este documento sea valido bajo la ley de California.'
+      : 'This Limited Power of Attorney is designed for a specific, clearly defined purpose. You may wish to consult with a licensed California attorney if you have questions about the scope of authority granted. Attorney review is not required for this document to be valid under California law.';
     wrap(attorneyNotice, m + 4, y + 12, cw - 8, 4);
-    y += 42;
+    y += 38;
 
-    // Statutory Notice
+    // ============================================
+    // STATUTORY NOTICE TO PRINCIPAL (California Probate Code § 4128)
+    // ============================================
+    y = newPage(y, 80);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.text(lang === 'es' ? 'AVISO LEGAL (Codigo de Sucesiones de California)' : 'STATUTORY NOTICE (California Probate Code)', m, y);
+    doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL' : 'NOTICE TO PERSON EXECUTING POWER OF ATTORNEY', m, y);
+    y += 5;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'italic');
+    doc.text(lang === 'es' ? '(Codigo de Sucesiones de California § 4128)' : '(California Probate Code § 4128)', m, y);
     y += 6;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    const statutoryNotice = lang === 'es'
-      ? 'Este poder notarial limitado autoriza a otra persona (su agente) a actuar en su nombre solo para el proposito especifico indicado. El agente tiene el deber fiduciario de actuar en su mejor interes.'
-      : 'This limited power of attorney authorizes another person (your agent) to act on your behalf only for the specific purpose stated. The agent has a fiduciary duty to act in your best interest.';
-    y = wrap(statutoryNotice, m, y, cw, 4);
+    
+    const noticeText = lang === 'es' 
+      ? `Un poder notarial es un documento legal importante. Al firmar este poder notarial, usted esta autorizando a otra persona a actuar en su nombre. Antes de firmar este poder notarial, debe conocer estos hechos importantes:
+
+Su agente (apoderado) no tiene obligacion de actuar a menos que usted y su agente acuerden lo contrario por escrito.
+
+Este documento otorga a su agente los poderes especificamente enumerados en este documento. Su agente debe actuar de acuerdo con sus instrucciones razonables o, en ausencia de instrucciones, en su mejor interes.
+
+Su agente tendra derecho a recibir un pago razonable por los servicios prestados bajo este poder notarial a menos que usted disponga lo contrario.
+
+Los poderes que otorga a su agente continuaran existiendo hasta la fecha de terminacion especificada o hasta que usted revoque este poder notarial.
+
+Solo puede enmendar o cambiar este poder notarial ejecutando un nuevo poder notarial o ejecutando una enmienda con las mismas formalidades que un original.
+
+Tiene derecho a revocar o terminar este poder notarial en cualquier momento, siempre que sea competente.
+
+Este poder notarial debe estar fechado y debe ser reconocido ante un notario publico o firmado por dos testigos.
+
+Debe leer este poder notarial cuidadosamente. Si no entiende el poder notarial, o alguna disposicion del mismo, debe obtener la asistencia de un abogado u otra persona calificada.`
+      : `A power of attorney is an important legal document. By signing this power of attorney, you are authorizing another person to act for you. Before you sign this power of attorney, you should know these important facts:
+
+Your agent (attorney-in-fact) has no duty to act unless you and your agent agree otherwise in writing.
+
+This document gives your agent the powers specifically enumerated in this document. Your agent must act in accordance with your reasonable expectations or, in the absence of expectations, in your best interest.
+
+Your agent will have the right to receive reasonable payment for services provided under this power of attorney unless you provide otherwise in this power of attorney.
+
+The powers you give your agent will continue to exist until the termination date specified or until you otherwise terminate the power of attorney.
+
+You can amend or change this power of attorney only by executing a new power of attorney or by executing an amendment through the same formalities as an original.
+
+You have the right to revoke or terminate this power of attorney at any time, so long as you are competent.
+
+This power of attorney must be dated and must be acknowledged before a notary public or signed by two witnesses.
+
+You should read this power of attorney carefully. If you do not understand the power of attorney, or any provision of it, then you should obtain the assistance of an attorney or other qualified person.`;
+    
+    y = wrap(noticeText, m, y, cw, 4);
     y += 10;
 
-    // ===== ARTICLE I: PARTIES =====
-    section(lang === 'es' ? 'ARTICULO I - PARTES' : 'ARTICLE I - PARTIES',
-      lang === 'es'
-        ? `Yo, ${d.principal_name || '_______________'}, residente de ${d.principal_address || '_______________'} ("Poderdante"), por medio del presente designo a ${d.agent_name || '_______________'}, residente de ${d.agent_address || '_______________'} ("Apoderado"), para actuar en mi nombre para el proposito limitado descrito en este documento.`
-        : `I, ${d.principal_name || '_______________'}, residing at ${d.principal_address || '_______________'} ("Principal"), hereby appoint ${d.agent_name || '_______________'}, residing at ${d.agent_address || '_______________'} ("Agent"), to act on my behalf for the limited purpose described in this document.`
-    );
-
-    // ===== ARTICLE II: PURPOSE AND SCOPE =====
+    // ============================================
+    // ARTICLE I - IDENTIFICATION OF PARTIES
+    // ============================================
+    y = newPage(y, 50);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'ARTICULO I - IDENTIFICACION DE LAS PARTES' : 'ARTICLE I - IDENTIFICATION OF PARTIES', m, y);
+    y += 8;
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
-    doc.text(lang === 'es' ? 'ARTICULO II - PROPOSITO Y ALCANCE' : 'ARTICLE II - PURPOSE AND SCOPE', m, y);
+
+    const principalText = lang === 'es'
+      ? `Yo, ${d.principal_name || '___'}, con domicilio en ${d.principal_address || '___'}, Estado de California ("Poderdante"), por medio del presente designo a:`
+      : `I, ${d.principal_name || '___'}, residing at ${d.principal_address || '___'}, State of California ("Principal"), hereby appoint:`;
+    
+    y = wrap(principalText, m, y, cw, 5);
+    y += 6;
+
+    // Agent info
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'APODERADO:' : 'AGENT:', m, y);
     y += 6;
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
+    let agentText = `${d.agent_name || '___'}`;
+    agentText += lang === 'es'
+      ? `, con domicilio en ${d.agent_address || '___'}`
+      : `, residing at ${d.agent_address || '___'}`;
+    if (d.agent_relationship) {
+      agentText += lang === 'es'
+        ? ` (Relacion: ${d.agent_relationship})`
+        : ` (Relationship: ${d.agent_relationship})`;
+    }
+    y = wrap(agentText, m, y, cw, 5);
+    y += 8;
+
+    // ============================================
+    // ARTICLE II - PURPOSE AND SCOPE
+    // ============================================
+    y = newPage(y, 40);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'ARTICULO II - PROPOSITO Y ALCANCE' : 'ARTICLE II - PURPOSE AND SCOPE', m, y);
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
     
     const purposeIntro = lang === 'es'
-      ? `Este Poder Notarial Limitado se otorga exclusivamente para el siguiente proposito: ${categoryName}.`
-      : `This Limited Power of Attorney is granted exclusively for the following purpose: ${categoryName}.`;
+      ? `Este Poder Notarial Limitado se otorga EXCLUSIVAMENTE para el siguiente proposito especifico: ${categoryName}.`
+      : `This Limited Power of Attorney is granted EXCLUSIVELY for the following specific purpose: ${categoryName}.`;
     y = wrap(purposeIntro, m, y, cw, 5);
-    y += 4;
+    y += 6;
 
-    // Property details for real estate
+    // Property/Subject details based on category
     if (d.purpose_category === 'real_estate' && d.re_property_address) {
-      const propertyText = lang === 'es'
-        ? `Propiedad: ${d.re_property_address}, Condado de ${d.re_property_county || '___'}, California. APN: ${d.re_apn || '___'}`
-        : `Property: ${d.re_property_address}, ${d.re_property_county || '___'} County, California. APN: ${d.re_apn || '___'}`;
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'Propiedad:' : 'Property:', m, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      const propertyText = `${d.re_property_address}, ${d.re_property_county || '___'} County, California. APN: ${d.re_apn || '___'}`;
       y = wrap(propertyText, m, y, cw, 5);
       y += 4;
     }
 
-    // Vehicle details
     if (d.purpose_category === 'vehicle' && d.vehicle_vin) {
-      const vehicleText = lang === 'es'
-        ? `Vehiculo: ${d.vehicle_year || '___'} ${d.vehicle_make || '___'} ${d.vehicle_model || '___'}, VIN: ${d.vehicle_vin}`
-        : `Vehicle: ${d.vehicle_year || '___'} ${d.vehicle_make || '___'} ${d.vehicle_model || '___'}, VIN: ${d.vehicle_vin}`;
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'Vehiculo:' : 'Vehicle:', m, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      const vehicleText = `${d.vehicle_year || '___'} ${d.vehicle_make || '___'} ${d.vehicle_model || '___'}, VIN: ${d.vehicle_vin}, License: ${d.vehicle_license || '___'}`;
       y = wrap(vehicleText, m, y, cw, 5);
       y += 4;
     }
 
-    // Insurance details
     if (d.purpose_category === 'insurance' && d.insurance_claim_description) {
-      const insuranceText = lang === 'es'
-        ? `Reclamo: ${d.insurance_claim_description}`
-        : `Claim: ${d.insurance_claim_description}`;
-      y = wrap(insuranceText, m, y, cw, 5);
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'Reclamo:' : 'Claim:', m, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      y = wrap(d.insurance_claim_description, m, y, cw, 5);
+      y += 4;
+    }
+
+    if (d.purpose_category === 'banking' && d.bank_name) {
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'Institucion Financiera:' : 'Financial Institution:', m, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      y = wrap(`${d.bank_name}${d.bank_account_last4 ? ', Account ending in ' + d.bank_account_last4 : ''}`, m, y, cw, 5);
       y += 4;
     }
 
     y += 6;
 
-    // ===== ARTICLE III: GRANTED POWERS =====
+    // ============================================
+    // ARTICLE III - SPECIFIC POWERS GRANTED
+    // ============================================
+    y = newPage(y, 50);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text(lang === 'es' ? 'ARTICULO III - PODERES OTORGADOS' : 'ARTICLE III - GRANTED POWERS', m, y);
-    y += 6;
+    doc.text(lang === 'es' ? 'ARTICULO III - PODERES ESPECIFICOS OTORGADOS' : 'ARTICLE III - SPECIFIC POWERS GRANTED', m, y);
+    y += 8;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
 
     const powersIntro = lang === 'es'
-      ? 'El Apoderado esta autorizado para realizar las siguientes acciones especificas en mi nombre:'
-      : 'The Agent is authorized to perform the following specific actions on my behalf:';
+      ? 'El Apoderado esta autorizado para realizar las siguientes acciones especificas en mi nombre, y SOLAMENTE estas acciones:'
+      : 'The Agent is authorized to perform the following specific actions on my behalf, and ONLY these actions:';
     y = wrap(powersIntro, m, y, cw, 5);
-    y += 4;
+    y += 6;
 
     const powers = getGrantedPowers(d, lang);
     if (powers.length > 0) {
       powers.forEach((power, index) => {
-        if (y > ph - 30) {
-          doc.addPage();
-          y = 20;
-          addFooter();
-        }
-        doc.text(`${index + 1}. ${power}`, m + 5, y);
-        y += 6;
+        y = newPage(y, 10);
+        doc.text(`[X] ${index + 1}. ${power}`, m + 5, y);
+        y += 7;
       });
     } else {
-      doc.text(lang === 'es' ? '(Poderes especificos no seleccionados)' : '(Specific powers not selected)', m + 5, y);
-      y += 6;
+      doc.text(lang === 'es' ? '(Poderes especificos segun lo descrito en el proposito anterior)' : '(Specific powers as described in the purpose above)', m + 5, y);
+      y += 7;
     }
     y += 6;
 
-    // ===== ARTICLE IV: LIMITATIONS =====
+    // ============================================
+    // ARTICLE IV - LIMITATIONS
+    // ============================================
     section(lang === 'es' ? 'ARTICULO IV - LIMITACIONES' : 'ARTICLE IV - LIMITATIONS',
       lang === 'es'
-        ? 'Este Poder Notarial esta estrictamente LIMITADO al proposito especificado anteriormente. El Apoderado NO tiene autoridad para actuar en ningun otro asunto. El Apoderado no puede delegar esta autoridad a otra persona.'
-        : 'This Power of Attorney is strictly LIMITED to the purpose specified above. The Agent has NO authority to act in any other matter. The Agent may not delegate this authority to another person.'
+        ? 'Este Poder Notarial esta ESTRICTAMENTE LIMITADO al proposito especificado anteriormente. El Apoderado NO tiene autoridad para actuar en ningun otro asunto. El Apoderado no puede delegar esta autoridad a otra persona. El Apoderado no puede tomar ninguna accion que exceda el alcance de los poderes especificamente otorgados en este documento.'
+        : 'This Power of Attorney is STRICTLY LIMITED to the purpose specified above. The Agent has NO authority to act in any other matter. The Agent may not delegate this authority to another person. The Agent may not take any action that exceeds the scope of the powers specifically granted in this document.'
     );
 
-    // ===== ARTICLE V: DURATION =====
-    let durationText;
-    if (d.effective_date === 'upon_signing') {
-      durationText = lang === 'es'
-        ? `Este Poder Notarial entra en vigor inmediatamente al momento de la firma y terminara ${d.termination_date === 'upon_completion' ? 'al completarse el proposito especificado' : 'en la fecha: ' + (d.termination_specific_date || '___')}.`
-        : `This Power of Attorney becomes effective immediately upon signing and shall terminate ${d.termination_date === 'upon_completion' ? 'upon completion of the specified purpose' : 'on the date: ' + (d.termination_specific_date || '___')}.`;
+    // ============================================
+    // ARTICLE V - DURATION AND EFFECTIVE DATE
+    // ============================================
+    y = newPage(y, 35);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'ARTICULO V - DURACION Y FECHA EFECTIVA' : 'ARTICLE V - DURATION AND EFFECTIVE DATE', m, y);
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+
+    let effectiveText = '';
+    if (d.effective_date === 'upon_signing' || !d.effective_date) {
+      effectiveText = lang === 'es'
+        ? 'Este Poder Notarial entra en vigor INMEDIATAMENTE al momento de la firma.'
+        : 'This Power of Attorney becomes effective IMMEDIATELY upon execution.';
     } else {
-      durationText = lang === 'es'
-        ? `Este Poder Notarial entrara en vigor en la fecha: ${d.effective_specific_date || '___'} y terminara ${d.termination_date === 'upon_completion' ? 'al completarse el proposito especificado' : 'en la fecha: ' + (d.termination_specific_date || '___')}.`
-        : `This Power of Attorney shall become effective on the date: ${d.effective_specific_date || '___'} and shall terminate ${d.termination_date === 'upon_completion' ? 'upon completion of the specified purpose' : 'on the date: ' + (d.termination_specific_date || '___')}.`;
+      effectiveText = lang === 'es'
+        ? `Este Poder Notarial entrara en vigor en la fecha: ${d.effective_specific_date || '___'}.`
+        : `This Power of Attorney shall become effective on: ${d.effective_specific_date || '___'}.`;
     }
-    section(lang === 'es' ? 'ARTICULO V - DURACION' : 'ARTICLE V - DURATION', durationText);
+    y = wrap(effectiveText, m, y, cw, 5);
+    y += 4;
+
+    let terminationText = '';
+    if (d.termination_date === 'upon_completion' || !d.termination_date) {
+      terminationText = lang === 'es'
+        ? 'Este Poder Notarial terminara automaticamente al completarse el proposito especificado.'
+        : 'This Power of Attorney shall automatically terminate upon completion of the specified purpose.';
+    } else {
+      terminationText = lang === 'es'
+        ? `Este Poder Notarial terminara en la fecha: ${d.termination_specific_date || '___'}.`
+        : `This Power of Attorney shall terminate on: ${d.termination_specific_date || '___'}.`;
+    }
+    y = wrap(terminationText, m, y, cw, 5);
+    y += 4;
 
     // Durability clause
     if (d.durable) {
@@ -384,80 +505,356 @@ function SuccessContent() {
         ? 'Este Poder Notarial es DURADERO y no sera afectado por mi incapacidad posterior, de conformidad con el Codigo de Sucesiones de California Seccion 4124.'
         : 'This Power of Attorney is DURABLE and shall NOT BE AFFECTED by my subsequent incapacity, pursuant to California Probate Code Section 4124.';
       y = wrap(durabilityText, m, y, cw, 5);
-      y += 8;
+    } else {
+      const nonDurableText = lang === 'es'
+        ? 'Este Poder Notarial NO es duradero y terminara automaticamente si quedo incapacitado.'
+        : 'This Power of Attorney is NOT durable and shall automatically terminate upon my incapacity.';
+      y = wrap(nonDurableText, m, y, cw, 5);
     }
+    y += 8;
 
-    // ===== ARTICLE VI: REVOCATION =====
+    // ============================================
+    // ARTICLE VI - REVOCATION
+    // ============================================
     section(lang === 'es' ? 'ARTICULO VI - REVOCACION' : 'ARTICLE VI - REVOCATION',
       lang === 'es'
-        ? 'Tengo el derecho de revocar este Poder Notarial Limitado en cualquier momento mediante notificacion escrita al Apoderado.'
-        : 'I have the right to revoke this Limited Power of Attorney at any time by written notice to the Agent.'
+        ? 'Tengo el derecho de revocar este Poder Notarial Limitado en cualquier momento mediante notificacion escrita al Apoderado. Dicha revocacion sera efectiva al momento de la entrega de la notificacion al Apoderado.'
+        : 'I have the right to revoke this Limited Power of Attorney at any time by written notice to the Agent. Such revocation shall be effective upon delivery of notice to the Agent.'
     );
 
-    // Check if need new page for signature
-    if (y > ph - 100) {
-      doc.addPage();
-      y = 20;
-    }
+    // ============================================
+    // ARTICLE VII - THIRD PARTY RELIANCE
+    // ============================================
+    section(lang === 'es' ? 'ARTICULO VII - CONFIANZA DE TERCEROS' : 'ARTICLE VII - THIRD PARTY RELIANCE',
+      lang === 'es'
+        ? 'Cualquier tercero puede confiar en la autoridad otorgada en este Poder Notarial sin indagar sobre su validez, alcance o revocacion, conforme a la Seccion 4303 del Codigo de Sucesiones de California. Un tercero que actue de buena fe confiando en este Poder Notarial no sera responsable de ningun dano que surja de dicha confianza.'
+        : 'Any third party may rely upon the authority granted in this Power of Attorney without inquiry into its validity, scope, or revocation, pursuant to California Probate Code Section 4303. A third party who acts in good faith reliance on this Power of Attorney shall not be liable for any damages arising from such reliance.'
+    );
 
-    // ===== EXECUTION SECTION =====
+    // ============================================
+    // EXECUTION PAGE
+    // ============================================
+    y = newPage(y, 80);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
     doc.text(lang === 'es' ? 'EJECUCION' : 'EXECUTION', m, y);
     y += 8;
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-
-    const witnessText = lang === 'es'
-      ? 'EN FE DE LO CUAL, he ejecutado este Poder Notarial Limitado en la fecha indicada a continuacion.'
-      : 'IN WITNESS WHEREOF, I have executed this Limited Power of Attorney on the date written below.';
-    y = wrap(witnessText, m, y, cw, 5);
-    y += 12;
-
-    // Signature lines
-    doc.text(lang === 'es' ? 'Fecha: _______________________' : 'Date: _______________________', m, y);
-    y += 15;
-    doc.text('_____________________________________________', m, y);
-    y += 5;
-    doc.text(d.principal_name || '(Principal Name)', m, y);
-    doc.text(lang === 'es' ? ', Poderdante' : ', Principal', m + doc.getTextWidth(d.principal_name || '(Principal Name)'), y);
-    y += 20;
-
-    // Agent Acknowledgment
-    doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
-    doc.text(lang === 'es' ? 'ACEPTACION DEL APODERADO' : 'AGENT ACCEPTANCE', m, y);
+    doc.text(lang === 'es' 
+      ? 'EN FE DE LO CUAL, he ejecutado este Poder Notarial Limitado en la fecha indicada a continuacion.' 
+      : 'IN WITNESS WHEREOF, I have executed this Limited Power of Attorney on the date written below.', m, y);
+    y += 12;
+    doc.text((lang === 'es' ? 'Fecha de Ejecucion: ' : 'Date of Execution: ') + '________________________', m, y);
+    y += 20;
+    doc.line(m, y, m + 100, y);
     y += 6;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    const agentAck = lang === 'es'
-      ? 'Acepto este nombramiento y acepto actuar en el mejor interes del Poderdante, ejerciendo solo la autoridad limitada otorgada en este documento.'
-      : 'I accept this appointment and agree to act in the best interest of the Principal, exercising only the limited authority granted in this document.';
-    y = wrap(agentAck, m, y, cw, 4);
-    y += 10;
-
-    doc.text(lang === 'es' ? 'Fecha: _______________________' : 'Date: _______________________', m, y);
-    y += 15;
-    doc.text('_____________________________________________', m, y);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(d.principal_name || '________________________', m, y);
     y += 5;
-    doc.text(d.agent_name || '(Agent Name)', m, y);
-    doc.text(lang === 'es' ? ', Apoderado' : ', Agent', m + doc.getTextWidth(d.agent_name || '(Agent Name)'), y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text(lang === 'es' ? 'Poderdante (Principal)' : 'Principal', m, y);
 
-    // Add footer to all pages
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Multi Servicios 360 | www.multiservicios360.net | 855.246.7274', pw / 2, ph - 10, { align: 'center' });
-      doc.text(`Page ${i} of ${totalPages}`, pw - m, ph - 10, { align: 'right' });
-    }
-
-    // ===== NOTARY ACKNOWLEDGMENT PAGE =====
+    // ============================================
+    // NOTICE TO AGENT PAGE (California Probate Code § 4128)
+    // ============================================
     doc.addPage();
     y = 20;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'AVISO AL APODERADO' : 'NOTICE TO AGENT', pw/2, y, {align: 'center'});
+    y += 6;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.text(lang === 'es' ? '(Codigo de Sucesiones de California § 4128)' : '(California Probate Code § 4128)', pw/2, y, {align: 'center'});
+    y += 10;
 
-    // Try to fetch and append the official CA notary form
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    const agentNoticeText = lang === 'es'
+      ? `Cuando usted acepta la autoridad otorgada bajo este poder notarial, se crea una relacion legal especial entre usted y el poderdante. Esta relacion impone sobre usted deberes legales que continuan hasta que renuncie o el poder notarial sea terminado o revocado. Usted debe:
+
+(1) Hacer lo que el poderdante le autorice a hacer solo cuando el poderdante quiere que usted actue o no puede tomar sus propias decisiones.
+
+(2) Actuar de buena fe para el beneficio del poderdante.
+
+(3) Hacer solo lo que el poderdante podria hacer legalmente.
+
+(4) Actuar con lealtad hacia el poderdante.
+
+(5) Evitar conflictos que podrian interferir con su capacidad de actuar en el mejor interes del poderdante.
+
+(6) Mantener separada la propiedad del poderdante, a menos que se permita lo contrario.
+
+(7) Mantener registros adecuados de todas las recibos, desembolsos y transacciones realizadas en nombre del poderdante.
+
+(8) Cooperar con una persona que tenga autoridad para tomar decisiones de atencion medica para el poderdante para llevar a cabo los deseos razonables del poderdante.
+
+(9) Intentar preservar el plan patrimonial del poderdante, en la medida que realmente lo conozca, si hacerlo es consistente con los mejores intereses del poderdante basado en toda la informacion relevante, incluyendo la situacion financiera del poderdante y las necesidades previsibles para la atencion medica y de vida.
+
+A menos que el poder notarial disponga lo contrario, su autoridad incluye la autoridad para hacer lo siguiente:
+
+(1) Autorizar que se le permita a otra persona ejercer la autoridad otorgada bajo el poder notarial.
+
+(2) Contratar un abogado, contador u otro profesional o experto para ayudarlo en la realizacion de sus deberes.
+
+(3) Recibir una compensacion razonable por los servicios que preste como agente.
+
+Si no cumple fielmente sus deberes bajo la ley y bajo el poder notarial, usted puede estar sujeto a cualquiera de las siguientes consecuencias:
+
+(1) El tribunal puede destituirlo como agente.
+
+(2) El tribunal puede ordenarle que devuelva cualquier propiedad que haya malversado.
+
+(3) Usted puede ser responsable de cualquier dano que cause al poderdante.
+
+(4) Usted puede estar sujeto a sanciones penales por actividades que constituyan conducta criminal.`
+      : `When you accept the authority granted under this power of attorney, a special legal relationship is created between you and the principal. This relationship imposes upon you legal duties that continue until you resign or the power of attorney is terminated or revoked. You must:
+
+(1) Do what the principal authorizes you to do only when the principal wants you to act or cannot make their own decisions.
+
+(2) Act in good faith for the benefit of the principal.
+
+(3) Do only what the principal could lawfully do.
+
+(4) Act loyally for the principal.
+
+(5) Avoid conflicts that would impair your ability to act in the principal's best interest.
+
+(6) Keep the principal's property separate, unless otherwise permitted.
+
+(7) Keep adequate records of all receipts, disbursements, and transactions made on behalf of the principal.
+
+(8) Cooperate with a person that has authority to make health care decisions for the principal to do what you know the principal reasonably expects or, if you do not know the principal's expectations, to act in the principal's best interest.
+
+(9) Attempt to preserve the principal's estate plan, to the extent actually known by you, if preserving the plan is consistent with the principal's best interest based on all relevant information, including the principal's foreseeable obligations and need for maintenance.
+
+Unless the power of attorney otherwise provides, your authority includes the authority to do the following:
+
+(1) Authorize another person to exercise the authority granted under the power of attorney.
+
+(2) Hire an attorney, accountant, or other professional or expert to assist you in performing your duties.
+
+(3) Receive reasonable compensation for services you render as agent.
+
+If you do not faithfully perform your duties under the law and under the power of attorney, you may be subject to any of the following consequences:
+
+(1) The court may remove you as agent.
+
+(2) The court may order you to return any property you have misappropriated.
+
+(3) You may be liable for any damages you cause to the principal.
+
+(4) You may be subject to criminal penalties for activities that constitute criminal conduct.`;
+
+    y = wrap(agentNoticeText, m, y, cw, 4);
+    y += 8;
+
+    // ============================================
+    // ELDER ABUSE WARNING
+    // ============================================
+    y = newPage(y, 45);
+    doc.setFillColor(255, 245, 238);
+    doc.rect(m, y, cw, 38, 'F');
+    doc.setDrawColor(200, 100, 100);
+    doc.setLineWidth(0.5);
+    doc.rect(m, y, cw, 38, 'S');
+    y += 6;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(180, 0, 0);
+    doc.text(lang === 'es' ? 'ADVERTENCIA SOBRE ABUSO DE ADULTOS MAYORES' : 'ELDER ABUSE WARNING', m + 4, y);
+    y += 6;
+    doc.setTextColor(0);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    const abuseWarning = lang === 'es'
+      ? 'El abuso de adultos mayores es un delito grave en California. El uso indebido de este poder notarial para robar o defraudar al poderdante puede resultar en cargos criminales bajo el Codigo Penal de California Seccion 368 y responsabilidad civil. Si sospecha de abuso financiero de un adulto mayor, comuniquese con los Servicios de Proteccion de Adultos al 1-833-401-0832 o la policia local.'
+      : 'Elder abuse is a serious crime in California. Misuse of this power of attorney to steal from or defraud the principal can result in criminal charges under California Penal Code Section 368 and civil liability. If you suspect financial abuse of an elder, contact Adult Protective Services at 1-833-401-0832 or local law enforcement.';
+    y = wrap(abuseWarning, m + 4, y, cw - 8, 4);
+    y += 18;
+
+    // ============================================
+    // AGENT ACCEPTANCE SIGNATURE
+    // ============================================
+    y = newPage(y, 60);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'ACEPTACION DEL APODERADO' : 'AGENT ACCEPTANCE', m, y);
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const acceptanceText = lang === 'es'
+      ? 'Yo, el Apoderado nombrado en este Poder Notarial, reconozco haber leido y entendido el Aviso al Apoderado anterior. Acepto actuar como Apoderado bajo este Poder Notarial Limitado y acepto cumplir con todos los deberes descritos anteriormente. Entiendo que mi autoridad esta ESTRICTAMENTE LIMITADA al proposito especificado en este documento.'
+      : 'I, the Agent named in this Power of Attorney, acknowledge that I have read and understand the Notice to Agent above. I agree to act as Agent under this Limited Power of Attorney and agree to comply with all duties described above. I understand that my authority is STRICTLY LIMITED to the purpose specified in this document.';
+    y = wrap(acceptanceText, m, y, cw, 5);
+    y += 15;
+
+    doc.line(m, y, m + 100, y);
+    y += 6;
+    doc.setFont('helvetica', 'bold');
+    doc.text(d.agent_name || '________________________', m, y);
+    y += 5;
+    doc.setFont('helvetica', 'normal');
+    doc.text(lang === 'es' ? 'Firma del Apoderado' : 'Agent Signature', m, y);
+    y += 15;
+    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
+
+    // ============================================
+    // WITNESS ATTESTATION PAGE
+    // ============================================
+    doc.addPage();
+    y = 20;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'DECLARACION DE TESTIGOS' : 'WITNESS ATTESTATION', pw/2, y, {align: 'center'});
+    y += 10;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const witnessIntro = lang === 'es'
+      ? 'Nosotros, los abajo firmantes, declaramos bajo pena de perjurio que:\n\n1. El Poderdante firmo este Poder Notarial en nuestra presencia, o reconocio ante nosotros que la firma en este documento es suya.\n\n2. El Poderdante parecio estar en su sano juicio y no actuaba bajo coaccion, fraude o influencia indebida.\n\n3. Somos mayores de 18 anos de edad.\n\n4. No somos nombrados como Apoderado en este documento.\n\n5. No estamos relacionados con el Poderdante por sangre, matrimonio o adopcion.\n\n6. No somos empleados del Apoderado nombrado en este documento.'
+      : 'We, the undersigned, declare under penalty of perjury that:\n\n1. The Principal signed this Power of Attorney in our presence, or acknowledged to us that the signature on this document is theirs.\n\n2. The Principal appeared to be of sound mind and was not acting under duress, fraud, or undue influence.\n\n3. We are at least 18 years of age.\n\n4. We are not named as Agent in this document.\n\n5. We are not related to the Principal by blood, marriage, or adoption.\n\n6. We are not employees of the Agent named in this document.';
+    y = wrap(witnessIntro, m, y, cw, 5);
+    y += 15;
+
+    // Witness 1
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'TESTIGO 1:' : 'WITNESS 1:', m, y);
+    y += 10;
+    doc.setFont('helvetica', 'normal');
+    doc.line(m, y, m + 100, y);
+    y += 5;
+    doc.text(lang === 'es' ? 'Firma' : 'Signature', m, y);
+    y += 10;
+    doc.line(m, y, m + 100, y);
+    y += 5;
+    doc.text(lang === 'es' ? 'Nombre Impreso' : 'Printed Name', m, y);
+    y += 10;
+    doc.line(m, y, m + 150, y);
+    y += 5;
+    doc.text(lang === 'es' ? 'Direccion' : 'Address', m, y);
+    y += 10;
+    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
+    y += 20;
+
+    // Witness 2
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'TESTIGO 2:' : 'WITNESS 2:', m, y);
+    y += 10;
+    doc.setFont('helvetica', 'normal');
+    doc.line(m, y, m + 100, y);
+    y += 5;
+    doc.text(lang === 'es' ? 'Firma' : 'Signature', m, y);
+    y += 10;
+    doc.line(m, y, m + 100, y);
+    y += 5;
+    doc.text(lang === 'es' ? 'Nombre Impreso' : 'Printed Name', m, y);
+    y += 10;
+    doc.line(m, y, m + 150, y);
+    y += 5;
+    doc.text(lang === 'es' ? 'Direccion' : 'Address', m, y);
+    y += 10;
+    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
+
+    // ============================================
+    // DOCUMENT PREPARER STATEMENT
+    // ============================================
+    doc.addPage();
+    y = 20;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'DECLARACION DEL PREPARADOR DEL DOCUMENTO' : 'DOCUMENT PREPARER STATEMENT', pw/2, y, {align: 'center'});
+    y += 6;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.text(lang === 'es' ? '(Codigo de Negocios y Profesiones de California § 6400-6415)' : '(California Business & Professions Code § 6400-6415)', pw/2, y, {align: 'center'});
+    y += 12;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const preparerStatement = lang === 'es'
+      ? `Este documento fue preparado por:
+
+Multi Servicios 360
+Servicio de Preparacion de Documentos Legales
+Telefono: 855.246.7274
+Sitio Web: www.multiservicios360.net
+
+DECLARACION DE NO-ABOGADO: Multi Servicios 360 NO es un bufete de abogados. No somos abogados y no podemos proporcionar asesoramiento legal. Este documento fue preparado a solicitud del cliente utilizando informacion proporcionada por el cliente. El cliente ha sido informado de que este documento puede tener consecuencias legales significativas y se le ha recomendado que consulte con un abogado antes de firmarlo.
+
+AVISO DE TARIFA: La tarifa cobrada por la preparacion de este documento es por servicios de mecanografia y procesamiento de datos unicamente, y no por asesoramiento legal o representacion legal.
+
+REGISTRO DEL CONDADO: Este preparador de documentos esta registrado en el(los) Condado(s) de California donde se realizan los servicios, segun lo requiere la ley.`
+      : `This document was prepared by:
+
+Multi Servicios 360
+Legal Document Preparation Service
+Phone: 855.246.7274
+Website: www.multiservicios360.net
+
+NON-ATTORNEY STATEMENT: Multi Servicios 360 is NOT a law firm. We are not attorneys and cannot provide legal advice. This document was prepared at the client's request using information provided by the client. The client has been advised that this document may have significant legal consequences and has been encouraged to consult with an attorney before signing.
+
+FEE DISCLOSURE: The fee charged for the preparation of this document is for typing and data processing services only, and not for legal advice or legal representation.
+
+COUNTY REGISTRATION: This document preparer is registered in the California County(ies) where services are performed, as required by law.`;
+
+    y = wrap(preparerStatement, m, y, cw, 5);
+    y += 15;
+
+    // Preparer signature line
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'FIRMA DEL PREPARADOR:' : 'PREPARER SIGNATURE:', m, y);
+    y += 12;
+    doc.setFont('helvetica', 'normal');
+    doc.line(m, y, m + 100, y);
+    y += 5;
+    doc.text('Multi Servicios 360', m, y);
+    y += 6;
+    doc.text(lang === 'es' ? 'Preparador de Documentos Legales' : 'Legal Document Preparer', m, y);
+    y += 12;
+    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + new Date().toLocaleDateString(), m, y);
+    y += 20;
+
+    // Client acknowledgment
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'RECONOCIMIENTO DEL CLIENTE:' : 'CLIENT ACKNOWLEDGMENT:', m, y);
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    const clientAck = lang === 'es'
+      ? 'Yo, el Poderdante, reconozco que he leido y entendido la Declaracion de No-Abogado anterior. Entiendo que Multi Servicios 360 no es un bufete de abogados y no me ha proporcionado asesoramiento legal. He proporcionado toda la informacion contenida en este documento y soy responsable de su exactitud.'
+      : 'I, the Principal, acknowledge that I have read and understood the Non-Attorney Statement above. I understand that Multi Servicios 360 is not a law firm and has not provided me with legal advice. I have provided all information contained in this document and am responsible for its accuracy.';
+    y = wrap(clientAck, m, y, cw, 4);
+    y += 12;
+
+    doc.line(m, y, m + 100, y);
+    y += 5;
+    doc.text(d.principal_name || '________________________', m, y);
+    y += 5;
+    doc.text(lang === 'es' ? 'Firma del Poderdante' : 'Principal Signature', m, y);
+    y += 10;
+    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
+
+    // ============================================
+    // FOOTER ON ALL PAGES
+    // ============================================
+    const pc = doc.internal.getNumberOfPages();
+    const footer = 'Multi Servicios 360 | www.multiservicios360.net | 855.246.7274';
+    for (let i = 1; i <= pc; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+      doc.text(footer, pw/2, 290, {align: 'center'});
+      doc.text((lang === 'es' ? 'Pagina ' : 'Page ') + i + (lang === 'es' ? ' de ' : ' of ') + pc, pw - m, 290, {align: 'right'});
+      doc.setTextColor(0);
+    }
+
+    // ============================================
+    // FETCH AND APPEND OFFICIAL CA NOTARY FORM
+    // ============================================
     try {
       const notaryResponse = await fetch('/api/notary-form');
       const notaryFormBytes = await notaryResponse.arrayBuffer();
@@ -466,21 +863,22 @@ function SuccessContent() {
       const [notaryPage] = await pdfDocFromJsPDF.copyPages(notaryPdf, [0]);
       pdfDocFromJsPDF.addPage(notaryPage);
 
+      // Save the merged PDF
       const pdfBytes = await pdfDocFromJsPDF.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `Limited_POA_${categoryName.replace(/\s+/g, '_')}_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`;
+      link.download = `Limited_POA_${categoryName.replace(/[^a-zA-Z0-9]/g, '_')}_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`;
       link.click();
       URL.revokeObjectURL(url);
     } catch (notaryError) {
       console.error('Error fetching notary form:', notaryError);
-      // Fallback - save without notary form
-      doc.save(`Limited_POA_${categoryName.replace(/\s+/g, '_')}_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`);
-      alert(lang === 'es'
-        ? 'Documento generado. Por favor descargue el formulario notarial de: /api/notary-form'
-        : 'Document generated. Please download notary form from: /api/notary-form');
+      // Fallback - just save the document without the notary form
+      doc.save(`Limited_POA_${categoryName.replace(/[^a-zA-Z0-9]/g, '_')}_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`);
+      alert(lang === 'es' 
+        ? 'Documento generado. Por favor descargue el formulario notarial por separado.' 
+        : 'Document generated. Please download notary form separately.');
     }
   };
 
@@ -491,6 +889,7 @@ function SuccessContent() {
           <div style={{ width: '48px', height: '48px', border: '4px solid #E5E7EB', borderTopColor: '#3B82F6', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }}></div>
           <p style={{ color: '#6B7280' }}>Loading...</p>
         </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
@@ -553,7 +952,13 @@ function SuccessContent() {
               <PrintIcon /> {t.print}
             </button>
             <button
-              onClick={() => alert('Email feature coming soon!')}
+              onClick={() => {
+                const subject = encodeURIComponent(language === 'es' ? 'Poder Notarial Limitado - Multi Servicios 360' : 'Limited Power of Attorney - Multi Servicios 360');
+                const body = encodeURIComponent(language === 'es' 
+                  ? 'Adjunto encontrara su Poder Notarial Limitado. Por favor descargue los documentos PDF desde su cuenta.\n\nMulti Servicios 360\n855.246.7274' 
+                  : 'Please find attached your Limited Power of Attorney documents. Please download the PDF documents from your account.\n\nMulti Servicios 360\n855.246.7274');
+                window.open(`mailto:?subject=${subject}&body=${body}`);
+              }}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '14px 20px', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}
             >
               <EmailIcon /> {t.email}
@@ -588,6 +993,11 @@ function SuccessContent() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <div style={{ textAlign: 'center', padding: '24px', color: '#6B7280', fontSize: '12px' }}>
+        Multi Servicios 360 | www.multiservicios360.net | 855.246.7274
+      </div>
     </div>
   );
 }
@@ -600,6 +1010,7 @@ export default function LimitedPOASuccessPage() {
           <div style={{ width: '48px', height: '48px', border: '4px solid #E5E7EB', borderTopColor: '#3B82F6', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }}></div>
           <p style={{ color: '#6B7280' }}>Loading...</p>
         </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     }>
       <SuccessContent />
