@@ -1,4 +1,4 @@
-// Last updated: 2026-01-21 16:37:22
+// Last updated: 2026-01-22
 "use client";
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -38,8 +38,58 @@ function SuccessContent() {
   const [matterData, setMatterData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState('es');
+  const [executionDate, setExecutionDate] = useState('');
+  const [dateError, setDateError] = useState('');
 
   const matterId = searchParams.get('matter_id');
+
+  // Helper: Get current date in America/Los_Angeles timezone
+  const getLADate = () => {
+    const now = new Date();
+    const laDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    const month = String(laDate.getMonth() + 1).padStart(2, '0');
+    const day = String(laDate.getDate()).padStart(2, '0');
+    const year = laDate.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  // Helper: Validate execution date format MM/DD/YYYY
+  const validateExecutionDate = (dateStr) => {
+    if (!dateStr || dateStr.trim() === '') return false;
+    const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
+    if (!regex.test(dateStr)) return false;
+    // Check if it's a valid date
+    const [month, day, year] = dateStr.split('/').map(Number);
+    const testDate = new Date(year, month - 1, day);
+    return testDate.getMonth() === month - 1 && testDate.getDate() === day && testDate.getFullYear() === year;
+  };
+
+  // Helper: Format date input to MM/DD/YYYY
+  const formatDateInput = (value) => {
+    // Remove non-digits
+    const digits = value.replace(/\D/g, '');
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
+  };
+
+  // Helper: Generate document version hash
+  const generateDocumentVersionId = (data) => {
+    const str = JSON.stringify({
+      intake: data.intake_data,
+      language: data.language,
+      executionDate: executionDate,
+      templateVersion: '2026-01-22'
+    });
+    // Simple hash function
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return `v1-${Math.abs(hash).toString(16)}`;
+  };
 
   useEffect(() => {
     const fetchMatterData = async () => {
@@ -104,6 +154,36 @@ function SuccessContent() {
       return;
     }
 
+    // VALIDATION: Execution date is required
+    if (!validateExecutionDate(executionDate)) {
+      const errorMsg = language === 'es' 
+        ? 'La fecha de ejecución es obligatoria.' 
+        : 'Execution date is required.';
+      setDateError(errorMsg);
+      alert(errorMsg);
+      return;
+    }
+    setDateError('');
+
+    // Generate audit timestamps (stored locally, not printed in PDF)
+    const now = new Date();
+    const auditData = {
+      executionDate: executionDate,
+      signedAtUtc: now.toISOString(),
+      signedAtLocal: now.toLocaleString('en-US', { 
+        timeZone: 'America/Los_Angeles',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }),
+      documentVersionId: generateDocumentVersionId(matterData)
+    };
+    console.log('Audit data (not printed):', auditData);
+
     try {
       const d = matterData.intake_data;
       const lang = isSpanish ? 'es' : 'en';
@@ -140,9 +220,26 @@ function SuccessContent() {
       };
 
       // ============================================
-      // RECORDING HEADER (for real estate POAs)
+      // DETERMINE POA TYPE FOR INTRO VARIANT
       // ============================================
-      if (d.record_for_real_estate) {
+      const hasRealEstate = d.powers_real_estate === true;
+      const hasHotPowers = d.hot_gifts || d.hot_beneficiary || d.hot_trust;
+      
+      // Determine which intro variant to use
+      // Variant 1: Real Estate = YES
+      // Variant 2: Real Estate = NO (but general powers)
+      // Variant 3: Financial/Administrative only (no real estate, no hot powers)
+      let introVariant = 2; // Default to Variant 2
+      if (hasRealEstate) {
+        introVariant = 1;
+      } else if (!hasHotPowers) {
+        introVariant = 3;
+      }
+
+      // ============================================
+      // RECORDING HEADER (for real estate POAs only)
+      // ============================================
+      if (hasRealEstate && d.record_for_real_estate) {
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.text("Assessor's Parcel No.: _______________________", m, y);
@@ -183,70 +280,79 @@ function SuccessContent() {
       y += 10;
 
       // ============================================
-      // ATTORNEY REVIEW NOTICE (Recommended)
+      // DYNAMIC INTRO NOTICE (Based on POA Type)
       // ============================================
-      doc.setFillColor(240, 240, 240);
-      doc.rect(m, y, cw, 38, 'F');
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'AVISO DE REVISION DE ABOGADO (Recomendado)' : 'ATTORNEY REVIEW NOTICE (Recommended)', m + 4, y + 6);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      const attorneyNotice = lang === 'es' 
-        ? 'Este Poder Notarial General esta disenado para propositos claramente definidos. Puede desear consultar con un abogado con licencia de California si: esta otorgando autoridad sobre bienes raices, esta otorgando autoridad sobre activos financieros significativos, no esta seguro de que este documento refleje completamente sus intenciones, o tiene una estructura patrimonial o empresarial compleja. La revision de un abogado no es requerida para que este documento sea valido bajo la ley de California.'
-        : 'This General Power of Attorney is designed for clearly defined purposes. You may wish to consult with a licensed California attorney if: you are granting authority involving real estate, you are granting authority involving significant financial assets, you are uncertain whether this document fully reflects your intentions, or you have a complex estate or business structure. Attorney review is not required for this document to be valid under California law.';
-      y = wrap(attorneyNotice, m + 4, y + 12, cw - 8, 4);
-      y += 10;
-
-      // ============================================
-      // STATUTORY NOTICE TO PRINCIPAL (California Probate Code § 4128)
-      // ============================================
-      y = newPage(y, 80);
+      y = newPage(y, 60);
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL DURADERO' : 'NOTICE TO PERSON EXECUTING DURABLE POWER OF ATTORNEY', m, y);
+      
+      // Title varies by variant
+      if (introVariant === 3) {
+        doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL' : 'NOTICE TO PERSON EXECUTING POWER OF ATTORNEY', m, y);
+      } else {
+        doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL DURADERO' : 'NOTICE TO PERSON EXECUTING DURABLE POWER OF ATTORNEY', m, y);
+      }
       y += 6;
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
+
+      let introText = '';
       
-      const noticeText = lang === 'es' 
-        ? `Un poder notarial duradero es un documento legal importante. Al firmar este poder notarial duradero, usted esta autorizando a otra persona a actuar en su nombre, el poderdante. Antes de firmar este poder notarial duradero, debe conocer estos hechos importantes:
+      if (introVariant === 1) {
+        // VARIANT 1: WITH REAL ESTATE
+        introText = lang === 'es'
+          ? `Un poder notarial duradero es un documento legal importante. Al firmar este poder notarial, usted autoriza a otra persona (su Apoderado) a actuar en su nombre en los asuntos expresamente indicados en este documento.
 
-Su agente (apoderado) no tiene obligacion de actuar a menos que usted y su agente acuerden lo contrario por escrito.
+Este poder notarial otorga autoridad amplia, incluyendo la facultad de administrar, vender, transferir, gravar y manejar bienes inmuebles, asi como administrar bienes personales, cuentas financieras, inversiones, asuntos fiscales y otros asuntos legales y patrimoniales, segun se establece expresamente en este documento.
 
-Este documento otorga a su agente los poderes para administrar, disponer, vender y traspasar sus bienes inmuebles y personales, y para usar su propiedad como garantia si su agente pide dinero prestado en su nombre. Este documento no otorga a su agente el poder de aceptar o recibir ninguna de sus propiedades, en fideicomiso o de otra manera, como regalo, a menos que usted autorice especificamente al agente para aceptar o recibir un regalo.
+Los poderes otorgados mediante este poder notarial continuaran vigentes incluso si usted llega a quedar incapacitado, a menos que este documento indique expresamente lo contrario.
 
-Su agente tendra derecho a recibir un pago razonable por los servicios prestados bajo este poder notarial duradero a menos que usted disponga lo contrario.
+Antes de firmar este poder notarial, usted debe comprender plenamente el alcance de la autoridad que esta otorgando. Si no esta seguro de que este documento refleje completamente sus intenciones, se le recomienda consultar con un abogado con licencia en el Estado de California.`
+          : `A durable power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf in the matters expressly indicated in this document.
 
-Los poderes que otorga a su agente continuaran existiendo durante toda su vida, a menos que establezca que el poder notarial durara por un periodo mas corto o a menos que termine el poder notarial. Los poderes que otorga a su agente en este poder notarial duradero continuaran existiendo incluso si ya no puede tomar sus propias decisiones respecto a la administracion de su propiedad.
+This power of attorney grants broad authority, including the power to manage, sell, transfer, encumber, and handle real property, as well as manage personal property, financial accounts, investments, tax matters, and other legal and estate matters, as expressly set forth in this document.
 
-Solo puede enmendar o cambiar este poder notarial duradero ejecutando un nuevo poder notarial duradero o ejecutando una enmienda con las mismas formalidades que un original.
+The powers granted under this power of attorney will continue in effect even if you become incapacitated, unless this document expressly provides otherwise.
 
-Tiene derecho a revocar o terminar este poder notarial duradero en cualquier momento, siempre que sea competente.
+Before signing this power of attorney, you should fully understand the scope of the authority you are granting. If you are not sure that this document fully reflects your intentions, you are advised to consult with an attorney licensed in the State of California.`;
+      } else if (introVariant === 2) {
+        // VARIANT 2: WITHOUT REAL ESTATE (but general powers)
+        introText = lang === 'es'
+          ? `Un poder notarial duradero es un documento legal importante. Al firmar este poder notarial, usted autoriza a otra persona (su Apoderado) a actuar en su nombre en los asuntos expresamente indicados en este documento.
 
-Este poder notarial duradero debe estar fechado y debe ser reconocido ante un notario publico o firmado por dos testigos.
+Este poder notarial otorga autoridad general sobre bienes personales y asuntos financieros y administrativos, tales como cuentas bancarias, inversiones, operaciones comerciales, asuntos fiscales y otros asuntos legales y patrimoniales, segun se establece expresamente en este documento.
 
-Debe leer este poder notarial duradero cuidadosamente. El poder notarial duradero es importante para usted. Si no entiende el poder notarial duradero, o alguna disposicion del mismo, debe obtener la asistencia de un abogado u otra persona calificada.`
-        : `A durable power of attorney is an important legal document. By signing the durable power of attorney, you are authorizing another person to act for you, the principal. Before you sign this durable power of attorney, you should know these important facts:
+Este poder notarial no otorga autoridad sobre bienes inmuebles, salvo que dicha autoridad sea expresamente concedida en una seccion especifica de este documento.
 
-Your agent (attorney-in-fact) has no duty to act unless you and your agent agree otherwise in writing.
+Los poderes otorgados mediante este poder notarial continuaran vigentes incluso si usted llega a quedar incapacitado, a menos que este documento indique expresamente lo contrario.
 
-This document gives your agent the powers to manage, dispose of, sell, and convey your real and personal property, and to use your property as security if your agent borrows money on your behalf. This document does not give your agent the power to accept or receive any of your property, in trust or otherwise, as a gift, unless you specifically authorize the agent to accept or receive a gift.
+Antes de firmar este poder notarial, usted debe comprender plenamente el alcance de la autoridad que esta otorgando. Si no esta seguro de que este documento refleje completamente sus intenciones, se le recomienda consultar con un abogado con licencia en el Estado de California.`
+          : `A durable power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf in the matters expressly indicated in this document.
 
-Your agent will have the right to receive reasonable payment for services provided under this durable power of attorney unless you provide otherwise in this power of attorney.
+This power of attorney grants general authority over personal property and financial and administrative matters, such as bank accounts, investments, business operations, tax matters, and other legal and estate matters, as expressly set forth in this document.
 
-The powers you give your agent will continue to exist for your entire lifetime, unless you state that the durable power of attorney will last for a shorter period of time or unless you otherwise terminate the durable power of attorney. The powers you give your agent in this durable power of attorney will continue to exist even if you can no longer make your own decisions respecting the management of your property.
+This power of attorney does not grant authority over real property, unless such authority is expressly granted in a specific section of this document.
 
-You can amend or change this durable power of attorney only by executing a new durable power of attorney or by executing an amendment through the same formalities as an original.
+The powers granted under this power of attorney will continue in effect even if you become incapacitated, unless this document expressly provides otherwise.
 
-You have the right to revoke or terminate this durable power of attorney at any time, so long as you are competent.
+Before signing this power of attorney, you should fully understand the scope of the authority you are granting. If you are not sure that this document fully reflects your intentions, you are advised to consult with an attorney licensed in the State of California.`;
+      } else {
+        // VARIANT 3: FINANCIAL/ADMINISTRATIVE ONLY
+        introText = lang === 'es'
+          ? `Un poder notarial es un documento legal importante. Al firmar este poder notarial, usted autoriza a otra persona (su Apoderado) a actuar en su nombre unicamente en los asuntos financieros y administrativos expresamente indicados en este documento.
 
-This durable power of attorney must be dated and must be acknowledged before a notary public or signed by two witnesses.
+Este poder notarial se limita a bienes personales, cuentas financieras, pagos, cobros, representacion administrativa y asuntos similares, y excluye expresamente cualquier autoridad relacionada con bienes inmuebles, creacion o modificacion de fideicomisos, donaciones significativas o disposiciones patrimoniales complejas, salvo que se indique de manera expresa y especifica.
 
-You should read this durable power of attorney carefully. The durable power of attorney is important to you. If you do not understand the durable power of attorney, or any provision of it, then you should obtain the assistance of an attorney or other qualified person.`;
+Antes de firmar este poder notarial, usted debe comprender claramente las limitaciones de la autoridad otorgada. Si tiene dudas sobre el alcance o las consecuencias legales de este documento, se le recomienda consultar con un abogado con licencia en el Estado de California.`
+          : `A power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf only in the financial and administrative matters expressly indicated in this document.
+
+This power of attorney is limited to personal property, financial accounts, payments, collections, administrative representation, and similar matters, and expressly excludes any authority related to real property, creation or modification of trusts, significant gifts, or complex estate dispositions, unless expressly and specifically indicated.
+
+Before signing this power of attorney, you should clearly understand the limitations of the authority granted. If you have questions about the scope or legal consequences of this document, you are advised to consult with an attorney licensed in the State of California.`;
+      }
       
-      y = wrap(noticeText, m, y, cw, 4);
-      y += 8;
+      y = wrap(introText, m, y, cw, 4);
+      y += 10;
 
       // ============================================
       // ARTICLE I - IDENTIFICATION OF PARTIES
@@ -606,7 +712,7 @@ You should read this durable power of attorney carefully. The durable power of a
       // ============================================
       // RECORDING NOTICE (if for real estate)
       // ============================================
-      if (d.record_for_real_estate) {
+      if (hasRealEstate && d.record_for_real_estate) {
         y = newPage(y, 25);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
@@ -640,8 +746,20 @@ You should read this durable power of attorney carefully. The durable power of a
         ? 'EN FE DE LO CUAL, he ejecutado este Poder Notarial General Duradero en la fecha indicada a continuacion.' 
         : 'IN WITNESS WHEREOF, I have executed this General Durable Power of Attorney on the date written below.', m, y);
       y += 12;
-      doc.text((lang === 'es' ? 'Fecha de Ejecucion: ' : 'Date of Execution: ') + '________________________', m, y);
+
+      // EXECUTION DATE - Required field (Time is NOT printed per spec)
+      // Render filled date if available, otherwise show blanks for draft mode
+      const displayDate = executionDate && validateExecutionDate(executionDate) 
+        ? executionDate 
+        : '____/____/______';
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'Fecha de Ejecucion: ' : 'Date of Execution: ', m, y);
+      doc.setFont('helvetica', 'normal');
+      const dateLabel = lang === 'es' ? 'Fecha de Ejecucion: ' : 'Date of Execution: ';
+      const dateLabelWidth = doc.getTextWidth(dateLabel);
+      doc.text(displayDate, m + dateLabelWidth, y);
       y += 20;
+
       doc.line(m, y, m + 100, y);
       y += 6;
       doc.setFontSize(11);
@@ -855,6 +973,108 @@ If your exercise of authority in any way violates the law or is inconsistent wit
       doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
 
       // ============================================
+      // SOFTWARE PLATFORM DISCLOSURE & USER ACKNOWLEDGMENT PAGE
+      // ============================================
+      doc.addPage();
+      y = 20;
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'DIVULGACION DE PLATAFORMA DE SOFTWARE Y' : 'SOFTWARE PLATFORM DISCLOSURE &', pw/2, y, {align: 'center'});
+      y += 6;
+      doc.text(lang === 'es' ? 'RECONOCIMIENTO DEL USUARIO' : 'USER ACKNOWLEDGMENT', pw/2, y, {align: 'center'});
+      y += 4;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'italic');
+      doc.text(lang === 'es' ? '(California)' : '(California)', pw/2, y, {align: 'center'});
+      y += 10;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const disclosureIntro = lang === 'es'
+        ? 'Este documento fue creado por el usuario a traves de un sistema automatizado de generacion de documentos de autoayuda proporcionado por Multiservicios 360.'
+        : 'This document was created by the user through an automated self-help document generation system provided by Multiservicios 360.';
+      y = wrap(disclosureIntro, m, y, cw, 5);
+      y += 10;
+
+      // NO LEGAL ADVICE Section
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(lang === 'es' ? 'SIN ASESORIA LEGAL / SIN PREPARACION DE DOCUMENTOS' : 'NO LEGAL ADVICE / NO DOCUMENT PREPARATION', m, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const noLegalAdvice = lang === 'es'
+        ? 'Multiservicios 360 no es un bufete de abogados y no proporciona asesoria legal. Multiservicios 360 no prepara documentos legales en nombre de los usuarios. Multiservicios 360 proporciona acceso a herramientas de software que permiten a los usuarios crear sus propios documentos basandose unicamente en la informacion y selecciones proporcionadas por el usuario.\n\nNo se crea ninguna relacion abogado-cliente por el uso de este sistema. Cualquier servicio de revision o consulta de abogados, si se ofrece, se proporciona por separado y solo a solicitud expresa del usuario.'
+        : 'Multiservicios 360 is not a law firm and does not provide legal advice. Multiservicios 360 does not prepare legal documents on behalf of users. Multiservicios 360 provides access to software tools that allow users to create their own documents based solely on information and selections provided by the user.\n\nNo attorney-client relationship is created by the use of this system. Any attorney review or consultation services, if offered, are provided separately and only upon the user\'s express request.';
+      y = wrap(noLegalAdvice, m, y, cw, 5);
+      y += 10;
+
+      // USER RESPONSIBILITY Section
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(lang === 'es' ? 'RESPONSABILIDAD DEL USUARIO' : 'USER RESPONSIBILITY', m, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const userResp = lang === 'es'
+        ? 'El usuario es el unico responsable de la precision, integridad y efecto legal de este documento. Multiservicios 360 no revisa, valida ni aprueba el contenido de los documentos generados por el usuario a menos que se solicite expresamente la revision de un abogado.'
+        : 'The user is solely responsible for the accuracy, completeness, and legal effect of this document. Multiservicios 360 does not review, validate, or approve the substance of user-generated documents unless attorney review is expressly requested.';
+      y = wrap(userResp, m, y, cw, 5);
+      y += 10;
+
+      // ELECTRONIC SIGNATURE INTENT Section
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(lang === 'es' ? 'INTENCION DE FIRMA ELECTRONICA' : 'ELECTRONIC SIGNATURE INTENT', m, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const eSignIntent = lang === 'es'
+        ? 'Al firmar a continuacion, confirmo que estoy firmando este reconocimiento electronicamente y que mi firma electronica tiene la intencion de tener el mismo efecto legal que una firma manuscrita.'
+        : 'By signing below, I confirm that I am signing this acknowledgment electronically and that my electronic signature is intended to have the same legal effect as a handwritten signature.';
+      y = wrap(eSignIntent, m, y, cw, 5);
+      y += 10;
+
+      // USER ACKNOWLEDGMENT Section
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(lang === 'es' ? 'RECONOCIMIENTO DEL USUARIO' : 'USER ACKNOWLEDGMENT', m, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const userAck = lang === 'es'
+        ? `Al firmar a continuacion, reconozco y acepto que:
+
+• Yo cree este documento por mi cuenta utilizando herramientas de software proporcionadas por Multiservicios 360;
+
+• No se me proporciono asesoria legal ni servicios de preparacion de documentos;
+
+• Soy responsable de toda la informacion contenida en este documento; y
+
+• Entiendo que este documento puede tener consecuencias legales significativas.`
+        : `By signing below, I acknowledge and agree that:
+
+• I created this document myself using software tools provided by Multiservicios 360;
+
+• No legal advice or document preparation services were provided to me;
+
+• I am responsible for all information contained in this document; and
+
+• I understand that this document may have significant legal consequences.`;
+      y = wrap(userAck, m, y, cw, 5);
+      y += 20;
+
+      // Signature lines
+      doc.text(lang === 'es' ? 'Firma del Usuario: ' : 'User Signature: ', m, y);
+      doc.line(m + 40, y, m + 140, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Nombre Impreso: ' : 'Printed Name: ', m, y);
+      doc.line(m + 40, y, m + 140, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Fecha: ' : 'Date: ', m, y);
+      doc.line(m + 20, y, m + 80, y);
+
+      // ============================================
       // FOOTER ON ALL PAGES
       // ============================================
       const pc = doc.internal.getNumberOfPages();
@@ -945,6 +1165,78 @@ If your exercise of authority in any way violates the law or is inconsistent wit
 
         <p style={{ color: '#6B7280', marginBottom: '32px' }}>{t.thankYou}</p>
 
+        {/* Execution Date Input - Required before download */}
+        <div style={{ 
+          backgroundColor: '#FEF3C7', 
+          border: '2px solid #F59E0B', 
+          borderRadius: '8px', 
+          padding: '20px', 
+          marginBottom: '24px',
+          textAlign: 'left'
+        }}>
+          <label style={{ 
+            display: 'block', 
+            fontSize: '14px', 
+            fontWeight: '600', 
+            color: '#92400E',
+            marginBottom: '8px'
+          }}>
+            {language === 'es' ? 'Fecha de Ejecución (Requerida)' : 'Execution Date (Required)'} *
+          </label>
+          <p style={{ 
+            fontSize: '12px', 
+            color: '#B45309', 
+            marginBottom: '12px',
+            margin: '0 0 12px 0'
+          }}>
+            {language === 'es' 
+              ? 'Ingrese la fecha en que firmará este documento (MM/DD/AAAA)' 
+              : 'Enter the date you will sign this document (MM/DD/YYYY)'}
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <input
+              type="text"
+              value={executionDate}
+              onChange={(e) => {
+                const formatted = formatDateInput(e.target.value);
+                setExecutionDate(formatted);
+                if (dateError) setDateError('');
+              }}
+              placeholder="MM/DD/YYYY"
+              maxLength={10}
+              style={{
+                padding: '12px 16px',
+                fontSize: '16px',
+                border: dateError ? '2px solid #DC2626' : '2px solid #D1D5DB',
+                borderRadius: '6px',
+                width: '160px',
+                fontFamily: 'monospace'
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => setExecutionDate(getLADate())}
+              style={{
+                padding: '12px 16px',
+                fontSize: '12px',
+                backgroundColor: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {language === 'es' ? 'Usar Fecha de Hoy' : "Use Today's Date"}
+            </button>
+          </div>
+          {dateError && (
+            <p style={{ color: '#DC2626', fontSize: '12px', marginTop: '8px', margin: '8px 0 0 0' }}>
+              {dateError}
+            </p>
+          )}
+        </div>
+
         {/* Download Buttons */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
           <button onClick={() => generatePDF(language === 'es')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
@@ -1019,5 +1311,4 @@ export default function PaymentSuccessPage() {
       <SuccessContent />
     </Suspense>
   );
-}// Force redeploy 01/21/2026 16:18:56
-
+}

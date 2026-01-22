@@ -760,83 +760,122 @@ If you do not faithfully perform your duties under the law and under the power o
     doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
 
     // ============================================
-    // DOCUMENT PREPARER STATEMENT
+    // SOFTWARE PLATFORM DISCLOSURE & USER ACKNOWLEDGMENT
     // ============================================
     doc.addPage();
     y = 20;
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'DECLARACION DEL PREPARADOR DEL DOCUMENTO' : 'DOCUMENT PREPARER STATEMENT', pw/2, y, {align: 'center'});
+    doc.text(lang === 'es' ? 'DIVULGACION DE PLATAFORMA DE SOFTWARE' : 'SOFTWARE PLATFORM DISCLOSURE', pw/2, y, {align: 'center'});
+    y += 6;
+    doc.text(lang === 'es' ? 'Y RECONOCIMIENTO DEL USUARIO' : '& USER ACKNOWLEDGMENT', pw/2, y, {align: 'center'});
     y += 6;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'italic');
-    doc.text(lang === 'es' ? '(Codigo de Negocios y Profesiones de California § 6400-6415)' : '(California Business & Professions Code § 6400-6415)', pw/2, y, {align: 'center'});
-    y += 12;
+    doc.text('(California)', pw/2, y, {align: 'center'});
+    y += 10;
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    const preparerStatement = lang === 'es'
-      ? `Este documento fue preparado por:
+    const platformIntro = lang === 'es'
+      ? 'Este documento fue creado por el usuario a traves de un sistema automatizado de generacion de documentos de autoayuda proporcionado por Multiservicios 360.'
+      : 'This document was created by the user through an automated self-help document generation system provided by Multiservicios 360.';
+    y = wrap(platformIntro, m, y, cw, 5);
+    y += 8;
 
-Multi Servicios 360
-Servicio de Preparacion de Documentos Legales
-Telefono: 855.246.7274
-Sitio Web: www.multiservicios360.net
-
-DECLARACION DE NO-ABOGADO: Multi Servicios 360 NO es un bufete de abogados. No somos abogados y no podemos proporcionar asesoramiento legal. Este documento fue preparado a solicitud del cliente utilizando informacion proporcionada por el cliente. El cliente ha sido informado de que este documento puede tener consecuencias legales significativas y se le ha recomendado que consulte con un abogado antes de firmarlo.
-
-AVISO DE TARIFA: La tarifa cobrada por la preparacion de este documento es por servicios de mecanografia y procesamiento de datos unicamente, y no por asesoramiento legal o representacion legal.
-
-REGISTRO DEL CONDADO: Este preparador de documentos esta registrado en el(los) Condado(s) de California donde se realizan los servicios, segun lo requiere la ley.`
-      : `This document was prepared by:
-
-Multi Servicios 360
-Legal Document Preparation Service
-Phone: 855.246.7274
-Website: www.multiservicios360.net
-
-NON-ATTORNEY STATEMENT: Multi Servicios 360 is NOT a law firm. We are not attorneys and cannot provide legal advice. This document was prepared at the client's request using information provided by the client. The client has been advised that this document may have significant legal consequences and has been encouraged to consult with an attorney before signing.
-
-FEE DISCLOSURE: The fee charged for the preparation of this document is for typing and data processing services only, and not for legal advice or legal representation.
-
-COUNTY REGISTRATION: This document preparer is registered in the California County(ies) where services are performed, as required by law.`;
-
-    y = wrap(preparerStatement, m, y, cw, 5);
-    y += 15;
-
-    // Preparer signature line
+    // NO LEGAL ADVICE Section
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'FIRMA DEL PREPARADOR:' : 'PREPARER SIGNATURE:', m, y);
-    y += 12;
-    doc.setFont('helvetica', 'normal');
-    doc.line(m, y, m + 100, y);
-    y += 5;
-    doc.text('Multi Servicios 360', m, y);
+    doc.setFontSize(11);
+    doc.text(lang === 'es' ? 'SIN ASESORIA LEGAL / SIN PREPARACION DE DOCUMENTOS' : 'NO LEGAL ADVICE / NO DOCUMENT PREPARATION', m, y);
     y += 6;
-    doc.text(lang === 'es' ? 'Preparador de Documentos Legales' : 'Legal Document Preparer', m, y);
-    y += 12;
-    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + new Date().toLocaleDateString(), m, y);
-    y += 20;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const noLegalAdvice = lang === 'es'
+      ? 'Multiservicios 360 no es un bufete de abogados y no proporciona asesoramiento legal. Multiservicios 360 no prepara documentos legales en nombre de los usuarios. Multiservicios 360 proporciona acceso a herramientas de software que permiten a los usuarios crear sus propios documentos basados unicamente en la informacion y selecciones proporcionadas por el usuario.\n\nNo se crea ninguna relacion abogado-cliente mediante el uso de este sistema. Cualquier servicio de revision o consulta de abogados, si se ofrece, se proporciona por separado y solo a solicitud expresa del usuario.'
+      : 'Multiservicios 360 is not a law firm and does not provide legal advice. Multiservicios 360 does not prepare legal documents on behalf of users. Multiservicios 360 provides access to software tools that allow users to create their own documents based solely on information and selections provided by the user.\n\nNo attorney-client relationship is created by the use of this system. Any attorney review or consultation services, if offered, are provided separately and only upon the user\'s express request.';
+    y = wrap(noLegalAdvice, m, y, cw, 5);
+    y += 8;
 
-    // Client acknowledgment
+    // USER RESPONSIBILITY Section
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'RECONOCIMIENTO DEL CLIENTE:' : 'CLIENT ACKNOWLEDGMENT:', m, y);
+    doc.setFontSize(11);
+    doc.text(lang === 'es' ? 'RESPONSABILIDAD DEL USUARIO' : 'USER RESPONSIBILITY', m, y);
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const userResp = lang === 'es'
+      ? 'El usuario es el unico responsable de la exactitud, integridad y efecto legal de este documento. Multiservicios 360 no revisa, valida ni aprueba el contenido de los documentos generados por el usuario a menos que se solicite expresamente una revision de abogado.'
+      : 'The user is solely responsible for the accuracy, completeness, and legal effect of this document. Multiservicios 360 does not review, validate, or approve the substance of user-generated documents unless attorney review is expressly requested.';
+    y = wrap(userResp, m, y, cw, 5);
+    y += 8;
+
+    // ELECTRONIC SIGNATURE INTENT Section
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(lang === 'es' ? 'INTENCION DE FIRMA ELECTRONICA' : 'ELECTRONIC SIGNATURE INTENT', m, y);
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const eSignIntent = lang === 'es'
+      ? 'Al firmar a continuacion, confirmo que estoy firmando este reconocimiento electronicamente y que mi firma electronica tiene la intencion de tener el mismo efecto legal que una firma manuscrita.'
+      : 'By signing below, I confirm that I am signing this acknowledgment electronically and that my electronic signature is intended to have the same legal effect as a handwritten signature.';
+    y = wrap(eSignIntent, m, y, cw, 5);
+    y += 10;
+
+    // USER ACKNOWLEDGMENT Section
+    y = newPage(y, 80);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(lang === 'es' ? 'RECONOCIMIENTO DEL USUARIO' : 'USER ACKNOWLEDGMENT', m, y);
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const userAckIntro = lang === 'es'
+      ? 'Al firmar a continuacion, reconozco y acepto que:'
+      : 'By signing below, I acknowledge and agree that:';
+    y = wrap(userAckIntro, m, y, cw, 5);
+    y += 4;
+
+    const ackPoints = lang === 'es'
+      ? [
+          'Yo mismo(a) cree este documento usando herramientas de software proporcionadas por Multiservicios 360;',
+          'No se me proporciono asesoria legal ni servicios de preparacion de documentos;',
+          'Soy responsable de toda la informacion contenida en este documento; y',
+          'Entiendo que este documento puede tener consecuencias legales significativas.'
+        ]
+      : [
+          'I created this document myself using software tools provided by Multiservicios 360;',
+          'No legal advice or document preparation services were provided to me;',
+          'I am responsible for all information contained in this document; and',
+          'I understand that this document may have significant legal consequences.'
+        ];
+    
+    ackPoints.forEach((point, idx) => {
+      doc.text(`• ${point}`, m + 5, y);
+      y += 7;
+    });
+    y += 10;
+
+    // Signature lines
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'Firma del Usuario:' : 'User Signature:', m, y);
     y += 8;
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    const clientAck = lang === 'es'
-      ? 'Yo, el Poderdante, reconozco que he leido y entendido la Declaracion de No-Abogado anterior. Entiendo que Multi Servicios 360 no es un bufete de abogados y no me ha proporcionado asesoramiento legal. He proporcionado toda la informacion contenida en este documento y soy responsable de su exactitud.'
-      : 'I, the Principal, acknowledge that I have read and understood the Non-Attorney Statement above. I understand that Multi Servicios 360 is not a law firm and has not provided me with legal advice. I have provided all information contained in this document and am responsible for its accuracy.';
-    y = wrap(clientAck, m, y, cw, 4);
+    doc.line(m, y, m + 120, y);
     y += 12;
 
-    doc.line(m, y, m + 100, y);
-    y += 5;
-    doc.text(d.principal_name || '________________________', m, y);
-    y += 5;
-    doc.text(lang === 'es' ? 'Firma del Poderdante' : 'Principal Signature', m, y);
-    y += 10;
-    doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.text(d.principal_name || '________________________________', m, y);
+    y += 12;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.text('________________________________', m, y);
 
     // ============================================
     // FOOTER ON ALL PAGES
