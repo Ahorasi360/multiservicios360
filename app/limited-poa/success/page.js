@@ -44,7 +44,7 @@ function SuccessContent() {
     const fetchMatterData = async () => {
       if (matterId) {
         try {
-          const response = await fetch(`/api/poa/matters/${matterId}`);
+          const response = await fetch(`/api/limited-poa/matters/${matterId}`);
           const data = await response.json();
           if (data.success) {
             setMatterData(data.matter);
