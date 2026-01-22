@@ -872,7 +872,7 @@ If your exercise of authority in any way violates the law or is inconsistent wit
       // FETCH AND APPEND OFFICIAL CA NOTARY FORM
       // ============================================
       try {
-        const notaryResponse = await fetch('https://notary.cdn.sos.ca.gov/forms/notary-ack.pdf');
+        const notaryResponse = await fetch('/api/notary-form');
         const notaryFormBytes = await notaryResponse.arrayBuffer();
         const notaryPdf = await PDFDocument.load(notaryFormBytes);
         const pdfDocFromJsPDF = await PDFDocument.load(doc.output('arraybuffer'));
@@ -893,8 +893,8 @@ If your exercise of authority in any way violates the law or is inconsistent wit
         // Fallback - just save the document without the notary form and show alert
         doc.save(`POA_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`);
         alert(lang === 'es' 
-          ? 'Documento generado. Por favor descargue el formulario notarial de: https://notary.cdn.sos.ca.gov/forms/notary-ack.pdf' 
-          : 'Document generated. Please download notary form from: https://notary.cdn.sos.ca.gov/forms/notary-ack.pdf');
+          ? 'Documento generado. Por favor descargue el formulario notarial de: /api/notary-form' 
+          : 'Document generated. Please download notary form from: /api/notary-form');
       }
 
     } catch (error) {
