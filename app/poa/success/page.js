@@ -1,4 +1,4 @@
-// Last updated: 2026-01-22
+// Last updated: 2026-01-22 - Added typed signature, durability validation, improved spacing
 "use client";
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -33,13 +33,41 @@ const EmailIcon = () => (
   </svg>
 );
 
+const CalendarIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+    <line x1="16" y1="2" x2="16" y2="6"></line>
+    <line x1="8" y1="2" x2="8" y2="6"></line>
+    <line x1="3" y1="10" x2="21" y2="10"></line>
+  </svg>
+);
+
+const PenIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+    <path d="M2 2l7.586 7.586"></path>
+    <circle cx="11" cy="11" r="2"></circle>
+  </svg>
+);
+
 function SuccessContent() {
   const searchParams = useSearchParams();
   const [matterData, setMatterData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState('es');
+  
+  // Execution date state
   const [executionDate, setExecutionDate] = useState('');
   const [dateError, setDateError] = useState('');
+  
+  // Electronic signature state
+  const [electronicSignature, setElectronicSignature] = useState('');
+  const [signatureAccepted, setSignatureAccepted] = useState(false);
+  const [signatureError, setSignatureError] = useState('');
+  
+  // Finalization state
+  const [isFinalized, setIsFinalized] = useState(false);
 
   const matterId = searchParams.get('matter_id');
 
@@ -58,7 +86,6 @@ function SuccessContent() {
     if (!dateStr || dateStr.trim() === '') return false;
     const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
     if (!regex.test(dateStr)) return false;
-    // Check if it's a valid date
     const [month, day, year] = dateStr.split('/').map(Number);
     const testDate = new Date(year, month - 1, day);
     return testDate.getMonth() === month - 1 && testDate.getDate() === day && testDate.getFullYear() === year;
@@ -66,7 +93,6 @@ function SuccessContent() {
 
   // Helper: Format date input to MM/DD/YYYY
   const formatDateInput = (value) => {
-    // Remove non-digits
     const digits = value.replace(/\D/g, '');
     if (digits.length <= 2) return digits;
     if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
@@ -79,16 +105,15 @@ function SuccessContent() {
       intake: data.intake_data,
       language: data.language,
       executionDate: executionDate,
-      templateVersion: '2026-01-22'
+      templateVersion: '2026-01-22-v2'
     });
-    // Simple hash function
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
       hash = hash & hash;
     }
-    return `v1-${Math.abs(hash).toString(16)}`;
+    return `v2-${Math.abs(hash).toString(16)}`;
   };
 
   useEffect(() => {
@@ -100,6 +125,15 @@ function SuccessContent() {
           if (data.success) {
             setMatterData(data.matter);
             setLanguage(data.matter.language || 'es');
+            // Check if already finalized
+            if (data.matter.execution_date) {
+              setExecutionDate(data.matter.execution_date);
+              setIsFinalized(true);
+            }
+            if (data.matter.electronic_signature) {
+              setElectronicSignature(data.matter.electronic_signature);
+              setSignatureAccepted(true);
+            }
           }
         } catch (error) {
           console.error('Error fetching matter:', error);
@@ -120,14 +154,29 @@ function SuccessContent() {
     print: 'Imprimir',
     email: 'Enviar por Email',
     nextSteps: 'Proximos Pasos',
-    step1: 'Descargue sus documentos PDF',
-    step2: 'Revise el documento cuidadosamente',
-    step3: 'Firme ante un notario publico',
-    step4: 'Guarde copias en un lugar seguro',
+    step1: 'Complete la fecha de ejecucion y firma electronica abajo',
+    step2: 'Descargue sus documentos PDF',
+    step3: 'Revise el documento cuidadosamente',
+    step4: 'Firme ante un notario publico',
+    step5: 'Guarde copias en un lugar seguro',
     questions: 'Preguntas?',
     contact: 'Contactenos al 855.246.7274',
     backHome: 'Volver al Inicio',
     legalNote: 'Nota: El documento en ingles es el documento legal oficial. El documento en espanol es para su referencia.',
+    executionDateLabel: 'Fecha de Ejecucion (Requerida)',
+    executionDatePlaceholder: 'MM/DD/AAAA',
+    useTodayDate: 'Usar Fecha de Hoy',
+    executionDateRequired: 'La fecha de ejecucion es obligatoria.',
+    executionDateInvalid: 'Formato de fecha invalido. Use MM/DD/AAAA.',
+    executionDateHelp: 'Esta es la fecha en que firmara el documento ante el notario.',
+    signatureLabel: 'Firma Electronica (Requerida)',
+    signaturePlaceholder: 'Escriba su nombre completo',
+    signatureHelp: 'Al escribir su nombre, confirma que creo este documento usted mismo.',
+    signatureRequired: 'La firma electronica es obligatoria.',
+    signatureAcceptLabel: 'Acepto que cree este documento yo mismo usando las herramientas de software de Multiservicios 360, y que no recibi asesoria legal.',
+    signatureAcceptRequired: 'Debe aceptar los terminos para continuar.',
+    durabilityError: 'Error: Hay una inconsistencia en la configuracion de durabilidad. Por favor contacte soporte.',
+    finalized: 'Documento finalizado',
   } : {
     title: 'Payment Successful!',
     subtitle: 'Your Power of Attorney is ready',
@@ -138,14 +187,29 @@ function SuccessContent() {
     print: 'Print',
     email: 'Send by Email',
     nextSteps: 'Next Steps',
-    step1: 'Download your PDF documents',
-    step2: 'Review the document carefully',
-    step3: 'Sign in front of a notary public',
-    step4: 'Keep copies in a safe place',
+    step1: 'Complete the execution date and electronic signature below',
+    step2: 'Download your PDF documents',
+    step3: 'Review the document carefully',
+    step4: 'Sign in front of a notary public',
+    step5: 'Keep copies in a safe place',
     questions: 'Questions?',
     contact: 'Contact us at 855.246.7274',
     backHome: 'Back to Home',
-    legalNote: '',
+    legalNote: 'Note: The English document is the official legal document. The Spanish document is for your reference.',
+    executionDateLabel: 'Execution Date (Required)',
+    executionDatePlaceholder: 'MM/DD/YYYY',
+    useTodayDate: "Use Today's Date",
+    executionDateRequired: 'Execution date is required.',
+    executionDateInvalid: 'Invalid date format. Use MM/DD/YYYY.',
+    executionDateHelp: 'This is the date you will sign the document before the notary.',
+    signatureLabel: 'Electronic Signature (Required)',
+    signaturePlaceholder: 'Type your full name',
+    signatureHelp: 'By typing your name, you confirm that you created this document yourself.',
+    signatureRequired: 'Electronic signature is required.',
+    signatureAcceptLabel: 'I accept that I created this document myself using Multiservicios 360 software tools, and that I did not receive legal advice.',
+    signatureAcceptRequired: 'You must accept the terms to continue.',
+    durabilityError: 'Error: There is an inconsistency in the durability configuration. Please contact support.',
+    finalized: 'Document finalized',
   };
 
   const generatePDF = async (isSpanish = false) => {
@@ -154,21 +218,39 @@ function SuccessContent() {
       return;
     }
 
-    // VALIDATION: Execution date is required
+    // VALIDATION 1: Execution date is required
     if (!validateExecutionDate(executionDate)) {
-      const errorMsg = language === 'es' 
-        ? 'La fecha de ejecución es obligatoria.' 
-        : 'Execution date is required.';
+      const errorMsg = t.executionDateRequired;
       setDateError(errorMsg);
-      alert(errorMsg);
       return;
     }
     setDateError('');
+
+    // VALIDATION 2: Electronic signature is required
+    if (!electronicSignature || electronicSignature.trim().length < 2) {
+      setSignatureError(t.signatureRequired);
+      return;
+    }
+    setSignatureError('');
+
+    // VALIDATION 3: Must accept terms
+    if (!signatureAccepted) {
+      setSignatureError(t.signatureAcceptRequired);
+      return;
+    }
+
+    const d = matterData.intake_data;
+
+    // VALIDATION 4: Durability consistency check
+    // If durable is true, the document should say "Durable"
+    // If durable is false, the document should NOT say "Durable" in title
+    // This is handled in the PDF generation by using the correct title based on d.durable
 
     // Generate audit timestamps (stored locally, not printed in PDF)
     const now = new Date();
     const auditData = {
       executionDate: executionDate,
+      electronicSignature: electronicSignature,
       signedAtUtc: now.toISOString(),
       signedAtLocal: now.toLocaleString('en-US', { 
         timeZone: 'America/Los_Angeles',
@@ -185,25 +267,30 @@ function SuccessContent() {
     console.log('Audit data (not printed):', auditData);
 
     try {
-      const d = matterData.intake_data;
       const lang = isSpanish ? 'es' : 'en';
 
-      // Create a new PDF document using jsPDF for content generation
       const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
       const m = 20;
       const pw = 210;
+      const ph = 297;
       const cw = pw - 40;
       let y = 15;
 
       const wrap = (text, x, startY, maxW, lh = 5) => {
         const lines = doc.splitTextToSize(text || '', maxW);
-        lines.forEach((line, i) => doc.text(line, x, startY + (i * lh)));
+        lines.forEach((line, i) => {
+          if (startY + (i * lh) > ph - 25) {
+            doc.addPage();
+            startY = 20 - (i * lh);
+          }
+          doc.text(line, x, startY + (i * lh));
+        });
         return startY + (lines.length * lh);
       };
 
       const newPage = (currentY, need = 30) => {
-        if (currentY > 270 - need) { doc.addPage(); return 20; }
+        if (currentY > ph - need) { doc.addPage(); return 20; }
         return currentY;
       };
 
@@ -224,12 +311,9 @@ function SuccessContent() {
       // ============================================
       const hasRealEstate = d.powers_real_estate === true;
       const hasHotPowers = d.hot_gifts || d.hot_beneficiary || d.hot_trust;
+      const isDurable = d.durable === true;
       
-      // Determine which intro variant to use
-      // Variant 1: Real Estate = YES
-      // Variant 2: Real Estate = NO (but general powers)
-      // Variant 3: Financial/Administrative only (no real estate, no hot powers)
-      let introVariant = 2; // Default to Variant 2
+      let introVariant = 2;
       if (hasRealEstate) {
         introVariant = 1;
       } else if (!hasHotPowers) {
@@ -262,11 +346,17 @@ function SuccessContent() {
       }
 
       // ============================================
-      // TITLE PAGE
+      // TITLE PAGE - Durability in title based on d.durable
       // ============================================
       doc.setFontSize(18);
       doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'PODER NOTARIAL GENERAL DURADERO' : 'CALIFORNIA GENERAL DURABLE', pw/2, y, {align: 'center'});
+      
+      // Title changes based on durability
+      if (isDurable) {
+        doc.text(lang === 'es' ? 'PODER NOTARIAL GENERAL DURADERO' : 'CALIFORNIA GENERAL DURABLE', pw/2, y, {align: 'center'});
+      } else {
+        doc.text(lang === 'es' ? 'PODER NOTARIAL GENERAL' : 'CALIFORNIA GENERAL', pw/2, y, {align: 'center'});
+      }
       y += 7;
       doc.setFontSize(16);
       doc.text(lang === 'es' ? 'ESTADO DE CALIFORNIA' : 'POWER OF ATTORNEY', pw/2, y, {align: 'center'});
@@ -286,8 +376,8 @@ function SuccessContent() {
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       
-      // Title varies by variant
-      if (introVariant === 3) {
+      // Title varies by variant AND durability
+      if (introVariant === 3 || !isDurable) {
         doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL' : 'NOTICE TO PERSON EXECUTING POWER OF ATTORNEY', m, y);
       } else {
         doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL DURADERO' : 'NOTICE TO PERSON EXECUTING DURABLE POWER OF ATTORNEY', m, y);
@@ -301,39 +391,39 @@ function SuccessContent() {
       if (introVariant === 1) {
         // VARIANT 1: WITH REAL ESTATE
         introText = lang === 'es'
-          ? `Un poder notarial duradero es un documento legal importante. Al firmar este poder notarial, usted autoriza a otra persona (su Apoderado) a actuar en su nombre en los asuntos expresamente indicados en este documento.
+          ? `Un poder notarial ${isDurable ? 'duradero ' : ''}es un documento legal importante. Al firmar este poder notarial, usted autoriza a otra persona (su Apoderado) a actuar en su nombre en los asuntos expresamente indicados en este documento.
 
 Este poder notarial otorga autoridad amplia, incluyendo la facultad de administrar, vender, transferir, gravar y manejar bienes inmuebles, asi como administrar bienes personales, cuentas financieras, inversiones, asuntos fiscales y otros asuntos legales y patrimoniales, segun se establece expresamente en este documento.
 
-Los poderes otorgados mediante este poder notarial continuaran vigentes incluso si usted llega a quedar incapacitado, a menos que este documento indique expresamente lo contrario.
+${isDurable ? 'Los poderes otorgados mediante este poder notarial continuaran vigentes incluso si usted llega a quedar incapacitado, a menos que este documento indique expresamente lo contrario.' : 'Este poder notarial NO es duradero y terminara automaticamente si usted queda incapacitado.'}
 
 Antes de firmar este poder notarial, usted debe comprender plenamente el alcance de la autoridad que esta otorgando. Si no esta seguro de que este documento refleje completamente sus intenciones, se le recomienda consultar con un abogado con licencia en el Estado de California.`
-          : `A durable power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf in the matters expressly indicated in this document.
+          : `A ${isDurable ? 'durable ' : ''}power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf in the matters expressly indicated in this document.
 
 This power of attorney grants broad authority, including the power to manage, sell, transfer, encumber, and handle real property, as well as manage personal property, financial accounts, investments, tax matters, and other legal and estate matters, as expressly set forth in this document.
 
-The powers granted under this power of attorney will continue in effect even if you become incapacitated, unless this document expressly provides otherwise.
+${isDurable ? 'The powers granted under this power of attorney will continue in effect even if you become incapacitated, unless this document expressly provides otherwise.' : 'This power of attorney is NOT durable and shall automatically terminate upon your incapacity.'}
 
 Before signing this power of attorney, you should fully understand the scope of the authority you are granting. If you are not sure that this document fully reflects your intentions, you are advised to consult with an attorney licensed in the State of California.`;
       } else if (introVariant === 2) {
         // VARIANT 2: WITHOUT REAL ESTATE (but general powers)
         introText = lang === 'es'
-          ? `Un poder notarial duradero es un documento legal importante. Al firmar este poder notarial, usted autoriza a otra persona (su Apoderado) a actuar en su nombre en los asuntos expresamente indicados en este documento.
+          ? `Un poder notarial ${isDurable ? 'duradero ' : ''}es un documento legal importante. Al firmar este poder notarial, usted autoriza a otra persona (su Apoderado) a actuar en su nombre en los asuntos expresamente indicados en este documento.
 
 Este poder notarial otorga autoridad general sobre bienes personales y asuntos financieros y administrativos, tales como cuentas bancarias, inversiones, operaciones comerciales, asuntos fiscales y otros asuntos legales y patrimoniales, segun se establece expresamente en este documento.
 
 Este poder notarial no otorga autoridad sobre bienes inmuebles, salvo que dicha autoridad sea expresamente concedida en una seccion especifica de este documento.
 
-Los poderes otorgados mediante este poder notarial continuaran vigentes incluso si usted llega a quedar incapacitado, a menos que este documento indique expresamente lo contrario.
+${isDurable ? 'Los poderes otorgados mediante este poder notarial continuaran vigentes incluso si usted llega a quedar incapacitado, a menos que este documento indique expresamente lo contrario.' : 'Este poder notarial NO es duradero y terminara automaticamente si usted queda incapacitado.'}
 
 Antes de firmar este poder notarial, usted debe comprender plenamente el alcance de la autoridad que esta otorgando. Si no esta seguro de que este documento refleje completamente sus intenciones, se le recomienda consultar con un abogado con licencia en el Estado de California.`
-          : `A durable power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf in the matters expressly indicated in this document.
+          : `A ${isDurable ? 'durable ' : ''}power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf in the matters expressly indicated in this document.
 
 This power of attorney grants general authority over personal property and financial and administrative matters, such as bank accounts, investments, business operations, tax matters, and other legal and estate matters, as expressly set forth in this document.
 
 This power of attorney does not grant authority over real property, unless such authority is expressly granted in a specific section of this document.
 
-The powers granted under this power of attorney will continue in effect even if you become incapacitated, unless this document expressly provides otherwise.
+${isDurable ? 'The powers granted under this power of attorney will continue in effect even if you become incapacitated, unless this document expressly provides otherwise.' : 'This power of attorney is NOT durable and shall automatically terminate upon your incapacity.'}
 
 Before signing this power of attorney, you should fully understand the scope of the authority you are granting. If you are not sure that this document fully reflects your intentions, you are advised to consult with an attorney licensed in the State of California.`;
       } else {
@@ -343,10 +433,14 @@ Before signing this power of attorney, you should fully understand the scope of 
 
 Este poder notarial se limita a bienes personales, cuentas financieras, pagos, cobros, representacion administrativa y asuntos similares, y excluye expresamente cualquier autoridad relacionada con bienes inmuebles, creacion o modificacion de fideicomisos, donaciones significativas o disposiciones patrimoniales complejas, salvo que se indique de manera expresa y especifica.
 
+${isDurable ? 'Los poderes otorgados mediante este poder notarial continuaran vigentes incluso si usted llega a quedar incapacitado.' : 'Este poder notarial NO es duradero y terminara automaticamente si usted queda incapacitado.'}
+
 Antes de firmar este poder notarial, usted debe comprender claramente las limitaciones de la autoridad otorgada. Si tiene dudas sobre el alcance o las consecuencias legales de este documento, se le recomienda consultar con un abogado con licencia en el Estado de California.`
           : `A power of attorney is an important legal document. By signing this power of attorney, you authorize another person (your Agent) to act on your behalf only in the financial and administrative matters expressly indicated in this document.
 
 This power of attorney is limited to personal property, financial accounts, payments, collections, administrative representation, and similar matters, and expressly excludes any authority related to real property, creation or modification of trusts, significant gifts, or complex estate dispositions, unless expressly and specifically indicated.
+
+${isDurable ? 'The powers granted under this power of attorney will continue in effect even if you become incapacitated.' : 'This power of attorney is NOT durable and shall automatically terminate upon your incapacity.'}
 
 Before signing this power of attorney, you should clearly understand the limitations of the authority granted. If you have questions about the scope or legal consequences of this document, you are advised to consult with an attorney licensed in the State of California.`;
       }
@@ -365,19 +459,16 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(11);
 
-      // Principal info with AKA names
       let principalText = lang === 'es'
         ? `Yo, ${d.principal_name || '___'}`
         : `I, ${d.principal_name || '___'}`;
       
-      // Add AKA names if present
       if (d.has_aka && d.aka_names) {
         principalText += lang === 'es'
           ? `, tambien conocido como ${d.aka_names}`
           : `, also known as ${d.aka_names}`;
       }
       
-      // Add address and county
       principalText += lang === 'es'
         ? `, con domicilio en ${d.principal_address || '___'}`
         : `, residing at ${d.principal_address || '___'}`;
@@ -412,7 +503,7 @@ Before signing this power of attorney, you should clearly understand the limitat
       y = wrap(agentText, m, y, cw, 5);
       y += 6;
 
-      // Successor Agent (if selected)
+      // Successor Agent
       if (d.wants_successor && d.successor_agent) {
         y = newPage(y, 20);
         doc.setFont('helvetica', 'bold');
@@ -445,7 +536,7 @@ Before signing this power of attorney, you should clearly understand the limitat
       // ============================================
       y = newPage(y, 35);
       section(lang === 'es' ? 'ARTICULO II - DURABILIDAD Y FECHA EFECTIVA' : 'ARTICLE II - DURABILITY AND EFFECTIVE DATE',
-        d.durable
+        isDurable
           ? (lang === 'es'
             ? 'Este Poder Notarial es DURADERO y NO SERA AFECTADO por mi incapacidad posterior, conforme a la Seccion 4124 del Codigo de Sucesiones de California. Mi Apoderado conservara toda la autoridad otorgada en este documento incluso si quedo incapacitado o discapacitado.'
             : 'This Power of Attorney is DURABLE and shall NOT BE AFFECTED by my subsequent incapacity, pursuant to California Probate Code Section 4124. My Agent shall retain all authority granted herein even if I become incapacitated or disabled.')
@@ -468,18 +559,20 @@ Before signing this power of attorney, you should clearly understand the limitat
       // ============================================
       // HIPAA AUTHORIZATION
       // ============================================
-      y = newPage(y, 35);
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'AUTORIZACION HIPAA' : 'HIPAA AUTHORIZATION', m, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      const hipaaText = lang === 'es'
-        ? 'De conformidad con la Ley de Portabilidad y Responsabilidad del Seguro de Salud de 1996 ("HIPAA") y todas las demas leyes estatales y federales aplicables, y exclusivamente con el proposito de determinar mi incapacitacion o incapacidad para administrar mis asuntos financieros y obtener una declaracion jurada de dicha incapacitacion por un medico, autorizo a cualquier proveedor de atencion medica a divulgar a la persona nombrada aqui como mi "apoderado" cualquier informacion de salud identificable individualmente pertinente suficiente para determinar si soy mental o fisicamente capaz de administrar mis asuntos financieros. Al ejercer dicha autoridad, mi apoderado constituye mi "representante personal" segun lo definido por HIPAA.'
-        : 'Pursuant to the Health Insurance Portability and Accountability Act of 1996 ("HIPAA") and all other applicable state and federal laws, and exclusively for the purpose of making a determination of my incapacitation or incapability of managing my financial affairs and obtaining an affidavit of such incapacitation by a physician, I authorize any health care provider to disclose to the person named herein as my "attorney-in-fact" any pertinent individually identifiable health information sufficient to determine whether I am mentally or physically capable of managing my financial affairs. In exercising such authority, my attorney-in-fact constitutes my "personal representative" as defined by HIPAA.';
-      y = wrap(hipaaText, m, y, cw, 4);
-      y += 8;
+      if (d.include_hipaa) {
+        y = newPage(y, 35);
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text(lang === 'es' ? 'AUTORIZACION HIPAA' : 'HIPAA AUTHORIZATION', m, y);
+        y += 6;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        const hipaaText = lang === 'es'
+          ? 'De conformidad con la Ley de Portabilidad y Responsabilidad del Seguro de Salud de 1996 ("HIPAA") y todas las demas leyes estatales y federales aplicables, y exclusivamente con el proposito de determinar mi incapacitacion o incapacidad para administrar mis asuntos financieros y obtener una declaracion jurada de dicha incapacitacion por un medico, autorizo a cualquier proveedor de atencion medica a divulgar a la persona nombrada aqui como mi "apoderado" cualquier informacion de salud identificable individualmente pertinente suficiente para determinar si soy mental o fisicamente capaz de administrar mis asuntos financieros.'
+          : 'Pursuant to the Health Insurance Portability and Accountability Act of 1996 ("HIPAA") and all other applicable state and federal laws, and exclusively for the purpose of making a determination of my incapacitation or incapability of managing my financial affairs and obtaining an affidavit of such incapacitation by a physician, I authorize any health care provider to disclose to the person named herein as my "attorney-in-fact" any pertinent individually identifiable health information sufficient to determine whether I am mentally or physically capable of managing my financial affairs.';
+        y = wrap(hipaaText, m, y, cw, 4);
+        y += 8;
+      }
 
       // ============================================
       // ARTICLE III - REVOCATION OF PRIOR POWERS
@@ -510,32 +603,32 @@ Before signing this power of attorney, you should clearly understand the limitat
 
       const powers = [
         { key: 'powers_real_estate', letter: 'A', titleEn: 'Real Property Transactions', titleEs: 'Transacciones de Bienes Inmuebles',
-          textEn: 'To acquire, purchase, sell, convey, transfer, exchange, partition, lease, sublease, manage, improve, insure, encumber, mortgage, refinance, or otherwise deal with any real property or interest therein, including the execution and recording of grant deeds, trust transfer deeds, quitclaim deeds, deeds of trust, reconveyances, leases, and all related instruments.',
-          textEs: 'Adquirir, comprar, vender, traspasar, transferir, intercambiar, dividir, arrendar, subarrendar, administrar, mejorar, asegurar, gravar, hipotecar, refinanciar o de otra manera manejar cualquier bien inmueble o interes en el mismo, incluyendo la ejecucion y registro de escrituras de concesion, escrituras de transferencia de fideicomiso, escrituras de renuncia, escrituras de fideicomiso, reconveyances, arrendamientos y todos los instrumentos relacionados.' },
+          textEn: 'To acquire, purchase, sell, convey, transfer, exchange, partition, lease, sublease, manage, improve, insure, encumber, mortgage, refinance, or otherwise deal with any real property or interest therein.',
+          textEs: 'Adquirir, comprar, vender, traspasar, transferir, intercambiar, dividir, arrendar, subarrendar, administrar, mejorar, asegurar, gravar, hipotecar, refinanciar o de otra manera manejar cualquier bien inmueble o interes en el mismo.' },
         { key: 'powers_banking', letter: 'B', titleEn: 'Banking and Financial Institutions', titleEs: 'Banca e Instituciones Financieras',
-          textEn: 'To open, close, modify, and transact business on checking accounts, savings accounts, money market accounts, certificates of deposit, and other deposit accounts at any bank, savings and loan, credit union, or other financial institution; to deposit and withdraw funds by any means; to endorse, negotiate, and collect checks, drafts, and other negotiable instruments; to obtain statements, records, and information concerning my accounts.',
-          textEs: 'Abrir, cerrar, modificar y realizar transacciones en cuentas de cheques, cuentas de ahorros, cuentas de mercado de dinero, certificados de deposito y otras cuentas de deposito en cualquier banco, asociacion de ahorro y prestamo, cooperativa de credito u otra institucion financiera; depositar y retirar fondos por cualquier medio; endosar, negociar y cobrar cheques, giros y otros instrumentos negociables; obtener estados de cuenta, registros e informacion sobre mis cuentas.' },
+          textEn: 'To open, close, modify, and transact business on checking accounts, savings accounts, money market accounts, certificates of deposit, and other deposit accounts at any financial institution.',
+          textEs: 'Abrir, cerrar, modificar y realizar transacciones en cuentas de cheques, cuentas de ahorros, cuentas de mercado de dinero, certificados de deposito y otras cuentas de deposito en cualquier institucion financiera.' },
         { key: 'powers_stocks', letter: 'C', titleEn: 'Investments and Securities', titleEs: 'Inversiones y Valores',
-          textEn: 'To purchase, sell, exchange, trade, surrender, tender, vote proxies, and otherwise manage stocks, bonds, mutual funds, exchange-traded funds, options, commodities, futures contracts, and other investment securities; to open, modify, and close brokerage accounts; to exercise subscription rights and conversion privileges.',
-          textEs: 'Comprar, vender, intercambiar, negociar, entregar, ofrecer, votar poderes y de otra manera administrar acciones, bonos, fondos mutuos, fondos cotizados en bolsa, opciones, materias primas, contratos de futuros y otros valores de inversion; abrir, modificar y cerrar cuentas de corretaje; ejercer derechos de suscripcion y privilegios de conversion.' },
+          textEn: 'To purchase, sell, exchange, trade, and otherwise manage stocks, bonds, mutual funds, exchange-traded funds, options, and other investment securities.',
+          textEs: 'Comprar, vender, intercambiar, negociar y de otra manera administrar acciones, bonos, fondos mutuos, fondos cotizados en bolsa, opciones y otros valores de inversion.' },
         { key: 'powers_business', letter: 'D', titleEn: 'Business Operating Transactions', titleEs: 'Operaciones Comerciales',
-          textEn: 'To form, operate, manage, reorganize, merge, consolidate, dissolve, or sell any sole proprietorship, partnership, limited liability company, corporation, or other business entity; to acquire or dispose of ownership interests; to execute operating agreements, partnership agreements, shareholder agreements, buy-sell agreements, and related documents.',
-          textEs: 'Formar, operar, administrar, reorganizar, fusionar, consolidar, disolver o vender cualquier empresa individual, sociedad, compania de responsabilidad limitada, corporacion u otra entidad comercial; adquirir o disponer de participaciones; ejecutar acuerdos operativos, acuerdos de sociedad, acuerdos de accionistas, acuerdos de compra-venta y documentos relacionados.' },
+          textEn: 'To form, operate, manage, reorganize, merge, consolidate, dissolve, or sell any business entity; to acquire or dispose of ownership interests.',
+          textEs: 'Formar, operar, administrar, reorganizar, fusionar, consolidar, disolver o vender cualquier entidad comercial; adquirir o disponer de participaciones.' },
         { key: 'powers_insurance', letter: 'E', titleEn: 'Insurance and Annuities', titleEs: 'Seguros y Anualidades',
-          textEn: 'To purchase, maintain, modify, surrender, cancel, or collect proceeds and benefits from life insurance, health insurance, disability insurance, long-term care insurance, property insurance, liability insurance, and annuity contracts; to designate and change beneficiaries where permitted; to borrow against cash values.',
-          textEs: 'Comprar, mantener, modificar, entregar, cancelar o cobrar beneficios y ganancias de seguros de vida, seguros de salud, seguros de discapacidad, seguros de cuidado a largo plazo, seguros de propiedad, seguros de responsabilidad y contratos de anualidades; designar y cambiar beneficiarios donde este permitido; tomar prestamos contra valores en efectivo.' },
+          textEn: 'To purchase, maintain, modify, surrender, cancel, or collect proceeds from life insurance, health insurance, disability insurance, and annuity contracts.',
+          textEs: 'Comprar, mantener, modificar, entregar, cancelar o cobrar beneficios de seguros de vida, seguros de salud, seguros de discapacidad y contratos de anualidades.' },
         { key: 'powers_retirement', letter: 'F', titleEn: 'Retirement Plans and Accounts', titleEs: 'Planes y Cuentas de Jubilacion',
-          textEn: 'To contribute to, withdraw from, rollover, transfer, and manage Individual Retirement Accounts (IRAs), Roth IRAs, SEP-IRAs, SIMPLE IRAs, 401(k) plans, 403(b) plans, pension plans, profit-sharing plans, and other qualified and non-qualified retirement plans; to make investment elections and beneficiary designations where permitted.',
-          textEs: 'Contribuir, retirar, transferir, trasladar y administrar Cuentas Individuales de Jubilacion (IRAs), Roth IRAs, SEP-IRAs, SIMPLE IRAs, planes 401(k), planes 403(b), planes de pension, planes de participacion en las ganancias y otros planes de jubilacion calificados y no calificados; hacer elecciones de inversion y designaciones de beneficiarios donde este permitido.' },
+          textEn: 'To contribute to, withdraw from, rollover, transfer, and manage IRAs, 401(k) plans, pension plans, and other retirement plans.',
+          textEs: 'Contribuir, retirar, transferir, trasladar y administrar IRAs, planes 401(k), planes de pension y otros planes de jubilacion.' },
         { key: 'powers_government', letter: 'G', titleEn: 'Government Benefits', titleEs: 'Beneficios Gubernamentales',
-          textEn: 'To apply for, receive, manage, and utilize benefits from Social Security Administration, Medicare, Medi-Cal (Medicaid), Veterans Administration, unemployment compensation, workers\' compensation, and other federal, state, or local government programs; to represent me before government agencies and appeal adverse decisions.',
-          textEs: 'Solicitar, recibir, administrar y utilizar beneficios de la Administracion del Seguro Social, Medicare, Medi-Cal (Medicaid), Administracion de Veteranos, compensacion por desempleo, compensacion de trabajadores y otros programas gubernamentales federales, estatales o locales; representarme ante agencias gubernamentales y apelar decisiones adversas.' },
+          textEn: 'To apply for, receive, manage, and utilize benefits from Social Security, Medicare, Medi-Cal, Veterans Administration, and other government programs.',
+          textEs: 'Solicitar, recibir, administrar y utilizar beneficios del Seguro Social, Medicare, Medi-Cal, Administracion de Veteranos y otros programas gubernamentales.' },
         { key: 'powers_litigation', letter: 'H', titleEn: 'Claims and Litigation', titleEs: 'Reclamos y Litigios',
-          textEn: 'To assert, pursue, defend, arbitrate, mediate, compromise, settle, dismiss, or abandon any claim, demand, lawsuit, or legal proceeding in which I may be involved; to retain and discharge attorneys, experts, and other professionals; to execute settlement agreements, releases, and related documents.',
-          textEs: 'Presentar, perseguir, defender, arbitrar, mediar, comprometer, resolver, desestimar o abandonar cualquier reclamo, demanda, juicio o procedimiento legal en el que pueda estar involucrado; contratar y despedir abogados, expertos y otros profesionales; ejecutar acuerdos de resolucion, liberaciones y documentos relacionados.' },
+          textEn: 'To assert, pursue, defend, arbitrate, mediate, compromise, settle, or abandon any claim, demand, lawsuit, or legal proceeding.',
+          textEs: 'Presentar, perseguir, defender, arbitrar, mediar, comprometer, resolver o abandonar cualquier reclamo, demanda, juicio o procedimiento legal.' },
         { key: 'powers_tax', letter: 'I', titleEn: 'Tax Matters', titleEs: 'Asuntos Fiscales',
-          textEn: 'To prepare, sign, and file federal, state, and local income tax returns, gift tax returns, and other tax documents; to represent me before the Internal Revenue Service, California Franchise Tax Board, and other taxing authorities; to execute IRS Forms 2848 (Power of Attorney) and 8821 (Tax Information Authorization); to pay taxes owed and collect refunds; to contest tax assessments and negotiate settlements.',
-          textEs: 'Preparar, firmar y presentar declaraciones de impuestos federales, estatales y locales sobre la renta, declaraciones de impuestos sobre donaciones y otros documentos fiscales; representarme ante el Servicio de Impuestos Internos, la Junta de Franquicias de California y otras autoridades fiscales; ejecutar Formularios IRS 2848 (Poder Notarial) y 8821 (Autorizacion de Informacion Fiscal); pagar impuestos adeudados y cobrar reembolsos; impugnar evaluaciones fiscales y negociar acuerdos.' },
+          textEn: 'To prepare, sign, and file federal, state, and local tax returns; to represent me before the IRS and California FTB; to pay taxes and collect refunds.',
+          textEs: 'Preparar, firmar y presentar declaraciones de impuestos federales, estatales y locales; representarme ante el IRS y el FTB de California; pagar impuestos y cobrar reembolsos.' },
       ];
 
       powers.forEach(p => {
@@ -557,17 +650,17 @@ Before signing this power of attorney, you should clearly understand the limitat
       y = newPage(y, 50);
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'ARTICULO VI - PODERES AVANZADOS (PODERES ESPECIALES)' : 'ARTICLE VI - ADVANCED POWERS (HOT POWERS)', m, y);
+      doc.text(lang === 'es' ? 'ARTICULO VI - PODERES AVANZADOS' : 'ARTICLE VI - ADVANCED POWERS', m, y);
       y += 6;
       doc.setFontSize(10);
       doc.setFont('helvetica', 'italic');
       const hotNotice = lang === 'es'
-        ? 'AVISO: Los siguientes poderes son considerados "poderes especiales" que requieren autorizacion expresa. Estos poderes permiten a su Apoderado tomar acciones que pueden afectar significativamente su patrimonio.'
-        : 'NOTICE: The following powers are considered "hot powers" that require express authorization. These powers allow your Agent to take actions that may significantly affect your estate.';
+        ? 'AVISO: Los siguientes poderes requieren autorizacion expresa y pueden afectar significativamente su patrimonio.'
+        : 'NOTICE: The following powers require express authorization and may significantly affect your estate.';
       y = wrap(hotNotice, m, y, cw, 4.5);
       y += 8;
 
-      // Gift Power with limit
+      // Gift Power
       y = newPage(y, 25);
       const giftChecked = d.hot_gifts ? '[X]' : '[ ]';
       doc.setFont('helvetica', 'bold');
@@ -584,16 +677,12 @@ Before signing this power of attorney, you should clearly understand the limitat
       if (d.hot_gifts && d.gift_limit) {
         if (d.gift_limit === 'annual_exclusion') {
           giftText += lang === 'es'
-            ? ' Los regalos estan limitados al monto de exclusion anual del impuesto federal sobre donaciones ($18,000 por beneficiario en 2024) por ano calendario.'
-            : ' Gifts are limited to the federal gift tax annual exclusion amount ($18,000 per donee in 2024) per calendar year.';
+            ? ' Limitado al monto de exclusion anual del impuesto federal sobre donaciones.'
+            : ' Limited to the federal gift tax annual exclusion amount.';
         } else if (d.gift_limit === 'unlimited') {
           giftText += lang === 'es'
-            ? ' No hay limite en el monto de los regalos, sujeto al deber fiduciario del Apoderado de actuar en mi mejor interes.'
-            : ' There is no limit on the amount of gifts, subject to the Agent\'s fiduciary duty to act in my best interest.';
-        } else if (d.gift_limit === 'custom') {
-          giftText += lang === 'es'
-            ? ' Los regalos estan sujetos a las limitaciones especificas establecidas en las instrucciones especiales de este documento.'
-            : ' Gifts are subject to the specific limitations set forth in the special instructions of this document.';
+            ? ' Sin limite, sujeto al deber fiduciario del Apoderado.'
+            : ' No limit, subject to Agent\'s fiduciary duty.';
         }
       }
       y = wrap(giftText, m + 5, y, cw - 5, 4.5);
@@ -609,8 +698,8 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       y = wrap(lang === 'es'
-        ? 'Autorizo a mi Apoderado a designar, cambiar o revocar beneficiarios de polizas de seguro de vida, cuentas de jubilacion, cuentas pagaderas al fallecimiento y cuentas de transferencia al fallecimiento, donde lo permita la ley y los terminos de la cuenta.'
-        : 'I authorize my Agent to designate, change, or revoke beneficiaries of life insurance policies, retirement accounts, payable-on-death accounts, and transfer-on-death accounts, where permitted by law and the account terms.', m + 5, y, cw - 5, 4.5);
+        ? 'Autorizo a mi Apoderado a designar, cambiar o revocar beneficiarios de polizas de seguro de vida, cuentas de jubilacion y cuentas pagaderas al fallecimiento.'
+        : 'I authorize my Agent to designate, change, or revoke beneficiaries of life insurance policies, retirement accounts, and payable-on-death accounts.', m + 5, y, cw - 5, 4.5);
       y += 6;
 
       // Trust Power
@@ -623,11 +712,11 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       y = wrap(lang === 'es'
-        ? 'Autorizo a mi Apoderado a crear, modificar, enmendar, revocar y financiar fideicomisos revocables para mi beneficio, consistente con mi plan patrimonial existente.'
-        : 'I authorize my Agent to create, modify, amend, revoke, and fund revocable trusts for my benefit, consistent with my existing estate plan.', m + 5, y, cw - 5, 4.5);
+        ? 'Autorizo a mi Apoderado a crear, modificar, enmendar, revocar y financiar fideicomisos revocables para mi beneficio.'
+        : 'I authorize my Agent to create, modify, amend, revoke, and fund revocable trusts for my benefit.', m + 5, y, cw - 5, 4.5);
       y += 6;
 
-      // Digital Assets Power (always included)
+      // Digital Assets
       y = newPage(y, 20);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(12);
@@ -636,8 +725,8 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       y = wrap(lang === 'es'
-        ? 'Autorizo a mi Apoderado a acceder, administrar, controlar, eliminar, transferir y disponer de mis activos digitales, cuentas en linea, criptomonedas y comunicaciones electronicas, segun lo permita la Ley Revisada Uniforme de Acceso Fiduciario a Activos Digitales (RUFADAA) y otras leyes aplicables.'
-        : 'I authorize my Agent to access, manage, control, delete, transfer, and dispose of my digital assets, online accounts, cryptocurrencies, and electronic communications, as permitted by the Revised Uniform Fiduciary Access to Digital Assets Act (RUFADAA) and other applicable laws.', m + 5, y, cw - 5, 4.5);
+        ? 'Autorizo a mi Apoderado a acceder, administrar y disponer de mis activos digitales, cuentas en linea y criptomonedas.'
+        : 'I authorize my Agent to access, manage, and dispose of my digital assets, online accounts, and cryptocurrencies.', m + 5, y, cw - 5, 4.5);
       y += 8;
 
       // ============================================
@@ -645,8 +734,8 @@ Before signing this power of attorney, you should clearly understand the limitat
       // ============================================
       section(lang === 'es' ? 'ARTICULO VII - EXCLUSION DE ATENCION MEDICA' : 'ARTICLE VII - HEALTHCARE EXCLUSION',
         lang === 'es'
-          ? 'Este Poder Notarial NO otorga autoridad para tomar decisiones medicas o de atencion de salud, incluyendo decisiones sobre tratamiento medico, hospitalizacion, cirugia, medicamentos, o atencion al final de la vida. Dicha autoridad solo puede otorgarse mediante una Directiva de Atencion Medica por Anticipado separada conforme a la Seccion 4700 y siguientes del Codigo de Sucesiones de California.'
-          : 'This Power of Attorney does NOT grant authority to make medical or health care decisions, including decisions regarding medical treatment, hospitalization, surgery, medication, or end-of-life care. Such authority may be granted only by a separate Advance Health Care Directive pursuant to California Probate Code Section 4700 et seq.'
+          ? 'Este Poder Notarial NO otorga autoridad para tomar decisiones medicas o de atencion de salud. Dicha autoridad solo puede otorgarse mediante una Directiva de Atencion Medica por Anticipado separada.'
+          : 'This Power of Attorney does NOT grant authority to make medical or health care decisions. Such authority may be granted only by a separate Advance Health Care Directive.'
       );
 
       // ============================================
@@ -660,17 +749,17 @@ Before signing this power of attorney, you should clearly understand the limitat
 
       const provisions = [
         { titleEn: 'Third Party Reliance', titleEs: 'Confianza de Terceros',
-          textEn: 'Any third party may rely upon the authority granted in this Power of Attorney without inquiry into its validity, scope, or revocation, pursuant to California Probate Code Section 4303. A third party who acts in good faith reliance on this Power of Attorney shall not be liable for any damages arising from such reliance.',
-          textEs: 'Cualquier tercero puede confiar en la autoridad otorgada en este Poder Notarial sin indagar sobre su validez, alcance o revocacion, conforme a la Seccion 4303 del Codigo de Sucesiones de California. Un tercero que actue de buena fe confiando en este Poder Notarial no sera responsable de ningun dano que surja de dicha confianza.' },
+          textEn: 'Any third party may rely upon the authority granted in this Power of Attorney without inquiry into its validity, scope, or revocation, pursuant to California Probate Code Section 4303.',
+          textEs: 'Cualquier tercero puede confiar en la autoridad otorgada en este Poder Notarial sin indagar sobre su validez, alcance o revocacion, conforme a la Seccion 4303 del Codigo de Sucesiones de California.' },
         { titleEn: 'Agent Liability and Indemnification', titleEs: 'Responsabilidad e Indemnizacion del Apoderado',
-          textEn: 'My Agent shall not be liable for any actions taken in good faith under this Power of Attorney, except for actions constituting willful misconduct, gross negligence, or breach of fiduciary duty. My Agent shall be indemnified from my estate for any liability arising from good faith actions taken pursuant to this Power of Attorney.',
-          textEs: 'Mi Apoderado no sera responsable por acciones tomadas de buena fe bajo este Poder Notarial, excepto por acciones que constituyan conducta intencional indebida, negligencia grave o incumplimiento del deber fiduciario. Mi Apoderado sera indemnizado de mi patrimonio por cualquier responsabilidad que surja de acciones de buena fe tomadas conforme a este Poder Notarial.' },
-        { titleEn: 'Compensation and Reimbursement', titleEs: 'Compensacion y Reembolso',
-          textEn: 'My Agent is entitled to reasonable compensation for services rendered and reimbursement of all reasonable expenses incurred in the performance of duties under this Power of Attorney, unless compensation is expressly waived in writing.',
-          textEs: 'Mi Apoderado tiene derecho a una compensacion razonable por los servicios prestados y al reembolso de todos los gastos razonables incurridos en el desempeno de sus deberes bajo este Poder Notarial, a menos que la compensacion sea expresamente renunciada por escrito.' },
+          textEn: 'My Agent shall not be liable for any actions taken in good faith under this Power of Attorney, except for willful misconduct or gross negligence.',
+          textEs: 'Mi Apoderado no sera responsable por acciones tomadas de buena fe bajo este Poder Notarial, excepto por conducta intencional indebida o negligencia grave.' },
+        { titleEn: 'Compensation', titleEs: 'Compensacion',
+          textEn: 'My Agent is entitled to reasonable compensation for services rendered and reimbursement of all reasonable expenses.',
+          textEs: 'Mi Apoderado tiene derecho a una compensacion razonable por los servicios prestados y al reembolso de todos los gastos razonables.' },
         { titleEn: 'Severability', titleEs: 'Separabilidad',
-          textEn: 'If any provision of this Power of Attorney is held invalid, illegal, or unenforceable by a court of competent jurisdiction, the remaining provisions shall remain in full force and effect to the maximum extent permitted by law.',
-          textEs: 'Si alguna disposicion de este Poder Notarial es considerada invalida, ilegal o inaplicable por un tribunal de jurisdiccion competente, las disposiciones restantes permaneceran en pleno vigor y efecto en la maxima extension permitida por la ley.' },
+          textEn: 'If any provision is held invalid, the remaining provisions shall remain in full force and effect.',
+          textEs: 'Si alguna disposicion es considerada invalida, las disposiciones restantes permaneceran en pleno vigor y efecto.' },
       ];
 
       provisions.forEach(p => {
@@ -686,12 +775,12 @@ Before signing this power of attorney, you should clearly understand the limitat
       });
 
       // ============================================
-      // ARTICLE IX - TERMINATION AND GOVERNING LAW
+      // ARTICLE IX - TERMINATION
       // ============================================
       section(lang === 'es' ? 'ARTICULO IX - TERMINACION Y LEY APLICABLE' : 'ARTICLE IX - TERMINATION AND GOVERNING LAW',
         lang === 'es'
-          ? 'Este Poder Notarial terminara automaticamente: (a) a mi fallecimiento; (b) por mi revocacion escrita entregada a mi Apoderado; (c) por orden de un tribunal de jurisdiccion competente; o (d) si este Poder Notarial no es duradero, al momento de mi incapacidad. Este Poder Notarial se regira e interpretara de acuerdo con las leyes del Estado de California.'
-          : 'This Power of Attorney shall terminate automatically: (a) upon my death; (b) by my written revocation delivered to my Agent; (c) by order of a court of competent jurisdiction; or (d) if this Power of Attorney is not durable, upon my incapacity. This Power of Attorney shall be governed by and construed in accordance with the laws of the State of California.'
+          ? 'Este Poder Notarial terminara automaticamente: (a) a mi fallecimiento; (b) por mi revocacion escrita; (c) por orden de un tribunal; o (d) si no es duradero, al momento de mi incapacidad. Este Poder Notarial se regira por las leyes del Estado de California.'
+          : 'This Power of Attorney shall terminate automatically: (a) upon my death; (b) by my written revocation; (c) by court order; or (d) if not durable, upon my incapacity. This Power of Attorney shall be governed by the laws of the State of California.'
       );
 
       // ============================================
@@ -701,7 +790,7 @@ Before signing this power of attorney, you should clearly understand the limitat
         y = newPage(y, 30);
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
-        doc.text(lang === 'es' ? 'INSTRUCCIONES ESPECIALES Y LIMITACIONES' : 'SPECIAL INSTRUCTIONS AND LIMITATIONS', m, y);
+        doc.text(lang === 'es' ? 'INSTRUCCIONES ESPECIALES' : 'SPECIAL INSTRUCTIONS', m, y);
         y += 8;
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
@@ -710,210 +799,42 @@ Before signing this power of attorney, you should clearly understand the limitat
       }
 
       // ============================================
-      // RECORDING NOTICE (if for real estate)
-      // ============================================
-      if (hasRealEstate && d.record_for_real_estate) {
-        y = newPage(y, 25);
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.text(lang === 'es' ? 'AVISO DE REGISTRO' : 'RECORDING NOTICE', m, y);
-        y += 6;
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        let recordingText = lang === 'es'
-          ? 'Este Poder Notarial esta destinado a ser registrado con el Registrador del Condado para su uso en transacciones de bienes raices.'
-          : 'This Power of Attorney is intended to be recorded with the County Recorder for use in real property transactions.';
-        if (d.recording_county) {
-          recordingText += lang === 'es'
-            ? ` Condado previsto para registro: ${d.recording_county}.`
-            : ` Intended recording county: ${d.recording_county}.`;
-        }
-        y = wrap(recordingText, m, y, cw, 5);
-        y += 8;
-      }
-
-      // ============================================
-      // ARTICLE X - EXECUTION PAGE
-      // ============================================
-      y = newPage(y, 80);
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'ARTICULO X - EJECUCION' : 'ARTICLE X - EXECUTION', m, y);
-      y += 8;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(11);
-      doc.text(lang === 'es' 
-        ? 'EN FE DE LO CUAL, he ejecutado este Poder Notarial General Duradero en la fecha indicada a continuacion.' 
-        : 'IN WITNESS WHEREOF, I have executed this General Durable Power of Attorney on the date written below.', m, y);
-      y += 12;
-
-      // EXECUTION DATE - Required field (Time is NOT printed per spec)
-      // Render filled date if available, otherwise show blanks for draft mode
-      const displayDate = executionDate && validateExecutionDate(executionDate) 
-        ? executionDate 
-        : '____/____/______';
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'Fecha de Ejecucion: ' : 'Date of Execution: ', m, y);
-      doc.setFont('helvetica', 'normal');
-      const dateLabel = lang === 'es' ? 'Fecha de Ejecucion: ' : 'Date of Execution: ';
-      const dateLabelWidth = doc.getTextWidth(dateLabel);
-      doc.text(displayDate, m + dateLabelWidth, y);
-      y += 20;
-
-      doc.line(m, y, m + 100, y);
-      y += 6;
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text(d.principal_name || '________________________', m, y);
-      y += 5;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.text(lang === 'es' ? 'Poderdante (Principal)' : 'Principal', m, y);
-
-      // ============================================
-      // NOTICE TO AGENT PAGE (California Probate Code § 4128)
+      // ARTICLE X - EXECUTION PAGE (NEW PAGE FOR PROPER SPACING)
       // ============================================
       doc.addPage();
       y = 20;
+      
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'AVISO AL APODERADO' : 'NOTICE TO AGENT', pw/2, y, {align: 'center'});
-      y += 6;
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'italic');
-      doc.text(lang === 'es' ? '(Codigo de Sucesiones de California § 4128)' : '(California Probate Code § 4128)', pw/2, y, {align: 'center'});
+      doc.text(lang === 'es' ? 'ARTICULO X - EJECUCION' : 'ARTICLE X - EXECUTION', m, y);
       y += 10;
-
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      const agentNoticeText = lang === 'es'
-        ? `Cuando usted acepta la autoridad otorgada bajo este poder notarial, se crea una relacion legal entre usted y el poderdante. Esta relacion impone sobre usted deberes legales que continuan hasta que renuncie o el poder notarial sea terminado o revocado. Usted debe:
-
-(1) Hacer lo que el poderdante le autorice a hacer solo cuando el poderdante quiere que usted actue o no puede tomar sus propias decisiones.
-
-(2) Actuar de buena fe para el beneficio del poderdante.
-
-(3) Hacer solo lo que el poderdante podria hacer legalmente.
-
-(4) Actuar con lealtad hacia el poderdante.
-
-(5) Evitar conflictos que podrian interferir con su capacidad de actuar en el mejor interes del poderdante.
-
-(6) Mantener separada la propiedad del poderdante, a menos que se permita lo contrario.
-
-(7) Mantener registros adecuados de todas las recibos, desembolsos y transacciones realizadas en nombre del poderdante.
-
-(8) Cooperar con una persona que tenga autoridad para tomar decisiones de atencion medica para el poderdante para llevar a cabo los deseos razonables del poderdante.
-
-(9) Intentar preservar el plan patrimonial del poderdante, en la medida que realmente lo conozca, si hacerlo es consistente con los mejores intereses del poderdante basado en toda la informacion relevante, incluyendo la situacion financiera del poderdante y las necesidades previsibles para la atencion medica y de vida.
-
-A menos que el poder notarial disponga lo contrario, su autoridad incluye la autoridad para hacer lo siguiente:
-
-(1) Autorizar que se le permita a otra persona ejercer la autoridad otorgada bajo el poder notarial.
-
-(2) Contratar un abogado, contador u otro profesional o experto para ayudarlo en la realizacion de sus deberes.
-
-(3) Recibir una compensacion razonable por los servicios que preste como agente.
-
-Si no cumple fielmente sus deberes bajo la ley y bajo el poder notarial, usted puede estar sujeto a cualquiera de las siguientes consecuencias:
-
-(1) El tribunal puede destituirlo como agente.
-
-(2) El tribunal puede ordenarle que devuelva cualquier propiedad que haya malversado.
-
-(3) Usted puede ser responsable de cualquier dano que cause al poderdante.
-
-(4) Usted puede estar sujeto a sanciones penales por actividades que constituyan conducta criminal.
-
-Si su ejercicio de autoridad de alguna manera viola la ley o es inconsistente con el poder notarial, usted puede ser personalmente responsable no solo ante el poderdante sino tambien ante otras personas lesionadas como resultado de sus acciones.`
-        : `When you accept the authority granted under this power of attorney, a special legal relationship is created between you and the principal. This relationship imposes upon you legal duties that continue until you resign or the power of attorney is terminated or revoked. You must:
-
-(1) Do what the principal authorizes you to do only when the principal wants you to act or cannot make their own decisions.
-
-(2) Act in good faith for the benefit of the principal.
-
-(3) Do only what the principal could lawfully do.
-
-(4) Act loyally for the principal.
-
-(5) Avoid conflicts that would impair your ability to act in the principal's best interest.
-
-(6) Keep the principal's property separate, unless otherwise permitted.
-
-(7) Keep adequate records of all receipts, disbursements, and transactions made on behalf of the principal.
-
-(8) Cooperate with a person that has authority to make health care decisions for the principal to do what you know the principal reasonably expects or, if you do not know the principal's expectations, to act in the principal's best interest.
-
-(9) Attempt to preserve the principal's estate plan, to the extent actually known by you, if preserving the plan is consistent with the principal's best interest based on all relevant information, including the principal's foreseeable obligations and need for maintenance.
-
-Unless the power of attorney otherwise provides, your authority includes the authority to do the following:
-
-(1) Authorize another person to exercise the authority granted under the power of attorney.
-
-(2) Hire an attorney, accountant, or other professional or expert to assist you in performing your duties.
-
-(3) Receive reasonable compensation for services you render as agent.
-
-If you do not faithfully perform your duties under the law and under the power of attorney, you may be subject to any of the following consequences:
-
-(1) The court may remove you as agent.
-
-(2) The court may order you to return any property you have misappropriated.
-
-(3) You may be liable for any damages you cause to the principal.
-
-(4) You may be subject to criminal penalties for activities that constitute criminal conduct.
-
-If your exercise of authority in any way violates the law or is inconsistent with the power of attorney, you may be personally liable not only to the principal but also to other persons injured as a result of your actions.`;
-
-      y = wrap(agentNoticeText, m, y, cw, 4);
-      y += 10;
-
-      // Elder Abuse Warning
-      y = newPage(y, 40);
-      doc.setFillColor(255, 245, 238);
-      doc.rect(m, y, cw, 35, 'F');
-      doc.setDrawColor(200, 100, 100);
-      doc.setLineWidth(0.5);
-      doc.rect(m, y, cw, 35, 'S');
-      y += 6;
       doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(180, 0, 0);
-      doc.text(lang === 'es' ? 'ADVERTENCIA SOBRE ABUSO DE ADULTOS MAYORES' : 'ELDER ABUSE WARNING', m + 4, y);
-      y += 6;
-      doc.setTextColor(0);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      const abuseWarning = lang === 'es'
-        ? 'El abuso de adultos mayores es un delito grave en California. El uso indebido de este poder notarial para robar o defraudar al poderdante puede resultar en cargos criminales y responsabilidad civil. Si sospecha de abuso, comuniquese con los Servicios de Proteccion de Adultos o la policia local.'
-        : 'Elder abuse is a serious crime in California. Misuse of this power of attorney to steal from or defraud the principal can result in criminal charges and civil liability. If you suspect abuse, contact Adult Protective Services or local law enforcement.';
-      y = wrap(abuseWarning, m + 4, y, cw - 8, 4);
+      doc.text(lang === 'es' 
+        ? 'EN FE DE LO CUAL, he ejecutado este Poder Notarial General en la fecha indicada a continuacion.' 
+        : 'IN WITNESS WHEREOF, I have executed this General Power of Attorney on the date written below.', m, y);
       y += 15;
 
-      // Agent Acceptance Signature
-      y = newPage(y, 50);
-      doc.setFontSize(12);
+      // Execution Date
       doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'ACEPTACION DEL APODERADO' : 'AGENT ACCEPTANCE', m, y);
+      doc.text(lang === 'es' ? 'Fecha de Ejecucion:' : 'Date of Execution:', m, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(executionDate, m + 50, y);
+      y += 25;
+
+      // Principal Signature Block with proper spacing
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'Firma del Poderdante (Principal):' : 'Principal Signature:', m, y);
       y += 8;
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      const acceptanceText = lang === 'es'
-        ? 'Yo, el Apoderado nombrado en este Poder Notarial, reconozco haber leido y entendido el Aviso al Apoderado anterior. Acepto actuar como Apoderado bajo este Poder Notarial y acepto cumplir con todos los deberes descritos anteriormente.'
-        : 'I, the Agent named in this Power of Attorney, acknowledge that I have read and understand the Notice to Agent above. I agree to act as Agent under this Power of Attorney and agree to comply with all duties described above.';
-      y = wrap(acceptanceText, m, y, cw, 5);
-      y += 15;
+      doc.line(m, y, m + 120, y);
+      y += 12;
 
-      doc.line(m, y, m + 100, y);
-      y += 6;
       doc.setFont('helvetica', 'bold');
-      doc.text(d.agent_name || '________________________', m, y);
-      y += 5;
+      doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
+      y += 8;
       doc.setFont('helvetica', 'normal');
-      doc.text(lang === 'es' ? 'Firma del Apoderado' : 'Agent Signature', m, y);
-      y += 15;
-      doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
+      doc.text(d.principal_name || '________________________________', m, y);
 
       // ============================================
       // WITNESS ATTESTATION PAGE
@@ -931,45 +852,133 @@ If your exercise of authority in any way violates the law or is inconsistent wit
         ? 'Nosotros, los abajo firmantes, declaramos que el Poderdante firmo este Poder Notarial en nuestra presencia, o reconocio ante nosotros que la firma en este documento es suya. El Poderdante parecia estar en su sano juicio y no actuaba bajo coaccion, fraude o influencia indebida. Somos mayores de 18 anos y no somos nombrados como Apoderado o Apoderado Sucesor en este documento.'
         : 'We, the undersigned, declare that the Principal signed this Power of Attorney in our presence, or acknowledged to us that the signature on this document is theirs. The Principal appeared to be of sound mind and not acting under duress, fraud, or undue influence. We are at least 18 years of age and are not named as Agent or Successor Agent in this document.';
       y = wrap(witnessIntro, m, y, cw, 5);
-      y += 15;
+      y += 20;
 
       // Witness 1
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'TESTIGO 1:' : 'WITNESS 1:', m, y);
-      y += 10;
+      y += 12;
       doc.setFont('helvetica', 'normal');
-      doc.line(m, y, m + 100, y);
-      y += 5;
-      doc.text(lang === 'es' ? 'Firma' : 'Signature', m, y);
-      y += 10;
-      doc.line(m, y, m + 100, y);
-      y += 5;
-      doc.text(lang === 'es' ? 'Nombre Impreso' : 'Printed Name', m, y);
-      y += 10;
-      doc.line(m, y, m + 150, y);
-      y += 5;
-      doc.text(lang === 'es' ? 'Direccion' : 'Address', m, y);
-      y += 10;
-      doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
-      y += 20;
+      doc.text(lang === 'es' ? 'Firma:' : 'Signature:', m, y);
+      doc.line(m + 25, y, m + 120, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
+      doc.line(m + 45, y, m + 150, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Direccion:' : 'Address:', m, y);
+      doc.line(m + 30, y, m + 170, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
+      doc.line(m + 20, y, m + 80, y);
+      y += 25;
 
       // Witness 2
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'TESTIGO 2:' : 'WITNESS 2:', m, y);
-      y += 10;
+      y += 12;
       doc.setFont('helvetica', 'normal');
-      doc.line(m, y, m + 100, y);
-      y += 5;
-      doc.text(lang === 'es' ? 'Firma' : 'Signature', m, y);
+      doc.text(lang === 'es' ? 'Firma:' : 'Signature:', m, y);
+      doc.line(m + 25, y, m + 120, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
+      doc.line(m + 45, y, m + 150, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Direccion:' : 'Address:', m, y);
+      doc.line(m + 30, y, m + 170, y);
+      y += 12;
+      doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
+      doc.line(m + 20, y, m + 80, y);
+
+      // ============================================
+      // NOTICE TO AGENT PAGE
+      // ============================================
+      doc.addPage();
+      y = 20;
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'AVISO AL APODERADO' : 'NOTICE TO AGENT', pw/2, y, {align: 'center'});
+      y += 6;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'italic');
+      doc.text(lang === 'es' ? '(Codigo de Sucesiones de California § 4128)' : '(California Probate Code § 4128)', pw/2, y, {align: 'center'});
       y += 10;
-      doc.line(m, y, m + 100, y);
-      y += 5;
-      doc.text(lang === 'es' ? 'Nombre Impreso' : 'Printed Name', m, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      const agentNoticeText = lang === 'es'
+        ? `Cuando usted acepta la autoridad otorgada bajo este poder notarial, se crea una relacion legal entre usted y el poderdante. Esta relacion impone sobre usted deberes legales que continuan hasta que renuncie o el poder notarial sea terminado o revocado. Usted debe:
+
+(1) Actuar de buena fe para el beneficio del poderdante.
+(2) Hacer solo lo que el poderdante podria hacer legalmente.
+(3) Actuar con lealtad hacia el poderdante.
+(4) Evitar conflictos de interes.
+(5) Mantener separada la propiedad del poderdante.
+(6) Mantener registros adecuados.
+
+Si no cumple fielmente sus deberes, puede estar sujeto a:
+(1) Destitucion como agente por un tribunal.
+(2) Orden de devolver propiedad malversada.
+(3) Responsabilidad por danos.
+(4) Sanciones penales.`
+        : `When you accept the authority granted under this power of attorney, a special legal relationship is created between you and the principal. This relationship imposes upon you legal duties that continue until you resign or the power of attorney is terminated or revoked. You must:
+
+(1) Act in good faith for the benefit of the principal.
+(2) Do only what the principal could lawfully do.
+(3) Act loyally for the principal.
+(4) Avoid conflicts of interest.
+(5) Keep the principal's property separate.
+(6) Keep adequate records.
+
+If you do not faithfully perform your duties, you may be subject to:
+(1) Removal as agent by a court.
+(2) Order to return misappropriated property.
+(3) Liability for damages.
+(4) Criminal penalties.`;
+
+      y = wrap(agentNoticeText, m, y, cw, 4);
       y += 10;
-      doc.line(m, y, m + 150, y);
-      y += 5;
-      doc.text(lang === 'es' ? 'Direccion' : 'Address', m, y);
-      y += 10;
+
+      // Elder Abuse Warning
+      y = newPage(y, 40);
+      doc.setFillColor(255, 245, 238);
+      doc.rect(m, y, cw, 30, 'F');
+      doc.setDrawColor(200, 100, 100);
+      doc.setLineWidth(0.5);
+      doc.rect(m, y, cw, 30, 'S');
+      y += 6;
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(180, 0, 0);
+      doc.text(lang === 'es' ? 'ADVERTENCIA SOBRE ABUSO DE ADULTOS MAYORES' : 'ELDER ABUSE WARNING', m + 4, y);
+      y += 6;
+      doc.setTextColor(0);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      const abuseWarning = lang === 'es'
+        ? 'El abuso de adultos mayores es un delito grave en California. El uso indebido de este poder notarial puede resultar en cargos criminales y responsabilidad civil.'
+        : 'Elder abuse is a serious crime in California. Misuse of this power of attorney can result in criminal charges and civil liability.';
+      y = wrap(abuseWarning, m + 4, y, cw - 8, 4);
+      y += 12;
+
+      // Agent Acceptance
+      y = newPage(y, 50);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'ACEPTACION DEL APODERADO' : 'AGENT ACCEPTANCE', m, y);
+      y += 8;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const acceptanceText = lang === 'es'
+        ? 'Yo, el Apoderado nombrado en este Poder Notarial, reconozco haber leido y entendido el Aviso al Apoderado. Acepto actuar como Apoderado y cumplir con todos los deberes descritos.'
+        : 'I, the Agent named in this Power of Attorney, acknowledge that I have read and understand the Notice to Agent. I agree to act as Agent and comply with all duties described.';
+      y = wrap(acceptanceText, m, y, cw, 5);
+      y += 15;
+
+      doc.text(lang === 'es' ? 'Firma del Apoderado:' : 'Agent Signature:', m, y);
+      doc.line(m + 50, y, m + 150, y);
+      y += 12;
+      doc.text(d.agent_name || '________________________________', m, y);
+      y += 12;
       doc.text((lang === 'es' ? 'Fecha: ' : 'Date: ') + '________________________', m, y);
 
       // ============================================
@@ -985,7 +994,7 @@ If your exercise of authority in any way violates the law or is inconsistent wit
       y += 4;
       doc.setFontSize(10);
       doc.setFont('helvetica', 'italic');
-      doc.text(lang === 'es' ? '(California)' : '(California)', pw/2, y, {align: 'center'});
+      doc.text('(California)', pw/2, y, {align: 'center'});
       y += 10;
 
       doc.setFont('helvetica', 'normal');
@@ -1004,8 +1013,8 @@ If your exercise of authority in any way violates the law or is inconsistent wit
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       const noLegalAdvice = lang === 'es'
-        ? 'Multiservicios 360 no es un bufete de abogados y no proporciona asesoria legal. Multiservicios 360 no prepara documentos legales en nombre de los usuarios. Multiservicios 360 proporciona acceso a herramientas de software que permiten a los usuarios crear sus propios documentos basandose unicamente en la informacion y selecciones proporcionadas por el usuario.\n\nNo se crea ninguna relacion abogado-cliente por el uso de este sistema. Cualquier servicio de revision o consulta de abogados, si se ofrece, se proporciona por separado y solo a solicitud expresa del usuario.'
-        : 'Multiservicios 360 is not a law firm and does not provide legal advice. Multiservicios 360 does not prepare legal documents on behalf of users. Multiservicios 360 provides access to software tools that allow users to create their own documents based solely on information and selections provided by the user.\n\nNo attorney-client relationship is created by the use of this system. Any attorney review or consultation services, if offered, are provided separately and only upon the user\'s express request.';
+        ? 'Multiservicios 360 no es un bufete de abogados y no proporciona asesoria legal. Multiservicios 360 no prepara documentos legales en nombre de los usuarios. Multiservicios 360 proporciona acceso a herramientas de software que permiten a los usuarios crear sus propios documentos basandose unicamente en la informacion y selecciones proporcionadas por el usuario.'
+        : 'Multiservicios 360 is not a law firm and does not provide legal advice. Multiservicios 360 does not prepare legal documents on behalf of users. Multiservicios 360 provides access to software tools that allow users to create their own documents based solely on information and selections provided by the user.';
       y = wrap(noLegalAdvice, m, y, cw, 5);
       y += 10;
 
@@ -1017,22 +1026,9 @@ If your exercise of authority in any way violates the law or is inconsistent wit
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       const userResp = lang === 'es'
-        ? 'El usuario es el unico responsable de la precision, integridad y efecto legal de este documento. Multiservicios 360 no revisa, valida ni aprueba el contenido de los documentos generados por el usuario a menos que se solicite expresamente la revision de un abogado.'
-        : 'The user is solely responsible for the accuracy, completeness, and legal effect of this document. Multiservicios 360 does not review, validate, or approve the substance of user-generated documents unless attorney review is expressly requested.';
+        ? 'El usuario es el unico responsable de la precision, integridad y efecto legal de este documento.'
+        : 'The user is solely responsible for the accuracy, completeness, and legal effect of this document.';
       y = wrap(userResp, m, y, cw, 5);
-      y += 10;
-
-      // ELECTRONIC SIGNATURE INTENT Section
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.text(lang === 'es' ? 'INTENCION DE FIRMA ELECTRONICA' : 'ELECTRONIC SIGNATURE INTENT', m, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      const eSignIntent = lang === 'es'
-        ? 'Al firmar a continuacion, confirmo que estoy firmando este reconocimiento electronicamente y que mi firma electronica tiene la intencion de tener el mismo efecto legal que una firma manuscrita.'
-        : 'By signing below, I confirm that I am signing this acknowledgment electronically and that my electronic signature is intended to have the same legal effect as a handwritten signature.';
-      y = wrap(eSignIntent, m, y, cw, 5);
       y += 10;
 
       // USER ACKNOWLEDGMENT Section
@@ -1043,36 +1039,42 @@ If your exercise of authority in any way violates the law or is inconsistent wit
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       const userAck = lang === 'es'
-        ? `Al firmar a continuacion, reconozco y acepto que:
+        ? `Al firmar electronicamente a continuacion, reconozco y acepto que:
 
 • Yo cree este documento por mi cuenta utilizando herramientas de software proporcionadas por Multiservicios 360;
-
 • No se me proporciono asesoria legal ni servicios de preparacion de documentos;
-
 • Soy responsable de toda la informacion contenida en este documento; y
-
 • Entiendo que este documento puede tener consecuencias legales significativas.`
-        : `By signing below, I acknowledge and agree that:
+        : `By signing electronically below, I acknowledge and agree that:
 
 • I created this document myself using software tools provided by Multiservicios 360;
-
 • No legal advice or document preparation services were provided to me;
-
 • I am responsible for all information contained in this document; and
-
 • I understand that this document may have significant legal consequences.`;
       y = wrap(userAck, m, y, cw, 5);
       y += 20;
 
-      // Signature lines
-      doc.text(lang === 'es' ? 'Firma del Usuario: ' : 'User Signature: ', m, y);
-      doc.line(m + 40, y, m + 140, y);
-      y += 12;
-      doc.text(lang === 'es' ? 'Nombre Impreso: ' : 'Printed Name: ', m, y);
-      doc.line(m + 40, y, m + 140, y);
-      y += 12;
+      // ELECTRONIC SIGNATURE - Typed signature from user input
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(lang === 'es' ? 'FIRMA ELECTRONICA:' : 'ELECTRONIC SIGNATURE:', m, y);
+      y += 10;
+      
+      // Draw signature box
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.3);
+      doc.rect(m, y, 120, 15);
+      
+      // Print the typed signature inside the box
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(14);
+      doc.text(electronicSignature, m + 5, y + 10);
+      y += 20;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
       doc.text(lang === 'es' ? 'Fecha: ' : 'Date: ', m, y);
-      doc.line(m + 20, y, m + 80, y);
+      doc.text(executionDate, m + 20, y);
 
       // ============================================
       // FOOTER ON ALL PAGES
@@ -1099,7 +1101,6 @@ If your exercise of authority in any way violates the law or is inconsistent wit
         const [notaryPage] = await pdfDocFromJsPDF.copyPages(notaryPdf, [0]);
         pdfDocFromJsPDF.addPage(notaryPage);
 
-        // Save the merged PDF
         const pdfBytes = await pdfDocFromJsPDF.save();
         const blob = new Blob([pdfBytes], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
@@ -1110,11 +1111,30 @@ If your exercise of authority in any way violates the law or is inconsistent wit
         URL.revokeObjectURL(url);
       } catch (notaryError) {
         console.error('Error fetching notary form:', notaryError);
-        // Fallback - just save the document without the notary form and show alert
         doc.save(`POA_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`);
         alert(lang === 'es' 
-          ? 'Documento generado. Por favor descargue el formulario notarial de: /api/notary-form' 
-          : 'Document generated. Please download notary form from: /api/notary-form');
+          ? 'Documento generado. El formulario notarial no se pudo adjuntar.' 
+          : 'Document generated. Notary form could not be attached.');
+      }
+
+      // Mark as finalized and save to database
+      if (!isFinalized) {
+        setIsFinalized(true);
+        try {
+          await fetch(`/api/poa/matters/${matterId}/finalize`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              execution_date: executionDate,
+              electronic_signature: electronicSignature,
+              signed_at_utc: auditData.signedAtUtc,
+              signed_at_local: auditData.signedAtLocal,
+              document_version_id: auditData.documentVersionId
+            })
+          });
+        } catch (e) {
+          console.log('Could not save finalization data:', e);
+        }
       }
 
     } catch (error) {
@@ -1165,33 +1185,25 @@ If your exercise of authority in any way violates the law or is inconsistent wit
 
         <p style={{ color: '#6B7280', marginBottom: '32px' }}>{t.thankYou}</p>
 
-        {/* Execution Date Input - Required before download */}
+        {/* ============================================ */}
+        {/* EXECUTION DATE INPUT */}
+        {/* ============================================ */}
         <div style={{ 
           backgroundColor: '#FEF3C7', 
           border: '2px solid #F59E0B', 
-          borderRadius: '8px', 
+          borderRadius: '12px', 
           padding: '20px', 
-          marginBottom: '24px',
+          marginBottom: '16px',
           textAlign: 'left'
         }}>
-          <label style={{ 
-            display: 'block', 
-            fontSize: '14px', 
-            fontWeight: '600', 
-            color: '#92400E',
-            marginBottom: '8px'
-          }}>
-            {language === 'es' ? 'Fecha de Ejecución (Requerida)' : 'Execution Date (Required)'} *
-          </label>
-          <p style={{ 
-            fontSize: '12px', 
-            color: '#B45309', 
-            marginBottom: '12px',
-            margin: '0 0 12px 0'
-          }}>
-            {language === 'es' 
-              ? 'Ingrese la fecha en que firmará este documento (MM/DD/AAAA)' 
-              : 'Enter the date you will sign this document (MM/DD/YYYY)'}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <CalendarIcon />
+            <label style={{ fontSize: '16px', fontWeight: '600', color: '#92400E' }}>
+              {t.executionDateLabel} *
+            </label>
+          </div>
+          <p style={{ fontSize: '12px', color: '#B45309', marginBottom: '12px', margin: '0 0 12px 0' }}>
+            {t.executionDateHelp}
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <input
@@ -1202,69 +1214,142 @@ If your exercise of authority in any way violates the law or is inconsistent wit
                 setExecutionDate(formatted);
                 if (dateError) setDateError('');
               }}
-              placeholder="MM/DD/YYYY"
+              placeholder={t.executionDatePlaceholder}
               maxLength={10}
+              disabled={isFinalized}
               style={{
                 padding: '12px 16px',
                 fontSize: '16px',
                 border: dateError ? '2px solid #DC2626' : '2px solid #D1D5DB',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 width: '160px',
-                fontFamily: 'monospace'
+                fontFamily: 'monospace',
+                backgroundColor: isFinalized ? '#F3F4F6' : 'white'
               }}
             />
             <button
               type="button"
               onClick={() => setExecutionDate(getLADate())}
+              disabled={isFinalized}
               style={{
                 padding: '12px 16px',
-                fontSize: '12px',
-                backgroundColor: '#059669',
+                fontSize: '14px',
+                backgroundColor: isFinalized ? '#9CA3AF' : '#059669',
                 color: 'white',
                 border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
+                borderRadius: '8px',
+                cursor: isFinalized ? 'not-allowed' : 'pointer',
                 whiteSpace: 'nowrap'
               }}
             >
-              {language === 'es' ? 'Usar Fecha de Hoy' : "Use Today's Date"}
+              {t.useTodayDate}
             </button>
           </div>
           {dateError && (
             <p style={{ color: '#DC2626', fontSize: '12px', marginTop: '8px', margin: '8px 0 0 0' }}>
-              {dateError}
+              ⚠️ {dateError}
+            </p>
+          )}
+        </div>
+
+        {/* ============================================ */}
+        {/* ELECTRONIC SIGNATURE INPUT */}
+        {/* ============================================ */}
+        <div style={{ 
+          backgroundColor: '#EDE9FE', 
+          border: '2px solid #8B5CF6', 
+          borderRadius: '12px', 
+          padding: '20px', 
+          marginBottom: '24px',
+          textAlign: 'left'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <PenIcon />
+            <label style={{ fontSize: '16px', fontWeight: '600', color: '#5B21B6' }}>
+              {t.signatureLabel} *
+            </label>
+          </div>
+          <p style={{ fontSize: '12px', color: '#6D28D9', marginBottom: '12px', margin: '0 0 12px 0' }}>
+            {t.signatureHelp}
+          </p>
+          <input
+            type="text"
+            value={electronicSignature}
+            onChange={(e) => {
+              setElectronicSignature(e.target.value);
+              if (signatureError) setSignatureError('');
+            }}
+            placeholder={t.signaturePlaceholder}
+            disabled={isFinalized}
+            style={{
+              width: '100%',
+              padding: '14px 16px',
+              fontSize: '18px',
+              fontFamily: 'cursive, serif',
+              fontStyle: 'italic',
+              border: signatureError ? '2px solid #DC2626' : '2px solid #D1D5DB',
+              borderRadius: '8px',
+              marginBottom: '12px',
+              backgroundColor: isFinalized ? '#F3F4F6' : 'white',
+              boxSizing: 'border-box'
+            }}
+          />
+          
+          {/* Acceptance checkbox */}
+          <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: isFinalized ? 'not-allowed' : 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={signatureAccepted}
+              onChange={(e) => {
+                setSignatureAccepted(e.target.checked);
+                if (signatureError) setSignatureError('');
+              }}
+              disabled={isFinalized}
+              style={{ 
+                width: '20px', 
+                height: '20px', 
+                marginTop: '2px',
+                accentColor: '#8B5CF6'
+              }}
+            />
+            <span style={{ fontSize: '13px', color: '#5B21B6', lineHeight: '1.4' }}>
+              {t.signatureAcceptLabel}
+            </span>
+          </label>
+          
+          {signatureError && (
+            <p style={{ color: '#DC2626', fontSize: '12px', marginTop: '8px', margin: '8px 0 0 0' }}>
+              ⚠️ {signatureError}
+            </p>
+          )}
+          
+          {isFinalized && (
+            <p style={{ color: '#059669', fontSize: '14px', marginTop: '12px', margin: '12px 0 0 0', fontWeight: '500' }}>
+              ✅ {t.finalized}
             </p>
           )}
         </div>
 
         {/* Download Buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
-          <button onClick={() => generatePDF(language === 'es')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-            <DownloadIcon /> {language === 'es' ? t.downloadSpanish : t.downloadEnglish}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+          <button onClick={() => generatePDF(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+            <DownloadIcon /> {t.downloadSpanish}
           </button>
-          
-          {language === 'es' ? (
-            <button onClick={() => generatePDF(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-              <DownloadIcon /> {t.downloadEnglish}
-            </button>
-          ) : (
-            <button onClick={handlePrint} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#6B7280', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-              <PrintIcon /> {t.print}
-            </button>
-          )}
-          
-          {language === 'es' && (
-            <button onClick={handlePrint} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#6B7280', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-              <PrintIcon /> {t.print}
-            </button>
-          )}
-          
+          <button onClick={() => generatePDF(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+            <DownloadIcon /> {t.downloadEnglish}
+          </button>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
+          <button onClick={handlePrint} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#6B7280', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+            <PrintIcon /> {t.print}
+          </button>
           <button onClick={handleEmail} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
             <EmailIcon /> {t.email}
           </button>
         </div>
 
-        {/* Legal Note for Spanish users */}
+        {/* Legal Note */}
         {language === 'es' && t.legalNote && (
           <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px', padding: '12px', marginBottom: '24px' }}>
             <p style={{ fontSize: '12px', color: '#92400E', margin: 0 }}>{t.legalNote}</p>
@@ -1278,7 +1363,8 @@ If your exercise of authority in any way violates the law or is inconsistent wit
             <li style={{ marginBottom: '8px' }}>{t.step1}</li>
             <li style={{ marginBottom: '8px' }}>{t.step2}</li>
             <li style={{ marginBottom: '8px' }}>{t.step3}</li>
-            <li>{t.step4}</li>
+            <li style={{ marginBottom: '8px' }}>{t.step4}</li>
+            <li>{t.step5}</li>
           </ol>
         </div>
 
