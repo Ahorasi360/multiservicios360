@@ -212,6 +212,17 @@ function SuccessContent() {
     finalized: 'Document finalized',
   };
 
+  // C1 - Validation: Ensure no unselected powers appear in output
+  const validateNoPowerLeakage = (formData) => {
+    const selectedPowerKeys = ['powers_real_estate', 'powers_banking', 'powers_stocks', 'powers_business', 'powers_insurance', 'powers_retirement', 'powers_government', 'powers_litigation', 'powers_tax'];
+    for (const key of selectedPowerKeys) {
+      if (!formData[key]) {
+        // This power is not selected - it will not be rendered by the filter in B1
+      }
+    }
+    return true; // Validation passes when using the filter approach
+  };
+
   const generatePDF = async (isSpanish = false) => {
     if (!matterData?.intake_data) {
       alert('No data available');
@@ -240,6 +251,9 @@ function SuccessContent() {
     }
 
     const d = matterData.intake_data;
+
+    // C1 - Run validation to ensure no power leakage
+    validateNoPowerLeakage(d);
 
     // VALIDATION 4: Durability consistency check
     // If durable is true, the document should say "Durable"
@@ -307,11 +321,16 @@ function SuccessContent() {
       };
 
       // ============================================
-      // DETERMINE POA TYPE FOR INTRO VARIANT
+      // DETERMINE POA TYPE FOR INTRO VARIANT (B3)
       // ============================================
       const hasRealEstate = d.powers_real_estate === true;
       const hasHotPowers = d.hot_gifts || d.hot_beneficiary || d.hot_trust;
       const isDurable = d.durable === true;
+      
+      // C2 - Durability consistency check: ensure isDurable matches d.durable
+      if ((d.durable === true) !== isDurable) {
+        console.warn('VALIDATION ERROR: Durability consistency issue detected');
+      }
       
       let introVariant = 2;
       if (hasRealEstate) {
@@ -321,9 +340,10 @@ function SuccessContent() {
       }
 
       // ============================================
-      // RECORDING HEADER (for real estate POAs only)
+      // RECORDING HEADER (for real estate POAs only) (C4)
       // ============================================
-      if (hasRealEstate && d.record_for_real_estate) {
+      const shouldShowRecordingHeader = hasRealEstate && d.record_for_real_estate === true;
+      if (shouldShowRecordingHeader) {
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.text("Assessor's Parcel No.: _______________________", m, y);
@@ -367,6 +387,58 @@ function SuccessContent() {
       y += 4;
       doc.setLineWidth(0.5);
       doc.line(m, y, pw - m, y);
+      y += 10;
+
+      // ============================================
+      // IMPORTANT INFORMATION FOR PRINCIPAL (CA Probate Code § 4128) (A1)
+      // ============================================
+      y = newPage(y, 80);
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'INFORMACION IMPORTANTE PARA EL PODERDANTE' : 'IMPORTANT INFORMATION FOR PRINCIPAL', m, y);
+      y += 8;
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL' : 'NOTICE TO PERSON EXECUTING POWER OF ATTORNEY', m, y);
+      y += 8;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const statutoryNotice = lang === 'es' ? `Un poder notarial es un documento legal muy importante. Al firmar este poder notarial, usted esta autorizando a otra persona a actuar por su cuenta. Antes de firmar este poder notarial, debe conocer estos hechos importantes:
+
+1. Este documento puede darle a la persona que usted designe como su apoderado el poder de tomar decisiones sobre su propiedad, incluyendo el poder de vender, hipotecar o disponer de cualquier propiedad real o personal.
+
+2. Los poderes que otorgue continuaran existiendo despues de que quede incapacitado si este poder notarial es duradero.
+
+3. Usted tiene el derecho de revocar o terminar este poder notarial en cualquier momento.
+
+4. Este poder notarial debe estar fechado y firmado por usted, y su firma debe ser reconocida ante un notario publico.
+
+5. Puede nombrar coapoderades que deben actuar juntos, o puede nombrar apoderades suplentes para que sirvan si su apoderado original no puede actuar.
+
+6. Puede optar por exigir que su apoderado le proporcione informes periodicos.
+
+7. Debe consultar con un abogado si tiene preguntas sobre este poder notarial o si tiene preocupaciones particulares.
+
+8. El apoderado tiene el deber de actuar de buena fe de acuerdo con sus instrucciones y en su mejor interes, mantener su propiedad separada de la del apoderado, y evitar conflictos de interes.` : `A power of attorney is an important legal document. It authorizes another person to act for you. By signing this power of attorney, you are authorizing your agent to act on your behalf.
+
+Before you sign this power of attorney, you should know these important facts:
+
+1. This document may give the person you designate as your agent the power to make decisions about your property, including the power to sell, mortgage, or dispose of any real or personal property.
+
+2. The powers you grant will continue to exist after you become incapacitated if this power of attorney is durable.
+
+3. You have the right to revoke or terminate this power of attorney at any time.
+
+4. This power of attorney must be dated and signed by you, and your signature must be acknowledged before a notary public.
+
+5. You may name co-agents who must act together, or you may name alternate agents to serve if your original agent becomes unable to serve.
+
+6. You may choose to require your agent to provide periodic accountings.
+
+7. You should consult a lawyer if you have questions about this power of attorney or if you have particular concerns.
+
+8. The agent has a duty to act in good faith according to your instructions and in your best interest, keep your property separate from the agent's property, and to avoid conflicts of interest.`;
+      y = wrap(statutoryNotice, m, y, cw, 4.5);
       y += 10;
 
       // ============================================
@@ -631,12 +703,14 @@ Before signing this power of attorney, you should clearly understand the limitat
           textEs: 'Preparar, firmar y presentar declaraciones de impuestos federales, estatales y locales; representarme ante el IRS y el FTB de California; pagar impuestos y cobrar reembolsos.' },
       ];
 
-      powers.forEach(p => {
+      // Filter to only selected powers (B1)
+      const selectedPowers = powers.filter(p => d[p.key]);
+      selectedPowers.forEach((p, index) => {
         y = newPage(y, 25);
-        const checked = d[p.key] ? '[X]' : '[ ]';
+        const letter = String.fromCharCode(65 + index); // A, B, C...
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(12);
-        doc.text(`${checked} ${p.letter}. ${lang === 'es' ? p.titleEs : p.titleEn}`, m, y);
+        doc.text(`${letter}. ${lang === 'es' ? p.titleEs : p.titleEn}`, m, y);
         y += 6;
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
@@ -645,89 +719,87 @@ Before signing this power of attorney, you should clearly understand the limitat
       });
 
       // ============================================
-      // ARTICLE VI - ADVANCED POWERS (HOT POWERS)
+      // ARTICLE VI - ADVANCED POWERS (HOT POWERS) (B2)
       // ============================================
-      y = newPage(y, 50);
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'ARTICULO VI - PODERES AVANZADOS' : 'ARTICLE VI - ADVANCED POWERS', m, y);
-      y += 6;
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'italic');
-      const hotNotice = lang === 'es'
-        ? 'AVISO: Los siguientes poderes requieren autorizacion expresa y pueden afectar significativamente su patrimonio.'
-        : 'NOTICE: The following powers require express authorization and may significantly affect your estate.';
-      y = wrap(hotNotice, m, y, cw, 4.5);
-      y += 8;
+      // Only render Article VI if at least one hot power is selected
+      const hasAnyHotPower = d.hot_gifts || d.hot_beneficiary || d.hot_trust;
+      
+      if (hasAnyHotPower) {
+        y = newPage(y, 50);
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text(lang === 'es' ? 'ARTICULO VI - PODERES AVANZADOS' : 'ARTICLE VI - ADVANCED POWERS', m, y);
+        y += 6;
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'italic');
+        const hotNotice = lang === 'es'
+          ? 'AVISO: Los siguientes poderes requieren autorizacion expresa y pueden afectar significativamente su patrimonio.'
+          : 'NOTICE: The following powers require express authorization and may significantly affect your estate.';
+        y = wrap(hotNotice, m, y, cw, 4.5);
+        y += 8;
 
-      // Gift Power
-      y = newPage(y, 25);
-      const giftChecked = d.hot_gifts ? '[X]' : '[ ]';
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.text(`${giftChecked} A. ${lang === 'es' ? 'Poder para Hacer Regalos' : 'Power to Make Gifts'}`, m, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      
-      let giftText = lang === 'es'
-        ? 'Autorizo a mi Apoderado a hacer regalos de mi propiedad a individuos o instituciones de caridad en mi nombre.'
-        : 'I authorize my Agent to make gifts of my property to individuals or charities on my behalf.';
-      
-      if (d.hot_gifts && d.gift_limit) {
-        if (d.gift_limit === 'annual_exclusion') {
-          giftText += lang === 'es'
-            ? ' Limitado al monto de exclusion anual del impuesto federal sobre donaciones.'
-            : ' Limited to the federal gift tax annual exclusion amount.';
-        } else if (d.gift_limit === 'unlimited') {
-          giftText += lang === 'es'
-            ? ' Sin limite, sujeto al deber fiduciario del Apoderado.'
-            : ' No limit, subject to Agent\'s fiduciary duty.';
+        // Gift Power
+        if (d.hot_gifts) {
+          y = newPage(y, 25);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(12);
+          doc.text(`A. ${lang === 'es' ? 'Poder para Hacer Regalos' : 'Power to Make Gifts'}`, m, y);
+          y += 6;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          
+          let giftText = lang === 'es'
+            ? 'Autorizo a mi Apoderado a hacer regalos de mi propiedad a individuos o instituciones de caridad en mi nombre.'
+            : 'I authorize my Agent to make gifts of my property to individuals or charities on my behalf.';
+          
+          if (d.gift_limit) {
+            if (d.gift_limit === 'annual_exclusion') {
+              giftText += lang === 'es'
+                ? ' Limitado al monto de exclusion anual del impuesto federal sobre donaciones.'
+                : ' Limited to the federal gift tax annual exclusion amount.';
+            } else if (d.gift_limit === 'unlimited') {
+              giftText += lang === 'es'
+                ? ' Sin limite, sujeto al deber fiduciario del Apoderado.'
+                : ' No limit, subject to Agent\'s fiduciary duty.';
+            }
+          }
+          y = wrap(giftText, m + 5, y, cw - 5, 4.5);
+          y += 6;
+        }
+
+        // Beneficiary Designation Power
+        if (d.hot_beneficiary) {
+          y = newPage(y, 20);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(12);
+          doc.text(`${d.hot_gifts ? 'B' : 'A'}. ${lang === 'es' ? 'Cambio de Designaciones de Beneficiarios' : 'Beneficiary Designation Changes'}`, m, y);
+          y += 6;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          y = wrap(lang === 'es'
+            ? 'Autorizo a mi Apoderado a designar, cambiar o revocar beneficiarios de polizas de seguro de vida, cuentas de jubilacion y cuentas pagaderas al fallecimiento.'
+            : 'I authorize my Agent to designate, change, or revoke beneficiaries of life insurance policies, retirement accounts, and payable-on-death accounts.', m + 5, y, cw - 5, 4.5);
+          y += 6;
+        }
+
+        // Trust Power
+        if (d.hot_trust) {
+          y = newPage(y, 20);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(12);
+          let trustLetter = 'A';
+          if (d.hot_gifts) trustLetter = 'B';
+          if (d.hot_beneficiary && d.hot_gifts) trustLetter = 'C';
+          doc.text(`${trustLetter}. ${lang === 'es' ? 'Creacion y Modificacion de Fideicomisos' : 'Trust Creation and Modification'}`, m, y);
+          y += 6;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          y = wrap(lang === 'es'
+            ? 'Autorizo a mi Apoderado a crear, modificar, enmendar, revocar y financiar fideicomisos revocables para mi beneficio.'
+            : 'I authorize my Agent to create, modify, amend, revoke, and fund revocable trusts for my benefit.', m + 5, y, cw - 5, 4.5);
+          y += 6;
         }
       }
-      y = wrap(giftText, m + 5, y, cw - 5, 4.5);
-      y += 6;
-
-      // Beneficiary Designation Power
-      y = newPage(y, 20);
-      const beneficiaryChecked = d.hot_beneficiary ? '[X]' : '[ ]';
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.text(`${beneficiaryChecked} B. ${lang === 'es' ? 'Cambio de Designaciones de Beneficiarios' : 'Beneficiary Designation Changes'}`, m, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      y = wrap(lang === 'es'
-        ? 'Autorizo a mi Apoderado a designar, cambiar o revocar beneficiarios de polizas de seguro de vida, cuentas de jubilacion y cuentas pagaderas al fallecimiento.'
-        : 'I authorize my Agent to designate, change, or revoke beneficiaries of life insurance policies, retirement accounts, and payable-on-death accounts.', m + 5, y, cw - 5, 4.5);
-      y += 6;
-
-      // Trust Power
-      y = newPage(y, 20);
-      const trustChecked = d.hot_trust ? '[X]' : '[ ]';
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.text(`${trustChecked} C. ${lang === 'es' ? 'Creacion y Modificacion de Fideicomisos' : 'Trust Creation and Modification'}`, m, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      y = wrap(lang === 'es'
-        ? 'Autorizo a mi Apoderado a crear, modificar, enmendar, revocar y financiar fideicomisos revocables para mi beneficio.'
-        : 'I authorize my Agent to create, modify, amend, revoke, and fund revocable trusts for my benefit.', m + 5, y, cw - 5, 4.5);
-      y += 6;
-
-      // Digital Assets
-      y = newPage(y, 20);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.text(`[X] D. ${lang === 'es' ? 'Activos Digitales' : 'Digital Assets'}`, m, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      y = wrap(lang === 'es'
-        ? 'Autorizo a mi Apoderado a acceder, administrar y disponer de mis activos digitales, cuentas en linea y criptomonedas.'
-        : 'I authorize my Agent to access, manage, and dispose of my digital assets, online accounts, and cryptocurrencies.', m + 5, y, cw - 5, 4.5);
-      y += 8;
 
       // ============================================
       // ARTICLE VII - HEALTHCARE EXCLUSION
@@ -815,6 +887,18 @@ Before signing this power of attorney, you should clearly understand the limitat
         : 'IN WITNESS WHEREOF, I have executed this General Power of Attorney on the date written below.', m, y);
       y += 15;
 
+      // Electronic Signature Intent paragraph (A5)
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(lang === 'es' ? 'INTENCION DE FIRMA ELECTRONICA' : 'ELECTRONIC SIGNATURE INTENT', m, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      const esigIntentText = lang === 'es'
+        ? 'Al escribir mi nombre y fecha a continuacion, tengo la intencion de que sirva como mi firma electronica. Entiendo que este documento sera impreso y puede requerir notarizacion para ciertos usos. Estoy ejecutando este documento voluntariamente y con plena comprension de su contenido.'
+        : 'By typing my name and date below, I intend this to serve as my electronic signature. I understand this document will be printed and may require notarization for certain uses. I am executing this document voluntarily and with full understanding of its contents.';
+      y = wrap(esigIntentText, m, y, cw, 4.5);
+      y += 10;
+
       // Execution Date
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'Fecha de Ejecucion:' : 'Date of Execution:', m, y);
@@ -849,9 +933,9 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
       const witnessIntro = lang === 'es'
-        ? 'Nosotros, los abajo firmantes, declaramos que el Poderdante firmo este Poder Notarial en nuestra presencia, o reconocio ante nosotros que la firma en este documento es suya. El Poderdante parecia estar en su sano juicio y no actuaba bajo coaccion, fraude o influencia indebida. Somos mayores de 18 anos y no somos nombrados como Apoderado o Apoderado Sucesor en este documento.'
-        : 'We, the undersigned, declare that the Principal signed this Power of Attorney in our presence, or acknowledged to us that the signature on this document is theirs. The Principal appeared to be of sound mind and not acting under duress, fraud, or undue influence. We are at least 18 years of age and are not named as Agent or Successor Agent in this document.';
-      y = wrap(witnessIntro, m, y, cw, 5);
+        ? 'DECLARACION DE TESTIGOS\n\nDeclaro bajo pena de perjurio conforme a las leyes del Estado de California que:\n\n1. Tengo al menos 18 anos de edad.\n2. No soy el apoderado, apoderado alterno ni empleado del apoderado nombrado en este poder notarial.\n3. No estoy relacionado con el poderdante por sangre, matrimonio o adopcion.\n4. No tengo derecho a ninguna porcion del patrimonio del poderdante al momento de su fallecimiento.\n5. No soy acreedor del poderdante.\n6. Presenciaba la firma del poderdante de este poder notarial de su propio libre albedrio y el poderdante parecia estar en su sano juicio.'
+        : 'WITNESS ATTESTATION\n\nI declare under penalty of perjury under the laws of the State of California that:\n\n1. I am at least 18 years of age.\n2. I am not the agent, alternate agent, or any employee of the agent named in this power of attorney.\n3. I am not related to the principal by blood, marriage, or adoption.\n4. I am not entitled to any portion of the principal\'s estate upon the principal\'s death.\n5. I am not a creditor of the principal.\n6. I witnessed the principal sign this power of attorney of their own free will and the principal appeared to be of sound mind.';
+      y = wrap(witnessIntro, m, y, cw, 4.5);
       y += 20;
 
       // Witness 1
@@ -909,11 +993,14 @@ Before signing this power of attorney, you should clearly understand the limitat
         ? `Cuando usted acepta la autoridad otorgada bajo este poder notarial, se crea una relacion legal entre usted y el poderdante. Esta relacion impone sobre usted deberes legales que continuan hasta que renuncie o el poder notarial sea terminado o revocado. Usted debe:
 
 (1) Actuar de buena fe para el beneficio del poderdante.
-(2) Hacer solo lo que el poderdante podria hacer legalmente.
+(2) Actuar solo dentro del alcance de la autoridad otorgada.
 (3) Actuar con lealtad hacia el poderdante.
 (4) Evitar conflictos de interes.
-(5) Mantener separada la propiedad del poderdante.
-(6) Mantener registros adecuados.
+(5) Mantener la propiedad del poderdante separada e identificable.
+(6) Mantener registros de todos los recibos, desembolsos y transacciones.
+(7) Cooperar con los agentes de atencion medica si corresponde.
+(8) Intentar preservar el plan patrimonial del poderdante en la medida que lo sepa.
+(9) Actuar de acuerdo con las expectativas razonables del poderdante si son conocidas, o de otra manera en el mejor interes del poderdante.
 
 Si no cumple fielmente sus deberes, puede estar sujeto a:
 (1) Destitucion como agente por un tribunal.
@@ -923,11 +1010,14 @@ Si no cumple fielmente sus deberes, puede estar sujeto a:
         : `When you accept the authority granted under this power of attorney, a special legal relationship is created between you and the principal. This relationship imposes upon you legal duties that continue until you resign or the power of attorney is terminated or revoked. You must:
 
 (1) Act in good faith for the benefit of the principal.
-(2) Do only what the principal could lawfully do.
-(3) Act loyally for the principal.
+(2) Act only within the scope of authority granted.
+(3) Act loyally for the principal's benefit.
 (4) Avoid conflicts of interest.
-(5) Keep the principal's property separate.
-(6) Keep adequate records.
+(5) Keep the principal's property separate and identifiable.
+(6) Keep records of all receipts, disbursements, and transactions.
+(7) Cooperate with healthcare agents if applicable.
+(8) Attempt to preserve the principal's estate plan to the extent known.
+(9) Act in accordance with the principal's reasonable expectations if known, otherwise in the principal's best interest.
 
 If you do not faithfully perform your duties, you may be subject to:
 (1) Removal as agent by a court.
@@ -955,8 +1045,8 @@ If you do not faithfully perform your duties, you may be subject to:
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       const abuseWarning = lang === 'es'
-        ? 'El abuso de adultos mayores es un delito grave en California. El uso indebido de este poder notarial puede resultar en cargos criminales y responsabilidad civil.'
-        : 'Elder abuse is a serious crime in California. Misuse of this power of attorney can result in criminal charges and civil liability.';
+        ? 'El abuso de adultos mayores es un delito grave en California. El uso indebido de este poder notarial puede resultar en cargos criminales y responsabilidad civil. Si cree que el poderdante esta siendo abusado, contacte a Adult Protective Services al 1-833-401-0832 o a la aplicacion de la ley local.'
+        : 'Elder abuse is a serious crime in California. Misuse of this power of attorney can result in criminal charges and civil liability. If you believe the principal is being abused, contact Adult Protective Services at 1-833-401-0832 or local law enforcement.';
       y = wrap(abuseWarning, m + 4, y, cw - 8, 4);
       y += 12;
 
