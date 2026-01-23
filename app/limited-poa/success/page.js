@@ -1,4 +1,4 @@
-// Updated: 2026-01-21 - Added all statutory sections for California compliance
+// Updated: 2026-01-22 - Fixed field names, added execution date input, proper page breaks
 "use client";
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -33,11 +33,25 @@ const EmailIcon = () => (
   </svg>
 );
 
+const CalendarIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+    <line x1="16" y1="2" x2="16" y2="6"></line>
+    <line x1="8" y1="2" x2="8" y2="6"></line>
+    <line x1="3" y1="10" x2="21" y2="10"></line>
+  </svg>
+);
+
 function SuccessContent() {
   const searchParams = useSearchParams();
   const [matterData, setMatterData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState('es');
+  
+  // Execution date state
+  const [executionDate, setExecutionDate] = useState('');
+  const [executionDateError, setExecutionDateError] = useState('');
+  const [isFinalized, setIsFinalized] = useState(false);
 
   const matterId = searchParams.get('matter_id');
 
@@ -50,6 +64,11 @@ function SuccessContent() {
           if (data.success) {
             setMatterData(data.matter);
             setLanguage(data.matter.language || 'es');
+            // Check if already finalized
+            if (data.matter.execution_date) {
+              setExecutionDate(data.matter.execution_date);
+              setIsFinalized(true);
+            }
           }
         } catch (error) {
           console.error('Error fetching matter:', error);
@@ -59,6 +78,41 @@ function SuccessContent() {
     };
     fetchMatterData();
   }, [matterId]);
+
+  // Format date input as MM/DD/YYYY
+  const handleDateChange = (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+      value = value.slice(0, 2) + '/' + value.slice(2);
+    }
+    if (value.length >= 5) {
+      value = value.slice(0, 5) + '/' + value.slice(5, 9);
+    }
+    setExecutionDate(value);
+    setExecutionDateError('');
+  };
+
+  // Set today's date (LA timezone)
+  const setTodayDate = () => {
+    const today = new Date().toLocaleDateString('en-US', {
+      timeZone: 'America/Los_Angeles',
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric'
+    });
+    setExecutionDate(today);
+    setExecutionDateError('');
+  };
+
+  // Validate date format MM/DD/YYYY
+  const isValidDate = (dateStr) => {
+    if (!dateStr || dateStr.length !== 10) return false;
+    const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
+    if (!regex.test(dateStr)) return false;
+    const [month, day, year] = dateStr.split('/').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.getMonth() === month - 1 && date.getDate() === day;
+  };
 
   const t = language === 'es' ? {
     title: 'Pago Exitoso!',
@@ -70,14 +124,21 @@ function SuccessContent() {
     print: 'Imprimir',
     email: 'Enviar por Email',
     nextSteps: 'Proximos Pasos',
-    step1: 'Descargue sus documentos PDF',
-    step2: 'Revise el documento cuidadosamente',
-    step3: 'Firme ante un notario publico',
-    step4: 'Guarde copias en un lugar seguro',
+    step1: 'Ingrese la fecha de ejecucion abajo',
+    step2: 'Descargue sus documentos PDF',
+    step3: 'Revise el documento cuidadosamente',
+    step4: 'Firme ante un notario publico',
+    step5: 'Guarde copias en un lugar seguro',
     questions: 'Preguntas?',
     contact: 'Contactenos al 855.246.7274',
     backHome: 'Volver al Inicio',
     legalNote: 'Nota: El documento en ingles es el documento legal oficial. El documento en espanol es para su referencia.',
+    executionDateLabel: 'Fecha de Ejecucion (Requerida)',
+    executionDatePlaceholder: 'MM/DD/AAAA',
+    useTodayDate: 'Usar Fecha de Hoy',
+    executionDateRequired: 'La fecha de ejecucion es obligatoria.',
+    executionDateInvalid: 'Formato de fecha invalido. Use MM/DD/AAAA.',
+    executionDateHelp: 'Esta es la fecha en que firmara el documento ante el notario.',
   } : {
     title: 'Payment Successful!',
     subtitle: 'Your Limited Power of Attorney is ready',
@@ -88,14 +149,21 @@ function SuccessContent() {
     print: 'Print',
     email: 'Email',
     nextSteps: 'Next Steps',
-    step1: 'Download your PDF documents',
-    step2: 'Review the document carefully',
-    step3: 'Sign in front of a notary public',
-    step4: 'Store copies in a safe place',
+    step1: 'Enter the execution date below',
+    step2: 'Download your PDF documents',
+    step3: 'Review the document carefully',
+    step4: 'Sign in front of a notary public',
+    step5: 'Store copies in a safe place',
     questions: 'Questions?',
     contact: 'Contact us at 855.246.7274',
     backHome: 'Back to Home',
     legalNote: 'Note: The English document is the official legal document. The Spanish document is for your reference.',
+    executionDateLabel: 'Execution Date (Required)',
+    executionDatePlaceholder: 'MM/DD/YYYY',
+    useTodayDate: "Use Today's Date",
+    executionDateRequired: 'Execution date is required.',
+    executionDateInvalid: 'Invalid date format. Use MM/DD/YYYY.',
+    executionDateHelp: 'This is the date you will sign the document before the notary.',
   };
 
   // Helper function to get purpose category label
@@ -168,6 +236,16 @@ function SuccessContent() {
   const generatePDF = async (lang) => {
     if (!matterData) return;
 
+    // Validate execution date
+    if (!executionDate) {
+      setExecutionDateError(t.executionDateRequired);
+      return;
+    }
+    if (!isValidDate(executionDate)) {
+      setExecutionDateError(t.executionDateInvalid);
+      return;
+    }
+
     const d = matterData.intake_data || {};
     const { jsPDF } = await import('jspdf');
     const doc = new jsPDF();
@@ -218,12 +296,12 @@ function SuccessContent() {
     const categoryName = getPurposeLabel(d.purpose_category, lang);
 
     // ============================================
-    // RECORDING HEADER (for real estate POAs)
+    // RECORDING HEADER (for real estate POAs that need recording)
     // ============================================
-    if (d.purpose_category === 'real_estate') {
+    if (d.purpose_category === 'real_estate' && d.authorized_for_recording) {
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      doc.text("Assessor's Parcel No.: " + (d.re_apn || '_______________________'), m, y);
+      doc.text("Assessor's Parcel No.: " + (d.re_property_apn || '_______________________'), m, y);
       y += 8;
       doc.text("RECORDING REQUESTED BY:", m, y);
       y += 4;
@@ -388,7 +466,7 @@ You should read this power of attorney carefully. If you do not understand the p
       doc.text(lang === 'es' ? 'Propiedad:' : 'Property:', m, y);
       y += 5;
       doc.setFont('helvetica', 'normal');
-      const propertyText = `${d.re_property_address}, ${d.re_property_county || '___'} County, California. APN: ${d.re_apn || '___'}`;
+      const propertyText = `${d.re_property_address}, ${d.re_property_county || '___'} County, California. APN: ${d.re_property_apn || '___'}`;
       y = wrap(propertyText, m, y, cw, 5);
       y += 4;
     }
@@ -403,12 +481,12 @@ You should read this power of attorney carefully. If you do not understand the p
       y += 4;
     }
 
-    if (d.purpose_category === 'insurance' && d.insurance_claim_description) {
+    if (d.purpose_category === 'insurance' && d.insurance_claim_desc) {
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'Reclamo:' : 'Claim:', m, y);
       y += 5;
       doc.setFont('helvetica', 'normal');
-      y = wrap(d.insurance_claim_description, m, y, cw, 5);
+      y = wrap(d.insurance_claim_desc, m, y, cw, 5);
       y += 4;
     }
 
@@ -463,9 +541,9 @@ You should read this power of attorney carefully. If you do not understand the p
     );
 
     // ============================================
-    // ARTICLE V - DURATION AND EFFECTIVE DATE
+    // ARTICLE V - DURATION AND EFFECTIVE DATE (FIXED FIELD NAMES)
     // ============================================
-    y = newPage(y, 35);
+    y = newPage(y, 50);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(lang === 'es' ? 'ARTICULO V - DURACION Y FECHA EFECTIVA' : 'ARTICLE V - DURATION AND EFFECTIVE DATE', m, y);
@@ -473,34 +551,40 @@ You should read this power of attorney carefully. If you do not understand the p
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
 
+    // FIXED: Using correct field name effective_date_type
     let effectiveText = '';
-    if (d.effective_date === 'upon_signing' || !d.effective_date) {
+    if (d.effective_date_type === 'upon_signing' || !d.effective_date_type) {
       effectiveText = lang === 'es'
         ? 'Este Poder Notarial entra en vigor INMEDIATAMENTE al momento de la firma.'
         : 'This Power of Attorney becomes effective IMMEDIATELY upon execution.';
-    } else {
+    } else if (d.effective_date_type === 'specific_date') {
       effectiveText = lang === 'es'
-        ? `Este Poder Notarial entrara en vigor en la fecha: ${d.effective_specific_date || '___'}.`
-        : `This Power of Attorney shall become effective on: ${d.effective_specific_date || '___'}.`;
+        ? `Este Poder Notarial entrara en vigor en la fecha: ${d.effective_date || '___'}.`
+        : `This Power of Attorney shall become effective on: ${d.effective_date || '___'}.`;
     }
     y = wrap(effectiveText, m, y, cw, 5);
     y += 4;
 
+    // FIXED: Using correct field name termination_type
     let terminationText = '';
-    if (d.termination_date === 'upon_completion' || !d.termination_date) {
+    if (d.termination_type === 'upon_completion' || !d.termination_type) {
       terminationText = lang === 'es'
         ? 'Este Poder Notarial terminara automaticamente al completarse el proposito especificado.'
         : 'This Power of Attorney shall automatically terminate upon completion of the specified purpose.';
-    } else {
+    } else if (d.termination_type === 'specific_date') {
       terminationText = lang === 'es'
-        ? `Este Poder Notarial terminara en la fecha: ${d.termination_specific_date || '___'}.`
-        : `This Power of Attorney shall terminate on: ${d.termination_specific_date || '___'}.`;
+        ? `Este Poder Notarial terminara en la fecha: ${d.termination_date || '___'}.`
+        : `This Power of Attorney shall terminate on: ${d.termination_date || '___'}.`;
+    } else if (d.termination_type === 'written_revocation') {
+      terminationText = lang === 'es'
+        ? 'Este Poder Notarial terminara mediante revocacion escrita por el Poderdante.'
+        : 'This Power of Attorney shall terminate upon written revocation by the Principal.';
     }
     y = wrap(terminationText, m, y, cw, 5);
     y += 4;
 
-    // Durability clause
-    if (d.durable) {
+    // FIXED: Using correct field name is_durable
+    if (d.is_durable) {
       const durabilityText = lang === 'es'
         ? 'Este Poder Notarial es DURADERO y no sera afectado por mi incapacidad posterior, de conformidad con el Codigo de Sucesiones de California Seccion 4124.'
         : 'This Power of Attorney is DURABLE and shall NOT BE AFFECTED by my subsequent incapacity, pursuant to California Probate Code Section 4124.';
@@ -532,21 +616,32 @@ You should read this power of attorney carefully. If you do not understand the p
     );
 
     // ============================================
-    // EXECUTION PAGE
+    // EXECUTION PAGE - FORCE NEW PAGE FOR PROPER SPACING
     // ============================================
-    y = newPage(y, 80);
+    doc.addPage();
+    y = 20;
+    
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'EJECUCION' : 'EXECUTION', m, y);
-    y += 8;
+    doc.text(lang === 'es' ? 'ARTICULO VIII - EJECUCION' : 'ARTICLE VIII - EXECUTION', m, y);
+    y += 10;
+    
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
-    doc.text(lang === 'es' 
+    const executionIntro = lang === 'es' 
       ? 'EN FE DE LO CUAL, he ejecutado este Poder Notarial Limitado en la fecha indicada a continuacion.' 
-      : 'IN WITNESS WHEREOF, I have executed this Limited Power of Attorney on the date written below.', m, y);
-    y += 12;
-    doc.text((lang === 'es' ? 'Fecha de Ejecucion: ' : 'Date of Execution: ') + '________________________', m, y);
-    y += 20;
+      : 'IN WITNESS WHEREOF, I have executed this Limited Power of Attorney on the date written below.';
+    y = wrap(executionIntro, m, y, cw, 5);
+    y += 15;
+
+    // Execution Date - using the date entered by user
+    doc.setFont('helvetica', 'bold');
+    doc.text(lang === 'es' ? 'Fecha de Ejecucion:' : 'Date of Execution:', m, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(executionDate || '____/____/________', m + 50, y);
+    y += 25;
+
+    // Principal signature
     doc.line(m, y, m + 100, y);
     y += 6;
     doc.setFontSize(11);
@@ -679,7 +774,7 @@ If you do not faithfully perform your duties under the law and under the power o
     // ============================================
     // AGENT ACCEPTANCE SIGNATURE
     // ============================================
-    y = newPage(y, 60);
+    y = newPage(y, 70);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text(lang === 'es' ? 'ACEPTACION DEL APODERADO' : 'AGENT ACCEPTANCE', m, y);
@@ -919,6 +1014,25 @@ If you do not faithfully perform your duties under the law and under the power o
         ? 'Documento generado. Por favor descargue el formulario notarial por separado.' 
         : 'Document generated. Please download notary form separately.');
     }
+
+    // Mark as finalized (optional - save to database)
+    if (!isFinalized) {
+      setIsFinalized(true);
+      // Optionally save execution date to database
+      try {
+        await fetch(`/api/limited-poa/matters/${matterId}/finalize`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            execution_date: executionDate,
+            signed_at_utc: new Date().toISOString(),
+            signed_at_local: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
+          })
+        });
+      } catch (e) {
+        console.log('Could not save finalization data:', e);
+      }
+    }
   };
 
   if (loading) {
@@ -966,6 +1080,78 @@ If you do not faithfully perform your duties under the law and under the power o
           </div>
 
           <p style={{ color: '#4B5563', textAlign: 'center', marginBottom: '24px' }}>{t.thankYou}</p>
+
+          {/* ============================================ */}
+          {/* EXECUTION DATE INPUT - REQUIRED BEFORE DOWNLOAD */}
+          {/* ============================================ */}
+          <div style={{ 
+            backgroundColor: '#FEF9C3', 
+            border: '2px solid #F59E0B',
+            borderRadius: '12px', 
+            padding: '20px', 
+            marginBottom: '24px' 
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <CalendarIcon />
+              <label style={{ fontWeight: '600', color: '#92400E', fontSize: '16px' }}>
+                {t.executionDateLabel}
+              </label>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '8px' }}>
+              <input
+                type="text"
+                value={executionDate}
+                onChange={handleDateChange}
+                placeholder={t.executionDatePlaceholder}
+                disabled={isFinalized}
+                maxLength={10}
+                style={{
+                  flex: 1,
+                  padding: '12px 16px',
+                  fontSize: '18px',
+                  fontFamily: 'monospace',
+                  border: executionDateError ? '2px solid #DC2626' : '2px solid #D1D5DB',
+                  borderRadius: '8px',
+                  backgroundColor: isFinalized ? '#F3F4F6' : 'white',
+                  textAlign: 'center'
+                }}
+              />
+              <button
+                onClick={setTodayDate}
+                disabled={isFinalized}
+                style={{
+                  padding: '12px 16px',
+                  backgroundColor: isFinalized ? '#9CA3AF' : '#3B82F6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: isFinalized ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {t.useTodayDate}
+              </button>
+            </div>
+            
+            {executionDateError && (
+              <p style={{ color: '#DC2626', fontSize: '14px', margin: '8px 0 0', fontWeight: '500' }}>
+                ⚠️ {executionDateError}
+              </p>
+            )}
+            
+            <p style={{ color: '#78716C', fontSize: '13px', margin: '8px 0 0' }}>
+              {t.executionDateHelp}
+            </p>
+            
+            {isFinalized && (
+              <p style={{ color: '#059669', fontSize: '14px', margin: '8px 0 0', fontWeight: '500' }}>
+                ✅ {language === 'es' ? 'Documento finalizado' : 'Document finalized'}
+              </p>
+            )}
+          </div>
 
           {/* Download Buttons */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
@@ -1016,7 +1202,8 @@ If you do not faithfully perform your duties under the law and under the power o
               <li style={{ marginBottom: '8px' }}>{t.step1}</li>
               <li style={{ marginBottom: '8px' }}>{t.step2}</li>
               <li style={{ marginBottom: '8px' }}>{t.step3}</li>
-              <li>{t.step4}</li>
+              <li style={{ marginBottom: '8px' }}>{t.step4}</li>
+              <li>{t.step5}</li>
             </ol>
           </div>
 
