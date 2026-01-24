@@ -29,7 +29,7 @@ const TRANSLATIONS = {
       badge: 'Preparación de Documentos Legales',
       title: 'Documentos Legales',
       titleAccent: 'para su Familia y Negocio',
-      subtitle: 'Plataforma de autoayuda para preparación de documentos legales. Acceso a una red de profesionales independientes: abogados, contadores y realtors licenciados en California.',
+      subtitle: 'Multiservicios 360 es una plataforma tecnológica bilingüe que permite a las personas preparar sus propios documentos legales utilizando herramientas guiadas de software. Usted ingresa su información, toma sus propias decisiones y genera sus documentos directamente.',
       cta: 'Comenzar Ahora',
       ctaSecondary: 'Ver Servicios',
       trust1: '100% Bilingüe',
@@ -66,6 +66,7 @@ const TRANSLATIONS = {
         items: ['Ciudadanía (N-400)', 'Petición Familiar (I-130)', 'Green Card (I-485)', 'Permiso de Trabajo', 'Renovación Green Card'],
         price: 'Desde $99',
       },
+      disclaimer: 'Este servicio proporciona acceso únicamente a software de preparación de documentos. Multiservicios 360 no brinda asesoría legal, no redacta documentos por usted y no es un bufete de abogados. Usted es responsable de ingresar toda la información y seleccionar todas las opciones.',
     },
     packages: {
       title: 'Paquetes Disponibles',
@@ -86,7 +87,7 @@ const TRANSLATIONS = {
       accountantsDesc: 'Servicios fiscales',
       realtors: 'Realtors',
       realtorsDesc: 'Bienes raíces',
-      independentNote: 'Todos los profesionales son independientes y no empleados de Multi Servicios 360. La revisión de abogados es opcional y proporcionada por abogados independientes licenciados en California.',
+      independentNote: 'El acceso a abogados, notarios, profesionales inmobiliarios, servicios de escrow y otros profesionales es opcional. Todos los profesionales son contratistas independientes, no empleados ni agentes de Multiservicios 360. Cualquier servicio profesional se rige por acuerdos separados entre usted y el proveedor.',
     },
     why: {
       title: '¿Por Qué Usar Nuestra Plataforma?',
@@ -118,7 +119,7 @@ const TRANSLATIONS = {
       badge: 'Legal Document Preparation',
       title: 'Legal Documents',
       titleAccent: 'for Your Family and Business',
-      subtitle: 'Self-help platform for legal document preparation. Access to a network of independent professionals: attorneys, accountants, and realtors licensed in California.',
+      subtitle: 'Multiservicios 360 is a bilingual technology platform that allows individuals to self-prepare legal documents using guided software tools. You enter your own information, make your own selections, and generate your documents directly.',
       cta: 'Get Started',
       ctaSecondary: 'View Services',
       trust1: '100% Bilingual',
@@ -155,6 +156,7 @@ const TRANSLATIONS = {
         items: ['Citizenship (N-400)', 'Family Petition (I-130)', 'Green Card (I-485)', 'Work Permit', 'Green Card Renewal'],
         price: 'From $99',
       },
+      disclaimer: 'This service provides access to document-preparation software only. Multiservicios 360 does not provide legal advice, does not draft documents on your behalf, and does not act as a law firm. You are responsible for entering all information and selecting all options.',
     },
     packages: {
       title: 'Available Packages',
@@ -163,6 +165,8 @@ const TRANSLATIONS = {
       estatePro: { name: 'Complete Estate Plan', items: ['Living Trust', 'Pour-Over Will', 'POA', 'Healthcare', 'HIPAA', 'Trust Cert'], price: '$799', badge: 'Most Popular' },
       funding: { name: 'Trust Funding', items: ['Living Trust', 'Pour-Over', 'Trust Deed', 'PCOR', 'Notary', 'Recording'], price: '$1,499', badge: 'Premium' },
       business: { name: 'Business Starter', items: ['LLC', 'Operating Agreement', 'Federal EIN'], price: '$349' },
+      pricingNote: 'The prices shown are software access fees only. If you choose optional attorney review or consultation, those legal services are provided directly by independent licensed attorneys at their own rates. Multiservicios 360 does not set, control, or share in attorney fees.',
+      pricingNote: 'Los precios mostrados son tarifas de acceso al software únicamente. Si usted elige revisión o consulta opcional con un abogado, esos servicios legales son proporcionados directamente por abogados independientes licenciados a sus propias tarifas. Multiservicios 360 no establece, controla ni participa en las tarifas de los abogados.',
     },
     team: {
       title: 'Network of Independent Professionals',
@@ -175,7 +179,7 @@ const TRANSLATIONS = {
       accountantsDesc: 'Tax services',
       realtors: 'Realtors',
       realtorsDesc: 'Real estate',
-      independentNote: 'All professionals are independent and not employees of Multi Servicios 360. Attorney review is optional and provided by independent attorneys licensed in California.',
+      independentNote: 'Access to attorneys, notaries, real estate professionals, escrow services, and other professionals is optional. All professionals are independent contractors, not employees or agents of Multiservicios 360. Any professional services are governed by separate agreements between you and the provider.',
     },
     why: {
       title: 'Why Use Our Platform?',
@@ -365,6 +369,9 @@ export default function HomePage() {
             <h2 className="section-title" style={{ fontSize: '36px', fontWeight: '800', color: '#1E3A8A', marginBottom: '12px' }}>{t.services.title}</h2>
             <p style={{ fontSize: '16px', color: '#64748B' }}>{t.services.subtitle}</p>
           </div>
+          <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px', padding: '12px 20px', marginBottom: '32px', textAlign: 'center' }}>
+            <p style={{ fontSize: '13px', color: '#92400E', margin: 0, lineHeight: '1.6' }}>{t.services.disclaimer}</p>
+          </div>
           <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
             {[
               { key: 'personal', icon: <ScaleIcon />, color: '#3B82F6', bg: '#EFF6FF' },
@@ -402,6 +409,9 @@ export default function HomePage() {
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <h2 className="section-title" style={{ fontSize: '36px', fontWeight: '800', color: '#1E3A8A', marginBottom: '12px' }}>{t.packages.title}</h2>
             <p style={{ fontSize: '16px', color: '#64748B' }}>{t.packages.subtitle}</p>
+          </div>
+          <div style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '8px', padding: '12px 20px', marginBottom: '32px', textAlign: 'center' }}>
+            <p style={{ fontSize: '13px', color: '#1E40AF', margin: 0, lineHeight: '1.6' }}>{t.packages.pricingNote}</p>
           </div>
           <div className="packages-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
             {['estate', 'estatePro', 'funding', 'business'].map((pkg) => (
@@ -561,7 +571,7 @@ export default function HomePage() {
               <Link href="/terms" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.footer.terms}</Link>
               <Link href="/privacy" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none' }}>{t.footer.privacy}</Link>
             </div>
-            <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>© 2025 Multi Servicios 360. {t.footer.rights}</p>
+            <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>© 2026 Multi Servicios 360. {t.footer.rights}</p>
           </div>
         </div>
       </footer>
