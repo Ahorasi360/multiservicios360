@@ -24,7 +24,7 @@ const AlertIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" heig
 
 const TRANSLATIONS = {
   es: {
-    nav: { services: 'Servicios', about: 'Nosotros', contact: 'Contacto', consultation: 'Consulta Gratis' },
+    nav: { services: 'Servicios', about: 'Nosotros', whyUs: '¿Por Qué Nosotros?', contact: 'Contacto', consultation: 'Consulta Gratis' },
     hero: {
       badge: 'Preparación de Documentos Legales',
       title: 'Documentos Legales',
@@ -114,7 +114,7 @@ const TRANSLATIONS = {
     },
   },
   en: {
-    nav: { services: 'Services', about: 'About', contact: 'Contact', consultation: 'Free Consultation' },
+    nav: { services: 'Services', about: 'About', whyUs: 'Why Us?', contact: 'Contact', consultation: 'Free Consultation' },
     hero: {
       badge: 'Legal Document Preparation',
       title: 'Legal Documents',
@@ -271,6 +271,7 @@ export default function HomePage() {
           <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <a href="#services" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.services}</a>
             <a href="#team" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.about}</a>
+            <Link href="/por-que-nosotros" style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '14px' }}>{t.nav.whyUs}</Link>
             <a href="#contact" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.contact}</a>
             <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '13px', color: '#374151' }}>
               <GlobeIcon /> {language === 'es' ? 'EN' : 'ES'}
@@ -297,6 +298,7 @@ export default function HomePage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <a href="#services" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.services}</a>
               <a href="#team" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.about}</a>
+              <Link href="/por-que-nosotros" onClick={() => setMenuOpen(false)} style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '16px', padding: '8px 0' }}>{t.nav.whyUs}</Link>
               <a href="#contact" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.contact}</a>
               <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: '600' }}>
                 <PhoneIcon /> 855.246.7274
@@ -568,6 +570,7 @@ export default function HomePage() {
 
           <div style={{ textAlign: 'center' }}>
             <div style={{ marginBottom: '12px' }}>
+              <Link href="/por-que-nosotros" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.nav.whyUs}</Link>
               <Link href="/terms" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.footer.terms}</Link>
               <Link href="/privacy" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none' }}>{t.footer.privacy}</Link>
             </div>
