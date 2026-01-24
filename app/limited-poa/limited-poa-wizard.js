@@ -96,7 +96,8 @@ const TRANSLATIONS = {
     send: "Send",
     progress: "Progress",
     tierSelect: "Select Review Tier",
-    submit: "Submit",
+    submit: "Unlock Document",
+    tierClarification: "Clarification: This service does not include legal services. Documents are self-prepared. Attorneys are independent, and any review or consultation is subject to availability and contracted separately.",
     clientInfo: "Client Information",
     clientName: "Your Full Name",
     clientEmail: "Your Email",
@@ -155,7 +156,8 @@ const TRANSLATIONS = {
     send: "Enviar",
     progress: "Progreso",
     tierSelect: "Seleccionar Nivel",
-    submit: "Enviar",
+    submit: "Desbloquear Documento",
+    tierClarification: "Aclaración: Este servicio no incluye servicios legales. Los documentos son autopreparados. Los abogados son independientes y cualquier revisión o consulta está sujeta a disponibilidad y se contrata por separado.",
     clientInfo: "Información del Cliente",
     clientName: "Su Nombre Completo",
     clientEmail: "Su Correo Electrónico",
@@ -210,9 +212,31 @@ const TRANSLATIONS = {
 };
 
 const TIERS = [
-  { value: 'draft_only', label_en: 'Draft Only', label_es: 'Solo Borrador', price: 99, desc_en: 'Limited POA document, English + Spanish PDF', desc_es: 'Documento de Poder Limitado, PDF en Inglés + Español' },
-  { value: 'attorney_review', label_en: 'Attorney Review', label_es: 'Revisión de Abogado', price: 199, desc_en: 'Licensed CA attorney review, 48-hour', desc_es: 'Revisión por abogado CA, 48 horas', popular: true },
-  { value: 'attorney_consultation', label_en: 'Attorney + Consultation', label_es: 'Abogado + Consulta', price: 299, desc_en: '30-min consultation + review', desc_es: 'Consulta 30 min + revisión' },
+  { 
+    value: 'draft_only', 
+    label_en: 'Self-Prepared Document (Basic Access)', 
+    label_es: 'Documento Autopreparado (Acceso Básico)', 
+    price: 99, 
+    desc_en: 'Software access to prepare your Power of Attorney. PDF in English and Spanish.', 
+    desc_es: 'Acceso al software para preparar su Poder Notarial. PDF en Inglés y Español.' 
+  },
+  { 
+    value: 'attorney_review', 
+    label_en: 'Professional Review (Advanced Platform)', 
+    label_es: 'Revisión Profesional (Plataforma Avanzada)', 
+    price: 199, 
+    desc_en: 'Platform infrastructure for optional legal review, subject to availability of independent California-licensed attorneys (estimated delivery 48 hours).', 
+    desc_es: 'Infraestructura de plataforma para revisión legal opcional, sujeta a disponibilidad de abogados independientes licenciados en California (entrega estimada 48 horas).', 
+    popular: true 
+  },
+  { 
+    value: 'attorney_consultation', 
+    label_en: 'Professional Consultation (Premium Platform)', 
+    label_es: 'Consulta Profesional (Plataforma Premium)', 
+    price: 299, 
+    desc_en: 'Infrastructure to coordinate an optional legal consultation, subject to availability of independent licensed attorneys (up to 30 min) + optional review (48 hours).', 
+    desc_es: 'Infraestructura para coordinación de consulta legal opcional, sujeta a disponibilidad de abogados independientes licenciados (hasta 30 min) + revisión opcional (48 horas).' 
+  },
 ];
 
 const DocumentPreview = ({ data, language, isPaid }) => {
@@ -898,19 +922,45 @@ export default function LimitedPOAWizard() {
             <div style={st.card}>
               <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#92400E' }}>{t.tierSelect}</h2>
               {TIERS.map((tier) => (
-                <button key={tier.value} onClick={() => setReviewTier(tier.value)} style={{ ...st.tierCard, ...(reviewTier === tier.value ? st.tierCardSelected : {}) }}>
-                  {tier.popular && <div style={st.popularBadge}>Popular</div>}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <div style={{ fontWeight: '600', fontSize: '16px', color: '#92400E' }}>{language === 'en' ? tier.label_en : tier.label_es}</div>
-                      <div style={{ fontSize: '13px', color: '#B45309', marginTop: '4px' }}>{language === 'en' ? tier.desc_en : tier.desc_es}</div>
+                <button 
+                  key={tier.value} 
+                  onClick={() => setReviewTier(tier.value)} 
+                  style={{ ...st.tierCard, ...(reviewTier === tier.value ? st.tierCardSelected : {}) }}
+                >
+                  {tier.popular && <div style={st.popularBadge}>{language === 'en' ? 'Popular' : 'Popular'}</div>}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ flex: 1, paddingRight: '16px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '4px', color: '#92400E' }}>
+                        {language === 'en' ? tier.label_en : tier.label_es}
+                      </div>
+                      <div style={{ fontSize: '13px', color: '#B45309', lineHeight: '1.4' }}>
+                        {language === 'en' ? tier.desc_en : tier.desc_es}
+                      </div>
                     </div>
-                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#F59E0B' }}>${tier.price}</div>
+                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#F59E0B', marginLeft: '12px' }}>${tier.price}</div>
                   </div>
                 </button>
               ))}
+              {/* COMPLIANCE CLARIFICATION */}
+              <div style={{ 
+                marginTop: '16px', 
+                marginBottom: '16px',
+                padding: '12px 16px', 
+                backgroundColor: '#FEF3C7', 
+                borderRadius: '8px', 
+                border: '1px solid #F59E0B'
+              }}>
+                <p style={{ 
+                  fontSize: '12px', 
+                  color: '#92400E', 
+                  margin: 0, 
+                  lineHeight: '1.5' 
+                }}>
+                  {t.tierClarification}
+                </p>
+              </div>
               <button onClick={handleSubmit} disabled={isLoading} style={{ ...st.btnPrimary, marginTop: '8px', backgroundColor: isLoading ? '#D1D5DB' : '#F59E0B', color: 'white', cursor: isLoading ? 'not-allowed' : 'pointer' }}>
-                {isLoading ? t.paying : t.submit} - ${TIERS.find(t => t.value === reviewTier)?.price}
+                {isLoading ? t.paying : `${t.submit} - $${TIERS.find(t => t.value === reviewTier)?.price}`}
               </button>
             </div>
 
