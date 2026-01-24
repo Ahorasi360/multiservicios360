@@ -477,6 +477,41 @@ setCurrentQuestionIndex(nextIdx);
     }
   };
 
+  const handleGoBack = () => {
+    if (currentQuestionIndex <= 0) return;
+    
+    const visibleQs = getVisibleQuestions();
+    const prevIndex = currentQuestionIndex - 1;
+    const prevQuestion = visibleQs[prevIndex];
+    
+    if (prevQuestion) {
+      const newData = { ...intakeData };
+      delete newData[prevQuestion.field];
+      QUESTIONS.forEach(q => {
+        if (q.showIf && q.showIf.field === prevQuestion.field) {
+          delete newData[q.field];
+        }
+      });
+      setIntakeData(newData);
+    }
+    
+    setMessages(prev => prev.slice(0, -3));
+    setCurrentQuestionIndex(prevIndex);
+    
+    setTimeout(() => {
+      const qt = language === 'en' ? prevQuestion.question_en : prevQuestion.question_es;
+      let questionText = qt;
+      
+      if (prevQuestion.type === 'select' && prevQuestion.options) {
+        questionText = qt + '\n\n' + t.options + '\n' + prevQuestion.options.map((o, i) => `${i + 1}. ${language === 'en' ? o.label_en : o.label_es}`).join('\n');
+      } else if (prevQuestion.type === 'boolean') {
+        questionText = `${qt}\n\n${t.options}\n• ${t.yes}\n• ${t.no}`;
+      }
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: questionText }]);
+    }, 100);
+  };
+
   const handleSubmit = async () => {
     if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
     setIsLoading(true);
@@ -639,6 +674,25 @@ setCurrentQuestionIndex(nextIdx);
                 <div ref={messagesEndRef} />
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
+                {currentQuestionIndex > 0 && (
+                  <button 
+                    onClick={handleGoBack}
+                    disabled={isLoading}
+                    style={{ 
+                      padding: '12px 16px', 
+                      backgroundColor: '#F3F4F6', 
+                      color: '#374151', 
+                      border: '1px solid #D1D5DB', 
+                      borderRadius: '8px', 
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                      fontWeight: '600',
+                      fontSize: '14px',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    ← {t.back}
+                  </button>
+                )}
                 <input 
                   type="text" 
                   value={input} 
