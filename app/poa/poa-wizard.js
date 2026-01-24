@@ -68,7 +68,11 @@ const TRANSLATIONS = {
     send: "Send", 
     progress: "Progress", 
     tierSelect: "Select Review Tier", 
-    submit: "Submit Application", 
+    submit: "Unlock Document", 
+    tierClarification: "Clarification: This service does not include legal services. Documents are self-prepared. Attorneys are independent, and any review or consultation is subject to availability and contracted separately.", 
+    upsellNotaryDesc: "Administrative notary coordination (independent provider)", 
+    basePrice: "Platform Access", 
+    paymentNote: "Payment for platform access.", 
     clientInfo: "Client Information", 
     clientName: "Your Full Name", 
     clientEmail: "Your Email", 
@@ -135,7 +139,11 @@ const TRANSLATIONS = {
     send: "Enviar", 
     progress: "Progreso", 
     tierSelect: "Seleccionar Nivel", 
-    submit: "Enviar Solicitud", 
+    submit: "Desbloquear Documento", 
+    tierClarification: "Aclaración: Este servicio no incluye servicios legales. Los documentos son autopreparados. Los abogados son independientes y cualquier revisión o consulta está sujeta a disponibilidad y se contrata por separado.", 
+    upsellNotaryDesc: "Coordinación administrativa de notario (proveedor independiente)", 
+    basePrice: "Acceso a la Plataforma", 
+    paymentNote: "Pago por acceso a la plataforma.", 
     clientInfo: "Información del Cliente", 
     clientName: "Su Nombre Completo", 
     clientEmail: "Su Correo Electrónico", 
@@ -198,9 +206,31 @@ const TRANSLATIONS = {
 };
 
 const TIERS = [
-  { value: 'draft_only', label_en: 'Draft Only', label_es: 'Solo Borrador', price: 149, desc_en: 'AI-generated POA, English + Spanish PDF', desc_es: 'POA generado por IA, PDF en Inglés + Español' },
-  { value: 'attorney_review_silent', label_en: 'Attorney Review', label_es: 'Revisión de Abogado', price: 349, desc_en: 'Licensed CA attorney review, 48-hour delivery', desc_es: 'Revisión por abogado CA licenciado, entrega 48 horas', popular: true },
-  { value: 'attorney_review_call', label_en: 'Attorney + Consultation', label_es: 'Abogado + Consulta', price: 499, desc_en: '30-min consultation + 48-hour delivery', desc_es: 'Consulta 30 min + entrega 48 horas' },
+  { 
+    value: 'draft_only', 
+    label_en: 'Self-Prepared Document (Basic Access)', 
+    label_es: 'Documento Autopreparado (Acceso Básico)', 
+    price: 149, 
+    desc_en: 'Software access to prepare your Power of Attorney. PDF in English and Spanish.', 
+    desc_es: 'Acceso al software para preparar su Poder Notarial. PDF en Inglés y Español.' 
+  },
+  { 
+    value: 'attorney_review_silent', 
+    label_en: 'Professional Review (Advanced Platform)', 
+    label_es: 'Revisión Profesional (Plataforma Avanzada)', 
+    price: 349, 
+    desc_en: 'Platform infrastructure for optional legal review, subject to availability of independent California-licensed attorneys (estimated delivery 48 hours).', 
+    desc_es: 'Infraestructura de plataforma para revisión legal opcional, sujeta a disponibilidad de abogados independientes licenciados en California (entrega estimada 48 horas).', 
+    popular: true 
+  },
+  { 
+    value: 'attorney_review_call', 
+    label_en: 'Professional Consultation (Premium Platform)', 
+    label_es: 'Consulta Profesional (Plataforma Premium)', 
+    price: 499, 
+    desc_en: 'Infrastructure to coordinate an optional legal consultation, subject to availability of independent licensed attorneys (up to 30 min) + optional review (48 hours).', 
+    desc_es: 'Infraestructura para coordinación de consulta legal opcional, sujeta a disponibilidad de abogados independientes licenciados (hasta 30 min) + revisión opcional (48 horas).' 
+  },
 ];
 
 const UPSELLS = [{ id: 'notary', price: 150 }, { id: 'recording', price: 250 }, { id: 'amendment', price: 99 }];
@@ -881,17 +911,43 @@ setCurrentQuestionIndex(nextIdx);
             <div style={st.card}>
               <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px' }}>{t.tierSelect}</h2>
               {TIERS.map((tier) => (
-                <button key={tier.value} onClick={() => setReviewTier(tier.value)} style={{ ...st.tierCard, ...(reviewTier === tier.value ? st.tierCardSelected : {}) }}>
+                <button 
+                  key={tier.value} 
+                  onClick={() => setReviewTier(tier.value)} 
+                  style={{ ...st.tierCard, ...(reviewTier === tier.value ? st.tierCardSelected : {}) }}
+                >
                   {tier.popular && <div style={st.popularBadge}>{language === 'en' ? 'Popular' : 'Popular'}</div>}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div>
-                      <div style={{ fontWeight: '600', fontSize: '18px' }}>{language === 'en' ? tier.label_en : tier.label_es}</div>
-                      <div style={{ fontSize: '14px', color: '#6B7280', marginTop: '4px' }}>{language === 'en' ? tier.desc_en : tier.desc_es}</div>
+                    <div style={{ flex: 1, paddingRight: '16px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '4px' }}>
+                        {language === 'en' ? tier.label_en : tier.label_es}
+                      </div>
+                      <div style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.4' }}>
+                        {language === 'en' ? tier.desc_en : tier.desc_es}
+                      </div>
                     </div>
-                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2563EB' }}>${tier.price}</div>
+                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2563EB', marginLeft: '12px' }}>${tier.price}</div>
                   </div>
                 </button>
               ))}
+              {/* COMPLIANCE CLARIFICATION */}
+              <div style={{ 
+                marginTop: '16px', 
+                marginBottom: '24px',
+                padding: '12px 16px', 
+                backgroundColor: '#FEF3C7', 
+                borderRadius: '8px', 
+                border: '1px solid #F59E0B'
+              }}>
+                <p style={{ 
+                  fontSize: '12px', 
+                  color: '#92400E', 
+                  margin: 0, 
+                  lineHeight: '1.5' 
+                }}>
+                  {t.tierClarification}
+                </p>
+              </div>
               <div style={{ marginTop: '24px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '4px' }}>{t.addOns}</h3>
                 <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '16px' }}>{t.addOnsSubtitle}</p>
@@ -959,9 +1015,23 @@ setCurrentQuestionIndex(nextIdx);
                   <span>{t.total}</span>
                   <span style={{ color: '#2563EB' }}>${calculateTotal()}</span>
                 </div>
-                <button onClick={handleSubmit} disabled={isLoading} style={{ ...st.btnPrimary, marginTop: '16px', ...(isLoading ? st.btnDisabled : st.btnGreen) }}>
-                  {isLoading ? t.paying : t.submit}
-                </button>
+                <div>
+                  <button 
+                    onClick={handleSubmit} 
+                    disabled={isLoading} 
+                    style={{ ...st.btnPrimary, marginTop: '16px', ...(isLoading ? st.btnDisabled : st.btnGreen) }}
+                  >
+                    {isLoading ? t.paying : `${t.submit} - $${calculateTotal()}`}
+                  </button>
+                  <p style={{ 
+                    fontSize: '11px', 
+                    color: '#6B7280', 
+                    textAlign: 'center', 
+                    marginTop: '8px' 
+                  }}>
+                    {t.paymentNote}
+                  </p>
+                </div>
               </div>
               <div style={st.card}>
                 <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>{language === 'en' ? 'Preview' : 'Vista Previa'}</h3>
