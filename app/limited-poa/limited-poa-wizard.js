@@ -411,6 +411,8 @@ export default function LimitedPOAWizard() {
   const [lastSection, setLastSection] = useState('');
   const [previewTab, setPreviewTab] = useState('answers');
   const [isPaid, setIsPaid] = useState(false);
+  const [editingField, setEditingField] = useState(null);
+  const [editValue, setEditValue] = useState('');
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
 
@@ -600,30 +602,174 @@ export default function LimitedPOAWizard() {
   const getLivePreview = () => {
     const entries = Object.entries(intakeData);
     if (entries.length === 0) return <p style={{ color: '#9CA3AF', textAlign: 'center', padding: '20px' }}>{t.answersWillAppear}</p>;
-
+    
     const sections = {};
     entries.forEach(([key, value]) => {
       const q = QUESTIONS.find(x => x.field === key);
       const section = q?.section || 'other';
       if (!sections[section]) sections[section] = [];
-      const label = q ? (language === 'en' ? q.question_en : q.question_es) : key;
-      const displayValue = value === true ? t.yes : value === false ? t.no : value;
-      sections[section].push({ key, label, displayValue });
+      sections[section].push({ key, value, question: q });
     });
-
+    
     return (
       <div style={{ padding: '12px' }}>
         {Object.entries(sections).map(([section, items]) => (
           <div key={section} style={{ marginBottom: '16px' }}>
-            <div style={{ fontSize: '12px', fontWeight: '600', color: '#F59E0B', marginBottom: '8px', textTransform: 'uppercase' }}>
-              {t.sections[section] || section}
+            <div style={{ fontSize: '12px', fontWeight: '600', color: '#EA580C', marginBottom: '8px', textTransform: 'uppercase' }}>
+              {t.sections?.[section] || section}
             </div>
-            {items.map(({ key, label, displayValue }) => (
-              <div key={key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #F3F4F6', fontSize: '12px' }}>
-                <span style={{ color: '#6B7280', flex: 1 }}>{label.substring(0, 35)}...</span>
-                <span style={{ fontWeight: '500', color: '#1F2937', marginLeft: '8px' }}>{String(displayValue).substring(0, 25)}</span>
-              </div>
-            ))}
+            {items.map(({ key, value, question }) => {
+              const isEditing = editingField === key;
+              const displayValue = value === true ? t.yes : value === false ? t.no : value;
+              const label = question ? (language === 'en' ? question.question_en : question.question_es) : key;
+              
+              return (
+                <div 
+                  key={key} 
+                  style={{ 
+                    padding: '10px 12px', 
+                    borderBottom: '1px solid #F3F4F6', 
+                    fontSize: '13px',
+                    backgroundColor: isEditing ? '#FFF7ED' : 'transparent',
+                    borderRadius: isEditing ? '8px' : '0',
+                    marginBottom: isEditing ? '8px' : '0'
+                  }}
+                >
+                  <div style={{ color: '#6B7280', marginBottom: '4px', fontSize: '12px' }}>
+                    {label.length > 60 ? label.substring(0, 60) + '...' : label}
+                  </div>
+                  
+                  {isEditing ? (
+                    <div style={{ marginTop: '8px' }}>
+                      {question?.type === 'boolean' ? (
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                          <button
+                            onClick={() => setEditValue('true')}
+                            style={{
+                              padding: '8px 16px',
+                              border: '2px solid',
+                              borderColor: editValue === 'true' ? '#EA580C' : '#D1D5DB',
+                              borderRadius: '6px',
+                              backgroundColor: editValue === 'true' ? '#FFF7ED' : 'white',
+                              color: editValue === 'true' ? '#EA580C' : '#374151',
+                              fontWeight: '600',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {t.yes}
+                          </button>
+                          <button
+                            onClick={() => setEditValue('false')}
+                            style={{
+                              padding: '8px 16px',
+                              border: '2px solid',
+                              borderColor: editValue === 'false' ? '#EA580C' : '#D1D5DB',
+                              borderRadius: '6px',
+                              backgroundColor: editValue === 'false' ? '#FFF7ED' : 'white',
+                              color: editValue === 'false' ? '#EA580C' : '#374151',
+                              fontWeight: '600',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {t.no}
+                          </button>
+                        </div>
+                      ) : question?.type === 'select' ? (
+                        <select
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            marginBottom: '8px'
+                          }}
+                        >
+                          {question.options?.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {language === 'en' ? opt.label_en : opt.label_es}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type="text"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            marginBottom: '8px'
+                          }}
+                        />
+                      )}
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          onClick={() => saveEdit(key)}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#059669',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {t.save}
+                        </button>
+                        <button
+                          onClick={cancelEditing}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#F3F4F6',
+                            color: '#374151',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {t.cancel}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div 
+                      onClick={() => startEditing(key, value)}
+                      style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        padding: '4px 0'
+                      }}
+                      title={t.clickToEdit}
+                    >
+                      <span style={{ fontWeight: '600', color: '#1F2937' }}>
+                        {String(displayValue).length > 35 ? String(displayValue).substring(0, 35) + '...' : displayValue}
+                      </span>
+                      <span style={{ 
+                        fontSize: '11px', 
+                        color: '#9CA3AF',
+                        padding: '2px 6px',
+                        backgroundColor: '#F3F4F6',
+                        borderRadius: '4px'
+                      }}>
+                        {t.edit}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ))}
       </div>
