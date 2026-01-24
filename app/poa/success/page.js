@@ -919,10 +919,9 @@ console.log('powers_stocks:', d.powers_stocks, typeof d.powers_stocks);
       }
 
       // ============================================
-      // ARTICLE X - EXECUTION PAGE (NEW PAGE FOR PROPER SPACING)
+      // ARTICLE X - EXECUTION PAGE
       // ============================================
-      doc.addPage();
-      y = 20;
+      y = newPage(y, 60);
       
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
@@ -954,85 +953,108 @@ console.log('powers_stocks:', d.powers_stocks, typeof d.powers_stocks);
       doc.text(executionDate, m + 50, y);
       y += 25;
 
-      // Principal Signature Block with proper spacing for actual signature
+      // Principal Signature Block
       doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'Firma del Poderdante (Principal):' : 'Principal Signature:', m, y);
-      y += 25; // MORE SPACE for actual signature
+      doc.text(lang === 'es' ? 'Firma del Poderdante:' : 'Principal Signature:', m, y);
+      y += 20; // Space for actual signature
+
+      doc.line(m, y, m + 120, y); // Signature line
+      y += 6;
 
       doc.setFont('helvetica', 'normal');
-      doc.line(m, y, m + 120, y); // Signature line
-      y += 5;
-
-      doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
       y += 6;
-      doc.setFont('helvetica', 'normal');
       doc.text(d.principal_name || '________________________________', m, y);
 
       // ============================================
-      // WITNESS ATTESTATION PAGE
+      // WITNESS ATTESTATION
       // ============================================
-      doc.addPage();
-      y = 20;
+      y = newPage(y, 120);
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'DECLARACION DE TESTIGOS' : 'WITNESS ATTESTATION', pw/2, y, {align: 'center'});
+      doc.text(lang === 'es' ? 'ATESTACIÓN DE TESTIGOS' : 'WITNESS ATTESTATION', m, y);
       y += 10;
 
-      doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
-      const witnessIntro = lang === 'es'
-        ? 'DECLARACION DE TESTIGOS\n\nDeclaro bajo pena de perjurio conforme a las leyes del Estado de California que:\n\n1. Tengo al menos 18 anos de edad.\n2. No soy el apoderado, apoderado alterno ni empleado del apoderado nombrado en este poder notarial.\n3. No estoy relacionado con el poderdante por sangre, matrimonio o adopcion.\n4. No tengo derecho a ninguna porcion del patrimonio del poderdante al momento de su fallecimiento.\n5. No soy acreedor del poderdante.\n6. Presenciaba la firma del poderdante de este poder notarial de su propio libre albedrio y el poderdante parecia estar en su sano juicio.'
-        : 'WITNESS ATTESTATION\n\nI declare under penalty of perjury under the laws of the State of California that:\n\n1. I am at least 18 years of age.\n2. I am not the agent, alternate agent, or any employee of the agent named in this power of attorney.\n3. I am not related to the principal by blood, marriage, or adoption.\n4. I am not entitled to any portion of the principal\'s estate upon the principal\'s death.\n5. I am not a creditor of the principal.\n6. I witnessed the principal sign this power of attorney of their own free will and the principal appeared to be of sound mind.';
+      doc.setFont('helvetica', 'normal');
+
+      const witnessIntro = lang === 'es' 
+        ? 'Declaro bajo pena de perjurio bajo las leyes del Estado de California que:'
+        : 'I declare under penalty of perjury under the laws of the State of California that:';
       y = wrap(witnessIntro, m, y, cw, 4.5);
-      y += 20;
+      y += 6;
+
+      const witnessStatements = lang === 'es' ? [
+        '1. Tengo al menos 18 años de edad.',
+        '2. No soy el apoderado, apoderado suplente, ni empleado del apoderado nombrado en este poder notarial.',
+        '3. No estoy relacionado con el poderdante por sangre, matrimonio o adopción.',
+        '4. No tengo derecho a ninguna porción del patrimonio del poderdante a su muerte.',
+        '5. No soy acreedor del poderdante.',
+        '6. Presencié al poderdante firmar este poder notarial por su propia voluntad y el poderdante parecía estar en pleno uso de sus facultades mentales.'
+      ] : [
+        '1. I am at least 18 years of age.',
+        '2. I am not the agent, alternate agent, or any employee of the agent named in this power of attorney.',
+        '3. I am not related to the principal by blood, marriage, or adoption.',
+        '4. I am not entitled to any portion of the principal\'s estate upon the principal\'s death.',
+        '5. I am not a creditor of the principal.',
+        '6. I witnessed the principal sign this power of attorney of their own free will and the principal appeared to be of sound mind.'
+      ];
+
+      witnessStatements.forEach(statement => {
+        y = wrap(statement, m, y, cw, 4.5);
+        y += 2;
+      });
+      y += 10;
+
+      // ALIGNED WITNESS BLOCKS - All lines same length
+      const labelCol = m;
+      const lineStart = m + 35; // All lines start here
+      const lineEnd = m + 160;  // ALL lines end here (same endpoint!)
 
       // Witness 1
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'TESTIGO 1:' : 'WITNESS 1:', m, y);
-      y += 12;
+      y += 10;
       doc.setFont('helvetica', 'normal');
 
-      const labelWidth = 45; // Consistent label width for alignment
-      const lineStart = m + labelWidth;
-      const lineEnd = m + 150;
-
-      doc.text(lang === 'es' ? 'Firma:' : 'Signature:', m, y);
+      doc.text(lang === 'es' ? 'Firma:' : 'Signature:', labelCol, y);
       doc.line(lineStart, y, lineEnd, y);
       y += 10;
 
-      doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
+      doc.text(lang === 'es' ? 'Nombre:' : 'Printed Name:', labelCol, y);
       doc.line(lineStart, y, lineEnd, y);
       y += 10;
 
-      doc.text(lang === 'es' ? 'Dirección:' : 'Address:', m, y);
-      doc.line(lineStart, y, lineEnd + 20, y);
+      doc.text(lang === 'es' ? 'Dirección:' : 'Address:', labelCol, y);
+      doc.line(lineStart, y, lineEnd, y);
       y += 10;
 
-      doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
-      doc.line(lineStart, y, lineStart + 60, y);
-      y += 25;
+      doc.text(lang === 'es' ? 'Fecha:' : 'Date:', labelCol, y);
+      doc.line(lineStart, y, lineEnd, y);
+      y += 20;
 
       // Witness 2
+      y = newPage(y, 60);
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'TESTIGO 2:' : 'WITNESS 2:', m, y);
-      y += 12;
+      y += 10;
       doc.setFont('helvetica', 'normal');
 
-      doc.text(lang === 'es' ? 'Firma:' : 'Signature:', m, y);
+      doc.text(lang === 'es' ? 'Firma:' : 'Signature:', labelCol, y);
       doc.line(lineStart, y, lineEnd, y);
       y += 10;
 
-      doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
+      doc.text(lang === 'es' ? 'Nombre:' : 'Printed Name:', labelCol, y);
       doc.line(lineStart, y, lineEnd, y);
       y += 10;
 
-      doc.text(lang === 'es' ? 'Dirección:' : 'Address:', m, y);
-      doc.line(lineStart, y, lineEnd + 20, y);
+      doc.text(lang === 'es' ? 'Dirección:' : 'Address:', labelCol, y);
+      doc.line(lineStart, y, lineEnd, y);
       y += 10;
 
-      doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
-      doc.line(lineStart, y, lineStart + 60, y);
+      doc.text(lang === 'es' ? 'Fecha:' : 'Date:', labelCol, y);
+      doc.line(lineStart, y, lineEnd, y);
+      y += 15;
 
       // ============================================
       // NOTICE TO AGENT PAGE
