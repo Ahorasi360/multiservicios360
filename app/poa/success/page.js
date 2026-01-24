@@ -484,57 +484,6 @@ function SuccessContent() {
       y += 10;
 
       // ============================================
-      // IMPORTANT INFORMATION FOR PRINCIPAL (CA Probate Code § 4128) (A1)
-      // ============================================
-      y = newPage(y, 80);
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'INFORMACION IMPORTANTE PARA EL PODERDANTE' : 'IMPORTANT INFORMATION FOR PRINCIPAL', m, y);
-      y += 8;
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text(lang === 'es' ? 'AVISO A LA PERSONA QUE EJECUTA EL PODER NOTARIAL' : 'NOTICE TO PERSON EXECUTING POWER OF ATTORNEY', m, y);
-      y += 8;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      const statutoryNotice = lang === 'es' ? `Un poder notarial es un documento legal muy importante. Al firmar este poder notarial, usted esta autorizando a otra persona a actuar por su cuenta. Antes de firmar este poder notarial, debe conocer estos hechos importantes:
-
-1. Este documento puede darle a la persona que usted designe como su apoderado el poder de tomar decisiones sobre su propiedad, incluyendo el poder de vender, hipotecar o disponer de cualquier propiedad real o personal.
-
-2. Los poderes que otorgue continuaran existiendo despues de que quede incapacitado si este poder notarial es duradero.
-
-3. Usted tiene el derecho de revocar o terminar este poder notarial en cualquier momento.
-
-4. Este poder notarial debe estar fechado y firmado por usted, y su firma debe ser reconocida ante un notario publico.
-
-5. Puede nombrar coapoderades que deben actuar juntos, o puede nombrar apoderades suplentes para que sirvan si su apoderado original no puede actuar.
-
-6. Puede optar por exigir que su apoderado le proporcione informes periodicos.
-
-7. Debe consultar con un abogado si tiene preguntas sobre este poder notarial o si tiene preocupaciones particulares.
-
-8. El apoderado tiene el deber de actuar de buena fe de acuerdo con sus instrucciones y en su mejor interes, mantener su propiedad separada de la del apoderado, y evitar conflictos de interes.` : `A power of attorney is an important legal document. It authorizes another person to act for you. By signing this power of attorney, you are authorizing your agent to act on your behalf.
-
-Before you sign this power of attorney, you should know these important facts:
-
-1. This document may give the person you designate as your agent the power to make decisions about your property, including the power to sell, mortgage, or dispose of any real or personal property.
-
-2. The powers you grant will continue to exist after you become incapacitated if this power of attorney is durable.
-
-3. You have the right to revoke or terminate this power of attorney at any time.
-
-4. This power of attorney must be dated and signed by you, and your signature must be acknowledged before a notary public.
-
-5. You may name co-agents who must act together, or you may name alternate agents to serve if your original agent becomes unable to serve.
-
-6. You may choose to require your agent to provide periodic accountings.
-
-7. You should consult a lawyer if you have questions about this power of attorney or if you have particular concerns.
-
-8. The agent has a duty to act in good faith according to your instructions and in your best interest, keep your property separate from the agent's property, and to avoid conflicts of interest.`;
-      y = wrap(statutoryNotice, m, y, cw, 4.5);
-      y += 10;
-
       // ============================================
       // DYNAMIC INTRO NOTICE (Based on POA Type)
       // ============================================
@@ -757,7 +706,12 @@ Before signing this power of attorney, you should clearly understand the limitat
           ? 'Otorgo a mi Apoderado pleno poder y autoridad para actuar por mi y en mi nombre en cualquier manera legal con respecto a los siguientes asuntos, en la maxima extension permitida bajo la ley de California, incluyendo pero no limitado a las acciones especificamente enumeradas a continuacion.'
           : 'I grant my Agent full power and authority to act for me and in my name in any lawful manner with respect to the following matters, to the fullest extent permitted under California law, including but not limited to the actions specifically enumerated below.'
       );
-
+// DEBUG - Remove after testing
+console.log('=== DEBUG POWERS ===');
+console.log('Full intake data (d):', JSON.stringify(d, null, 2));
+console.log('powers_real_estate:', d.powers_real_estate, typeof d.powers_real_estate);
+console.log('powers_banking:', d.powers_banking, typeof d.powers_banking);
+console.log('powers_stocks:', d.powers_stocks, typeof d.powers_stocks);
       // ============================================
       // ARTICLE V - SPECIFIC POWERS GRANTED
       // ============================================
@@ -1000,17 +954,18 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.text(executionDate, m + 50, y);
       y += 25;
 
-      // Principal Signature Block with proper spacing
+      // Principal Signature Block with proper spacing for actual signature
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'Firma del Poderdante (Principal):' : 'Principal Signature:', m, y);
-      y += 8;
+      y += 25; // MORE SPACE for actual signature
+
       doc.setFont('helvetica', 'normal');
-      doc.line(m, y, m + 120, y);
-      y += 12;
+      doc.line(m, y, m + 120, y); // Signature line
+      y += 5;
 
       doc.setFont('helvetica', 'bold');
       doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
-      y += 8;
+      y += 6;
       doc.setFont('helvetica', 'normal');
       doc.text(d.principal_name || '________________________________', m, y);
 
@@ -1037,17 +992,25 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.text(lang === 'es' ? 'TESTIGO 1:' : 'WITNESS 1:', m, y);
       y += 12;
       doc.setFont('helvetica', 'normal');
+
+      const labelWidth = 45; // Consistent label width for alignment
+      const lineStart = m + labelWidth;
+      const lineEnd = m + 150;
+
       doc.text(lang === 'es' ? 'Firma:' : 'Signature:', m, y);
-      doc.line(m + 25, y, m + 120, y);
-      y += 12;
+      doc.line(lineStart, y, lineEnd, y);
+      y += 10;
+
       doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
-      doc.line(m + 45, y, m + 150, y);
-      y += 12;
-      doc.text(lang === 'es' ? 'Direccion:' : 'Address:', m, y);
-      doc.line(m + 30, y, m + 170, y);
-      y += 12;
+      doc.line(lineStart, y, lineEnd, y);
+      y += 10;
+
+      doc.text(lang === 'es' ? 'Dirección:' : 'Address:', m, y);
+      doc.line(lineStart, y, lineEnd + 20, y);
+      y += 10;
+
       doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
-      doc.line(m + 20, y, m + 80, y);
+      doc.line(lineStart, y, lineStart + 60, y);
       y += 25;
 
       // Witness 2
@@ -1055,17 +1018,21 @@ Before signing this power of attorney, you should clearly understand the limitat
       doc.text(lang === 'es' ? 'TESTIGO 2:' : 'WITNESS 2:', m, y);
       y += 12;
       doc.setFont('helvetica', 'normal');
+
       doc.text(lang === 'es' ? 'Firma:' : 'Signature:', m, y);
-      doc.line(m + 25, y, m + 120, y);
-      y += 12;
+      doc.line(lineStart, y, lineEnd, y);
+      y += 10;
+
       doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
-      doc.line(m + 45, y, m + 150, y);
-      y += 12;
-      doc.text(lang === 'es' ? 'Direccion:' : 'Address:', m, y);
-      doc.line(m + 30, y, m + 170, y);
-      y += 12;
+      doc.line(lineStart, y, lineEnd, y);
+      y += 10;
+
+      doc.text(lang === 'es' ? 'Dirección:' : 'Address:', m, y);
+      doc.line(lineStart, y, lineEnd + 20, y);
+      y += 10;
+
       doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
-      doc.line(m + 20, y, m + 80, y);
+      doc.line(lineStart, y, lineStart + 60, y);
 
       // ============================================
       // NOTICE TO AGENT PAGE
@@ -1328,7 +1295,9 @@ If you do not faithfully perform your duties, you may be subject to:
   };
 
   const handlePrint = () => {
-    window.print();
+    alert(language === 'es' 
+      ? 'Para imprimir su Poder Notarial:\n\n1. Descargue el PDF (botón azul o morado arriba)\n2. Abra el archivo PDF descargado\n3. Use Ctrl+P o Archivo → Imprimir' 
+      : 'To print your Power of Attorney:\n\n1. Download the PDF (blue or purple button above)\n2. Open the downloaded PDF file\n3. Use Ctrl+P or File → Print');
   };
 
   const handleEmail = () => {
