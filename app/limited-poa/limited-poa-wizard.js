@@ -221,7 +221,7 @@ const TIERS = [
     desc_es: 'Acceso al software para preparar su Poder Notarial. PDF en Inglés y Español.' 
   },
   { 
-    value: 'attorney_review', 
+    value: 'attorney_review_silent', 
     label_en: 'Professional Review (Advanced Platform)', 
     label_es: 'Revisión Profesional (Plataforma Avanzada)', 
     price: 199, 
@@ -230,7 +230,7 @@ const TIERS = [
     popular: true 
   },
   { 
-    value: 'attorney_consultation', 
+    value: 'attorney_review_call', 
     label_en: 'Professional Consultation (Premium Platform)', 
     label_es: 'Consulta Profesional (Plataforma Premium)', 
     price: 299, 
