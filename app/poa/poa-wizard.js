@@ -10,54 +10,54 @@ const EmailIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="20" heig
 
 const QUESTIONS = [
   // === SECTION 1: PRINCIPAL INFORMATION ===
-  { field: 'principal_name', question_en: "What is the full legal name of the Principal?", question_es: "¿Cuál es el nombre legal completo del Poderdante?", type: 'text', section: 'principal' },
-  { field: 'has_aka', question_en: "Does the Principal have any other names (AKA/maiden name/former name)?", question_es: "¿El Poderdante tiene otros nombres (AKA/nombre de soltera/nombre anterior)?", type: 'boolean', section: 'principal' },
+  { field: 'principal_name', question_en: "What is the full legal name of the Principal (person granting power)?", question_es: "¿Cuál es el nombre legal completo del Poderdante (persona que otorga el poder)?", type: 'text', section: 'principal' },
+  { field: 'has_aka', question_en: "Does the Principal have any other names (AKA/maiden name/former name)?", question_es: "¿El Poderdante tiene otros nombres (también conocido como/nombre de soltera/nombre anterior)?", type: 'boolean', section: 'principal' },
   { field: 'aka_names', question_en: "Please list all other names (separate with commas):", question_es: "Por favor liste todos los otros nombres (separe con comas):", type: 'text', showIf: { field: 'has_aka', value: true }, section: 'principal' },
-  { field: 'principal_address', question_en: "What is the Principal's complete address?", question_es: "¿Cuál es la dirección completa del Poderdante?", type: 'text', section: 'principal' },
-  { field: 'principal_county', question_en: "What county does the Principal reside in?", question_es: "¿En qué condado reside el Poderdante?", type: 'text', section: 'principal' },
+  { field: 'principal_address', question_en: "What is the Principal's complete address?", question_es: "¿Cuál es la dirección completa del Poderdante (calle, ciudad, estado, código postal)?", type: 'text', section: 'principal' },
+  { field: 'principal_county', question_en: "What county does the Principal reside in?", question_es: "¿En qué condado reside el Poderdante (ejemplo: Los Angeles, Orange, San Diego)?", type: 'text', section: 'principal' },
   
   // === SECTION 2: AGENT INFORMATION ===
-  { field: 'agent_name', question_en: "Who would you like to appoint as your Agent (Attorney-in-Fact)?", question_es: "¿A quién le gustaría nombrar como su Apoderado?", type: 'text', section: 'agent' },
+  { field: 'agent_name', question_en: "Who would you like to appoint as your Agent (Attorney-in-Fact)?", question_es: "¿A quién le gustaría nombrar como su Apoderado (la persona autorizada para actuar en su nombre)?", type: 'text', section: 'agent' },
   { field: 'agent_address', question_en: "What is the Agent's complete address?", question_es: "¿Cuál es la dirección completa del Apoderado?", type: 'text', section: 'agent' },
-  { field: 'agent_relationship', question_en: "What is the Agent's relationship to the Principal?", question_es: "¿Cuál es la relación del Apoderado con el Poderdante?", type: 'text', section: 'agent' },
+  { field: 'agent_relationship', question_en: "What is the Agent's relationship to the Principal (spouse, child, sibling, friend, etc.)?", question_es: "¿Cuál es la relación del Apoderado con el Poderdante (esposo/a, hijo/a, hermano/a, amigo/a, etc.)?", type: 'text', section: 'agent' },
   
   // === SECTION 3: SUCCESSOR AGENT ===
-  { field: 'wants_successor', question_en: "Would you like to name a Successor Agent (backup)?", question_es: "¿Desea nombrar un Apoderado Sucesor (respaldo)?", type: 'boolean', section: 'successor' },
+  { field: 'wants_successor', question_en: "Would you like to name a Successor Agent (backup if primary agent cannot serve)?", question_es: "¿Desea nombrar un Apoderado Sucesor (respaldo si el apoderado principal no puede servir)?", type: 'boolean', section: 'successor' },
   { field: 'successor_agent', question_en: "What is the full name of your Successor Agent?", question_es: "¿Cuál es el nombre completo del Apoderado Sucesor?", type: 'text', showIf: { field: 'wants_successor', value: true }, section: 'successor' },
   { field: 'successor_address', question_en: "What is the Successor Agent's complete address?", question_es: "¿Cuál es la dirección completa del Apoderado Sucesor?", type: 'text', showIf: { field: 'wants_successor', value: true }, section: 'successor' },
-  { field: 'successor_relationship', question_en: "What is the Successor Agent's relationship to the Principal?", question_es: "¿Cuál es la relación del Apoderado Sucesor con el Poderdante?", type: 'text', showIf: { field: 'wants_successor', value: true }, section: 'successor' },
+  { field: 'successor_relationship', question_en: "What is the Successor Agent's relationship to the Principal (spouse, child, sibling, friend, etc.)?", question_es: "¿Cuál es la relación del Apoderado Sucesor con el Poderdante (esposo/a, hijo/a, hermano/a, amigo/a, etc.)?", type: 'text', showIf: { field: 'wants_successor', value: true }, section: 'successor' },
   
   // === SECTION 4: POA TYPE & EFFECTIVENESS ===
-  { field: 'durable', question_en: "Should this Power of Attorney be DURABLE (remain valid if you become incapacitated)?", question_es: "¿Debe este Poder Notarial ser DURADERO (permanecer válido si queda incapacitado)?", type: 'boolean', section: 'type' },
-  { field: 'effective_when', question_en: "When should this Power of Attorney become effective?", question_es: "¿Cuándo debe entrar en vigor este Poder Notarial?", type: 'select', options: [{ value: 'immediately', label_en: 'Immediately upon signing', label_es: 'Inmediatamente al firmar' }, { value: 'upon_incapacity', label_en: 'Only upon my incapacity (Springing POA)', label_es: 'Solo ante mi incapacidad (Poder Contingente)' }], section: 'type' },
+  { field: 'durable', question_en: "Should this Power of Attorney be DURABLE (remain valid even if you become incapacitated)?", question_es: "¿Debe este Poder Notarial ser DURADERO (permanecer válido incluso si usted queda incapacitado)?", type: 'boolean', section: 'type' },
+  { field: 'effective_when', question_en: "When should this Power of Attorney become effective?", question_es: "¿Cuándo debe entrar en vigor este Poder Notarial?", type: 'select', options: [{ value: 'immediately', label_en: 'Immediately upon signing', label_es: 'Inmediatamente al firmar' }, { value: 'upon_incapacity', label_en: 'Only upon my incapacity (Springing POA)', label_es: 'Solo si quedo incapacitado (Poder Contingente)' }], section: 'type' },
   
   // === SECTION 5: FINANCIAL POWERS ===
-  { field: 'powers_real_estate', question_en: "Grant authority over REAL ESTATE transactions?", question_es: "¿Otorgar autoridad sobre transacciones de BIENES RAÍCES?", type: 'boolean', section: 'powers' },
-  { field: 'powers_banking', question_en: "Grant authority over BANKING and financial accounts?", question_es: "¿Otorgar autoridad sobre cuentas BANCARIAS y financieras?", type: 'boolean', section: 'powers' },
-  { field: 'powers_stocks', question_en: "Grant authority over STOCKS, BONDS, and investments?", question_es: "¿Otorgar autoridad sobre ACCIONES, BONOS e inversiones?", type: 'boolean', section: 'powers' },
-  { field: 'powers_business', question_en: "Grant authority over BUSINESS operations?", question_es: "¿Otorgar autoridad sobre OPERACIONES COMERCIALES?", type: 'boolean', section: 'powers' },
-  { field: 'powers_insurance', question_en: "Grant authority over INSURANCE policies and claims?", question_es: "¿Otorgar autoridad sobre pólizas y reclamos de SEGUROS?", type: 'boolean', section: 'powers' },
-  { field: 'powers_retirement', question_en: "Grant authority over RETIREMENT accounts (IRA, 401k, pension)?", question_es: "¿Otorgar autoridad sobre cuentas de JUBILACIÓN (IRA, 401k, pensión)?", type: 'boolean', section: 'powers' },
-  { field: 'powers_government', question_en: "Grant authority over GOVERNMENT BENEFITS (Social Security, Medicare, VA)?", question_es: "¿Otorgar autoridad sobre BENEFICIOS GUBERNAMENTALES (Seguro Social, Medicare, VA)?", type: 'boolean', section: 'powers' },
-  { field: 'powers_litigation', question_en: "Grant authority over CLAIMS and LITIGATION?", question_es: "¿Otorgar autoridad sobre RECLAMOS Y LITIGIOS?", type: 'boolean', section: 'powers' },
-  { field: 'powers_tax', question_en: "Grant authority over TAX matters (IRS, FTB)?", question_es: "¿Otorgar autoridad sobre asuntos FISCALES (IRS, FTB)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_real_estate', question_en: "Grant authority over REAL ESTATE transactions (buy, sell, refinance property)?", question_es: "¿Otorgar autoridad sobre transacciones de BIENES RAÍCES (comprar, vender, refinanciar propiedades)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_banking', question_en: "Grant authority over BANKING and financial accounts (checking, savings, CDs)?", question_es: "¿Otorgar autoridad sobre cuentas BANCARIAS y financieras (cuentas de cheques, ahorros, CDs)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_stocks', question_en: "Grant authority over STOCKS, BONDS, and investments (brokerage accounts, mutual funds)?", question_es: "¿Otorgar autoridad sobre ACCIONES, BONOS e inversiones (cuentas de corretaje, fondos mutuos)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_business', question_en: "Grant authority over BUSINESS operations (LLCs, corporations, partnerships)?", question_es: "¿Otorgar autoridad sobre OPERACIONES COMERCIALES (LLCs, corporaciones, sociedades)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_insurance', question_en: "Grant authority over INSURANCE policies and claims (life, health, property)?", question_es: "¿Otorgar autoridad sobre pólizas y reclamos de SEGUROS (vida, salud, propiedad)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_retirement', question_en: "Grant authority over RETIREMENT accounts (IRA, 401k, pension, annuities)?", question_es: "¿Otorgar autoridad sobre cuentas de JUBILACIÓN (IRA, 401k, pensión, anualidades)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_government', question_en: "Grant authority over GOVERNMENT BENEFITS (Social Security, Medicare, Medi-Cal, VA)?", question_es: "¿Otorgar autoridad sobre BENEFICIOS GUBERNAMENTALES (Seguro Social, Medicare, Medi-Cal, VA)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_litigation', question_en: "Grant authority over CLAIMS and LITIGATION (lawsuits, settlements, legal disputes)?", question_es: "¿Otorgar autoridad sobre RECLAMOS Y LITIGIOS (demandas, acuerdos, disputas legales)?", type: 'boolean', section: 'powers' },
+  { field: 'powers_tax', question_en: "Grant authority over TAX matters (IRS, California FTB, file returns)?", question_es: "¿Otorgar autoridad sobre asuntos FISCALES (IRS, FTB de California, presentar declaraciones)?", type: 'boolean', section: 'powers' },
   
   // === SECTION 6: ADVANCED/HOT POWERS ===
-  { field: 'hot_gifts', question_en: "Authorize Agent to MAKE GIFTS on your behalf?", question_es: "¿Autorizar al Apoderado a HACER REGALOS en su nombre?", type: 'boolean', section: 'advanced' },
-  { field: 'gift_limit', question_en: "What is the maximum gift amount per person per year?", question_es: "¿Cuál es el monto máximo de regalo por persona por año?", type: 'select', showIf: { field: 'hot_gifts', value: true }, options: [{ value: 'annual_exclusion', label_en: 'Annual gift tax exclusion ($18,000 in 2024)', label_es: 'Exclusión anual de impuesto sobre regalos ($18,000 en 2024)' }, { value: 'unlimited', label_en: 'No limit (use with caution)', label_es: 'Sin límite (usar con precaución)' }, { value: 'custom', label_en: 'Custom amount', label_es: 'Monto personalizado' }], section: 'advanced' },
-  { field: 'hot_beneficiary', question_en: "Authorize Agent to change BENEFICIARY designations?", question_es: "¿Autorizar al Apoderado a cambiar designaciones de BENEFICIARIOS?", type: 'boolean', section: 'advanced' },
-  { field: 'hot_trust', question_en: "Authorize Agent to create, amend, or revoke TRUSTS?", question_es: "¿Autorizar al Apoderado a crear, modificar o revocar FIDEICOMISOS?", type: 'boolean', section: 'advanced' },
+  { field: 'hot_gifts', question_en: "Authorize Agent to MAKE GIFTS on your behalf (WARNING: This is a significant power)?", question_es: "¿Autorizar al Apoderado a HACER REGALOS en su nombre (ADVERTENCIA: Este es un poder significativo)?", type: 'boolean', section: 'advanced' },
+  { field: 'gift_limit', question_en: "What is the maximum gift amount per person per year?", question_es: "¿Cuál es el monto máximo de regalo por persona por año?", type: 'select', showIf: { field: 'hot_gifts', value: true }, options: [{ value: 'annual_exclusion', label_en: 'Annual gift tax exclusion ($18,000 in 2024)', label_es: 'Exclusión anual de impuesto sobre regalos ($18,000 en 2024)' }, { value: 'unlimited', label_en: 'No limit (use with extreme caution)', label_es: 'Sin límite (usar con extrema precaución)' }, { value: 'custom', label_en: 'Custom amount', label_es: 'Monto personalizado' }], section: 'advanced' },
+  { field: 'hot_beneficiary', question_en: "Authorize Agent to change BENEFICIARY designations (life insurance, retirement accounts)?", question_es: "¿Autorizar al Apoderado a cambiar designaciones de BENEFICIARIOS (seguros de vida, cuentas de jubilación)?", type: 'boolean', section: 'advanced' },
+  { field: 'hot_trust', question_en: "Authorize Agent to create, amend, or revoke TRUSTS (living trusts, revocable trusts)?", question_es: "¿Autorizar al Apoderado a crear, modificar o revocar FIDEICOMISOS (fideicomisos en vida, fideicomisos revocables)?", type: 'boolean', section: 'advanced' },
   
   // === SECTION 7: HIPAA AUTHORIZATION ===
-  { field: 'include_hipaa', question_en: "Include HIPAA Authorization (access to medical records for financial purposes)?", question_es: "¿Incluir Autorización HIPAA (acceso a registros médicos para propósitos financieros)?", type: 'boolean', section: 'hipaa' },
+  { field: 'include_hipaa', question_en: "Include HIPAA Authorization (access to medical records for financial decision-making)?", question_es: "¿Incluir Autorización HIPAA (acceso a registros médicos para tomar decisiones financieras)?", type: 'boolean', section: 'hipaa' },
   
   // === SECTION 8: RECORDING & REAL ESTATE ===
-  { field: 'record_for_real_estate', question_en: "Do you intend to RECORD this POA with the County Recorder?", question_es: "¿Pretende REGISTRAR este Poder Notarial con el Registrador del Condado?", type: 'boolean', section: 'recording' },
-  { field: 'recording_county', question_en: "Which county will this be recorded in?", question_es: "¿En qué condado se registrará?", type: 'text', showIf: { field: 'record_for_real_estate', value: true }, section: 'recording' },
+  { field: 'record_for_real_estate', question_en: "Do you intend to RECORD this POA with the County Recorder (required for real estate transactions)?", question_es: "¿Pretende REGISTRAR este Poder Notarial con el Registrador del Condado (requerido para transacciones de bienes raíces)?", type: 'boolean', section: 'recording' },
+  { field: 'recording_county', question_en: "Which county will this be recorded in?", question_es: "¿En qué condado se registrará (ejemplo: Los Angeles, Orange, San Diego)?", type: 'text', showIf: { field: 'record_for_real_estate', value: true }, section: 'recording' },
   
   // === SECTION 9: SPECIAL INSTRUCTIONS ===
-  { field: 'has_special_instructions', question_en: "Do you have any special instructions or limitations?", question_es: "¿Tiene instrucciones especiales o limitaciones?", type: 'boolean', section: 'special' },
-  { field: 'special_instructions', question_en: "Please describe your special instructions:", question_es: "Por favor describa sus instrucciones especiales:", type: 'text', showIf: { field: 'has_special_instructions', value: true }, section: 'special' },
+  { field: 'has_special_instructions', question_en: "Do you have any special instructions or limitations for your Agent?", question_es: "¿Tiene instrucciones especiales o limitaciones para su Apoderado?", type: 'boolean', section: 'special' },
+  { field: 'special_instructions', question_en: "Please describe your special instructions:", question_es: "Por favor describa sus instrucciones especiales (sea específico):", type: 'text', showIf: { field: 'has_special_instructions', value: true }, section: 'special' },
 ];
 
 const TRANSLATIONS = {

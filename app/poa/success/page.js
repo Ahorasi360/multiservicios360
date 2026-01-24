@@ -4,6 +4,100 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PDFDocument } from 'pdf-lib';
 
+// Spanish to English relationship translations
+const RELATIONSHIP_TRANSLATIONS = {
+  // Immediate family
+  'esposo': 'husband',
+  'esposa': 'wife',
+  'hijo': 'son',
+  'hija': 'daughter',
+  'padre': 'father',
+  'madre': 'mother',
+  'hermano': 'brother',
+  'hermana': 'sister',
+  
+  // In-laws
+  'suegro': 'father-in-law',
+  'suegra': 'mother-in-law',
+  'cuñado': 'brother-in-law',
+  'cuñada': 'sister-in-law',
+  'yerno': 'son-in-law',
+  'nuera': 'daughter-in-law',
+  'consuegro': 'co-father-in-law',
+  'consuegra': 'co-mother-in-law',
+  
+  // Extended family
+  'abuelo': 'grandfather',
+  'abuela': 'grandmother',
+  'nieto': 'grandson',
+  'nieta': 'granddaughter',
+  'tio': 'uncle',
+  'tío': 'uncle',
+  'tia': 'aunt',
+  'tía': 'aunt',
+  'primo': 'cousin',
+  'prima': 'cousin',
+  'sobrino': 'nephew',
+  'sobrina': 'niece',
+  
+  // Step family
+  'padrastro': 'stepfather',
+  'madrastra': 'stepmother',
+  'hijastro': 'stepson',
+  'hijastra': 'stepdaughter',
+  'hermanastro': 'stepbrother',
+  'hermanastra': 'stepsister',
+  
+  // Other relationships
+  'amigo': 'friend',
+  'amiga': 'friend',
+  'novio': 'boyfriend',
+  'novia': 'girlfriend',
+  'prometido': 'fiancé',
+  'prometida': 'fiancée',
+  'pareja': 'partner',
+  'vecino': 'neighbor',
+  'vecina': 'neighbor',
+  'colega': 'colleague',
+  'jefe': 'boss',
+  'empleado': 'employee',
+  'empleada': 'employee',
+  'socio': 'business partner',
+  'socia': 'business partner',
+  'abogado': 'attorney',
+  'abogada': 'attorney',
+  'contador': 'accountant',
+  'contadora': 'accountant',
+  
+  // Great relatives
+  'bisabuelo': 'great-grandfather',
+  'bisabuela': 'great-grandmother',
+  'bisnieto': 'great-grandson',
+  'bisnieta': 'great-granddaughter',
+  'tataraabuelo': 'great-great-grandfather',
+  'tataraabuela': 'great-great-grandmother',
+};
+
+// Function to translate relationship from Spanish to English
+const translateRelationship = (spanishRelationship) => {
+  if (!spanishRelationship) return spanishRelationship;
+  
+  const lower = spanishRelationship.toLowerCase().trim();
+  
+  // Check for exact match
+  if (RELATIONSHIP_TRANSLATIONS[lower]) {
+    // Preserve original capitalization style
+    const translation = RELATIONSHIP_TRANSLATIONS[lower];
+    if (spanishRelationship[0] === spanishRelationship[0].toUpperCase()) {
+      return translation.charAt(0).toUpperCase() + translation.slice(1);
+    }
+    return translation;
+  }
+  
+  // If no translation found, return original
+  return spanishRelationship;
+};
+
 const CheckIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12"></polyline>
@@ -570,7 +664,7 @@ Before signing this power of attorney, you should clearly understand the limitat
       if (d.agent_relationship) {
         agentText += lang === 'es'
           ? ` (Relacion: ${d.agent_relationship})`
-          : ` (Relationship: ${d.agent_relationship})`;
+          : ` (Relationship: ${translateRelationship(d.agent_relationship)})`;
       }
       y = wrap(agentText, m, y, cw, 5);
       y += 6;
@@ -591,7 +685,7 @@ Before signing this power of attorney, you should clearly understand the limitat
         if (d.successor_relationship) {
           successorText += lang === 'es'
             ? ` (Relacion: ${d.successor_relationship})`
-            : ` (Relationship: ${d.successor_relationship})`;
+            : ` (Relationship: ${translateRelationship(d.successor_relationship)})`;
         }
         y = wrap(successorText, m, y, cw, 5);
         y += 4;

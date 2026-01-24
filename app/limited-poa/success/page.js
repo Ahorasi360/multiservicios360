@@ -4,6 +4,100 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PDFDocument } from 'pdf-lib';
 
+// Spanish to English relationship translations
+const RELATIONSHIP_TRANSLATIONS = {
+  // Immediate family
+  'esposo': 'husband',
+  'esposa': 'wife',
+  'hijo': 'son',
+  'hija': 'daughter',
+  'padre': 'father',
+  'madre': 'mother',
+  'hermano': 'brother',
+  'hermana': 'sister',
+  
+  // In-laws
+  'suegro': 'father-in-law',
+  'suegra': 'mother-in-law',
+  'cuñado': 'brother-in-law',
+  'cuñada': 'sister-in-law',
+  'yerno': 'son-in-law',
+  'nuera': 'daughter-in-law',
+  'consuegro': 'co-father-in-law',
+  'consuegra': 'co-mother-in-law',
+  
+  // Extended family
+  'abuelo': 'grandfather',
+  'abuela': 'grandmother',
+  'nieto': 'grandson',
+  'nieta': 'granddaughter',
+  'tio': 'uncle',
+  'tío': 'uncle',
+  'tia': 'aunt',
+  'tía': 'aunt',
+  'primo': 'cousin',
+  'prima': 'cousin',
+  'sobrino': 'nephew',
+  'sobrina': 'niece',
+  
+  // Step family
+  'padrastro': 'stepfather',
+  'madrastra': 'stepmother',
+  'hijastro': 'stepson',
+  'hijastra': 'stepdaughter',
+  'hermanastro': 'stepbrother',
+  'hermanastra': 'stepsister',
+  
+  // Other relationships
+  'amigo': 'friend',
+  'amiga': 'friend',
+  'novio': 'boyfriend',
+  'novia': 'girlfriend',
+  'prometido': 'fiancé',
+  'prometida': 'fiancée',
+  'pareja': 'partner',
+  'vecino': 'neighbor',
+  'vecina': 'neighbor',
+  'colega': 'colleague',
+  'jefe': 'boss',
+  'empleado': 'employee',
+  'empleada': 'employee',
+  'socio': 'business partner',
+  'socia': 'business partner',
+  'abogado': 'attorney',
+  'abogada': 'attorney',
+  'contador': 'accountant',
+  'contadora': 'accountant',
+  
+  // Great relatives
+  'bisabuelo': 'great-grandfather',
+  'bisabuela': 'great-grandmother',
+  'bisnieto': 'great-grandson',
+  'bisnieta': 'great-granddaughter',
+  'tataraabuelo': 'great-great-grandfather',
+  'tataraabuela': 'great-great-grandmother',
+};
+
+// Function to translate relationship from Spanish to English
+const translateRelationship = (spanishRelationship) => {
+  if (!spanishRelationship) return spanishRelationship;
+  
+  const lower = spanishRelationship.toLowerCase().trim();
+  
+  // Check for exact match
+  if (RELATIONSHIP_TRANSLATIONS[lower]) {
+    // Preserve original capitalization style
+    const translation = RELATIONSHIP_TRANSLATIONS[lower];
+    if (spanishRelationship[0] === spanishRelationship[0].toUpperCase()) {
+      return translation.charAt(0).toUpperCase() + translation.slice(1);
+    }
+    return translation;
+  }
+  
+  // If no translation found, return original
+  return spanishRelationship;
+};
+
 const CheckIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12"></polyline>
@@ -42,6 +136,15 @@ const CalendarIcon = () => (
   </svg>
 );
 
+const PenIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+    <path d="M2 2l7.586 7.586"></path>
+    <circle cx="11" cy="11" r="2"></circle>
+  </svg>
+);
+
 function SuccessContent() {
   const searchParams = useSearchParams();
   const [matterData, setMatterData] = useState(null);
@@ -52,6 +155,11 @@ function SuccessContent() {
   const [executionDate, setExecutionDate] = useState('');
   const [executionDateError, setExecutionDateError] = useState('');
   const [isFinalized, setIsFinalized] = useState(false);
+  
+  // Electronic signature state
+  const [electronicSignature, setElectronicSignature] = useState('');
+  const [signatureAccepted, setSignatureAccepted] = useState(false);
+  const [signatureError, setSignatureError] = useState('');
 
   const matterId = searchParams.get('matter_id');
 
@@ -68,6 +176,11 @@ function SuccessContent() {
             if (data.matter.execution_date) {
               setExecutionDate(data.matter.execution_date);
               setIsFinalized(true);
+            }
+            // Load saved electronic signature if exists
+            if (data.matter.electronic_signature) {
+              setElectronicSignature(data.matter.electronic_signature);
+              setSignatureAccepted(true);
             }
           }
         } catch (error) {
@@ -139,6 +252,13 @@ function SuccessContent() {
     executionDateRequired: 'La fecha de ejecucion es obligatoria.',
     executionDateInvalid: 'Formato de fecha invalido. Use MM/DD/AAAA.',
     executionDateHelp: 'Esta es la fecha en que firmara el documento ante el notario.',
+    signatureLabel: 'Firma Electronica (Requerida)',
+    signaturePlaceholder: 'Escriba su nombre completo',
+    signatureHelp: 'Al escribir su nombre, confirma que creo este documento usted mismo.',
+    signatureRequired: 'La firma electronica es obligatoria.',
+    signatureAcceptLabel: 'Acepto que cree este documento yo mismo usando las herramientas de software de Multiservicios 360, y que no recibi asesoria legal.',
+    signatureAcceptRequired: 'Debe aceptar los terminos para continuar.',
+    finalized: 'Documento finalizado',
   } : {
     title: 'Payment Successful!',
     subtitle: 'Your Limited Power of Attorney is ready',
@@ -164,6 +284,13 @@ function SuccessContent() {
     executionDateRequired: 'Execution date is required.',
     executionDateInvalid: 'Invalid date format. Use MM/DD/YYYY.',
     executionDateHelp: 'This is the date you will sign the document before the notary.',
+    signatureLabel: 'Electronic Signature (Required)',
+    signaturePlaceholder: 'Type your full name',
+    signatureHelp: 'By typing your name, you confirm that you created this document yourself.',
+    signatureRequired: 'Electronic signature is required.',
+    signatureAcceptLabel: 'I accept that I created this document myself using Multiservicios 360 software tools, and that I did not receive legal advice.',
+    signatureAcceptRequired: 'You must accept the terms to continue.',
+    finalized: 'Document finalized',
   };
 
   // Helper function to get purpose category label
@@ -186,7 +313,7 @@ function SuccessContent() {
     if (d.purpose_category === 'real_estate') {
       if (d.re_sign_deed) powers.push(lang === 'en' ? 'Sign deeds and transfer documents' : 'Firmar escrituras y documentos de transferencia');
       if (d.re_sign_escrow) powers.push(lang === 'en' ? 'Sign escrow and closing documents' : 'Firmar documentos de escrow y cierre');
-      if (d.re_sign_tax_forms) powers.push(lang === 'en' ? 'Sign IRS Form 593 and PCOR' : 'Firmar Formulario 593 del IRS y PCOR');
+      if (d.re_sign_tax_forms) powers.push(lang === 'en' ? 'Sign California FTB Form 593 and PCOR' : 'Firmar Formulario 593 del FTB de California y PCOR');
       if (d.re_receive_proceeds) powers.push(lang === 'en' ? 'Receive and disburse sale proceeds' : 'Recibir y desembolsar fondos de venta');
       if (d.re_coordinate_recording) powers.push(lang === 'en' ? 'Coordinate county recording' : 'Coordinar registro del condado');
     }
@@ -243,6 +370,19 @@ function SuccessContent() {
     }
     if (!isValidDate(executionDate)) {
       setExecutionDateError(t.executionDateInvalid);
+      return;
+    }
+
+    // VALIDATION: Electronic signature is required
+    if (!electronicSignature || electronicSignature.trim().length < 2) {
+      setSignatureError(t.signatureRequired);
+      return;
+    }
+    setSignatureError('');
+
+    // VALIDATION: Must accept terms
+    if (!signatureAccepted) {
+      setSignatureError(t.signatureAcceptRequired);
       return;
     }
 
@@ -438,7 +578,7 @@ You should read this power of attorney carefully. If you do not understand the p
     if (d.agent_relationship) {
       agentText += lang === 'es'
         ? ` (Relacion: ${d.agent_relationship})`
-        : ` (Relationship: ${d.agent_relationship})`;
+        : ` (Relationship: ${translateRelationship(d.agent_relationship)})`;
     }
     y = wrap(agentText, m, y, cw, 5);
     y += 8;
@@ -951,26 +1091,27 @@ If you do not faithfully perform your duties under the law and under the power o
     });
     y += 10;
 
-    // Signature lines
+    // ELECTRONIC SIGNATURE - Typed signature from user input
     doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'Firma del Usuario:' : 'User Signature:', m, y);
-    y += 8;
-    doc.setFont('helvetica', 'normal');
-    doc.line(m, y, m + 120, y);
-    y += 12;
+    doc.setFontSize(11);
+    doc.text(lang === 'es' ? 'FIRMA ELECTRONICA:' : 'ELECTRONIC SIGNATURE:', m, y);
+    y += 10;
 
-    doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'Nombre Impreso:' : 'Printed Name:', m, y);
-    y += 8;
-    doc.setFont('helvetica', 'normal');
-    doc.text(d.principal_name || '________________________________', m, y);
-    y += 12;
+    // Draw signature box
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.3);
+    doc.rect(m, y, 120, 15);
 
-    doc.setFont('helvetica', 'bold');
-    doc.text(lang === 'es' ? 'Fecha:' : 'Date:', m, y);
-    y += 8;
+    // Print the typed signature inside the box
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(14);
+    doc.text(electronicSignature, m + 5, y + 10);
+    y += 20;
+
     doc.setFont('helvetica', 'normal');
-    doc.text('________________________________', m, y);
+    doc.setFontSize(10);
+    doc.text(lang === 'es' ? 'Fecha: ' : 'Date: ', m, y);
+    doc.text(executionDate, m + 20, y);
 
     // ============================================
     // FOOTER ON ALL PAGES
@@ -1018,13 +1159,14 @@ If you do not faithfully perform your duties under the law and under the power o
     // Mark as finalized (optional - save to database)
     if (!isFinalized) {
       setIsFinalized(true);
-      // Optionally save execution date to database
+      // Optionally save execution date and signature to database
       try {
         await fetch(`/api/limited-poa/matters/${matterId}/finalize`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             execution_date: executionDate,
+            electronic_signature: electronicSignature,
             signed_at_utc: new Date().toISOString(),
             signed_at_local: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
           })
@@ -1149,6 +1291,84 @@ If you do not faithfully perform your duties under the law and under the power o
             {isFinalized && (
               <p style={{ color: '#059669', fontSize: '14px', margin: '8px 0 0', fontWeight: '500' }}>
                 ✅ {language === 'es' ? 'Documento finalizado' : 'Document finalized'}
+              </p>
+            )}
+          </div>
+
+          {/* ============================================ */}
+          {/* ELECTRONIC SIGNATURE INPUT */}
+          {/* ============================================ */}
+          <div style={{ 
+            backgroundColor: '#EDE9FE', 
+            border: '2px solid #8B5CF6', 
+            borderRadius: '12px', 
+            padding: '20px', 
+            marginBottom: '24px',
+            textAlign: 'left'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <PenIcon />
+              <label style={{ fontSize: '16px', fontWeight: '600', color: '#5B21B6' }}>
+                {t.signatureLabel} *
+              </label>
+            </div>
+            <p style={{ fontSize: '12px', color: '#6D28D9', marginBottom: '12px', margin: '0 0 12px 0' }}>
+              {t.signatureHelp}
+            </p>
+            <input
+              type="text"
+              value={electronicSignature}
+              onChange={(e) => {
+                setElectronicSignature(e.target.value);
+                if (signatureError) setSignatureError('');
+              }}
+              placeholder={t.signaturePlaceholder}
+              disabled={isFinalized}
+              style={{
+                width: '100%',
+                padding: '14px 16px',
+                fontSize: '18px',
+                fontFamily: 'cursive, serif',
+                fontStyle: 'italic',
+                border: signatureError ? '2px solid #DC2626' : '2px solid #D1D5DB',
+                borderRadius: '8px',
+                marginBottom: '12px',
+                backgroundColor: isFinalized ? '#F3F4F6' : 'white',
+                boxSizing: 'border-box'
+              }}
+            />
+            
+            {/* Acceptance checkbox */}
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: isFinalized ? 'not-allowed' : 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={signatureAccepted}
+                onChange={(e) => {
+                  setSignatureAccepted(e.target.checked);
+                  if (signatureError) setSignatureError('');
+                }}
+                disabled={isFinalized}
+                style={{ 
+                  width: '20px', 
+                  height: '20px', 
+                  marginTop: '2px',
+                  accentColor: '#8B5CF6'
+                }}
+              />
+              <span style={{ fontSize: '13px', color: '#5B21B6', lineHeight: '1.4' }}>
+                {t.signatureAcceptLabel}
+              </span>
+            </label>
+            
+            {signatureError && (
+              <p style={{ color: '#DC2626', fontSize: '12px', marginTop: '8px', margin: '8px 0 0 0' }}>
+                ⚠️ {signatureError}
+              </p>
+            )}
+            
+            {isFinalized && (
+              <p style={{ color: '#059669', fontSize: '14px', marginTop: '12px', margin: '12px 0 0 0', fontWeight: '500' }}>
+                ✅ {t.finalized}
               </p>
             )}
           </div>

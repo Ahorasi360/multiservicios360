@@ -41,7 +41,7 @@ const QUESTIONS = [
   { field: 're_property_apn', question_en: "What is the APN (Assessor's Parcel Number)?", question_es: "¿Cuál es el APN (Número de Parcela del Tasador)?", type: 'text', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' } },
   { field: 're_sign_deed', question_en: "Authorize Agent to sign deeds (grant deed, quitclaim, trust transfer)?", question_es: "¿Autorizar al Apoderado a firmar escrituras?", type: 'boolean', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' } },
   { field: 're_sign_escrow', question_en: "Authorize Agent to sign escrow instructions and closing documents?", question_es: "¿Autorizar al Apoderado a firmar instrucciones de escrow y documentos de cierre?", type: 'boolean', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' } },
-  { field: 're_sign_tax_forms', question_en: "Authorize Agent to sign IRS Form 593 and PCOR?", question_es: "¿Autorizar al Apoderado a firmar el Formulario 593 del IRS y PCOR?", type: 'boolean', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' } },
+  { field: 're_sign_tax_forms', question_en: "Authorize Agent to sign California FTB Form 593 and PCOR?", question_es: "¿Autorizar al Apoderado a firmar el Formulario 593 del FTB de California y PCOR?", type: 'boolean', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' } },
   { field: 're_receive_proceeds', question_en: "Authorize Agent to receive and disburse sale proceeds?", question_es: "¿Autorizar al Apoderado a recibir y desembolsar los fondos de la venta?", type: 'boolean', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' } },
   { field: 're_coordinate_recording', question_en: "Authorize Agent to coordinate recording with County Recorder?", question_es: "¿Autorizar al Apoderado a coordinar el registro con el Registrador del Condado?", type: 'boolean', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' } },
   { field: 'bank_name', question_en: "What is the name of the bank?", question_es: "¿Cuál es el nombre del banco?", type: 'text', section: 'banking', showIf: { field: 'purpose_category', value: 'banking' } },
@@ -232,7 +232,7 @@ const DocumentPreview = ({ data, language, isPaid }) => {
     if (data.purpose_category === 'real_estate') {
       if (data.re_sign_deed) powers.push(language === 'en' ? 'Sign deeds and transfer documents' : 'Firmar escrituras y documentos de transferencia');
       if (data.re_sign_escrow) powers.push(language === 'en' ? 'Sign escrow and closing documents' : 'Firmar documentos de escrow y cierre');
-      if (data.re_sign_tax_forms) powers.push(language === 'en' ? 'Sign IRS Form 593 and PCOR' : 'Firmar Formulario 593 del IRS y PCOR');
+      if (data.re_sign_tax_forms) powers.push(language === 'en' ? 'Sign California FTB Form 593 and PCOR' : 'Firmar Formulario 593 del FTB de California y PCOR');
       if (data.re_receive_proceeds) powers.push(language === 'en' ? 'Receive and disburse sale proceeds' : 'Recibir y desembolsar fondos de venta');
       if (data.re_coordinate_recording) powers.push(language === 'en' ? 'Coordinate county recording' : 'Coordinar registro del condado');
     }
