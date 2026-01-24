@@ -107,6 +107,10 @@ const TRANSLATIONS = {
     no: "No",
     options: "Options:",
     saved: "Saved:",
+    edit: "Edit",
+    save: "Save",
+    cancel: "Cancel",
+    clickToEdit: "Click to edit",
     pleaseAnswer: "Please answer Yes or No.",
     pleaseSelect: "Please select an option.",
     paying: "Processing...",
@@ -162,6 +166,10 @@ const TRANSLATIONS = {
     no: "No",
     options: "Opciones:",
     saved: "Guardado:",
+    edit: "Editar",
+    save: "Guardar",
+    cancel: "Cancelar",
+    clickToEdit: "Clic para editar",
     pleaseAnswer: "Por favor responda Sí o No.",
     pleaseSelect: "Por favor seleccione una opción.",
     paying: "Procesando...",
@@ -545,6 +553,41 @@ export default function LimitedPOAWizard() {
       
       setMessages(prev => [...prev, { role: 'assistant', content: questionText }]);
     }, 100);
+  };
+
+  const startEditing = (field, currentValue) => {
+    setEditingField(field);
+    setEditValue(currentValue === true ? 'true' : currentValue === false ? 'false' : currentValue);
+  };
+
+  const cancelEditing = () => {
+    setEditingField(null);
+    setEditValue('');
+  };
+
+  const saveEdit = (field) => {
+    const question = QUESTIONS.find(q => q.field === field);
+    if (!question) return;
+    
+    let newValue = editValue;
+    
+    if (question.type === 'boolean') {
+      newValue = editValue === 'true';
+    }
+    
+    const newData = { ...intakeData, [field]: newValue };
+    
+    if (question.type === 'boolean' && newValue === false) {
+      QUESTIONS.forEach(q => {
+        if (q.showIf && q.showIf.field === field) {
+          delete newData[q.field];
+        }
+      });
+    }
+    
+    setIntakeData(newData);
+    setEditingField(null);
+    setEditValue('');
   };
 
   const handleSubmit = async () => {

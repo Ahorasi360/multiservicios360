@@ -79,6 +79,10 @@ const TRANSLATIONS = {
     no: "No", 
     options: "Options:", 
     saved: "Saved:", 
+    edit: "Edit",
+    save: "Save",
+    cancel: "Cancel",
+    clickToEdit: "Click to edit", 
     pleaseAnswer: "Please answer Yes or No.", 
     pleaseSelect: "Please select one of the options.", 
     paying: "Processing...", 
@@ -108,6 +112,10 @@ const TRANSLATIONS = {
     basePrice: "Base Price", 
     total: "Total", 
     selectedAddOns: "Selected Add-Ons",
+    edit: "Edit",
+    save: "Save",
+    cancel: "Cancel",
+    clickToEdit: "Click to edit",
     sections: {
       principal: "Principal Information",
       agent: "Agent Information", 
@@ -138,6 +146,10 @@ const TRANSLATIONS = {
     no: "No", 
     options: "Opciones:", 
     saved: "Guardado:", 
+    edit: "Editar",
+    save: "Guardar",
+    cancel: "Cancelar",
+    clickToEdit: "Clic para editar", 
     pleaseAnswer: "Por favor responda Sí o No.", 
     pleaseSelect: "Por favor seleccione una de las opciones.", 
     paying: "Procesando...", 
@@ -167,6 +179,10 @@ const TRANSLATIONS = {
     basePrice: "Precio Base", 
     total: "Total", 
     selectedAddOns: "Servicios Adicionales",
+    edit: "Editar",
+    save: "Guardar",
+    cancel: "Cancelar",
+    clickToEdit: "Clic para editar",
     sections: {
       principal: "Información del Poderdante",
       agent: "Información del Apoderado",
@@ -352,6 +368,8 @@ export default function PoAIntakeWizard() {
   const [reviewTier, setReviewTier] = useState('draft_only');
   const [selectedUpsells, setSelectedUpsells] = useState([]);
   const [previewTab, setPreviewTab] = useState('answers');
+  const [editingField, setEditingField] = useState(null);
+  const [editValue, setEditValue] = useState('');
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
 
@@ -512,6 +530,41 @@ setCurrentQuestionIndex(nextIdx);
     }, 100);
   };
 
+  const startEditing = (field, currentValue) => {
+    setEditingField(field);
+    setEditValue(currentValue === true ? 'true' : currentValue === false ? 'false' : currentValue);
+  };
+
+  const cancelEditing = () => {
+    setEditingField(null);
+    setEditValue('');
+  };
+
+  const saveEdit = (field) => {
+    const question = QUESTIONS.find(q => q.field === field);
+    if (!question) return;
+    
+    let newValue = editValue;
+    
+    if (question.type === 'boolean') {
+      newValue = editValue === 'true';
+    }
+    
+    const newData = { ...intakeData, [field]: newValue };
+    
+    if (question.type === 'boolean' && newValue === false) {
+      QUESTIONS.forEach(q => {
+        if (q.showIf && q.showIf.field === field) {
+          delete newData[q.field];
+        }
+      });
+    }
+    
+    setIntakeData(newData);
+    setEditingField(null);
+    setEditValue('');
+  };
+
   const handleSubmit = async () => {
     if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
     setIsLoading(true);
@@ -556,15 +609,12 @@ setCurrentQuestionIndex(nextIdx);
     const entries = Object.entries(intakeData);
     if (entries.length === 0) return <p style={{ color: '#9CA3AF', textAlign: 'center', padding: '20px' }}>{t.answersWillAppear}</p>;
     
-    // Group by section
     const sections = {};
     entries.forEach(([key, value]) => {
       const q = QUESTIONS.find(x => x.field === key);
       const section = q?.section || 'other';
       if (!sections[section]) sections[section] = [];
-      const label = q ? (language === 'en' ? q.question_en : q.question_es) : key;
-      const displayValue = value === true ? t.yes : value === false ? t.no : value;
-      sections[section].push({ key, label, displayValue });
+      sections[section].push({ key, value, question: q });
     });
     
     return (
@@ -574,12 +624,158 @@ setCurrentQuestionIndex(nextIdx);
             <div style={{ fontSize: '12px', fontWeight: '600', color: '#2563EB', marginBottom: '8px', textTransform: 'uppercase' }}>
               {t.sections[section] || section}
             </div>
-            {items.map(({ key, label, displayValue }) => (
-              <div key={key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #F3F4F6', fontSize: '13px' }}>
-                <span style={{ color: '#6B7280', flex: 1 }}>{label.substring(0, 40)}...</span>
-                <span style={{ fontWeight: '500', color: '#1F2937', marginLeft: '8px' }}>{String(displayValue).substring(0, 30)}</span>
-              </div>
-            ))}
+            {items.map(({ key, value, question }) => {
+              const isEditing = editingField === key;
+              const displayValue = value === true ? t.yes : value === false ? t.no : value;
+              const label = question ? (language === 'en' ? question.question_en : question.question_es) : key;
+              
+              return (
+                <div 
+                  key={key} 
+                  style={{ 
+                    padding: '10px 12px', 
+                    borderBottom: '1px solid #F3F4F6', 
+                    fontSize: '13px',
+                    backgroundColor: isEditing ? '#EFF6FF' : 'transparent',
+                    borderRadius: isEditing ? '8px' : '0',
+                    marginBottom: isEditing ? '8px' : '0'
+                  }}
+                >
+                  <div style={{ color: '#6B7280', marginBottom: '4px', fontSize: '12px' }}>
+                    {label.length > 60 ? label.substring(0, 60) + '...' : label}
+                  </div>
+                  
+                  {isEditing ? (
+                    <div style={{ marginTop: '8px' }}>
+                      {question?.type === 'boolean' ? (
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                          <button
+                            onClick={() => setEditValue('true')}
+                            style={{
+                              padding: '8px 16px',
+                              border: '2px solid',
+                              borderColor: editValue === 'true' ? '#2563EB' : '#D1D5DB',
+                              borderRadius: '6px',
+                              backgroundColor: editValue === 'true' ? '#EFF6FF' : 'white',
+                              color: editValue === 'true' ? '#2563EB' : '#374151',
+                              fontWeight: '600',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {t.yes}
+                          </button>
+                          <button
+                            onClick={() => setEditValue('false')}
+                            style={{
+                              padding: '8px 16px',
+                              border: '2px solid',
+                              borderColor: editValue === 'false' ? '#2563EB' : '#D1D5DB',
+                              borderRadius: '6px',
+                              backgroundColor: editValue === 'false' ? '#EFF6FF' : 'white',
+                              color: editValue === 'false' ? '#2563EB' : '#374151',
+                              fontWeight: '600',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {t.no}
+                          </button>
+                        </div>
+                      ) : question?.type === 'select' ? (
+                        <select
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            marginBottom: '8px'
+                          }}
+                        >
+                          {question.options?.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {language === 'en' ? opt.label_en : opt.label_es}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type="text"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            marginBottom: '8px'
+                          }}
+                        />
+                      )}
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          onClick={() => saveEdit(key)}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#059669',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {t.save}
+                        </button>
+                        <button
+                          onClick={cancelEditing}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#F3F4F6',
+                            color: '#374151',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {t.cancel}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div 
+                      onClick={() => startEditing(key, value)}
+                      style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        padding: '4px 0'
+                      }}
+                      title={t.clickToEdit}
+                    >
+                      <span style={{ fontWeight: '600', color: '#1F2937' }}>
+                        {String(displayValue).length > 35 ? String(displayValue).substring(0, 35) + '...' : displayValue}
+                      </span>
+                      <span style={{ 
+                        fontSize: '11px', 
+                        color: '#9CA3AF',
+                        padding: '2px 6px',
+                        backgroundColor: '#F3F4F6',
+                        borderRadius: '4px'
+                      }}>
+                        {t.edit}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ))}
       </div>
