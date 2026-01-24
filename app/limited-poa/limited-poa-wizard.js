@@ -102,6 +102,7 @@ const TRANSLATIONS = {
     clientEmail: "Your Email",
     clientPhone: "Your Phone (optional)",
     continue: "Continue to Questions",
+    back: "Back",
     yes: "Yes",
     no: "No",
     options: "Options:",
@@ -156,6 +157,7 @@ const TRANSLATIONS = {
     clientEmail: "Su Correo Electrónico",
     clientPhone: "Su Teléfono (opcional)",
     continue: "Continuar a las Preguntas",
+    back: "Atrás",
     yes: "Sí",
     no: "No",
     options: "Opciones:",
@@ -691,6 +693,12 @@ export default function LimitedPOAWizard() {
               <div style={{ maxHeight: '420px', overflowY: 'auto' }}>
                 {previewTab === 'answers' ? getLivePreview() : <DocumentPreview data={intakeData} language={language} isPaid={isPaid} />}
               </div>
+              <div style={{ marginTop: '16px', display: 'flex', gap: '12px' }}>
+                <button type="button" onClick={() => setCurrentStep('client')} style={{ ...st.btnPrimary, backgroundColor: '#F3F4F6', color: '#374151', border: '1px solid #D1D5DB', fontWeight: '600' }}>← {t.back}</button>
+                {Object.keys(intakeData).length === visibleQuestions.length && (
+                  <button onClick={() => setCurrentStep('tier')} style={{ ...st.btnPrimary, backgroundColor: '#F59E0B', color: 'white', flex: 1 }}>{t.continue}</button>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -714,6 +722,7 @@ export default function LimitedPOAWizard() {
               <button onClick={handleSubmit} disabled={isLoading} style={{ ...st.btnPrimary, marginTop: '8px', backgroundColor: isLoading ? '#D1D5DB' : '#F59E0B', color: 'white', cursor: isLoading ? 'not-allowed' : 'pointer' }}>
                 {isLoading ? t.paying : t.submit} - ${TIERS.find(t => t.value === reviewTier)?.price}
               </button>
+              <button type="button" onClick={() => setCurrentStep('intake')} style={{ ...st.btnPrimary, marginTop: '12px', backgroundColor: '#F3F4F6', color: '#374151', border: '1px solid #D1D5DB', fontWeight: '600' }}>← {t.back}</button>
             </div>
 
             <div style={st.card}>

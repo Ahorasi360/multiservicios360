@@ -74,6 +74,7 @@ const TRANSLATIONS = {
     clientEmail: "Your Email", 
     clientPhone: "Your Phone (optional)", 
     continue: "Continue to Questions", 
+    back: "Back",
     yes: "Yes", 
     no: "No", 
     options: "Options:", 
@@ -132,6 +133,7 @@ const TRANSLATIONS = {
     clientEmail: "Su Correo Electrónico", 
     clientPhone: "Su Teléfono (opcional)", 
     continue: "Continuar", 
+    back: "Atrás",
     yes: "Sí", 
     no: "No", 
     options: "Opciones:", 
@@ -667,6 +669,12 @@ setCurrentQuestionIndex(nextIdx);
                 </button>
               </div>
               {previewTab === 'answers' ? <div style={{ maxHeight: '440px', overflowY: 'auto' }}>{getLivePreview()}</div> : <DocumentPreview intakeData={intakeData} language={language} isPaid={isPaid} />}
+              <div style={{ marginTop: '16px', display: 'flex', gap: '12px' }}>
+                <button type="button" onClick={() => setCurrentStep('client')} style={{ ...st.btnPrimary, backgroundColor: '#F3F4F6', color: '#374151', border: '1px solid #D1D5DB', fontWeight: '600' }}>← {t.back}</button>
+                {Object.keys(intakeData).length === visibleQuestions.length && (
+                  <button onClick={() => setCurrentStep('tier')} style={{ ...st.btnPrimary, ...st.btnGreen, flex: 1 }}>{t.continue}</button>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -757,6 +765,7 @@ setCurrentQuestionIndex(nextIdx);
                 <button onClick={handleSubmit} disabled={isLoading} style={{ ...st.btnPrimary, marginTop: '16px', ...(isLoading ? st.btnDisabled : st.btnGreen) }}>
                   {isLoading ? t.paying : t.submit}
                 </button>
+                <button type="button" onClick={() => setCurrentStep('intake')} style={{ ...st.btnPrimary, marginTop: '12px', backgroundColor: '#F3F4F6', color: '#374151', border: '1px solid #D1D5DB', fontWeight: '600' }}>← {t.back}</button>
               </div>
               <div style={st.card}>
                 <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>{language === 'en' ? 'Preview' : 'Vista Previa'}</h3>
