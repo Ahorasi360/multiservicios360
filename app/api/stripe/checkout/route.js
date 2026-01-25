@@ -8,21 +8,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { 
-      tier, 
-      addons, 
-      clientName, 
-      clientEmail, 
-      intakeData,
-      language,
-      matterId 
-    } = body;
+    const { tier, addons, clientName, clientEmail, intakeData, language, matterId } = body;
 
-    // Calculate prices
     const tierPrices = {
-      draft_only: { amount: 14900, name: 'POA - Draft Only', nameEs: 'POA - Solo Borrador' },
-      attorney_review_silent: { amount: 34900, name: 'POA - Attorney Review', nameEs: 'POA - Revision de Abogado' },
-      attorney_review_call: { amount: 49900, name: 'POA - Attorney Review + Call', nameEs: 'POA - Revision + Consulta' },
+      draft_only: { amount: 14900, name: 'General POA - Self-Prepared Document', nameEs: 'POA General - Documento Autopreparado' },
+      attorney_review_silent: { amount: 34900, name: 'General POA - Professional Review', nameEs: 'POA General - Revision Profesional' },
+      attorney_review_call: { amount: 49900, name: 'General POA - Professional Consultation', nameEs: 'POA General - Consulta Profesional' },
     };
 
     const addonPrices = {
@@ -31,27 +22,22 @@ export async function POST(request) {
       amendment: { amount: 9900, name: 'Future Amendments Credit', nameEs: 'Credito para Enmiendas' },
     };
 
-    // Build line items
     const lineItems = [];
     const isSpanish = language === 'es';
 
-    // Add tier
     const selectedTier = tierPrices[tier] || tierPrices.draft_only;
     lineItems.push({
       price_data: {
         currency: 'usd',
         product_data: {
           name: isSpanish ? selectedTier.nameEs : selectedTier.name,
-          description: isSpanish 
-            ? 'Poder Notarial de California' 
-            : 'California Power of Attorney',
+          description: isSpanish ? 'Poder Notarial General de California' : 'California General Power of Attorney',
         },
         unit_amount: selectedTier.amount,
       },
       quantity: 1,
     });
 
-    // Add addons
     if (addons && addons.length > 0) {
       addons.forEach(addonId => {
         const addon = addonPrices[addonId];
@@ -59,9 +45,7 @@ export async function POST(request) {
           lineItems.push({
             price_data: {
               currency: 'usd',
-              product_data: {
-                name: isSpanish ? addon.nameEs : addon.name,
-              },
+              product_data: { name: isSpanish ? addon.nameEs : addon.name },
               unit_amount: addon.amount,
             },
             quantity: 1,
@@ -70,10 +54,8 @@ export async function POST(request) {
       });
     }
 
-    // Get base URL
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://multiservicios360.vercel.app';
 
-    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -87,24 +69,15 @@ export async function POST(request) {
         addons: JSON.stringify(addons || []),
         clientName: clientName,
         language: language,
+        documentType: 'general_poa',
       },
       billing_address_collection: 'required',
-      phone_number_collection: {
-        enabled: true,
-      },
+      phone_number_collection: { enabled: true },
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      sessionId: session.id,
-      url: session.url 
-    });
-
+    return NextResponse.json({ success: true, sessionId: session.id, url: session.url });
   } catch (error) {
     console.error('Stripe checkout error:', error);
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }

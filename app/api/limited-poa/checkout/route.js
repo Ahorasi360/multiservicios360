@@ -11,9 +11,9 @@ export async function POST(request) {
     const { tier, addons, clientName, clientEmail, language, matterId, poaCategory } = body;
 
     const tierPrices = {
-      draft_only: { amount: 14900, name: 'Limited POA - Draft Only', nameEs: 'POA Limitado - Solo Borrador' },
-      attorney_review_silent: { amount: 34900, name: 'Limited POA - Attorney Review', nameEs: 'POA Limitado - Revision de Abogado' },
-      attorney_review_call: { amount: 49900, name: 'Limited POA - Attorney Review + Call', nameEs: 'POA Limitado - Revision + Consulta' },
+      draft_only: { amount: 9900, name: 'Limited POA - Self-Prepared Document', nameEs: 'POA Limitado - Documento Autopreparado' },
+      attorney_review_silent: { amount: 19900, name: 'Limited POA - Professional Review', nameEs: 'POA Limitado - Revision Profesional' },
+      attorney_review_call: { amount: 29900, name: 'Limited POA - Professional Consultation', nameEs: 'POA Limitado - Consulta Profesional' },
     };
 
     const addonPrices = {
