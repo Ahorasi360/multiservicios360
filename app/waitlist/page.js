@@ -314,4 +314,5 @@ export default function WaitlistPage() {
       </div>
     </div>
   );
-}
+}   
+ 
