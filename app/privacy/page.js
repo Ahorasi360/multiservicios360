@@ -716,7 +716,7 @@ export default function PrivacyPolicyPage() {
             {language === 'es' ? 'Política de Privacidad' : 'Privacy Policy'}
           </Link>
         </div>
-        <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>© 2025 Multi Servicios 360. {language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
+        <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>© 2026 Multi Servicios 360. {language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
       </footer>
     </div>
   );
