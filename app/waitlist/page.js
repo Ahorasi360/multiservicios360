@@ -311,8 +311,7 @@ export default function WaitlistPage() {
       <div style={{ textAlign: 'center', padding: '24px 16px', color: '#64748B', fontSize: '12px' }}>
         <p style={{ margin: 0 }}>Multi Servicios 360 | 855.246.7274</p>
         <p style={{ margin: '4px 0 0' }}>{language === 'en' ? 'Document preparation service, not legal advice' : 'Servicio de preparación de documentos, no asesoría legal'}</p>
-      </div>
+</div>
     </div>
   );
-}   
- 
+}
