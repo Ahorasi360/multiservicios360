@@ -21,14 +21,14 @@ const QUESTIONS = [
     { value: 'written_revocation', label_en: 'Upon written revocation', label_es: 'Mediante revocación escrita' }
   ]},
   { field: 'termination_date', question_en: "What is the termination date? (MM/DD/YYYY)", question_es: "¿Cuál es la fecha de terminación? (MM/DD/AAAA)", type: 'text', section: 'settings', showIf: { field: 'termination_type', value: 'specific_date' } },
- { field: 'purpose_category', question_en: "What is the PRIMARY purpose of this Limited POA?", question_es: "¿Cuál es el propósito PRINCIPAL de este Poder Limitado?", type: 'select', section: 'purpose', options: [
-    { value: 'real_estate', label_en: 'Real Estate Transaction', label_es: 'Transacción de Bienes Raíces' },
-    { value: 'banking', label_en: 'Banking / Financial', label_es: 'Bancario / Financiero' },
-    { value: 'tax', label_en: 'Tax Matters', label_es: 'Asuntos Fiscales' },
-    { value: 'business', label_en: 'Business / Entity', label_es: 'Negocios / Entidad' },
-    { value: 'vehicle', label_en: 'Vehicle / DMV', label_es: 'Vehículo / DMV' },
-    { value: 'insurance', label_en: 'Insurance / Claims', label_es: 'Seguros / Reclamos' },
-    { value: 'legal_matters', label_en: 'Legal Matters / Litigation', label_es: 'Asuntos Legales / Litigios' }
+  { field: 'purpose_category', question_en: "What do you need this Limited Power of Attorney for?", question_es: "¿Para qué necesita este Poder Notarial Limitado?", type: 'select', section: 'purpose', helper_en: "Select the option that best describes the main purpose. You are preparing your own document.", helper_es: "Seleccione la opción que mejor describe el uso principal. Usted prepara su propio documento.", options: [
+    { value: 'real_estate', label_en: 'Real Estate', label_es: 'Bienes Raíces' },
+    { value: 'banking', label_en: 'Banking', label_es: 'Bancos' },
+    { value: 'tax', label_en: 'Tax', label_es: 'Impuestos' },
+    { value: 'business', label_en: 'Business', label_es: 'Negocios' },
+    { value: 'vehicle', label_en: 'Vehicle', label_es: 'Vehículos' },
+    { value: 'insurance', label_en: 'Insurance', label_es: 'Seguros' },
+    { value: 'legal_matters', label_en: 'Legal Matters (Administrative)', label_es: 'Asuntos Legales (Administrativo)' }
   ]},
   { field: 're_transaction_type', question_en: "What type of real estate transaction?", question_es: "¿Qué tipo de transacción de bienes raíces?", type: 'select', section: 'real_estate', showIf: { field: 'purpose_category', value: 'real_estate' }, options: [
     { value: 'sell', label_en: 'Sell property', label_es: 'Vender propiedad' },
@@ -83,7 +83,7 @@ const QUESTIONS = [
   { field: 'insurance_submit_claim', question_en: "Authorize Agent to submit insurance claims?", question_es: "¿Autorizar al Apoderado a presentar reclamos de seguro?", type: 'boolean', section: 'insurance', showIf: { field: 'purpose_category', value: 'insurance' } },
   { field: 'insurance_endorse_checks', question_en: "Authorize Agent to endorse settlement checks?", question_es: "¿Autorizar al Apoderado a endosar cheques de liquidación?", type: 'boolean', section: 'insurance', showIf: { field: 'purpose_category', value: 'insurance' } },
   { field: 'insurance_execute_releases', question_en: "Authorize Agent to execute releases?", question_es: "¿Autorizar al Apoderado a ejecutar liberaciones?", type: 'boolean', section: 'insurance', showIf: { field: 'purpose_category', value: 'insurance' } },
- // === LEGAL MATTERS (ADMINISTRATIVE) ===
+  // === LEGAL MATTERS (ADMINISTRATIVE) ===
   { field: 'legal_matter_desc', question_en: "Briefly describe the legal administrative matter:", question_es: "Describa brevemente el asunto legal administrativo:", type: 'text', section: 'legal', showIf: { field: 'purpose_category', value: 'legal_matters' } },
   { field: 'legal_sign_documents', question_en: "Authorize Agent to sign specific documents on your behalf?", question_es: "¿Autorizar al Apoderado a firmar documentos específicos en su nombre?", type: 'boolean', section: 'legal', showIf: { field: 'purpose_category', value: 'legal_matters' } },
   { field: 'legal_file_documents', question_en: "Authorize Agent to file or pick up documents at courts or agencies?", question_es: "¿Autorizar al Apoderado a presentar o recoger documentos en tribunales o agencias?", type: 'boolean', section: 'legal', showIf: { field: 'purpose_category', value: 'legal_matters' } },
@@ -142,6 +142,7 @@ const TRANSLATIONS = {
     notDurable: "NOT DURABLE",
     watermark: "DRAFT - PREVIEW ONLY",
     payToUnlock: "Complete payment to unlock full document",
+    legalDisclaimer: "This authorization does NOT permit the Agent to provide legal representation or legal advice.",
     sections: {
       principal: "📋 Principal Information",
       agent: "👤 Agent Information",
@@ -203,6 +204,7 @@ const TRANSLATIONS = {
     notDurable: "NO DURADERO",
     watermark: "BORRADOR - SOLO VISTA PREVIA",
     payToUnlock: "Complete el pago para desbloquear el documento completo",
+    legalDisclaimer: "Esta autorización NO permite que el Apoderado proporcione representación legal ni asesoría jurídica.",
     sections: {
       principal: "📋 Información del Poderdante",
       agent: "👤 Información del Apoderado",
@@ -255,14 +257,6 @@ const DocumentPreview = ({ data, language, isPaid }) => {
     if (isPaid) return content;
     if (!content) return '[PROTECTED]';
     if (showFirst > 0 && content.length > showFirst) return content.substring(0, showFirst) + '···';
-   if (data.purpose_category === 'legal_matters') {
-      if (data.legal_sign_documents) powers.push(language === 'en' ? 'Sign specific documents' : 'Firmar documentos específicos');
-      if (data.legal_file_documents) powers.push(language === 'en' ? 'File/pick up documents at courts/agencies' : 'Presentar/recoger documentos en tribunales/agencias');
-      if (data.legal_communicate) powers.push(language === 'en' ? 'Communicate with attorneys/agencies' : 'Comunicarse con abogados/agencias');
-      if (data.legal_obtain_records) powers.push(language === 'en' ? 'Obtain copies of legal records' : 'Obtener copias de registros legales');
-      // Add disclaimer
-      powers.push(language === 'en' ? '⚠️ Does NOT authorize legal representation' : '⚠️ NO autoriza representación legal');
-    }
     return '[PROTECTED]';
   };
 
@@ -273,7 +267,7 @@ const DocumentPreview = ({ data, language, isPaid }) => {
       tax: language === 'en' ? 'Tax Matters' : 'Asuntos Fiscales',
       business: language === 'en' ? 'Business / Entity' : 'Negocios / Entidad',
       vehicle: language === 'en' ? 'Vehicle / DMV' : 'Vehículo / DMV',
-      insurance: language === 'en' ? 'Insurance / Claims' : 'Seguros / Reclamos'
+      insurance: language === 'en' ? 'Insurance / Claims' : 'Seguros / Reclamos',
       legal_matters: language === 'en' ? 'Legal Matters (Administrative)' : 'Asuntos Legales (Administrativo)',
     };
     return purposes[data.purpose_category] || '_______________';
@@ -322,6 +316,12 @@ const DocumentPreview = ({ data, language, isPaid }) => {
       if (data.insurance_endorse_checks) powers.push(language === 'en' ? 'Endorse settlement checks' : 'Endosar cheques de liquidación');
       if (data.insurance_execute_releases) powers.push(language === 'en' ? 'Execute releases' : 'Ejecutar liberaciones');
     }
+    if (data.purpose_category === 'legal_matters') {
+      if (data.legal_sign_documents) powers.push(language === 'en' ? 'Sign specific documents' : 'Firmar documentos específicos');
+      if (data.legal_file_documents) powers.push(language === 'en' ? 'File/pick up documents at courts/agencies' : 'Presentar/recoger documentos en tribunales/agencias');
+      if (data.legal_communicate) powers.push(language === 'en' ? 'Communicate with attorneys/agencies' : 'Comunicarse con abogados/agencias');
+      if (data.legal_obtain_records) powers.push(language === 'en' ? 'Obtain copies of legal records' : 'Obtener copias de registros legales');
+    }
     return powers;
   };
 
@@ -336,6 +336,11 @@ const DocumentPreview = ({ data, language, isPaid }) => {
       <div style={{ textAlign: 'center', marginBottom: '16px', borderBottom: '2px solid #F59E0B', paddingBottom: '12px' }}>
         <h2 style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 'bold', color: '#92400E' }}>{t.docTitle}</h2>
         <p style={{ margin: 0, fontSize: '10px', color: '#B45309' }}>State of California</p>
+        {data.purpose_category === 'legal_matters' && (
+          <p style={{ margin: '4px 0 0', fontSize: '9px', color: '#DC2626', fontStyle: 'italic' }}>
+            {language === 'en' ? '(Administrative Matters Only)' : '(Solo Asuntos Administrativos)'}
+          </p>
+        )}
       </div>
 
       <div style={{ marginBottom: '12px' }}>
@@ -378,6 +383,9 @@ const DocumentPreview = ({ data, language, isPaid }) => {
         {data.purpose_category === 'insurance' && data.insurance_claim_desc && (
           <p style={{ margin: '3px 0', filter: isPaid ? 'none' : 'blur(3px)' }}><strong>{language === 'en' ? 'Matter' : 'Asunto'}:</strong> {hideContent(data.insurance_claim_desc)}</p>
         )}
+        {data.purpose_category === 'legal_matters' && data.legal_matter_desc && (
+          <p style={{ margin: '3px 0', filter: isPaid ? 'none' : 'blur(3px)' }}><strong>{language === 'en' ? 'Matter' : 'Asunto'}:</strong> {hideContent(data.legal_matter_desc)}</p>
+        )}
       </div>
 
       <div style={{ marginBottom: '12px' }}>
@@ -391,6 +399,12 @@ const DocumentPreview = ({ data, language, isPaid }) => {
         ) : (
           <p style={{ margin: '3px 0', color: '#9CA3AF', fontStyle: 'italic', fontSize: '10px' }}>
             {language === 'en' ? 'Powers will appear as you select them...' : 'Los poderes aparecerán mientras los selecciona...'}
+          </p>
+        )}
+        {/* Legal Matters Disclaimer */}
+        {data.purpose_category === 'legal_matters' && (
+          <p style={{ margin: '8px 0 0', padding: '6px 8px', backgroundColor: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '4px', fontSize: '9px', color: '#DC2626', fontWeight: '500' }}>
+            ⚠️ {t.legalDisclaimer}
           </p>
         )}
       </div>
@@ -530,6 +544,14 @@ export default function LimitedPOAWizard() {
         setTimeout(() => { setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${warning}` }]); }, 300);
       }
 
+      // Show legal matters disclaimer when selected
+      if (currentQuestion.field === 'purpose_category' && parsedValue === 'legal_matters') {
+        const disclaimer = language === 'en' 
+          ? '⚠️ Note: This authorizes administrative matters only (signing documents, filing paperwork). It does NOT authorize legal representation or legal advice.'
+          : '⚠️ Nota: Esto autoriza solo asuntos administrativos (firmar documentos, presentar papeles). NO autoriza representación legal ni asesoría jurídica.';
+        setTimeout(() => { setMessages(prev => [...prev, { role: 'assistant', content: disclaimer }]); }, 400);
+      }
+
       const newVisibleQs = getVisibleQuestions(newData);
       const currentFieldIndex = newVisibleQs.findIndex(q => q.field === currentQuestion.field);
       const nextIdx = currentFieldIndex + 1;
@@ -563,8 +585,6 @@ export default function LimitedPOAWizard() {
       setIsLoading(false);
     }
   };
-
-
 
   const startEditing = (field, currentValue) => {
     setEditingField(field);
@@ -959,7 +979,6 @@ export default function LimitedPOAWizard() {
                   </div>
                 </button>
               ))}
-              {/* COMPLIANCE CLARIFICATION */}
               <div style={{ 
                 marginTop: '16px', 
                 marginBottom: '16px',
