@@ -628,15 +628,16 @@ export default function LimitedPOAWizard() {
       const res = await fetch('/api/limited-poa/matters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_name: clientName,
-          client_email: clientEmail,
-          client_phone: clientPhone,
-          review_tier: reviewTier,
-          intake_data: { ...intakeData, poa_type: 'limited' },
-          language,
-          document_type: 'limited_poa'
-        })
+       body: JSON.stringify({
+  client_name: clientName,
+  client_email: clientEmail,
+  client_phone: clientPhone,
+  review_tier: reviewTier,
+  intake_data: { ...intakeData, poa_type: 'limited' },
+  language,
+  document_type: 'limited_poa',
+  poa_category: intakeData.purpose_category || 'real_estate'
+})
       });
       const result = await res.json();
       if (result.success) {
