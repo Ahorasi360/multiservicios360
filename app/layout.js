@@ -1,11 +1,20 @@
 export const metadata = {
-  title: 'Multi Servicios 360',
-  description: 'Legal document preparation services',
+  title: 'Multi Servicios 360 | Self-Service Legal Document Software',
+  description: 'Create your own Power of Attorney, Living Trust, and business documents. Bilingual self-service legal software platform for California. You prepare your own documents.',
+  keywords: 'power of attorney, POA, legal documents, California, Spanish, bilingual, self-service, document software',
   verification: {
     google: 'google6dee70b79b4cd078',
     other: {
       'msvalidate.01': 'B31244A5BEB800476FBFDBB970B09C56',
     },
+  },
+  openGraph: {
+    title: 'Multi Servicios 360 | Self-Service Legal Document Software',
+    description: 'Create your own Power of Attorney and legal documents. Bilingual self-service platform.',
+    url: 'https://multiservicios360.vercel.app',
+    siteName: 'Multi Servicios 360',
+    locale: 'en_US',
+    type: 'website',
   },
 }
 
