@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
 export async function POST(request) {
@@ -16,59 +16,49 @@ export async function POST(request) {
   const signature = request.headers.get('stripe-signature');
 
   let event;
-
   try {
-    event = JSON.parse(body);
+    if (process.env.STRIPE_WEBHOOK_SECRET && signature) {
+      event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET);
+    } else {
+      event = JSON.parse(body);
+    }
   } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return NextResponse.json(
-      { error: 'Webhook signature verification failed' },
-      { status: 400 }
-    );
+    console.error('Webhook error:', err.message);
+    return NextResponse.json({ error: 'Webhook error' }, { status: 400 });
   }
 
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const session = event.data.object;
-      console.log('Payment successful:', session.id);
-      console.log('Metadata:', session.metadata);
+  console.log('Webhook received:', event.type);
 
-      if (session.metadata?.matterId) {
-        const { error } = await supabase
-          .from('poa_matters')
-          .update({
-            status: 'paid',
-            payment_id: session.payment_intent,
-            payment_amount: session.amount_total,
-            paid_at: new Date().toISOString(),
-          })
-          .eq('id', session.metadata.matterId);
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    console.log('Payment successful:', session.id);
+    console.log('Metadata:', session.metadata);
 
-        if (error) {
-          console.error('Error updating matter:', error);
-        } else {
-          console.log('Matter updated to paid status');
-        }
+    const matterId = session.metadata?.matterId;
+    const documentType = session.metadata?.documentType;
+    const totalPrice = session.amount_total ? session.amount_total / 100 : null;
+
+    if (matterId) {
+      const tableName = documentType === 'limited_poa' ? 'limited_poa_matters' : 'poa_matters';
+      
+      const { error } = await supabase
+        .from(tableName)
+        .update({
+          status: 'paid',
+          payment_id: session.payment_intent,
+          total_price: totalPrice,
+          paid_at: new Date().toISOString(),
+        })
+        .eq('id', matterId);
+
+      if (error) {
+        console.error('Error updating ' + tableName + ':', error);
+      } else {
+        console.log(tableName + ' updated to paid status');
       }
-      break;
+    } else {
+      console.log('No matterId in metadata');
     }
-    case 'checkout.session.expired': {
-      const session = event.data.object;
-      console.log('Checkout session expired:', session.id);
-      break;
-    }
-    case 'payment_intent.succeeded': {
-      const paymentIntent = event.data.object;
-      console.log('PaymentIntent succeeded:', paymentIntent.id);
-      break;
-    }
-    case 'payment_intent.payment_failed': {
-      const paymentIntent = event.data.object;
-      console.log('PaymentIntent failed:', paymentIntent.id);
-      break;
-    }
-    default:
-      console.log("Unhandled event type: " + event.type);
   }
 
   return NextResponse.json({ received: true });
