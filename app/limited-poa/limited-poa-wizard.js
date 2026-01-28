@@ -184,7 +184,7 @@ const TRANSLATIONS = {
     pleaseAnswer: "Por favor responda Sí o No.",
     pleaseSelect: "Por favor seleccione una opción.",
     paying: "Procesando...",
-    legalNote: "Nota: El documento oficial estará en inglés según lo requiere la ley de California.",
+    legalNote: "Nota: Tu documento se proporcionará en español e inglés  .",
     yourAnswers: "Sus Respuestas",
     documentPreview: "Documento",
     answersWillAppear: "Sus respuestas aparecerán aquí mientras contesta las preguntas",
