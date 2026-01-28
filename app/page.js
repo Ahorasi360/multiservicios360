@@ -93,7 +93,7 @@ const TRANSLATIONS = {
       reason1: { title: '100% Bilingüe', desc: 'Todo en español e inglés' },
       reason2: { title: 'Autoayuda', desc: 'Usted controla sus documentos' },
       reason3: { title: 'Rápido y Fácil', desc: 'Documentos en minutos' },
-      reason4: { title: 'Desde 2010', desc: 'Sirviendo a California' },
+      reason4: { title: 'Nuevo en 2026', desc: 'Sirviendo a California' },
     },
     cta: {
       title: '¿Listo para Comenzar?',
@@ -182,7 +182,7 @@ const TRANSLATIONS = {
       reason1: { title: '100% Bilingual', desc: 'Everything in Spanish & English' },
       reason2: { title: 'Self-Help', desc: 'You control your documents' },
       reason3: { title: 'Fast and Easy', desc: 'Documents in minutes' },
-      reason4: { title: 'Since 2010', desc: 'Serving California' },
+      reason4: { title: 'New in 2026', desc: 'Serving California' },
     },
     cta: {
       title: 'Ready to Get Started?',

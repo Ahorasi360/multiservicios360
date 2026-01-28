@@ -122,7 +122,7 @@ const TRANSLATIONS = {
     pleaseAnswer: "Please answer Yes or No.",
     pleaseSelect: "Please select an option.",
     paying: "Processing...",
-    legalNote: "Note: The official document will be in English as required by California law.",
+    legalNote: "Note: Your document will be provided in both English and Spanish.",
     yourAnswers: "Your Answers",
     documentPreview: "Document",
     answersWillAppear: "Your answers will appear here as you answer questions",

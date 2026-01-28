@@ -267,7 +267,7 @@ export default function AdminDashboard() {
                   <span>📧</span> admin@multiservicios360.net
                 </div>
                 <div style={s.contactItem}>
-                  <span>📞</span> (310) 897-1035
+                  <span>📞</span> (855) 246-7274
                 </div>
                 <div style={s.contactItem}>
                   <span>🌐</span> multiservicios360.net
@@ -562,7 +562,7 @@ export default function AdminDashboard() {
       {/* Footer */}
       <footer style={{ textAlign: 'center', padding: '32px', color: '#64748b', fontSize: '13px', borderTop: '1px solid #e2e8f0' }}>
         <p style={{ margin: '0 0 8px' }}><strong>Multi Servicios 360</strong> — Self-Service Legal Document Software Platform</p>
-        <p style={{ margin: 0 }}>📧 admin@multiservicios360.net | 📞 (310) 897-1035 | 🌐 multiservicios360.net</p>
+        <p style={{ margin: 0 }}>📧 admin@multiservicios360.net | 📞 (855) 246-7274 | 🌐 multiservicios360.net</p>
       </footer>
 
       {/* Order Detail Modal */}
