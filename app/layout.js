@@ -1,3 +1,5 @@
+import './globals.css'
+
 export const metadata = {
   title: 'Multi Servicios 360 | Self-Service Legal Document Software',
   description: 'Create your own Power of Attorney, Living Trust, and business documents. Bilingual self-service legal software platform for California. You prepare your own documents.',
@@ -11,7 +13,7 @@ export const metadata = {
   openGraph: {
     title: 'Multi Servicios 360 | Self-Service Legal Document Software',
     description: 'Create your own Power of Attorney and legal documents. Bilingual self-service platform.',
-    url: 'https://multiservicios360.vercel.app',
+    url: 'https://multiservicios360.net',
     siteName: 'Multi Servicios 360',
     locale: 'en_US',
     type: 'website',
