@@ -1,16 +1,16 @@
 // app/portal/new-document/page.js
 
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function PartnerNewDocument() {
+function NewDocumentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [step, setStep] = useState(1); // 1 = select client, 2 = select document type
+  const [step, setStep] = useState(1);
 
   useEffect(() => {
     const partnerId = localStorage.getItem('partner_id');
@@ -22,7 +22,6 @@ export default function PartnerNewDocument() {
   }, []);
 
   useEffect(() => {
-    // Check if client_id is in URL params
     const clientId = searchParams.get('client_id');
     if (clientId && clients.length > 0) {
       const client = clients.find(c => c.id === clientId);
@@ -52,14 +51,12 @@ export default function PartnerNewDocument() {
   };
 
   const handleStartDocument = (docType) => {
-    // Store client info for the wizard
     localStorage.setItem('portal_client_id', selectedClient.id);
     localStorage.setItem('portal_client_name', selectedClient.client_name);
     localStorage.setItem('portal_client_email', selectedClient.client_email || '');
     localStorage.setItem('portal_client_phone', selectedClient.client_phone || '');
     localStorage.setItem('portal_client_language', selectedClient.language_preference || 'es');
 
-    // Redirect to appropriate wizard
     if (docType === 'general_poa') {
       router.push('/poa?partner_mode=true');
     } else if (docType === 'limited_poa') {
@@ -288,5 +285,17 @@ export default function PartnerNewDocument() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function PartnerNewDocument() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    }>
+      <NewDocumentContent />
+    </Suspense>
   );
 }
