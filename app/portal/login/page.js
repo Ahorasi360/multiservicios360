@@ -1,5 +1,3 @@
-// app/portal/login/page.js
-
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -39,79 +37,153 @@ export default function PartnerLogin() {
     setLoading(false);
   };
 
+  const styles = {
+    container: {
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '16px',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    card: {
+      backgroundColor: 'rgba(255,255,255,0.1)',
+      backdropFilter: 'blur(20px)',
+      padding: '32px',
+      borderRadius: '16px',
+      boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+      width: '100%',
+      maxWidth: '400px',
+      border: '1px solid rgba(255,255,255,0.2)'
+    },
+    logo: {
+      width: '64px',
+      height: '64px',
+      background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+      borderRadius: '16px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: '0 auto 16px'
+    },
+    logoText: {
+      fontSize: '24px',
+      fontWeight: 'bold',
+      color: 'white'
+    },
+    title: {
+      fontSize: '24px',
+      fontWeight: 'bold',
+      color: 'white',
+      textAlign: 'center',
+      marginBottom: '8px'
+    },
+    subtitle: {
+      color: '#94a3b8',
+      textAlign: 'center',
+      marginBottom: '32px'
+    },
+    error: {
+      backgroundColor: 'rgba(239,68,68,0.2)',
+      border: '1px solid rgba(239,68,68,0.5)',
+      color: '#fecaca',
+      padding: '12px 16px',
+      borderRadius: '8px',
+      marginBottom: '24px'
+    },
+    label: {
+      display: 'block',
+      color: '#cbd5e1',
+      fontSize: '14px',
+      fontWeight: '500',
+      marginBottom: '8px'
+    },
+    input: {
+      width: '100%',
+      padding: '12px 16px',
+      backgroundColor: 'rgba(255,255,255,0.1)',
+      border: '1px solid rgba(255,255,255,0.2)',
+      borderRadius: '8px',
+      color: 'white',
+      fontSize: '16px',
+      marginBottom: '16px',
+      boxSizing: 'border-box'
+    },
+    button: {
+      width: '100%',
+      padding: '12px',
+      background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+      color: 'white',
+      fontWeight: '600',
+      border: 'none',
+      borderRadius: '8px',
+      fontSize: '16px',
+      cursor: 'pointer',
+      marginTop: '8px'
+    },
+    footer: {
+      marginTop: '24px',
+      textAlign: 'center',
+      color: '#94a3b8',
+      fontSize: '14px'
+    },
+    link: {
+      color: '#60a5fa',
+      textDecoration: 'none'
+    },
+    backLink: {
+      marginTop: '32px',
+      paddingTop: '24px',
+      borderTop: '1px solid rgba(255,255,255,0.1)',
+      textAlign: 'center'
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/20">
-        
-        {/* Logo/Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl font-bold text-white">MS</span>
-          </div>
-          <h1 className="text-2xl font-bold text-white">Partner Portal</h1>
-          <p className="text-slate-300 mt-2">Multi Servicios 360</p>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <div style={styles.logo}>
+          <span style={styles.logoText}>MS</span>
         </div>
+        <h1 style={styles.title}>Partner Portal</h1>
+        <p style={styles.subtitle}>Multi Servicios 360</p>
 
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
+        {error && <div style={styles.error}>{error}</div>}
 
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-slate-300 text-sm font-medium mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="partner@example.com"
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit}>
+          <label style={styles.label}>Email</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            style={styles.input}
+            placeholder="partner@example.com"
+            required
+          />
 
-          <div>
-            <label className="block text-slate-300 text-sm font-medium mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
-              required
-            />
-          </div>
+          <label style={styles.label}>Password</label>
+          <input
+            type="password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            style={styles.input}
+            placeholder="••••••••"
+            required
+          />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} style={styles.button}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        {/* Footer Links */}
-        <div className="mt-6 text-center">
-          <p className="text-slate-400 text-sm">
-            Not a partner yet?{' '}
-            <a href="/portal/register" className="text-blue-400 hover:text-blue-300">
-              Apply here
-            </a>
-          </p>
+        <div style={styles.footer}>
+          Not a partner yet?{' '}
+          <a href="/portal/register" style={styles.link}>Apply here</a>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-white/10 text-center">
-          <a href="/" className="text-slate-400 text-sm hover:text-white">
-            ← Back to main site
-          </a>
+        <div style={styles.backLink}>
+          <a href="/" style={{...styles.link, color: '#94a3b8'}}>← Back to main site</a>
         </div>
       </div>
     </div>
