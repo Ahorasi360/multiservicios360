@@ -32,6 +32,7 @@ const TRANSLATIONS = {
       subtitle: 'Multiservicios 360 es una plataforma tecnológica bilingüe que permite a las personas preparar sus propios documentos legales utilizando herramientas guiadas de software.',
       ctaGeneral: 'Crear Poder General',
       ctaLimited: 'Crear Poder Limitado',
+      ctaTrust: 'Crear Living Trust',
       ctaSecondary: 'Ver Servicios',
       trust1: '100% Bilingüe',
       trust2: 'Autoayuda Legal',
@@ -57,17 +58,19 @@ const TRANSLATIONS = {
         cta: 'Iniciar',
         uses: ['Bienes Raíces', 'Bancos', 'Impuestos', 'Negocios', 'Vehículos', 'Seguros', 'Asuntos Legales'],
       },
+      trust: {
+        title: 'Living Trust (CA)',
+        desc: 'Fideicomiso en vida para proteger sus bienes y evitar probate.',
+        price: 'Desde $599',
+        cta: 'Iniciar',
+        features: ['Evita Probate', 'Protege Bienes', 'Privacidad', 'Control Total'],
+      },
       comingSoon: 'PRÓXIMAMENTE',
       waitlist: 'Únase a la lista de espera',
       business: {
         title: 'Formación de Negocios',
         desc: 'LLC, Corporaciones, EIN',
         price: 'Desde $149',
-      },
-      trust: {
-        title: 'Living Trust',
-        desc: 'Fideicomiso en vida para proteger sus bienes',
-        price: 'Desde $799',
       },
       immigration: {
         title: 'Inmigración',
@@ -110,6 +113,7 @@ const TRANSLATIONS = {
       disclaimer: 'Multi Servicios 360 no es un bufete de abogados y no proporciona asesoría legal. Este sitio web ofrece preparación de documentos legales de autoayuda basada en la información proporcionada por el usuario.',
       terms: 'Términos de Servicio',
       privacy: 'Política de Privacidad',
+      accessibility: 'Accesibilidad',
     },
   },
   en: {
@@ -121,6 +125,7 @@ const TRANSLATIONS = {
       subtitle: 'Multiservicios 360 is a bilingual technology platform that allows individuals to self-prepare legal documents using guided software tools.',
       ctaGeneral: 'Create General POA',
       ctaLimited: 'Create Limited POA',
+      ctaTrust: 'Create Living Trust',
       ctaSecondary: 'View Services',
       trust1: '100% Bilingual',
       trust2: 'Legal Self-Help',
@@ -146,17 +151,19 @@ const TRANSLATIONS = {
         cta: 'Start',
         uses: ['Real Estate', 'Banking', 'Tax', 'Business', 'Vehicles', 'Insurance', 'Legal Matters'],
       },
+      trust: {
+        title: 'Living Trust (CA)',
+        desc: 'Living trust to protect your assets and avoid probate.',
+        price: 'From $599',
+        cta: 'Start',
+        features: ['Avoid Probate', 'Protect Assets', 'Privacy', 'Full Control'],
+      },
       comingSoon: 'COMING SOON',
       waitlist: 'Join the waitlist',
       business: {
         title: 'Business Formation',
         desc: 'LLC, Corporations, EIN',
         price: 'From $149',
-      },
-      trust: {
-        title: 'Living Trust',
-        desc: 'Living trust to protect your assets',
-        price: 'From $799',
       },
       immigration: {
         title: 'Immigration',
@@ -199,6 +206,7 @@ const TRANSLATIONS = {
       disclaimer: 'Multi Servicios 360 is not a law firm and does not provide legal advice. This website offers self-help legal document preparation based on information provided by the user.',
       terms: 'Terms of Service',
       privacy: 'Privacy Policy',
+      accessibility: 'Accessibility',
     },
   },
 };
@@ -221,6 +229,7 @@ export default function HomePage() {
           .hero-preview { display: none !important; }
           .trust-badges { flex-direction: column !important; gap: 12px !important; align-items: center; }
           .services-grid { grid-template-columns: 1fr !important; }
+          .services-grid-3 { grid-template-columns: 1fr !important; }
           .team-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .why-grid { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
           .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; }
@@ -300,7 +309,7 @@ export default function HomePage() {
         )}
       </nav>
 
-      {/* Hero Section - TWO CTAs */}
+      {/* Hero Section - THREE CTAs */}
       <section style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #1D4ED8 100%)', color: 'white', padding: '60px 16px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)' }} />
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -316,17 +325,20 @@ export default function HomePage() {
               <p className="hero-subtitle" style={{ fontSize: '17px', lineHeight: '1.6', opacity: '0.9', marginBottom: '28px', maxWidth: '500px' }}>
                 {t.hero.subtitle}
               </p>
-              
-              {/* TWO CTA BUTTONS */}
+
+              {/* THREE CTA BUTTONS */}
               <div className="hero-buttons" style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
-                <Link href="/poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', backgroundColor: '#FCD34D', color: '#1E3A8A', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '15px', boxShadow: '0 4px 14px rgba(252, 211, 77, 0.4)' }}>
+                <Link href="/poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#FCD34D', color: '#1E3A8A', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(252, 211, 77, 0.4)' }}>
                   {t.hero.ctaGeneral} <ArrowRightIcon />
                 </Link>
-                <Link href="/limited-poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', backgroundColor: '#F59E0B', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '15px', boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)' }}>
+                <Link href="/limited-poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#F59E0B', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)' }}>
                   {t.hero.ctaLimited} <ArrowRightIcon />
                 </Link>
+                <Link href="/trust" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#10B981', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)' }}>
+                  {t.hero.ctaTrust} <ArrowRightIcon />
+                </Link>
               </div>
-              
+
               <div className="trust-badges" style={{ display: 'flex', gap: '20px' }}>
                 {[t.hero.trust1, t.hero.trust2, t.hero.trust3].map((item, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', opacity: '0.9' }}>
@@ -344,14 +356,21 @@ export default function HomePage() {
                   {[
                     { icon: <ScaleIcon />, label: 'General POA', link: '/poa' },
                     { icon: <FileTextIcon />, label: 'Limited POA', link: '/limited-poa' },
-                    { icon: <HomeIcon />, label: 'Trust', link: null },
+                    { icon: <HomeIcon />, label: 'Living Trust', link: '/trust' },
                     { icon: <BuildingIcon />, label: 'LLC', link: null },
                   ].map((item, i) => (
-                    <div key={i} style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '14px', padding: '20px', textAlign: 'center', position: 'relative' }}>
-                      {!item.link && <div style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: '#F59E0B', color: 'white', fontSize: '8px', padding: '2px 6px', borderRadius: '10px' }}>SOON</div>}
-                      <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.icon}</div>
-                      <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
-                    </div>
+                    item.link ? (
+                      <Link key={i} href={item.link} style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '14px', padding: '20px', textAlign: 'center', textDecoration: 'none', color: 'white', transition: 'background 0.2s' }}>
+                        <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.icon}</div>
+                        <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
+                      </Link>
+                    ) : (
+                      <div key={i} style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '14px', padding: '20px', textAlign: 'center', position: 'relative' }}>
+                        <div style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: '#F59E0B', color: 'white', fontSize: '8px', padding: '2px 6px', borderRadius: '10px' }}>SOON</div>
+                        <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.icon}</div>
+                        <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
+                      </div>
+                    )
                   ))}
                 </div>
               </div>
@@ -360,7 +379,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Services Section - ACTIVE + COMING SOON */}
+      {/* Services Section - 3 ACTIVE + 2 COMING SOON */}
       <section id="services" className="section-padding" style={{ padding: '80px 16px', backgroundColor: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -371,14 +390,15 @@ export default function HomePage() {
             <p style={{ fontSize: '13px', color: '#92400E', margin: 0, lineHeight: '1.6' }}>{t.services.disclaimer}</p>
           </div>
 
-          <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '32px' }}>
+          {/* 3 ACTIVE SERVICES */}
+          <div className="services-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '32px' }}>
             {/* GENERAL POA - ACTIVE */}
             <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '28px', border: '2px solid #3B82F6', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                 <div style={{ width: '56px', height: '56px', backgroundColor: '#EFF6FF', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3B82F6' }}><ScaleIcon /></div>
                 <div>
                   <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', marginBottom: '4px', display: 'inline-block' }}>✓ {language === 'es' ? 'DISPONIBLE' : 'AVAILABLE'}</div>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#1F2937', margin: 0 }}>{t.services.generalPoa.title}</h3>
+                  <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1F2937', margin: 0 }}>{t.services.generalPoa.title}</h3>
                 </div>
               </div>
               <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px', lineHeight: '1.5' }}>{t.services.generalPoa.desc}</p>
@@ -396,14 +416,13 @@ export default function HomePage() {
                 <div style={{ width: '56px', height: '56px', backgroundColor: '#FEF3C7', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F59E0B' }}><FileTextIcon /></div>
                 <div>
                   <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', marginBottom: '4px', display: 'inline-block' }}>✓ {language === 'es' ? 'DISPONIBLE' : 'AVAILABLE'}</div>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#1F2937', margin: 0 }}>{t.services.limitedPoa.title}</h3>
+                  <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1F2937', margin: 0 }}>{t.services.limitedPoa.title}</h3>
                 </div>
               </div>
               <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '12px', lineHeight: '1.5' }}>{t.services.limitedPoa.desc}</p>
-              {/* 7 USE CASES */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
-                {t.services.limitedPoa.uses.map((use, i) => (
-                  <span key={i} style={{ backgroundColor: '#FEF3C7', color: '#92400E', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '500' }}>{use}</span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '16px' }}>
+                {t.services.limitedPoa.uses.slice(0, 4).map((use, i) => (
+                  <span key={i} style={{ backgroundColor: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: '500' }}>{use}</span>
                 ))}
               </div>
               <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -413,14 +432,36 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
+
+            {/* LIVING TRUST - ACTIVE */}
+            <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '28px', border: '2px solid #10B981', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.15)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div style={{ width: '56px', height: '56px', backgroundColor: '#D1FAE5', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10B981' }}><HomeIcon /></div>
+                <div>
+                  <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', marginBottom: '4px', display: 'inline-block' }}>✓ {language === 'es' ? 'DISPONIBLE' : 'AVAILABLE'}</div>
+                  <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1F2937', margin: 0 }}>{t.services.trust.title}</h3>
+                </div>
+              </div>
+              <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '12px', lineHeight: '1.5' }}>{t.services.trust.desc}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '16px' }}>
+                {t.services.trust.features.map((feature, i) => (
+                  <span key={i} style={{ backgroundColor: '#D1FAE5', color: '#065F46', padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: '500' }}>{feature}</span>
+                ))}
+              </div>
+              <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '24px', fontWeight: '800', color: '#10B981' }}>{t.services.trust.price}</span>
+                <Link href="/trust" style={{ padding: '10px 24px', backgroundColor: '#10B981', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '14px' }}>
+                  {t.services.trust.cta} →
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* COMING SOON SERVICES */}
           <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#6B7280', marginBottom: '16px', textAlign: 'center' }}>{language === 'es' ? 'Más Servicios Próximamente' : 'More Services Coming Soon'}</h3>
-          <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+          <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
             {[
-              { key: 'trust', icon: <HomeIcon />, color: '#8B5CF6' },
-              { key: 'business', icon: <BuildingIcon />, color: '#10B981' },
+              { key: 'business', icon: <BuildingIcon />, color: '#8B5CF6' },
               { key: 'immigration', icon: <PlaneIcon />, color: '#EC4899' },
             ].map((service) => (
               <div key={service.key} style={{ backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '24px', border: '1px solid #E5E7EB', opacity: 0.8, position: 'relative' }}>
@@ -490,16 +531,19 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section id="contact" className="section-padding" style={{ padding: '80px 16px', backgroundColor: '#FCD34D' }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'center' }}>
           <h2 className="section-title" style={{ fontSize: '32px', fontWeight: '800', color: '#1E3A8A', marginBottom: '12px' }}>{t.cta.title}</h2>
           <p style={{ fontSize: '17px', color: '#1E3A8A', opacity: '0.8', marginBottom: '32px' }}>{t.cta.subtitle}</p>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Link href="/poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '16px 28px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '15px' }}>
+              <Link href="/poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
                 {t.hero.ctaGeneral} <ArrowRightIcon />
               </Link>
-              <Link href="/limited-poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '16px 28px', backgroundColor: '#F59E0B', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '15px' }}>
+              <Link href="/limited-poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#F59E0B', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
                 {t.hero.ctaLimited} <ArrowRightIcon />
+              </Link>
+              <Link href="/trust" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#10B981', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
+                {t.hero.ctaTrust} <ArrowRightIcon />
               </Link>
             </div>
             <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1E3A8A', fontWeight: '600', textDecoration: 'none', fontSize: '16px' }}>
@@ -528,7 +572,7 @@ export default function HomePage() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 <li><Link href="/poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>General Power of Attorney</Link></li>
                 <li><Link href="/limited-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>Limited Power of Attorney</Link></li>
-                <li><span style={{ color: '#64748B', fontSize: '13px', lineHeight: '2' }}>Living Trust (Coming Soon)</span></li>
+                <li><Link href="/trust" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>California Living Trust</Link></li>
                 <li><span style={{ color: '#64748B', fontSize: '13px', lineHeight: '2' }}>LLC Formation (Coming Soon)</span></li>
               </ul>
             </div>
@@ -551,7 +595,8 @@ export default function HomePage() {
             <div style={{ marginBottom: '12px' }}>
               <Link href="/por-que-nosotros" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.nav.whyUs}</Link>
               <Link href="/terms" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.footer.terms}</Link>
-              <Link href="/privacy" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none' }}>{t.footer.privacy}</Link>
+              <Link href="/privacy" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.footer.privacy}</Link>
+              <Link href="/accessibility" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none' }}>{t.footer.accessibility}</Link>
             </div>
             <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>© 2026 Multi Servicios 360. {t.footer.rights}</p>
           </div>
