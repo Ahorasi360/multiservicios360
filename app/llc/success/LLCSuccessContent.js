@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default LLCSuccessContent;
+function LLCSuccessContent() {
   const searchParams = useSearchParams();
   const matterId = searchParams.get('matter_id');
   const sessionId = searchParams.get('session_id');
@@ -813,3 +813,6 @@ export default LLCSuccessContent;
       </div>
     </div>
   );
+}
+
+export default LLCSuccessContent;
