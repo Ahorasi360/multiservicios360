@@ -1,10 +1,10 @@
 // app/llc/success/page.js
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function LLCSuccessPage() {
+function LLCSuccessContent() {
   const searchParams = useSearchParams();
   const matterId = searchParams.get('matter_id');
   const sessionId = searchParams.get('session_id');
@@ -444,5 +444,12 @@ export default function LLCSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+export default function LLCSuccessPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><p>Loading...</p></div>}>
+      <LLCSuccessContent />
+    </Suspense>
   );
 }
