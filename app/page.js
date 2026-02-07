@@ -32,8 +32,8 @@ const TRANSLATIONS = {
       subtitle: 'Multiservicios 360 es una plataforma tecnológica bilingüe que permite a las personas preparar sus propios documentos legales utilizando herramientas guiadas de software.',
       ctaGeneral: 'Crear Poder General',
       ctaLimited: 'Crear Poder Limitado',
-      ctaTrust: 'Crear Living Trust',
       ctaTrust: 'Crear Fideicomiso en Vida',
+      ctaLLC: 'Crear LLC en California',
       trust1: '100% Bilingüe',
       trust2: 'Autoayuda Legal',
       trust3: 'California',
@@ -65,13 +65,15 @@ const TRANSLATIONS = {
         cta: 'Iniciar',
         features: ['Evita Probate', 'Protege Bienes', 'Privacidad', 'Control Total'],
       },
+      llc: {
+        title: 'Formación de LLC (California)',
+        desc: 'Crea tu LLC con documentos completos y estructura legal conforme a California.',
+        price: 'Desde $799',
+        cta: 'Iniciar',
+        features: ['Operating Agreement', 'Estructura Básica', 'Cumple California', 'Bilingüe'],
+      },
       comingSoon: 'PRÓXIMAMENTE',
       waitlist: 'Únase a la lista de espera',
-      business: {
-        title: 'Formación de Negocios',
-        desc: 'LLC, Corporaciones, EIN',
-        price: 'Desde $149',
-      },
       immigration: {
         title: 'Inmigración',
         desc: 'N-400, I-130, I-485',
@@ -126,6 +128,7 @@ const TRANSLATIONS = {
       ctaGeneral: 'Create General POA',
       ctaLimited: 'Create Limited POA',
       ctaTrust: 'Create Living Trust',
+      ctaLLC: 'Create California LLC',
       ctaSecondary: 'View Services',
       trust1: '100% Bilingual',
       trust2: 'Legal Self-Help',
@@ -158,13 +161,15 @@ const TRANSLATIONS = {
         cta: 'Start',
         features: ['Avoid Probate', 'Protect Assets', 'Privacy', 'Full Control'],
       },
+      llc: {
+        title: 'LLC Formation (California)',
+        desc: 'Create your LLC with complete documents and legal structure compliant with California.',
+        price: 'From $799',
+        cta: 'Start',
+        features: ['Operating Agreement', 'Basic Structure', 'CA Compliant', 'Bilingual'],
+      },
       comingSoon: 'COMING SOON',
       waitlist: 'Join the waitlist',
-      business: {
-        title: 'Business Formation',
-        desc: 'LLC, Corporations, EIN',
-        price: 'From $149',
-      },
       immigration: {
         title: 'Immigration',
         desc: 'N-400, I-130, I-485',
@@ -229,7 +234,7 @@ export default function HomePage() {
           .hero-preview { display: none !important; }
           .trust-badges { flex-direction: column !important; gap: 12px !important; align-items: center; }
           .services-grid { grid-template-columns: 1fr !important; }
-          .services-grid-3 { grid-template-columns: 1fr !important; }
+          .services-grid-4 { grid-template-columns: 1fr !important; }
           .team-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .why-grid { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
           .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; }
@@ -309,7 +314,7 @@ export default function HomePage() {
         )}
       </nav>
 
-      {/* Hero Section - THREE CTAs */}
+      {/* Hero Section - FOUR CTAs */}
       <section style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #1D4ED8 100%)', color: 'white', padding: '60px 16px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)' }} />
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -326,7 +331,7 @@ export default function HomePage() {
                 {t.hero.subtitle}
               </p>
 
-              {/* THREE CTA BUTTONS */}
+              {/* FOUR CTA BUTTONS */}
               <div className="hero-buttons" style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
                 <Link href="/poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#FCD34D', color: '#1E3A8A', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(252, 211, 77, 0.4)' }}>
                   {t.hero.ctaGeneral} <ArrowRightIcon />
@@ -336,6 +341,9 @@ export default function HomePage() {
                 </Link>
                 <Link href="/trust" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#10B981', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)' }}>
                   {t.hero.ctaTrust} <ArrowRightIcon />
+                </Link>
+                <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: 'rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', border: '2px solid rgba(255,255,255,0.4)', boxShadow: '0 4px 14px rgba(0,0,0,0.1)' }}>
+                  {t.hero.ctaLLC} <ArrowRightIcon />
                 </Link>
               </div>
 
@@ -357,20 +365,12 @@ export default function HomePage() {
                     { icon: <ScaleIcon />, label: 'General POA', link: '/poa' },
                     { icon: <FileTextIcon />, label: 'Limited POA', link: '/limited-poa' },
                     { icon: <HomeIcon />, label: 'Living Trust', link: '/trust' },
-                    { icon: <BuildingIcon />, label: 'LLC', link: null },
+                    { icon: <BuildingIcon />, label: 'LLC', link: '/llc' },
                   ].map((item, i) => (
-                    item.link ? (
-                      <Link key={i} href={item.link} style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '14px', padding: '20px', textAlign: 'center', textDecoration: 'none', color: 'white', transition: 'background 0.2s' }}>
-                        <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.icon}</div>
-                        <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
-                      </Link>
-                    ) : (
-                      <div key={i} style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '14px', padding: '20px', textAlign: 'center', position: 'relative' }}>
-                        <div style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: '#F59E0B', color: 'white', fontSize: '8px', padding: '2px 6px', borderRadius: '10px' }}>SOON</div>
-                        <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.icon}</div>
-                        <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
-                      </div>
-                    )
+                    <Link key={i} href={item.link} style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '14px', padding: '20px', textAlign: 'center', textDecoration: 'none', color: 'white', transition: 'background 0.2s' }}>
+                      <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.icon}</div>
+                      <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -379,7 +379,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Services Section - 3 ACTIVE + 2 COMING SOON */}
+      {/* Services Section - 4 ACTIVE + 1 COMING SOON */}
       <section id="services" className="section-padding" style={{ padding: '80px 16px', backgroundColor: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -390,8 +390,8 @@ export default function HomePage() {
             <p style={{ fontSize: '13px', color: '#92400E', margin: 0, lineHeight: '1.6' }}>{t.services.disclaimer}</p>
           </div>
 
-          {/* 3 ACTIVE SERVICES */}
-          <div className="services-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '32px' }}>
+          {/* 4 ACTIVE SERVICES */}
+          <div className="services-grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '32px' }}>
             {/* GENERAL POA - ACTIVE */}
             <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '28px', border: '2px solid #3B82F6', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
@@ -455,28 +455,46 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-          </div>
 
-          {/* COMING SOON SERVICES */}
-          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#6B7280', marginBottom: '16px', textAlign: 'center' }}>{language === 'es' ? 'Más Servicios Próximamente' : 'More Services Coming Soon'}</h3>
-          <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-            {[
-              { key: 'business', icon: <BuildingIcon />, color: '#8B5CF6' },
-              { key: 'immigration', icon: <PlaneIcon />, color: '#EC4899' },
-            ].map((service) => (
-              <div key={service.key} style={{ backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '24px', border: '1px solid #E5E7EB', opacity: 0.8, position: 'relative' }}>
-                <div style={{ position: 'absolute', top: '12px', right: '12px', backgroundColor: '#6B7280', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: '600' }}>{t.services.comingSoon}</div>
-                <div style={{ width: '48px', height: '48px', backgroundColor: '#E5E7EB', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px', color: '#9CA3AF' }}>{service.icon}</div>
-                <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>{t.services[service.key].title}</h4>
-                <p style={{ fontSize: '13px', color: '#9CA3AF', marginBottom: '12px' }}>{t.services[service.key].desc}</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '18px', fontWeight: '700', color: '#6B7280' }}>{t.services[service.key].price}</span>
-                  <Link href={`/waitlist?service=${service.key}`} style={{ padding: '8px 16px', backgroundColor: '#E5E7EB', color: '#374151', textDecoration: 'none', borderRadius: '6px', fontWeight: '500', fontSize: '12px' }}>
-                    {t.services.waitlist}
-                  </Link>
+            {/* LLC - ACTIVE */}
+            <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '28px', border: '2px solid #8B5CF6', boxShadow: '0 4px 12px rgba(139, 92, 246, 0.15)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div style={{ width: '56px', height: '56px', backgroundColor: '#EDE9FE', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8B5CF6' }}><BuildingIcon /></div>
+                <div>
+                  <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', marginBottom: '4px', display: 'inline-block' }}>✓ {language === 'es' ? 'DISPONIBLE' : 'AVAILABLE'}</div>
+                  <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1F2937', margin: 0 }}>{t.services.llc.title}</h3>
                 </div>
               </div>
-            ))}
+              <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '12px', lineHeight: '1.5' }}>{t.services.llc.desc}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '16px' }}>
+                {t.services.llc.features.map((feature, i) => (
+                  <span key={i} style={{ backgroundColor: '#EDE9FE', color: '#5B21B6', padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: '500' }}>{feature}</span>
+                ))}
+              </div>
+              <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '24px', fontWeight: '800', color: '#8B5CF6' }}>{t.services.llc.price}</span>
+                <Link href="/llc" style={{ padding: '10px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '14px' }}>
+                  {t.services.llc.cta} →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* COMING SOON - ONLY IMMIGRATION */}
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#6B7280', marginBottom: '16px', textAlign: 'center' }}>{language === 'es' ? 'Más Servicios Próximamente' : 'More Services Coming Soon'}</h3>
+          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '24px', border: '1px solid #E5E7EB', opacity: 0.8, position: 'relative' }}>
+              <div style={{ position: 'absolute', top: '12px', right: '12px', backgroundColor: '#6B7280', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: '600' }}>{t.services.comingSoon}</div>
+              <div style={{ width: '48px', height: '48px', backgroundColor: '#E5E7EB', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px', color: '#9CA3AF' }}><PlaneIcon /></div>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>{t.services.immigration.title}</h4>
+              <p style={{ fontSize: '13px', color: '#9CA3AF', marginBottom: '12px' }}>{t.services.immigration.desc}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '18px', fontWeight: '700', color: '#6B7280' }}>{t.services.immigration.price}</span>
+                <Link href="/waitlist?service=immigration" style={{ padding: '8px 16px', backgroundColor: '#E5E7EB', color: '#374151', textDecoration: 'none', borderRadius: '6px', fontWeight: '500', fontSize: '12px' }}>
+                  {t.services.waitlist}
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -545,6 +563,9 @@ export default function HomePage() {
               <Link href="/trust" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#10B981', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
                 {t.hero.ctaTrust} <ArrowRightIcon />
               </Link>
+              <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
+                {t.hero.ctaLLC} <ArrowRightIcon />
+              </Link>
             </div>
             <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1E3A8A', fontWeight: '600', textDecoration: 'none', fontSize: '16px' }}>
               <PhoneIcon /> {t.cta.call}: 855.246.7274
@@ -573,7 +594,7 @@ export default function HomePage() {
                 <li><Link href="/poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>General Power of Attorney</Link></li>
                 <li><Link href="/limited-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>Limited Power of Attorney</Link></li>
                 <li><Link href="/trust" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>California Living Trust</Link></li>
-                <li><span style={{ color: '#64748B', fontSize: '13px', lineHeight: '2' }}>LLC Formation (Coming Soon)</span></li>
+                <li><Link href="/llc" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Formación de LLC (California)' : 'LLC Formation (California)'}</Link></li>
               </ul>
             </div>
             <div>
