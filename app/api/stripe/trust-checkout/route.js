@@ -51,7 +51,7 @@ export async function POST(request) {
 
     const cleanEmail = clientEmail.trim().toLowerCase();
     const tierConfig = TIER_PRICES[tier];
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://multiservicios360.vercel.app';
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({

@@ -33,7 +33,7 @@ const TRANSLATIONS = {
       ctaGeneral: 'Crear Poder General',
       ctaLimited: 'Crear Poder Limitado',
       ctaTrust: 'Crear Living Trust',
-      ctaSecondary: 'Ver Servicios',
+      ctaTrust: 'Crear Fideicomiso en Vida',
       trust1: '100% Bilingüe',
       trust2: 'Autoayuda Legal',
       trust3: 'California',
