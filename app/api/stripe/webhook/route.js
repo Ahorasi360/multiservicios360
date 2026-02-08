@@ -127,8 +127,11 @@ export async function POST(request) {
           const vaultUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://multiservicios360.net'}/vault?code=${vaultToken.token}`;
           console.log('Vault URL:', vaultUrl);
 
-          // TODO: Send email to client with vault link
-          // await sendVaultEmail(clientEmail, clientName, vaultUrl);
+          // Send vault access email to client
+          if (clientEmail) {
+            const { sendVaultEmail } = await import('@/lib/send-vault-email');
+            await sendVaultEmail(clientEmail, clientName, vaultUrl, documentType);
+          }
         }
       } catch (vaultError) {
         // Vault creation is non-critical — don't fail the webhook
