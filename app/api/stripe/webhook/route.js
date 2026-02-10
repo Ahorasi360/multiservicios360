@@ -1,4 +1,4 @@
-﻿import Stripe from 'stripe';
+import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
@@ -75,9 +75,9 @@ export async function POST(request) {
         console.log(tableName + ' updated to paid status');
       }
 
-      // ──────────────────────────────────────────────
+      // ----------------------------------------------
       // CREATE VAULT TOKEN FOR CLIENT DOCUMENT ACCESS
-      // ──────────────────────────────────────────────
+      // ----------------------------------------------
       try {
         const clientName = session.customer_details?.name || session.metadata?.clientName || '';
         const clientEmail = session.customer_details?.email || session.metadata?.clientEmail || '';
@@ -129,12 +129,12 @@ export async function POST(request) {
 
           // Send vault access email to client
           if (clientEmail) {
-            const { sendVaultEmail } = await import('@/lib/send-vault-email');
+            const { sendVaultEmail } = await import('../../../../lib/send-vault-email');
             await sendVaultEmail(clientEmail, clientName, vaultUrl, documentType);
           }
         }
       } catch (vaultError) {
-        // Vault creation is non-critical — don't fail the webhook
+        // Vault creation is non-critical � don't fail the webhook
         console.error('Vault creation error (non-critical):', vaultError);
       }
     } else {
