@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getTrustPDFBlob } from './trust-pdf-generator';
+import { saveToVault } from '../../../lib/save-to-vault';
 
 function TrustSuccessContent() {
   const searchParams = useSearchParams();
@@ -436,6 +437,8 @@ function TrustSuccessContent() {
     link.download = `${name}_California_Living_Trust.pdf`;
     link.click();
     URL.revokeObjectURL(url);
+    URL.revokeObjectURL(sigUrl);
+        saveToVault({ blob: sigBlob, matterId, clientName: matter?.client_name, clientEmail: matter?.client_email, documentType: 'trust-signature', language: 'en', fileName: sigLink.download });
 
     // Generate and download signature addendum
     try {

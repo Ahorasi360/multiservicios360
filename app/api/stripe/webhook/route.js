@@ -1,4 +1,4 @@
-import Stripe from 'stripe';
+﻿import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
@@ -134,7 +134,7 @@ export async function POST(request) {
           }
         }
       } catch (vaultError) {
-        // Vault creation is non-critical � don't fail the webhook
+        // Vault creation is non-critical — don't fail the webhook
         console.error('Vault creation error (non-critical):', vaultError);
       }
     } else {

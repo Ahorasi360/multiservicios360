@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { saveToVault } from '../../../lib/save-to-vault';
 
 function LLCSuccessContent() {
   const searchParams = useSearchParams();
@@ -513,6 +514,8 @@ function LLCSuccessContent() {
       if (doc) {
         const companyName = (matter?.intake_data?.llc_name || 'LLC').replace(/[^a-zA-Z0-9]/g, '_');
         doc.save(`Operating_Agreement_${companyName}.pdf`);
+        const enBlob = doc.output('blob');
+        saveToVault({ blob: enBlob, matterId, clientName: matter?.client_name, clientEmail: matter?.client_email, documentType: 'llc', language: 'en', fileName: `Operating_Agreement_${companyName}.pdf` });
       }
     } catch (err) {
       console.error('PDF generation error:', err);
@@ -550,6 +553,8 @@ function LLCSuccessContent() {
       if (doc) {
         const companyName = (matter?.intake_data?.llc_name || 'LLC').replace(/[^a-zA-Z0-9]/g, '_');
         doc.save(`Acuerdo_Operativo_${companyName}.pdf`);
+        const esBlob = doc.output('blob');
+        saveToVault({ blob: esBlob, matterId, clientName: matter?.client_name, clientEmail: matter?.client_email, documentType: 'llc', language: 'es', fileName: `Acuerdo_Operativo_${companyName}.pdf` });
       }
     } catch (err) {
       console.error('Spanish PDF error:', err);

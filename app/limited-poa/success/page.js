@@ -1146,6 +1146,7 @@ If you do not faithfully perform your duties under the law and under the power o
       link.href = url;
       link.download = `Limited_POA_${categoryName.replace(/[^a-zA-Z0-9]/g, '_')}_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`;
       link.click();
+      saveToVault({ blob, matterId, clientName: matterData?.client_name, clientEmail: matterData?.client_email, documentType: 'limited-poa', language: lang, fileName: link.download });
       URL.revokeObjectURL(url);
     } catch (notaryError) {
       console.error('Error fetching notary form:', notaryError);

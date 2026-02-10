@@ -3,6 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PDFDocument } from 'pdf-lib';
+import { saveToVault } from '../../../lib/save-to-vault';
 
 // Spanish to English relationship translations
 const RELATIONSHIP_TRANSLATIONS = {
@@ -1281,6 +1282,9 @@ If you do not faithfully perform your duties, you may be subject to:
         link.href = url;
         link.download = `POA_${(d.principal_name || 'Document').replace(/\s+/g, '_')}_${lang.toUpperCase()}.pdf`;
         link.click();
+        link.click();
+        saveToVault({ blob, matterId, clientName: matterData?.client_name, clientEmail: matterData?.client_email, documentType: 'poa', language: lang, fileName: link.download });
+        URL.revokeObjectURL(url);
         URL.revokeObjectURL(url);
       } catch (notaryError) {
         console.error('Error fetching notary form:', notaryError);
