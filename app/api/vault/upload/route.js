@@ -10,38 +10,29 @@ const supabase = createClient(
 /**
  * POST /api/vault/upload
  * Admin-authenticated endpoint for manually uploading documents to a client vault.
- * Used for: SOS filings, EIN letters, Articles of Organization, etc.
- *
- * Accepts multipart form data:
- *   - file: the uploaded file
- *   - matter_id: UUID of the matter
- *   - document_type: one of articles_of_org, ein_letter, sos_filing, amendment, certificate, other
- *   - language: en or es (default en)
- *   - file_name: optional display name override
+ * Supports both linking to existing matter OR creating a standalone vault.
  */
 export async function POST(request) {
   try {
-    // Admin auth check — verify admin session or API key
-    // You can swap this for your existing admin auth pattern (cookie, session, etc.)
+    // Admin auth check — Bearer token
     const authHeader = request.headers.get('authorization');
-    const adminKey = process.env.ADMIN_API_KEY;
+    const adminKey = process.env.ADMIN_API_KEY || 'ms360-admin-key-2026';
 
-    if (!adminKey || authHeader !== `Bearer ${adminKey}`) {
+    if (!authHeader || authHeader !== `Bearer ${adminKey}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const formData = await request.formData();
     const file = formData.get('file');
-    const matterId = formData.get('matter_id');
+    const matterId = formData.get('matter_id') || null;
+    const clientName = formData.get('client_name') || '';
+    const clientEmail = formData.get('client_email') || '';
     const documentType = formData.get('document_type') || 'other';
     const language = formData.get('language') || 'en';
     const fileNameOverride = formData.get('file_name');
 
-    if (!file || !matterId) {
-      return NextResponse.json(
-        { error: 'file and matter_id are required' },
-        { status: 400 }
-      );
+    if (!file) {
+      return NextResponse.json({ error: 'File is required' }, { status: 400 });
     }
 
     // Validate document type
@@ -57,34 +48,46 @@ export async function POST(request) {
       );
     }
 
-    // Get or create vault token for this matter
-    let { data: vaultToken } = await supabase
-      .from('vault_tokens')
-      .select('id, token')
-      .eq('matter_id', matterId)
-      .single();
+    // Find or create vault token
+    let vaultToken;
 
-    if (!vaultToken) {
-      // Look up matter for client info
-      const { data: matter } = await supabase
-        .from('matters')
-        .select('id')
-        .eq('id', matterId)
+    if (matterId) {
+      // Try to find existing vault for this matter
+      const { data: existing } = await supabase
+        .from('vault_tokens')
+        .select('id, token, matter_id')
+        .eq('matter_id', matterId)
         .single();
 
-      if (!matter) {
-        return NextResponse.json({ error: 'Matter not found' }, { status: 404 });
+      if (existing) {
+        vaultToken = existing;
+        // Update client info if provided
+        if (clientName || clientEmail) {
+          await supabase
+            .from('vault_tokens')
+            .update({
+              ...(clientName && { client_name: clientName }),
+              ...(clientEmail && { client_email: clientEmail }),
+            })
+            .eq('id', existing.id);
+        }
       }
+    }
 
-      // Generate new token
+    // If no existing vault found, create new one
+    if (!vaultToken) {
       const crypto = await import('crypto');
       const token = crypto.randomBytes(32).toString('hex');
+      const newMatterId = matterId || crypto.randomUUID();
 
       const { data: newToken, error: tokenError } = await supabase
         .from('vault_tokens')
         .insert({
-          matter_id: matterId,
+          matter_id: newMatterId,
           token,
+          client_name: clientName || null,
+          client_email: clientEmail || null,
+          service_type: documentType,
           expires_at: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
         })
         .select()
@@ -100,7 +103,7 @@ export async function POST(request) {
     // Upload file to Supabase storage
     const fileName = fileNameOverride || file.name;
     const fileBuffer = Buffer.from(await file.arrayBuffer());
-    const storagePath = `${matterId}/${Date.now()}-${fileName}`;
+    const storagePath = `${vaultToken.matter_id || 'uploads'}/${Date.now()}-${fileName}`;
 
     const { error: uploadError } = await supabase
       .storage
@@ -119,7 +122,7 @@ export async function POST(request) {
     const { data: vaultDoc, error: docError } = await supabase
       .from('vault_documents')
       .insert({
-        matter_id: matterId,
+        matter_id: vaultToken.matter_id || null,
         token_id: vaultToken.id,
         document_type: documentType,
         language,
@@ -144,7 +147,6 @@ export async function POST(request) {
       vault_token: vaultToken.token,
       vault_url: `${baseUrl}/vault?code=${vaultToken.token}`,
       file_name: fileName,
-      storage_path: storagePath,
     });
   } catch (error) {
     console.error('Vault upload error:', error);

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-
+import AdminLayout from '../../components/AdminLayout';
 export default function AdminDashboard() {
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
@@ -249,7 +249,7 @@ export default function AdminDashboard() {
   const filteredWaitlist = filterBySearch(waitlist);
 
   return (
-    <div style={s.container}>
+    <AdminLayout title="Dashboard">
       {/* Header */}
       <header style={s.header}>
         <div style={s.headerTop}>
@@ -630,7 +630,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-      )}
-    </div>
+    )}
+    </AdminLayout>
   );
 }
