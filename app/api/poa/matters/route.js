@@ -26,7 +26,7 @@ export async function POST(request) {
     const {
       client_name,
       client_email,
-      client_phone,
+      client_phone, partner_id,
       review_tier,
       intake_data,
       language,
@@ -55,6 +55,7 @@ export async function POST(request) {
     const { data: matter, error } = await supabase
       .from('poa_matters')
       .insert({
+        partner_id: partner_id || null,
         client_name,
         client_email,
         client_phone: client_phone || null,

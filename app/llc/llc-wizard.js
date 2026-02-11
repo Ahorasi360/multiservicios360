@@ -137,6 +137,24 @@ export default function LLCIntakeWizard() {
     }
   }, [intakeData.agent_type]);
 
+    // ============================================
+  // Partner mode: pre-fill client info
+  // ============================================
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('partner_mode') === 'true') {
+        const name = localStorage.getItem('portal_client_name') || '';
+        const email = localStorage.getItem('portal_client_email') || '';
+        const phone = localStorage.getItem('portal_client_phone') || '';
+        const lang = localStorage.getItem('portal_client_language') || 'es';
+        if (name) setClientName(name);
+        if (email) setClientEmail(email);
+        if (phone) setClientPhone(phone);
+        if (lang) setLanguage(lang);
+      }
+    }
+  }, []);
   // ============================================
   // Upsell toggle
   // ============================================
@@ -305,6 +323,7 @@ export default function LLCIntakeWizard() {
           client_name: clientName,
           client_email: clientEmail,
           client_phone: clientPhone,
+          partner_id: typeof window !== 'undefined' ? localStorage.getItem('partner_id') || null : null,
           review_tier: reviewTier,
           intake_data: intakeData,
           language,

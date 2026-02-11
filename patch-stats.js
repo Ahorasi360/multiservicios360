@@ -1,4 +1,7 @@
-// app/api/portal/stats/route.js
+const fs = require('fs');
+var f = 'app/api/portal/stats/route.js';
+
+var newCode = `// app/api/portal/stats/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
@@ -99,3 +102,7 @@ export async function GET(request) {
     );
   }
 }
+`;
+
+fs.writeFileSync(f, newCode, 'utf8');
+console.log(f + ' - UPDATED');

@@ -166,8 +166,7 @@ export default function PartnerDashboard() {
               <div>
                 <p className="text-sm font-medium text-slate-500">Documents Created</p>
                 <p className="text-3xl font-bold text-slate-800 mt-1">{stats?.totalDocuments || 0}</p>
-                <p className="text-xs text-slate-400 mt-1">POAs & Legal docs</p>
-              </div>
+               <p className="text-xs text-slate-400 mt-1">POAs, Trusts, LLCs & Legal docs</p>              </div>
               <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center">
                 <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -240,7 +239,7 @@ export default function PartnerDashboard() {
                   </div>
                   <div className="ml-4 text-left">
                     <p className="font-medium text-slate-800">Create Document</p>
-                    <p className="text-xs text-slate-500">Start a new POA</p>
+                    <p className="text-xs text-slate-500">Start a new document</p>
                   </div>
                 </button>
 
