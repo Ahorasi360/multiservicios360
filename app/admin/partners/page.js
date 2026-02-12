@@ -1,350 +1,469 @@
-"use client";
+'use client';
 import { useState, useEffect } from 'react';
 
-export default function AdminPartners() {
+export default function AdminPartnersPage() {
   const [partners, setPartners] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState('');
   const [filter, setFilter] = useState('all');
+  const [showModal, setShowModal] = useState(false);
+  const [editingPartner, setEditingPartner] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
-    email: '', password: '', business_name: '', contact_name: '',
-    phone: '', partner_type: 'tax_preparer', tier: 'referral',
-    commission_rate: 20, status: 'active'
+    email: '',
+    password: '',
+    business_name: '',
+    contact_name: '',
+    phone: '',
+    partner_type: 'tax_preparer',
+    tier: 'start',
+    commission_rate: 20,
+    status: 'active'
   });
 
-  useEffect(() => { fetchPartners(); }, []);
-
-  const fetchPartners = async () => {
-    try {
-      const res = await fetch('/api/admin/partners');
-      const data = await res.json();
-      if (data.success) setPartners(data.partners);
-    } catch (err) { console.error(err); }
-    setLoading(false);
+  const defaultForm = {
+    email: '',
+    password: '',
+    business_name: '',
+    contact_name: '',
+    phone: '',
+    partner_type: 'tax_preparer',
+    tier: 'start',
+    commission_rate: 20,
+    status: 'active'
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch('/api/admin/partners', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
-    });
-    const data = await res.json();
-    if (data.success) {
-      setMessage('Partner added successfully!');
-      setShowModal(false);
-      setForm({ email: '', password: '', business_name: '', contact_name: '', phone: '', partner_type: 'tax_preparer', tier: 'referral', commission_rate: 20, status: 'active' });
-      fetchPartners();
-      setTimeout(() => setMessage(''), 3000);
-    } else {
-      setMessage(data.error || 'Error adding partner');
-    }
-  };
-
-  const updateStatus = async (id, status) => {
-    await fetch('/api/admin/partners', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, status })
-    });
+  useEffect(() => {
     fetchPartners();
-  };
+  }, []);
+
+  async function fetchPartners() {
+    try {
+      const res = await fetch('/api/admin/partners', {
+        headers: { 'x-admin-password': localStorage.getItem('adminPassword') || '' }
+      });
+      const data = await res.json();
+      if (data.partners) setPartners(data.partners);
+    } catch (err) {
+      console.error('Error fetching partners:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function openAddModal() {
+    setEditingPartner(null);
+    setForm(defaultForm);
+    setShowModal(true);
+  }
+
+  function openEditModal(partner) {
+    setEditingPartner(partner);
+    setForm({
+      email: partner.email || '',
+      password: '', // leave blank = no change
+      business_name: partner.business_name || '',
+      contact_name: partner.contact_name || '',
+      phone: partner.phone || '',
+      partner_type: partner.partner_type || 'tax_preparer',
+      tier: partner.tier || 'start',
+      commission_rate: partner.commission_rate || 20,
+      status: partner.status || 'active'
+    });
+    setShowModal(true);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      if (editingPartner) {
+        // UPDATE existing partner
+        const updateData = { ...form };
+        if (!updateData.password) delete updateData.password; // don't send empty password
+        const res = await fetch('/api/admin/partners', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': localStorage.getItem('adminPassword') || ''
+          },
+          body: JSON.stringify({ id: editingPartner.id, ...updateData })
+        });
+        const data = await res.json();
+        if (data.error) {
+          alert('Error: ' + data.error);
+          return;
+        }
+      } else {
+        // CREATE new partner
+        if (!form.password) {
+          alert('La contrasena es obligatoria para socios nuevos');
+          return;
+        }
+        const res = await fetch('/api/admin/partners', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': localStorage.getItem('adminPassword') || ''
+          },
+          body: JSON.stringify(form)
+        });
+        const data = await res.json();
+        if (data.error) {
+          alert('Error: ' + data.error);
+          return;
+        }
+      }
+      setShowModal(false);
+      setEditingPartner(null);
+      setForm(defaultForm);
+      fetchPartners();
+    } catch (err) {
+      alert('Error al guardar: ' + err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function updateStatus(id, status) {
+    try {
+      const res = await fetch('/api/admin/partners', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': localStorage.getItem('adminPassword') || ''
+        },
+        body: JSON.stringify({ id, status })
+      });
+      const data = await res.json();
+      if (!data.error) fetchPartners();
+    } catch (err) {
+      console.error('Error updating status:', err);
+    }
+  }
 
   const filtered = filter === 'all' ? partners : partners.filter(p => p.status === filter);
 
-  if (loading) return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-        <p className="mt-4 text-white">Loading partners...</p>
+  const stats = {
+    total: partners.length,
+    active: partners.filter(p => p.status === 'active').length,
+    pending: partners.filter(p => p.status === 'pending').length,
+    suspended: partners.filter(p => p.status === 'suspended').length,
+  };
+
+  const tierLabels = {
+    start: 'Partner Start',
+    pro: 'Partner Pro',
+    elite: 'Partner Elite',
+    referral: 'Referral',
+    wholesale: 'Wholesale',
+    white_label: 'White Label'
+  };
+
+  const tierColors = {
+    start: 'bg-blue-500/20 text-blue-400',
+    pro: 'bg-purple-500/20 text-purple-400',
+    elite: 'bg-yellow-500/20 text-yellow-400',
+    referral: 'bg-blue-500/20 text-blue-400',
+    wholesale: 'bg-orange-500/20 text-orange-400',
+    white_label: 'bg-cyan-500/20 text-cyan-400'
+  };
+
+  const typeLabels = {
+    tax_preparer: 'Tax Preparer',
+    attorney: 'Attorney',
+    notary: 'Notary',
+    insurance: 'Insurance',
+    real_estate: 'Real Estate',
+    immigration: 'Immigration',
+    community: 'Community Center',
+    other: 'Other'
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="text-white text-xl">Cargando socios...</div>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-      {/* Header */}
-      <header className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
-                <span className="text-white font-bold text-lg">MS</span>
-              </div>
+    <div className="min-h-screen bg-slate-950 text-white">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center font-bold text-lg">MS</div>
               <div>
-                <h1 className="text-xl font-bold text-white">Multi Servicios 360</h1>
-                <p className="text-sm text-slate-400">Partner Administration</p>
+                <h1 className="text-2xl font-bold">Multi Servicios 360</h1>
+                <p className="text-slate-400 text-sm">Administracion de Socios</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <a href="/" className="text-slate-400 hover:text-white transition-colors">← Back to Site</a>
-              <a href="/portal/dashboard" className="text-slate-400 hover:text-white transition-colors">Partner Portal</a>
-            </div>
+          </div>
+          <div className="flex gap-3">
+            <a href="/admin" className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors text-sm">&larr; Back to Admin</a>
+            <a href="/portal/login" target="_blank" className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors text-sm">Partner Portal &rarr;</a>
           </div>
         </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Success Message */}
-        {message && (
-          <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${message.includes('success') ? 'bg-green-500/20 border border-green-500/30 text-green-400' : 'bg-red-500/20 border border-red-500/30 text-red-400'}`}>
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            {message}
-          </div>
-        )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Total Partners</p>
-                <p className="text-3xl font-bold text-white mt-1">{partners.length}</p>
+        <div className="grid grid-cols-4 gap-4 mb-8">
+          {[
+            { label: 'Total Socios', value: stats.total, color: 'from-blue-500 to-cyan-500', icon: '👥' },
+            { label: 'Activos', value: stats.active, color: 'from-emerald-500 to-green-500', icon: '✅' },
+            { label: 'Pendientes', value: stats.pending, color: 'from-amber-500 to-yellow-500', icon: '⏳' },
+            { label: 'Suspendidos', value: stats.suspended, color: 'from-red-500 to-rose-500', icon: '🚫' },
+          ].map((stat) => (
+            <div key={stat.label} className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-slate-400 text-sm">{stat.label}</span>
+                <span className="text-2xl">{stat.icon}</span>
               </div>
-              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
+              <div className={`text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>{stat.value}</div>
             </div>
+          ))}
+        </div>
+
+        {/* Package Info Cards */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-slate-900 border border-blue-500/30 rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 font-bold text-sm">S</span>
+              <span className="font-bold text-blue-400">Partner Start</span>
+            </div>
+            <p className="text-slate-400 text-sm">$499 — Comision 20%. Oficina pequena, primer acercamiento.</p>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Active</p>
-                <p className="text-3xl font-bold text-green-400 mt-1">{partners.filter(p => p.status === 'active').length}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
+          <div className="bg-slate-900 border border-purple-500/30 rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 font-bold text-sm">P</span>
+              <span className="font-bold text-purple-400">Partner Pro</span>
             </div>
+            <p className="text-slate-400 text-sm">$899 — Comision 20-22%. Oficinas con 100+ clientes.</p>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Pending Approval</p>
-                <p className="text-3xl font-bold text-yellow-400 mt-1">{partners.filter(p => p.status === 'pending').length}</p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
+          <div className="bg-slate-900 border border-yellow-500/30 rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center text-yellow-400 font-bold text-sm">E</span>
+              <span className="font-bold text-yellow-400">Partner Elite</span>
             </div>
-          </div>
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Suspended</p>
-                <p className="text-3xl font-bold text-red-400 mt-1">{partners.filter(p => p.status === 'suspended').length}</p>
-              </div>
-              <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                </svg>
-              </div>
-            </div>
+            <p className="text-slate-400 text-sm">$2,500-$3,500 — Comision 20-25%. Multi-ubicacion, white-label.</p>
           </div>
         </div>
 
-        {/* Tier Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-500/30 rounded-2xl p-5">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">R</span>
-              </div>
-              <h3 className="font-semibold text-blue-400">Referral Partners</h3>
-            </div>
-            <p className="text-slate-400 text-sm">Client pays full price. Partner earns 20% commission on each sale.</p>
-          </div>
-          <div className="bg-gradient-to-br from-purple-600/20 to-purple-800/20 border border-purple-500/30 rounded-2xl p-5">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">W</span>
-              </div>
-              <h3 className="font-semibold text-purple-400">Wholesale Partners</h3>
-            </div>
-            <p className="text-slate-400 text-sm">Partner buys at wholesale rate and collects payment from clients directly.</p>
-          </div>
-          <div className="bg-gradient-to-br from-cyan-600/20 to-cyan-800/20 border border-cyan-500/30 rounded-2xl p-5">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">WL</span>
-              </div>
-              <h3 className="font-semibold text-cyan-400">White Label Partners</h3>
-            </div>
-            <p className="text-slate-400 text-sm">Full branding control. Partner handles everything, pays wholesale pricing.</p>
-          </div>
-        </div>
-
-        {/* Filter & Add Button */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        {/* Filter + Add Button */}
+        <div className="flex items-center justify-between mb-6">
           <div className="flex gap-2">
             {['all', 'active', 'pending', 'suspended'].map(f => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
-              >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
+              <button key={f} onClick={() => setFilter(f)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${filter === f ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>
+                {f === 'all' ? 'Todos' : f === 'active' ? 'Activos' : f === 'pending' ? 'Pendientes' : 'Suspendidos'}
               </button>
             ))}
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-all flex items-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Add Partner
+          <button onClick={openAddModal} className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-all">
+            + Agregar Socio
           </button>
         </div>
 
         {/* Partners Table */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-slate-700">
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Business</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Contact</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tier</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Commission</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Status</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-700">
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="px-6 py-12 text-center text-slate-500">No partners found</td>
-                  </tr>
-                ) : filtered.map(p => (
-                  <tr key={p.id} className="hover:bg-slate-700/30 transition-colors">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-slate-800">
+                <th className="text-left px-6 py-4 text-slate-400 text-sm font-medium">NEGOCIO</th>
+                <th className="text-left px-6 py-4 text-slate-400 text-sm font-medium">CONTACTO</th>
+                <th className="text-left px-6 py-4 text-slate-400 text-sm font-medium">TIPO</th>
+                <th className="text-left px-6 py-4 text-slate-400 text-sm font-medium">PAQUETE</th>
+                <th className="text-center px-6 py-4 text-slate-400 text-sm font-medium">COMISION</th>
+                <th className="text-center px-6 py-4 text-slate-400 text-sm font-medium">STATUS</th>
+                <th className="text-center px-6 py-4 text-slate-400 text-sm font-medium">ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr><td colSpan={7} className="text-center py-12 text-slate-500">No hay socios en esta categoria</td></tr>
+              ) : (
+                filtered.map((partner) => (
+                  <tr key={partner.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold">{p.business_name?.charAt(0)}</span>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${
+                          partner.tier === 'elite' ? 'bg-yellow-500/20 text-yellow-400' :
+                          partner.tier === 'pro' ? 'bg-purple-500/20 text-purple-400' :
+                          'bg-blue-500/20 text-blue-400'
+                        }`}>
+                          {(partner.business_name || 'N')[0].toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-medium text-white">{p.business_name}</p>
-                          <p className="text-sm text-slate-400">{p.email}</p>
+                          <div className="font-medium">{partner.business_name}</div>
+                          <div className="text-slate-500 text-sm">{partner.email}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-slate-300">{p.contact_name}</p>
-                      <p className="text-sm text-slate-500">{p.phone || 'No phone'}</p>
+                      <div className="text-sm">{partner.contact_name || '—'}</div>
+                      <div className="text-slate-500 text-sm">{partner.phone || '—'}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${p.tier === 'referral' ? 'bg-blue-500/20 text-blue-400' : p.tier === 'wholesale' ? 'bg-purple-500/20 text-purple-400' : 'bg-cyan-500/20 text-cyan-400'}`}>
-                        {p.tier}
+                      <span className="text-sm text-slate-300">{typeLabels[partner.partner_type] || partner.partner_type}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${tierColors[partner.tier] || 'bg-slate-700 text-slate-300'}`}>
+                        {tierLabels[partner.tier] || partner.tier}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="font-bold text-emerald-400">{partner.commission_rate}%</span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        partner.status === 'active' ? 'bg-emerald-500/20 text-emerald-400' :
+                        partner.status === 'pending' ? 'bg-amber-500/20 text-amber-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {partner.status === 'active' ? 'Activo' : partner.status === 'pending' ? 'Pendiente' : 'Suspendido'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-white font-semibold">{p.commission_rate}%</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${p.status === 'active' ? 'bg-green-500/20 text-green-400' : p.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400'}`}>
-                        {p.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
-                        {p.status === 'pending' && (
-                          <button onClick={() => updateStatus(p.id, 'active')} className="px-3 py-1.5 bg-green-500/20 text-green-400 rounded-lg text-sm font-medium hover:bg-green-500/30 transition-colors">
-                            Approve
+                      <div className="flex items-center justify-center gap-2">
+                        <button onClick={() => openEditModal(partner)}
+                          className="px-3 py-1.5 bg-blue-500/20 text-blue-400 rounded-lg text-xs font-medium hover:bg-blue-500/30 transition-colors"
+                          title="Editar">
+                          ✏️ Editar
+                        </button>
+                        {partner.status === 'pending' && (
+                          <button onClick={() => updateStatus(partner.id, 'active')}
+                            className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-medium hover:bg-emerald-500/30 transition-colors">
+                            Aprobar
                           </button>
                         )}
-                        {p.status === 'active' && (
-                          <button onClick={() => updateStatus(p.id, 'suspended')} className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 transition-colors">
-                            Suspend
+                        {partner.status === 'active' && (
+                          <button onClick={() => updateStatus(partner.id, 'suspended')}
+                            className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-xs font-medium hover:bg-red-500/30 transition-colors">
+                            Suspender
                           </button>
                         )}
-                        {p.status === 'suspended' && (
-                          <button onClick={() => updateStatus(p.id, 'active')} className="px-3 py-1.5 bg-green-500/20 text-green-400 rounded-lg text-sm font-medium hover:bg-green-500/30 transition-colors">
-                            Reactivate
+                        {partner.status === 'suspended' && (
+                          <button onClick={() => updateStatus(partner.id, 'active')}
+                            className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-medium hover:bg-emerald-500/30 transition-colors">
+                            Reactivar
                           </button>
                         )}
                       </div>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
 
         {/* Footer */}
-        <footer className="mt-12 pt-8 border-t border-slate-700">
-          <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-slate-500">
-            <p>© 2026 Multi Servicios 360. All rights reserved.</p>
-            <p className="mt-2 sm:mt-0">Need help? Call (855) 246-7274</p>
-          </div>
-        </footer>
-      </main>
+        <div className="mt-8 text-center text-slate-600 text-sm">
+          <p>&copy; 2026 Multi Servicios 360. All rights reserved.</p>
+          <p>Need help? Call (855) 246-7274</p>
+        </div>
+      </div>
 
-      {/* Add Partner Modal */}
+      {/* ADD / EDIT MODAL */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl">
-            <div className="p-6 border-b border-slate-700 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-white">Add New Partner</h2>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white transition-colors">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold mb-1">
+              {editingPartner ? '✏️ Editar Socio' : '➕ Agregar Nuevo Socio'}
+            </h2>
+            <p className="text-slate-400 text-sm mb-5">
+              {editingPartner ? `Editando: ${editingPartner.business_name}` : 'Complete la informacion del nuevo socio'}
+            </p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Nombre del Negocio *</label>
+                <input type="text" required value={form.business_name} onChange={e => setForm({...form, business_name: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                  placeholder="Ej: Lopez Tax Services" />
+              </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Business Name *</label>
-                  <input type="text" required value={form.business_name} onChange={e => setForm({...form, business_name: e.target.value})} className="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors" />
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Nombre de Contacto *</label>
+                  <input type="text" required value={form.contact_name} onChange={e => setForm({...form, contact_name: e.target.value})}
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                    placeholder="Maria Lopez" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Contact Name *</label>
-                  <input type="text" required value={form.contact_name} onChange={e => setForm({...form, contact_name: e.target.value})} className="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors" />
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Telefono</label>
+                  <input type="text" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})}
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                    placeholder="555-123-4567" />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Email *</label>
+                <input type="email" required value={form.email} onChange={e => setForm({...form, email: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                  placeholder="oficina@email.com" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">
+                  {editingPartner ? 'Nueva Contrasena (dejar vacio para no cambiar)' : 'Contrasena *'}
+                </label>
+                <input type="text" value={form.password} onChange={e => setForm({...form, password: e.target.value})}
+                  required={!editingPartner}
+                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                  placeholder={editingPartner ? 'Dejar vacio para mantener la actual' : 'Contrasena del socio'} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Phone</label>
-                  <input type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Email *</label>
-                  <input type="email" required value={form.email} onChange={e => setForm({...form, email: e.target.value})} className="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Password *</label>
-                  <input type="password" required value={form.password} onChange={e => setForm({...form, password: e.target.value})} className="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Partner Tier</label>
-                  <select value={form.tier} onChange={e => setForm({...form, tier: e.target.value})} className="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors">
-                    <option value="referral">Referral (Commission)</option>
-                    <option value="wholesale">Wholesale</option>
-                    <option value="white_label">White Label</option>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Tipo de Oficina</label>
+                  <select value={form.partner_type} onChange={e => setForm({...form, partner_type: e.target.value})}
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors">
+                    <option value="tax_preparer">Preparador de Impuestos</option>
+                    <option value="insurance">Agente de Seguros</option>
+                    <option value="notary">Notario</option>
+                    <option value="immigration">Oficina de Inmigracion</option>
+                    <option value="real_estate">Bienes Raices</option>
+                    <option value="community">Centro Comunitario</option>
+                    <option value="attorney">Abogado</option>
+                    <option value="other">Otro</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Commission %</label>
-                  <input type="number" min="0" max="100" value={form.commission_rate} onChange={e => setForm({...form, commission_rate: Number(e.target.value)})} className="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors" />
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Paquete</label>
+                  <select value={form.tier} onChange={e => {
+                    const tier = e.target.value;
+                    const rate = tier === 'elite' ? 25 : tier === 'pro' ? 22 : 20;
+                    setForm({...form, tier, commission_rate: rate});
+                  }}
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors">
+                    <option value="start">Partner Start ($499)</option>
+                    <option value="pro">Partner Pro ($899)</option>
+                    <option value="elite">Partner Elite ($2,500+)</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Comision %</label>
+                  <input type="number" min="0" max="100" value={form.commission_rate} onChange={e => setForm({...form, commission_rate: Number(e.target.value)})}
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Status</label>
+                  <select value={form.status} onChange={e => setForm({...form, status: e.target.value})}
+                    className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors">
+                    <option value="active">Activo</option>
+                    <option value="pending">Pendiente</option>
+                    <option value="suspended">Suspendido</option>
+                  </select>
                 </div>
               </div>
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2.5 bg-slate-700 text-white rounded-xl hover:bg-slate-600 transition-colors">
-                  Cancel
+                <button type="button" onClick={() => { setShowModal(false); setEditingPartner(null); }}
+                  className="flex-1 px-4 py-2.5 bg-slate-700 text-white rounded-xl hover:bg-slate-600 transition-colors">
+                  Cancelar
                 </button>
-                <button type="submit" className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-all">
-                  Add Partner
+                <button type="submit" disabled={saving}
+                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-all disabled:opacity-50">
+                  {saving ? 'Guardando...' : editingPartner ? 'Guardar Cambios' : 'Agregar Socio'}
                 </button>
               </div>
             </form>
