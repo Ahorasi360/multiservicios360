@@ -2,8 +2,6 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const DEPARTMENTS = {
   info: { email: 'info@multiservicios360.net', label: 'General Inquiry' },
   admin: { email: 'admin@multiservicios360.net', label: 'Administrative' },
@@ -12,6 +10,7 @@ const DEPARTMENTS = {
 };
 
 export async function POST(request) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const { name, email, department, message } = await request.json();
 
