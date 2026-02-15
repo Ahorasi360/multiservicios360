@@ -47,7 +47,7 @@ export default function BlogListClient({ posts }) {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <div className="bg-amber-400"><div className="max-w-7xl mx-auto px-4 py-2"><p className="text-gray-900 text-xs text-center font-medium">Multi Servicios 360 no es un bufete de abogados y no proporciona asesoría legal.</p></div></div>
+      <div className="bg-amber-400"><div className="max-w-7xl mx-auto px-4 py-2"><p className="text-gray-900 text-xs text-center font-medium">{lang === 'es' ? 'Multi Servicios 360 no es un bufete de abogados y no proporciona asesoría legal.' : 'Multi Servicios 360 is not a law firm and does not provide legal advice.'}</p></div></div>
 
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -56,10 +56,10 @@ export default function BlogListClient({ posts }) {
             <div className="hidden sm:block"><span className="text-gray-900 font-bold text-sm block leading-tight">Multi Servicios 360</span><span className="text-gray-500 text-[10px] uppercase tracking-widest">Document Preparation</span></div>
           </Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/#services" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">Servicios</Link>
+            <Link href="/#services" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Servicios' : 'Services'}</Link>
             <Link href="/blog" className="text-blue-700 font-bold text-sm no-underline border-b-2 border-blue-700 pb-0.5">Blog</Link>
-            <Link href="/por-que-nosotros" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">¿Por Qué Nosotros?</Link>
-            <a href="/#contact" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">Contacto</a>
+            <Link href="/nuestra-historia" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
+            <Link href="/contacto" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Contacto' : 'Contact'}</Link>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={() => setLang(lang === 'es' ? 'en' : 'es')} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors">🌐 {lang === 'es' ? 'EN' : 'ES'}</button>
@@ -134,18 +134,18 @@ export default function BlogListClient({ posts }) {
       <footer className="bg-gray-900 text-white pt-10 pb-20 md:pb-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid sm:grid-cols-3 gap-8 mb-6">
-            <div><div className="flex items-center gap-2 mb-2"><div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center"><span className="text-white font-extrabold text-[10px]">M360</span></div><span className="text-white font-bold text-sm">Multi Servicios 360</span></div><p className="text-gray-400 text-xs leading-relaxed">Plataforma de preparación de documentos legales de autoayuda para la comunidad latina en California.</p></div>
-            <div><h3 className="text-white font-bold text-xs uppercase tracking-wider mb-2">Servicios</h3><ul className="space-y-1 list-none p-0 m-0"><li><Link href="/poa" className="text-gray-400 hover:text-white text-xs no-underline">General Power of Attorney</Link></li><li><Link href="/limited-poa" className="text-gray-400 hover:text-white text-xs no-underline">Limited Power of Attorney</Link></li><li><Link href="/trust" className="text-gray-400 hover:text-white text-xs no-underline">California Living Trust</Link></li><li><Link href="/llc" className="text-gray-400 hover:text-white text-xs no-underline">Formación de LLC</Link></li></ul></div>
-            <div><h3 className="text-white font-bold text-xs uppercase tracking-wider mb-2">Contacto</h3><ul className="space-y-1 list-none p-0 m-0"><li><a href="tel:8552467274" className="text-gray-400 hover:text-white text-xs no-underline">855.246.7274</a></li><li><a href="mailto:info@multiservicios360.net" className="text-gray-400 hover:text-white text-xs no-underline">info@multiservicios360.net</a></li><li className="text-gray-500 text-xs">Lun - Vie: 9am - 6pm</li><li className="text-gray-500 text-xs">Beverly Hills, CA</li></ul></div>
+            <div><div className="flex items-center gap-2 mb-2"><div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center"><span className="text-white font-extrabold text-[10px]">M360</span></div><span className="text-white font-bold text-sm">Multi Servicios 360</span></div><p className="text-gray-400 text-xs leading-relaxed">{lang === 'es' ? 'Plataforma de preparación de documentos legales de autoayuda para la comunidad latina en California.' : 'Self-help legal document preparation platform for the Latino community in California.'}</p></div>
+            <div><h3 className="text-white font-bold text-xs uppercase tracking-wider mb-2">{lang === 'es' ? 'Servicios' : 'Services'}</h3><ul className="space-y-1 list-none p-0 m-0"><li><Link href="/poa" className="text-gray-400 hover:text-white text-xs no-underline">General Power of Attorney</Link></li><li><Link href="/limited-poa" className="text-gray-400 hover:text-white text-xs no-underline">Limited Power of Attorney</Link></li><li><Link href="/trust" className="text-gray-400 hover:text-white text-xs no-underline">California Living Trust</Link></li><li><Link href="/llc" className="text-gray-400 hover:text-white text-xs no-underline">{lang === 'es' ? 'Formación de LLC' : 'LLC Formation'}</Link></li></ul></div>
+            <div><h3 className="text-white font-bold text-xs uppercase tracking-wider mb-2">{lang === 'es' ? 'Contacto' : 'Contact'}</h3><ul className="space-y-1 list-none p-0 m-0"><li><a href="tel:8552467274" className="text-gray-400 hover:text-white text-xs no-underline">855.246.7274</a></li><li><a href="mailto:info@multiservicios360.net" className="text-gray-400 hover:text-white text-xs no-underline">info@multiservicios360.net</a></li><li className="text-gray-500 text-xs">{lang === 'es' ? 'Lun - Vie: 9am - 6pm' : 'Mon - Fri: 9am - 6pm'}</li><li className="text-gray-500 text-xs">Beverly Hills, CA</li></ul></div>
           </div>
           <div className="border-t border-gray-800 pt-4">
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-3"><Link href="/terms" className="text-gray-500 hover:text-white text-xs no-underline">Términos</Link><Link href="/privacy" className="text-gray-500 hover:text-white text-xs no-underline">Privacidad</Link><Link href="/blog" className="text-gray-500 hover:text-white text-xs no-underline">Blog</Link></div>
-            <p className="text-gray-600 text-xs text-center">© 2026 Multi Servicios 360. Todos los derechos reservados.</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-3"><Link href="/nuestra-historia" className="text-gray-500 hover:text-white text-xs no-underline">{lang === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link><Link href="/contacto" className="text-gray-500 hover:text-white text-xs no-underline">{lang === 'es' ? 'Contacto' : 'Contact'}</Link><Link href="/terms" className="text-gray-500 hover:text-white text-xs no-underline">{lang === 'es' ? 'Términos' : 'Terms'}</Link><Link href="/privacy" className="text-gray-500 hover:text-white text-xs no-underline">{lang === 'es' ? 'Privacidad' : 'Privacy'}</Link><Link href="/blog" className="text-gray-500 hover:text-white text-xs no-underline">Blog</Link></div>
+            <p className="text-gray-600 text-xs text-center">© 2026 Multi Servicios 360. {lang === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
           </div>
         </div>
       </footer>
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden shadow-[0_-4px_12px_rgba(0,0,0,0.3)]"><a href="tel:8552467274" className="flex items-center justify-center gap-3 bg-gradient-to-r from-blue-800 to-blue-900 text-white no-underline font-bold text-base py-4">📞 <span>Llámenos:</span> <span className="text-yellow-400 font-extrabold">855.246.7274</span></a></div>
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden shadow-[0_-4px_12px_rgba(0,0,0,0.3)]"><a href="tel:8552467274" className="flex items-center justify-center gap-3 bg-gradient-to-r from-blue-800 to-blue-900 text-white no-underline font-bold text-base py-4">📞 <span>{lang === 'es' ? 'Llámenos:' : 'Call Us:'}</span> <span className="text-yellow-400 font-extrabold">855.246.7274</span></a></div>
       <div className="h-16 md:hidden" />
     </div>
   );

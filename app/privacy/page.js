@@ -709,11 +709,20 @@ export default function PrivacyPolicyPage() {
       {/* Footer */}
       <footer style={{ backgroundColor: '#0F172A', color: 'white', padding: '24px 16px', textAlign: 'center' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '16px', flexWrap: 'wrap' }}>
+          <Link href="/" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>
+            {language === 'es' ? 'Inicio' : 'Home'}
+          </Link>
+          <Link href="/blog" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>
+            Blog
+          </Link>
           <Link href="/terms" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>
             {language === 'es' ? 'Términos de Servicio' : 'Terms of Service'}
           </Link>
-          <Link href="/privacy" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>
+          <Link href="/privacy" style={{ color: '#3B82F6', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
             {language === 'es' ? 'Política de Privacidad' : 'Privacy Policy'}
+          </Link>
+          <Link href="/accessibility" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>
+            {language === 'es' ? 'Accesibilidad' : 'Accessibility'}
           </Link>
         </div>
         <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>© 2026 Multi Servicios 360. {language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>

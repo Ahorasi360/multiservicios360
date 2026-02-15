@@ -1,8 +1,5 @@
 export const metadata = {
-  title: 'Waitlist - Multi Servicios 360',
-  description: 'Join our waitlist for Living Trust, Business Formation, and Immigration services. Coming soon.',
+  title: 'Join the Waitlist | Multi Servicios 360',
+  description: 'Sign up for upcoming Multi Servicios 360 services including immigration document preparation.',
 };
-
-export default function WaitlistLayout({ children }) {
-  return children;
-}
+export default function Layout({ children }) { return children; }

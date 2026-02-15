@@ -17,6 +17,11 @@ export default function AdminPartnersPage() {
     partner_type: 'tax_preparer',
     tier: 'start',
     commission_rate: 20,
+    package_name: 'basic',
+    setup_fee_amount: 499,
+    annual_fee_amount: 499,
+    annual_fee_waived: false,
+    annual_fee_waived_reason: '',
     status: 'active'
   });
 
@@ -29,6 +34,11 @@ export default function AdminPartnersPage() {
     partner_type: 'tax_preparer',
     tier: 'start',
     commission_rate: 20,
+    package_name: 'basic',
+    setup_fee_amount: 499,
+    annual_fee_amount: 499,
+    annual_fee_waived: false,
+    annual_fee_waived_reason: '',
     status: 'active'
   };
 
@@ -67,6 +77,11 @@ export default function AdminPartnersPage() {
       partner_type: partner.partner_type || 'tax_preparer',
       tier: partner.tier || 'start',
       commission_rate: partner.commission_rate || 20,
+      package_name: partner.package_name || 'basic',
+      setup_fee_amount: partner.setup_fee_amount || 499,
+      annual_fee_amount: partner.annual_fee_amount || 499,
+      annual_fee_waived: partner.annual_fee_waived || false,
+      annual_fee_waived_reason: partner.annual_fee_waived_reason || '',
       status: partner.status || 'active'
     });
     setShowModal(true);
@@ -276,6 +291,7 @@ export default function AdminPartnersPage() {
                 <th className="text-left px-6 py-4 text-slate-400 text-sm font-medium">PAQUETE</th>
                 <th className="text-center px-6 py-4 text-slate-400 text-sm font-medium">COMISION</th>
                 <th className="text-center px-6 py-4 text-slate-400 text-sm font-medium">STATUS</th>
+                <th className="text-center px-6 py-4 text-slate-400 text-sm font-medium">MEMBRESIA</th>
                 <th className="text-center px-6 py-4 text-slate-400 text-sm font-medium">ACCIONES</th>
               </tr>
             </thead>
@@ -323,6 +339,16 @@ export default function AdminPartnersPage() {
                       }`}>
                         {partner.status === 'active' ? 'Activo' : partner.status === 'pending' ? 'Pendiente' : 'Suspendido'}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {partner.setup_fee_paid ? (
+                        <div>
+                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">💳 Paid</span>
+                          {partner.annual_fee_waived && <span className="ml-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400">⭐ Waived</span>}
+                        </div>
+                      ) : (
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400">⏳ Unpaid</span>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-2">
@@ -454,6 +480,53 @@ export default function AdminPartnersPage() {
                     <option value="pending">Pendiente</option>
                     <option value="suspended">Suspendido</option>
                   </select>
+                </div>
+              </div>
+              {/* Package & Fees */}
+              <div className="bg-slate-800/50 border border-emerald-500/30 rounded-xl p-4 mt-2">
+                <p className="text-sm font-medium text-emerald-400 mb-3">💳 Membership Package</p>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-1">Package</label>
+                    <select value={form.package_name} onChange={e => {
+                      const pkg = e.target.value;
+                      const fees = { basic: 499, pro: 699, elite: 899, custom: form.setup_fee_amount };
+                      setForm({...form, package_name: pkg, setup_fee_amount: fees[pkg] || 499, annual_fee_amount: fees[pkg] || 499 });
+                    }}
+                      className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors">
+                      <option value="basic">Basic — $499</option>
+                      <option value="pro">Pro — $699</option>
+                      <option value="elite">Elite — $899</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-1">Setup Fee $</label>
+                    <input type="number" min="0" step="1" value={form.setup_fee_amount} onChange={e => setForm({...form, setup_fee_amount: Number(e.target.value)})}
+                      className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-1">Annual Renewal $</label>
+                    <input type="number" min="0" step="1" value={form.annual_fee_amount} onChange={e => setForm({...form, annual_fee_amount: Number(e.target.value)})}
+                      className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors" />
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Partner will receive a payment link in their welcome email and can pay from their portal.</p>
+                {/* Waive Annual Renewal */}
+                <div className="mt-3 p-3 rounded-lg" style={{ background: form.annual_fee_waived ? 'rgba(234,179,8,0.1)' : 'transparent', border: form.annual_fee_waived ? '1px solid rgba(234,179,8,0.3)' : '1px solid transparent' }}>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" checked={form.annual_fee_waived} onChange={e => setForm({...form, annual_fee_waived: e.target.checked})}
+                      className="w-4 h-4 accent-yellow-500" />
+                    <span className="text-sm font-medium text-yellow-400">⭐ Waive Annual Renewal Fee</span>
+                  </label>
+                  {form.annual_fee_waived && (
+                    <div className="mt-2">
+                      <input value={form.annual_fee_waived_reason} onChange={e => setForm({...form, annual_fee_waived_reason: e.target.value})}
+                        placeholder="Reason (e.g. High volume office, VIP partner...)"
+                        className="w-full px-3 py-2 bg-slate-800 border border-yellow-500/30 rounded-lg text-white text-sm focus:border-yellow-500 outline-none" />
+                      <p className="text-xs text-yellow-500/70 mt-1">This office will not see a renewal payment option. You can turn this off anytime.</p>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex gap-3 pt-4">

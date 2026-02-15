@@ -75,6 +75,63 @@ export async function POST(request) {
         console.log(tableName + ' updated to paid status');
       }
 
+      // -----------------------------------------------
+      // TRACK SALES REP COMMISSION (automatic)
+      // If this matter came from a partner, and that
+      // partner was onboarded by a sales rep, give
+      // the rep their commission automatically.
+      // -----------------------------------------------
+      try {
+        // Get the matter to find partner_id
+        const { data: matter } = await supabase
+          .from(tableName)
+          .select('partner_id')
+          .eq('id', matterId)
+          .single();
+
+        if (matter?.partner_id) {
+          // Check if a sales rep has an active commission on this partner
+          const { data: activeCommissions } = await supabase
+            .from('sales_commissions')
+            .select('id, sales_rep_id, commission_rate, total_document_sales, total_commission_earned')
+            .eq('partner_id', matter.partner_id)
+            .eq('status', 'active')
+            .gte('end_date', new Date().toISOString());
+
+          if (activeCommissions && activeCommissions.length > 0) {
+            for (const commission of activeCommissions) {
+              const commissionAmount = (totalPrice || 0) * (commission.commission_rate / 100);
+
+              // Create commission entry
+              await supabase.from('sales_commission_entries').insert({
+                sales_commission_id: commission.id,
+                sales_rep_id: commission.sales_rep_id,
+                partner_id: matter.partner_id,
+                matter_type: documentType,
+                matter_id: matterId,
+                document_price: totalPrice || 0,
+                commission_amount: commissionAmount,
+                status: 'pending',
+              });
+
+              // Update running totals
+              await supabase
+                .from('sales_commissions')
+                .update({
+                  total_document_sales: Number(commission.total_document_sales || 0) + (totalPrice || 0),
+                  total_commission_earned: Number(commission.total_commission_earned || 0) + commissionAmount,
+                })
+                .eq('id', commission.id);
+
+              console.log(`Sales commission: $${commissionAmount.toFixed(2)} for rep ${commission.sales_rep_id} (${commission.commission_rate}% of $${totalPrice})`);
+            }
+          }
+        }
+      } catch (commissionError) {
+        // Commission tracking is non-critical
+        console.error('Sales commission tracking error (non-critical):', commissionError);
+      }
+
       // ----------------------------------------------
       // CREATE VAULT TOKEN FOR CLIENT DOCUMENT ACCESS
       // ----------------------------------------------
@@ -139,6 +196,92 @@ export async function POST(request) {
       }
     } else {
       console.log('No matterId in metadata');
+    }
+
+    // -----------------------------------------------
+    // PARTNER SETUP FEE / ANNUAL RENEWAL PAYMENT
+    // -----------------------------------------------
+    const partnerPaymentId = session.metadata?.payment_id;
+    const partnerPaymentType = session.metadata?.payment_type;
+    const partnerId = session.metadata?.partner_id;
+
+    if (partnerId && partnerPaymentType && (partnerPaymentType === 'setup_fee' || partnerPaymentType === 'annual_renewal')) {
+      try {
+        const paymentAmount = session.amount_total ? session.amount_total / 100 : 0;
+
+        // Update payment record
+        if (partnerPaymentId) {
+          await supabase
+            .from('partner_payments')
+            .update({
+              status: 'paid',
+              stripe_payment_id: session.payment_intent,
+              paid_at: new Date().toISOString(),
+              amount: paymentAmount,
+            })
+            .eq('id', partnerPaymentId);
+        }
+
+        // Update partner record
+        const partnerUpdate = {};
+        if (partnerPaymentType === 'setup_fee') {
+          partnerUpdate.setup_fee_paid = true;
+          partnerUpdate.setup_fee_paid_at = new Date().toISOString();
+          partnerUpdate.setup_fee_payment_id = session.payment_intent;
+          // Set membership expiry to 1 year from now
+          partnerUpdate.membership_expires_at = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+        } else if (partnerPaymentType === 'annual_renewal') {
+          // Extend membership by 1 year from current expiry or from now
+          const { data: currentPartner } = await supabase
+            .from('partners')
+            .select('membership_expires_at')
+            .eq('id', partnerId)
+            .single();
+
+          const currentExpiry = currentPartner?.membership_expires_at ? new Date(currentPartner.membership_expires_at) : new Date();
+          const baseDate = currentExpiry > new Date() ? currentExpiry : new Date();
+          partnerUpdate.membership_expires_at = new Date(baseDate.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString();
+        }
+
+        await supabase.from('partners').update(partnerUpdate).eq('id', partnerId);
+
+        // Auto-track sales rep setup fee share
+        if (partnerPaymentType === 'setup_fee') {
+          const { data: activeCommissions } = await supabase
+            .from('sales_commissions')
+            .select('id, sales_rep_id, setup_fee_share_percent, setup_fee_amount')
+            .eq('partner_id', partnerId)
+            .eq('status', 'active');
+
+          if (activeCommissions) {
+            for (const comm of activeCommissions) {
+              if (comm.setup_fee_amount > 0) {
+                await supabase.from('sales_commissions')
+                  .update({ setup_fee_paid: true })
+                  .eq('id', comm.id);
+
+                // Record as commission entry
+                await supabase.from('sales_commission_entries').insert({
+                  sales_commission_id: comm.id,
+                  sales_rep_id: comm.sales_rep_id,
+                  partner_id: partnerId,
+                  matter_type: 'setup_fee',
+                  matter_id: partnerId,
+                  document_price: paymentAmount,
+                  commission_amount: comm.setup_fee_amount,
+                  status: 'pending',
+                });
+
+                console.log(`Setup fee share: $${comm.setup_fee_amount} for rep ${comm.sales_rep_id}`);
+              }
+            }
+          }
+        }
+
+        console.log(`Partner payment processed: ${partnerPaymentType} — $${paymentAmount} for partner ${partnerId}`);
+      } catch (partnerPayErr) {
+        console.error('Partner payment processing error (non-critical):', partnerPayErr);
+      }
     }
   }
 

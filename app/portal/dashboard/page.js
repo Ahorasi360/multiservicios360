@@ -10,6 +10,12 @@ export default function PartnerDashboard() {
   const [stats, setStats] = useState(null);
   const [recentClients, setRecentClients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showPwModal, setShowPwModal] = useState(false);
+  const [currentPw, setCurrentPw] = useState('');
+  const [newPw, setNewPw] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwMessage, setPwMessage] = useState('');
 
   useEffect(() => {
     const partnerId = localStorage.getItem('partner_id');
@@ -44,6 +50,26 @@ export default function PartnerDashboard() {
     localStorage.removeItem('partner_id');
     localStorage.removeItem('partner_name');
     router.push('/portal/login');
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (newPw !== confirmPw) { setPwMessage('❌ Passwords do not match'); return; }
+    if (newPw.length < 6) { setPwMessage('❌ Password must be at least 6 characters'); return; }
+    setPwSaving(true);
+    try {
+      const res = await fetch('/api/portal/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ partner_id: partner.id, current_password: currentPw, new_password: newPw }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPwMessage('✅ Password updated successfully');
+        setTimeout(() => { setShowPwModal(false); setCurrentPw(''); setNewPw(''); setConfirmPw(''); setPwMessage(''); }, 1500);
+      } else { setPwMessage('❌ ' + (data.error || 'Failed to update')); }
+    } catch (err) { setPwMessage('❌ Error: ' + err.message); }
+    setPwSaving(false);
   };
 
   const formatMoney = (amount) => {
@@ -93,6 +119,18 @@ export default function PartnerDashboard() {
                   <p className="text-sm font-medium text-slate-800">{partner?.business_name}</p>
                   <p className="text-xs text-slate-500">Partner Account</p>
                 </div>
+                <button
+                  onClick={() => setShowPwModal(true)}
+                  className="px-4 py-2 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  🔑 Password
+                </button>
+                <button
+                  onClick={() => window.location.href = '/portal/membership'}
+                  className="px-4 py-2 text-sm text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                >
+                  💳 Membership
+                </button>
                 <button
                   onClick={handleLogout}
                   className="px-4 py-2 text-sm text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -361,6 +399,41 @@ export default function PartnerDashboard() {
           </div>
         </footer>
       </main>
+
+      {/* CHANGE PASSWORD MODAL */}
+      {showPwModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-7 max-w-md w-full shadow-2xl">
+            <h2 className="text-lg font-bold text-slate-800 mb-4">🔑 Change Password</h2>
+            {pwMessage && <p className={`text-sm mb-3 ${pwMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>{pwMessage}</p>}
+            <form onSubmit={handleChangePassword}>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-slate-600 mb-1">Current Password</label>
+                <input type="password" required value={currentPw} onChange={e=>setCurrentPw(e.target.value)}
+                  className="w-full px-4 py-2.5 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none" />
+              </div>
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-slate-600 mb-1">New Password</label>
+                <input type="password" required value={newPw} onChange={e=>setNewPw(e.target.value)} minLength={6}
+                  className="w-full px-4 py-2.5 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none" />
+              </div>
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-slate-600 mb-1">Confirm New Password</label>
+                <input type="password" required value={confirmPw} onChange={e=>setConfirmPw(e.target.value)}
+                  className="w-full px-4 py-2.5 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none" />
+              </div>
+              <div className="flex gap-3">
+                <button type="button" onClick={()=>{setShowPwModal(false);setCurrentPw('');setNewPw('');setConfirmPw('');setPwMessage('');}}
+                  className="flex-1 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-medium hover:bg-slate-200">Cancel</button>
+                <button type="submit" disabled={pwSaving}
+                  className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 disabled:opacity-50">
+                  {pwSaving ? 'Saving...' : 'Update Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

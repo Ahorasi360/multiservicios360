@@ -1,10 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { sendWelcomeEmail } from '../../../../lib/send-welcome-email';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 function hashPassword(password) {
@@ -38,6 +39,9 @@ export async function POST(request) {
       partner_type: partner_type || 'tax_preparer',
       tier: tier || 'referral',
       commission_rate: commission_rate || 20,
+      package_name: body.package_name || 'basic',
+      setup_fee_amount: body.setup_fee_amount || 499,
+      annual_fee_amount: body.annual_fee_amount || 499,
       status: status || 'active',
       referral_code: referralCode
     })
@@ -45,6 +49,24 @@ export async function POST(request) {
     .single();
 
   if (error) return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+
+  // Send welcome email with credentials
+  try {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://multiservicios360.net';
+    await sendWelcomeEmail({
+      to: email.toLowerCase().trim(),
+      name: contact_name || business_name,
+      role: 'partner',
+      loginUrl: `${siteUrl}/portal/login`,
+      email: email.toLowerCase().trim(),
+      password: password,
+      setupFee: body.setup_fee_amount || 499,
+      membershipUrl: `${siteUrl}/portal/membership`,
+    });
+  } catch (emailErr) {
+    console.error('Partner welcome email error:', emailErr);
+  }
+
   return NextResponse.json({ success: true, partner });
 }
 

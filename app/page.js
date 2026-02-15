@@ -24,7 +24,7 @@ const AlertIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" heig
 
 const TRANSLATIONS = {
   es: {
-    nav: { services: 'Servicios', about: 'Nosotros', whyUs: '¿Por Qué Nosotros?', contact: 'Contacto', consultation: 'Consulta Gratis' },
+    nav: { services: 'Servicios', about: 'Nosotros', whyUs: '¿Por Qué Nosotros?', ourStory: 'Nuestra Historia', contact: 'Contacto', consultation: 'Consulta Gratis' },
     hero: {
       badge: 'Preparación de Documentos Legales',
       title: 'Documentos Legales',
@@ -106,6 +106,22 @@ const TRANSLATIONS = {
       button: 'Comenzar Documentos',
       call: 'Llámenos',
     },
+    contactForm: {
+      title: 'Contáctenos',
+      subtitle: 'Envíenos un mensaje y le responderemos dentro de 24-48 horas hábiles.',
+      name: 'Nombre Completo',
+      email: 'Correo Electrónico',
+      department: 'Departamento',
+      deptInfo: 'Información General',
+      deptAdmin: 'Administrativo',
+      deptSupport: 'Soporte Técnico',
+      deptPrivacy: 'Privacidad',
+      message: 'Su Mensaje',
+      send: 'Enviar Mensaje',
+      sending: 'Enviando...',
+      success: '✅ Mensaje enviado. Le responderemos pronto.',
+      error: '❌ Error al enviar. Intente de nuevo.',
+    },
     footer: {
       desc: 'Plataforma de preparación de documentos legales de autoayuda para la comunidad latina en California.',
       services: 'Servicios',
@@ -119,7 +135,7 @@ const TRANSLATIONS = {
     },
   },
   en: {
-    nav: { services: 'Services', about: 'About', whyUs: 'Why Us?', contact: 'Contact', consultation: 'Free Consultation' },
+    nav: { services: 'Services', about: 'About', whyUs: 'Why Us?', ourStory: 'Our Story', contact: 'Contact', consultation: 'Free Consultation' },
     hero: {
       badge: 'Legal Document Preparation',
       title: 'Legal Documents',
@@ -202,6 +218,22 @@ const TRANSLATIONS = {
       button: 'Start Documents',
       call: 'Call Us',
     },
+    contactForm: {
+      title: 'Contact Us',
+      subtitle: 'Send us a message and we will respond within 24-48 business hours.',
+      name: 'Full Name',
+      email: 'Email Address',
+      department: 'Department',
+      deptInfo: 'General Inquiry',
+      deptAdmin: 'Administrative',
+      deptSupport: 'Technical Support',
+      deptPrivacy: 'Privacy',
+      message: 'Your Message',
+      send: 'Send Message',
+      sending: 'Sending...',
+      success: '✅ Message sent. We will get back to you soon.',
+      error: '❌ Failed to send. Please try again.',
+    },
     footer: {
       desc: 'Self-help legal document preparation platform for the Latino community in California.',
       services: 'Services',
@@ -237,6 +269,7 @@ export default function HomePage() {
           .services-grid-4 { grid-template-columns: 1fr !important; }
           .team-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .why-grid { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
+          .contact-grid { grid-template-columns: 1fr !important; }
           .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; }
           .section-title { font-size: 28px !important; }
           .section-padding { padding: 60px 16px !important; }
@@ -280,8 +313,9 @@ export default function HomePage() {
             <a href="#services" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.services}</a>
             <a href="#team" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.about}</a>
             <Link href="/por-que-nosotros" style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '14px' }}>{t.nav.whyUs}</Link>
+            <Link href="/nuestra-historia" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.ourStory}</Link>
            <Link href="/blog" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>Blog</Link>
-            <a href="#contact" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.contact}</a>
+            <Link href="/contacto" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.contact}</Link>
             <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '13px', color: '#374151' }}>
               <GlobeIcon /> {language === 'es' ? 'EN' : 'ES'}
             </button>
@@ -306,6 +340,7 @@ export default function HomePage() {
               <a href="#services" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.services}</a>
               <a href="#team" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.about}</a>
               <Link href="/por-que-nosotros" onClick={() => setMenuOpen(false)} style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '16px', padding: '8px 0' }}>{t.nav.whyUs}</Link>
+              <Link href="/nuestra-historia" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.ourStory}</Link>
               
               <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>Blog</Link>
               <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: '600' }}>
@@ -551,27 +586,30 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section id="contact" className="section-padding" style={{ padding: '80px 16px', backgroundColor: '#FCD34D' }}>
-        <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 className="section-title" style={{ fontSize: '32px', fontWeight: '800', color: '#1E3A8A', marginBottom: '12px' }}>{t.cta.title}</h2>
-          <p style={{ fontSize: '17px', color: '#1E3A8A', opacity: '0.8', marginBottom: '32px' }}>{t.cta.subtitle}</p>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Link href="/poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
-                {t.hero.ctaGeneral} <ArrowRightIcon />
-              </Link>
-              <Link href="/limited-poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#F59E0B', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
-                {t.hero.ctaLimited} <ArrowRightIcon />
-              </Link>
-              <Link href="/trust" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#10B981', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
-                {t.hero.ctaTrust} <ArrowRightIcon />
-              </Link>
-              <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
-                {t.hero.ctaLLC} <ArrowRightIcon />
-              </Link>
-            </div>
-            <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1E3A8A', fontWeight: '600', textDecoration: 'none', fontSize: '16px' }}>
-              <PhoneIcon /> {t.cta.call}: 855.246.7274
-            </a>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <h2 className="section-title" style={{ fontSize: '32px', fontWeight: '800', color: '#1E3A8A', marginBottom: '12px', textAlign: 'center' }}>{t.cta.title}</h2>
+          <p style={{ fontSize: '17px', color: '#1E3A8A', opacity: '0.8', marginBottom: '32px', textAlign: 'center' }}>{t.cta.subtitle}</p>
+          
+          {/* Quick Service Buttons */}
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '40px' }}>
+            <Link href="/poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
+              {t.hero.ctaGeneral} <ArrowRightIcon />
+            </Link>
+            <Link href="/limited-poa" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#F59E0B', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
+              {t.hero.ctaLimited} <ArrowRightIcon />
+            </Link>
+            <Link href="/trust" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#10B981', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
+              {t.hero.ctaTrust} <ArrowRightIcon />
+            </Link>
+            <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
+              {t.hero.ctaLLC} <ArrowRightIcon />
+            </Link>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '8px' }}>
+            <Link href="/contacto" style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '15px' }}>
+              {t.nav.contact} →
+            </Link>
           </div>
         </div>
       </section>
@@ -604,6 +642,7 @@ export default function HomePage() {
               <div style={{ color: '#94A3B8', fontSize: '13px', lineHeight: '2' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><PhoneIcon /> 855.246.7274</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><MailIcon /> info@multiservicios360.net</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><MailIcon /> support@multiservicios360.net</div>
                 <div style={{ marginTop: '8px' }}>{t.footer.hours}</div>
                 <div>Beverly Hills, CA</div>
               </div>
@@ -617,8 +656,11 @@ export default function HomePage() {
           <div style={{ textAlign: 'center' }}>
             <div style={{ marginBottom: '12px' }}>
               <Link href="/por-que-nosotros" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.nav.whyUs}</Link>
+              <Link href="/nuestra-historia" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.nav.ourStory}</Link>
               
               <Link href="/blog" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>Blog</Link>
+              <Link href="/contacto" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.nav.contact}</Link>
+              <Link href="/terms" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.footer.terms}</Link>
               <Link href="/privacy" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none', marginRight: '20px' }}>{t.footer.privacy}</Link>
               <Link href="/accessibility" style={{ color: '#64748B', fontSize: '12px', textDecoration: 'none' }}>{t.footer.accessibility}</Link>
             </div>

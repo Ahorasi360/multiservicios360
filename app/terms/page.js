@@ -612,6 +612,16 @@ export default function TermsOfService() {
           <p style={{ color: '#1E3A5F', fontWeight: 'bold' }}>855.246.7274</p>
           <p style={{ color: '#1E3A5F' }}>info@multiservicios360.net</p>
         </div>
+
+        {/* Footer Nav */}
+        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #E5E7EB' }}>
+          <Link href="/" style={{ color: '#6B7280', fontSize: '13px', textDecoration: 'none' }}>Inicio</Link>
+          <Link href="/blog" style={{ color: '#6B7280', fontSize: '13px', textDecoration: 'none' }}>Blog</Link>
+          <Link href="/privacy" style={{ color: '#6B7280', fontSize: '13px', textDecoration: 'none' }}>Privacidad</Link>
+          <Link href="/terms" style={{ color: '#3B82F6', fontSize: '13px', textDecoration: 'none', fontWeight: '600' }}>Términos</Link>
+          <Link href="/accessibility" style={{ color: '#6B7280', fontSize: '13px', textDecoration: 'none' }}>Accesibilidad</Link>
+        </div>
+        <p style={{ textAlign: 'center', color: '#94A3B8', fontSize: '12px', marginTop: '12px' }}>© 2026 Multi Servicios 360. Todos los derechos reservados.</p>
       </div>
     </div>
   );
