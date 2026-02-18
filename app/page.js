@@ -28,12 +28,13 @@ const TRANSLATIONS = {
     hero: {
       badge: 'Preparación de Documentos Legales',
       title: 'Documentos Legales',
-      titleAccent: 'para su Familia y Negocio',
+      titleAccent: 'para Usted, Su Familia y Negocio',
       subtitle: 'Multiservicios 360 es una plataforma tecnológica bilingüe que permite a las personas preparar sus propios documentos legales utilizando herramientas guiadas de software.',
       ctaGeneral: 'Crear Poder General',
       ctaLimited: 'Crear Poder Limitado',
       ctaTrust: 'Crear Fideicomiso en Vida',
       ctaLLC: 'Crear LLC en California',
+      ctaMore: 'Más Documentos',
       trust1: '100% Bilingüe',
       trust2: 'Autoayuda Legal',
       trust3: 'California',
@@ -155,12 +156,13 @@ const TRANSLATIONS = {
     hero: {
       badge: 'Legal Document Preparation',
       title: 'Legal Documents',
-      titleAccent: 'for Your Family and Business',
+      titleAccent: 'for You, Your Family and Business',
       subtitle: 'Multiservicios 360 is a bilingual technology platform that allows individuals to self-prepare legal documents using guided software tools.',
       ctaGeneral: 'Create General POA',
       ctaLimited: 'Create Limited POA',
       ctaTrust: 'Create Living Trust',
       ctaLLC: 'Create California LLC',
+      ctaMore: 'More Documents',
       ctaSecondary: 'View Services',
       trust1: '100% Bilingual',
       trust2: 'Legal Self-Help',
@@ -417,6 +419,9 @@ export default function HomePage() {
                 <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: 'rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', border: '2px solid rgba(255,255,255,0.4)', boxShadow: '0 4px 14px rgba(0,0,0,0.1)' }}>
                   {t.hero.ctaLLC} <ArrowRightIcon />
                 </Link>
+                <Link href="/mas-servicios" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(139, 92, 246, 0.4)' }}>
+                  {t.hero.ctaMore} <ArrowRightIcon />
+                </Link>
               </div>
 
               <div className="trust-badges" style={{ display: 'flex', gap: '20px' }}>
@@ -669,6 +674,9 @@ export default function HomePage() {
             <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
               {t.hero.ctaLLC} <ArrowRightIcon />
             </Link>
+            <Link href="/mas-servicios" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#6366F1', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px' }}>
+              {t.hero.ctaMore} <ArrowRightIcon />
+            </Link>
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '8px' }}>
@@ -706,6 +714,7 @@ export default function HomePage() {
                 <li><Link href="/guardianship" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Designación de Guardián' : 'Guardianship Designation'}</Link></li>
                 <li><Link href="/affidavit" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Declaración Jurada' : 'Affidavit'}</Link></li>
                 <li><Link href="/revocation-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Revocación de Poder' : 'Revocation of POA'}</Link></li>
+                <li><Link href="/travel-authorization" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Carta de Autorización de Viaje' : 'Travel Authorization Letter'}</Link></li>
               </ul>
             </div>
             <div>
