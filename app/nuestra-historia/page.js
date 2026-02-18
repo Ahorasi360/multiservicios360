@@ -278,17 +278,22 @@ export default function NuestraHistoriaPage() {
             <span style={{ fontWeight: '700', fontSize: '14px', color: '#0F172A' }}>Multi Servicios 360</span>
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Link href="/blog" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>Blog</Link>
             <Link href="/#services" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>
               {lang === 'es' ? 'Servicios' : 'Services'}
             </Link>
+            <Link href="/por-que-nosotros" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>
+              {lang === 'es' ? '¿Por Qué Nosotros?' : 'Why Us?'}
+            </Link>
+            <Link href="/nuestra-historia" style={{ color: '#1E3A8A', textDecoration: 'none', fontSize: '14px', fontWeight: '700' }}>
+              {lang === 'es' ? 'Nuestra Historia' : 'Our Story'}
+            </Link>
+            <Link href="/blog" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>Blog</Link>
             <Link href="/contacto" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>
               {lang === 'es' ? 'Contacto' : 'Contact'}
             </Link>
-            <div style={{ display: 'flex', background: '#F1F5F9', borderRadius: '8px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
-              <button onClick={() => setLang('es')} style={{ padding: '6px 12px', fontSize: '13px', fontWeight: lang === 'es' ? '700' : '500', background: lang === 'es' ? '#1E3A8A' : 'transparent', color: lang === 'es' ? '#fff' : '#64748B', border: 'none', cursor: 'pointer' }}>ES</button>
-              <button onClick={() => setLang('en')} style={{ padding: '6px 12px', fontSize: '13px', fontWeight: lang === 'en' ? '700' : '500', background: lang === 'en' ? '#1E3A8A' : 'transparent', color: lang === 'en' ? '#fff' : '#64748B', border: 'none', cursor: 'pointer' }}>EN</button>
-            </div>
+            <button onClick={() => setLang(lang === 'es' ? 'en' : 'es')} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '13px', color: '#374151' }}>
+              🌐 {lang === 'es' ? 'EN' : 'ES'}
+            </button>
           </div>
         </div>
       </nav>

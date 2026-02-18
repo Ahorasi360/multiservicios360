@@ -612,6 +612,11 @@ export default function PrivacyPolicyPage() {
           </Link>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Link href="/#services" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{language === 'es' ? 'Servicios' : 'Services'}</Link>
+            <Link href="/por-que-nosotros" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{language === 'es' ? '¿Por Qué Nosotros?' : 'Why Us?'}</Link>
+            <Link href="/nuestra-historia" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{language === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
+            <Link href="/blog" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>Blog</Link>
+            <Link href="/contacto" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{language === 'es' ? 'Contacto' : 'Contact'}</Link>
             <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '13px', color: '#374151' }}>
               <GlobeIcon /> {language === 'es' ? 'EN' : 'ES'}
             </button>

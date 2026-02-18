@@ -123,10 +123,11 @@ export default function BlogPostClient({ post, relatedPosts }) {
             <div className="hidden sm:block"><span className="text-gray-900 font-bold text-sm block leading-tight">Multi Servicios 360</span><span className="text-gray-500 text-[10px] uppercase tracking-widest">Document Preparation</span></div>
           </Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/#services" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">Servicios</Link>
+            <Link href="/#services" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Servicios' : 'Services'}</Link>
+            <Link href="/por-que-nosotros" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? '¿Por Qué Nosotros?' : 'Why Us?'}</Link>
+            <Link href="/nuestra-historia" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
             <Link href="/blog" className="text-blue-700 font-bold text-sm no-underline border-b-2 border-blue-700 pb-0.5">Blog</Link>
-            <Link href="/por-que-nosotros" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">¿Por Qué Nosotros?</Link>
-            <a href="/#contact" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">Contacto</a>
+            <Link href="/contacto" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Contacto' : 'Contact'}</Link>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={function() { setLang(lang === 'es' ? 'en' : 'es'); }} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors">🌐 {lang === 'es' ? 'EN' : 'ES'}</button>

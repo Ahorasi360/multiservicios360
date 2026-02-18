@@ -57,8 +57,9 @@ export default function BlogListClient({ posts }) {
           </Link>
           <div className="hidden md:flex items-center gap-6">
             <Link href="/#services" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Servicios' : 'Services'}</Link>
-            <Link href="/blog" className="text-blue-700 font-bold text-sm no-underline border-b-2 border-blue-700 pb-0.5">Blog</Link>
+            <Link href="/por-que-nosotros" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? '¿Por Qué Nosotros?' : 'Why Us?'}</Link>
             <Link href="/nuestra-historia" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
+            <Link href="/blog" className="text-blue-700 font-bold text-sm no-underline border-b-2 border-blue-700 pb-0.5">Blog</Link>
             <Link href="/contacto" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{lang === 'es' ? 'Contacto' : 'Contact'}</Link>
           </div>
           <div className="flex items-center gap-3">

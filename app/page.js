@@ -79,6 +79,13 @@ const TRANSLATIONS = {
         desc: 'N-400, I-130, I-485',
         price: 'Desde $99',
       },
+      billOfSale: { title: 'Carta de Venta', desc: 'Vehículos, equipos y bienes personales.', price: '$69', cta: 'Iniciar' },
+      affidavit: { title: 'Declaración Jurada', desc: 'Declaración bajo juramento para instituciones.', price: '$89', cta: 'Iniciar' },
+      revocationPoa: { title: 'Revocación de Poder', desc: 'Cancele un poder notarial existente.', price: '$59', cta: 'Iniciar' },
+      authorizationLetter: { title: 'Carta de Autorización', desc: 'Autorice a otra persona para trámites.', price: '$49', cta: 'Iniciar' },
+      promissoryNote: { title: 'Pagaré', desc: 'Formalice préstamos entre personas.', price: '$89', cta: 'Iniciar' },
+      guardianship: { title: 'Designación de Guardián', desc: 'Designe guardián para sus hijos menores.', price: '$129', cta: 'Iniciar' },
+      moreServices: 'Más Servicios',
     },
     team: {
       title: 'Red de Profesionales Independientes',
@@ -98,13 +105,22 @@ const TRANSLATIONS = {
       reason1: { title: '100% Bilingüe', desc: 'Todo en español e inglés' },
       reason2: { title: 'Autoayuda', desc: 'Usted controla sus documentos' },
       reason3: { title: 'Rápido y Fácil', desc: 'Documentos en minutos' },
-      reason4: { title: 'Nuevo en 2026', desc: 'Sirviendo a California' },
+      reason4: { title: 'Desde el 2026', desc: 'Sirviendo a California' },
     },
     cta: {
       title: '¿Listo para Comenzar?',
       subtitle: 'Consulta informativa gratuita de 15 minutos (no es asesoría legal)',
       button: 'Comenzar Documentos',
       call: 'Llámenos',
+    },
+    vault: {
+      title: 'Su Bóveda Digital Segura',
+      subtitle: 'Cada documento que preparamos se entrega a través de su bóveda digital personal — accesible desde cualquier dispositivo.',
+      feature1: { title: 'Acceso 24/7', desc: 'Descargue sus documentos desde su teléfono, tableta o computadora en cualquier momento.' },
+      feature2: { title: 'Encriptado y Seguro', desc: 'Sus documentos están protegidos con la misma seguridad que usan los bancos.' },
+      feature3: { title: 'Nunca Pierda Sus Documentos', desc: 'No más carpetas perdidas. Sus documentos siempre están disponibles digitalmente.' },
+      feature4: { title: 'Acceso con Código Único', desc: 'Solo usted tiene el código de acceso a su bóveda personal.' },
+      premium: 'Bóveda Premium — Acceso permanente a sus documentos',
     },
     contactForm: {
       title: 'Contáctenos',
@@ -191,6 +207,13 @@ const TRANSLATIONS = {
         desc: 'N-400, I-130, I-485',
         price: 'From $99',
       },
+      billOfSale: { title: 'Bill of Sale', desc: 'Vehicles, equipment, and personal property.', price: '$69', cta: 'Start' },
+      affidavit: { title: 'Affidavit', desc: 'Sworn statement for institutions.', price: '$89', cta: 'Start' },
+      revocationPoa: { title: 'Revocation of POA', desc: 'Cancel an existing power of attorney.', price: '$59', cta: 'Start' },
+      authorizationLetter: { title: 'Authorization Letter', desc: 'Authorize someone for specific tasks.', price: '$49', cta: 'Start' },
+      promissoryNote: { title: 'Promissory Note', desc: 'Formalize loans between individuals.', price: '$89', cta: 'Start' },
+      guardianship: { title: 'Guardianship Designation', desc: 'Designate a guardian for your minor children.', price: '$129', cta: 'Start' },
+      moreServices: 'More Services',
     },
     team: {
       title: 'Network of Independent Professionals',
@@ -210,13 +233,22 @@ const TRANSLATIONS = {
       reason1: { title: '100% Bilingual', desc: 'Everything in Spanish & English' },
       reason2: { title: 'Self-Help', desc: 'You control your documents' },
       reason3: { title: 'Fast and Easy', desc: 'Documents in minutes' },
-      reason4: { title: 'New in 2026', desc: 'Serving California' },
+      reason4: { title: 'Since 2026', desc: 'Serving California' },
     },
     cta: {
       title: 'Ready to Get Started?',
       subtitle: 'Free 15-minute informational consultation (not legal advice)',
       button: 'Start Documents',
       call: 'Call Us',
+    },
+    vault: {
+      title: 'Your Secure Digital Vault',
+      subtitle: 'Every document we prepare is delivered through your personal digital vault — accessible from any device.',
+      feature1: { title: '24/7 Access', desc: 'Download your documents from your phone, tablet, or computer anytime.' },
+      feature2: { title: 'Encrypted & Secure', desc: 'Your documents are protected with the same security banks use.' },
+      feature3: { title: 'Never Lose Your Documents', desc: 'No more lost folders. Your documents are always available digitally.' },
+      feature4: { title: 'Unique Access Code', desc: 'Only you have the access code to your personal vault.' },
+      premium: 'Vault Premium — Permanent access to your documents',
     },
     contactForm: {
       title: 'Contact Us',
@@ -265,10 +297,11 @@ export default function HomePage() {
           .hero-buttons { flex-direction: column !important; align-items: center; }
           .hero-preview { display: none !important; }
           .trust-badges { flex-direction: column !important; gap: 12px !important; align-items: center; }
-          .services-grid { grid-template-columns: 1fr !important; }
+          .services-grid { grid-template-columns: 1fr 1fr !important; }
           .services-grid-4 { grid-template-columns: 1fr !important; }
           .team-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .why-grid { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
+          .vault-grid { grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
           .contact-grid { grid-template-columns: 1fr !important; }
           .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; }
           .section-title { font-size: 28px !important; }
@@ -278,6 +311,8 @@ export default function HomePage() {
         @media (max-width: 480px) {
           .team-grid { grid-template-columns: 1fr !important; }
           .why-grid { grid-template-columns: 1fr !important; }
+          .vault-grid { grid-template-columns: 1fr !important; }
+          .services-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -517,21 +552,21 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* COMING SOON - ONLY IMMIGRATION */}
-          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#6B7280', marginBottom: '16px', textAlign: 'center' }}>{language === 'es' ? 'Más Servicios Próximamente' : 'More Services Coming Soon'}</h3>
-          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
-            <div style={{ backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '24px', border: '1px solid #E5E7EB', opacity: 0.8, position: 'relative' }}>
-              <div style={{ position: 'absolute', top: '12px', right: '12px', backgroundColor: '#6B7280', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: '600' }}>{t.services.comingSoon}</div>
-              <div style={{ width: '48px', height: '48px', backgroundColor: '#E5E7EB', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px', color: '#9CA3AF' }}><PlaneIcon /></div>
-              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#374151', marginBottom: '4px' }}>{t.services.immigration.title}</h4>
-              <p style={{ fontSize: '13px', color: '#9CA3AF', marginBottom: '12px' }}>{t.services.immigration.desc}</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '18px', fontWeight: '700', color: '#6B7280' }}>{t.services.immigration.price}</span>
-                <Link href="/waitlist?service=immigration" style={{ padding: '8px 16px', backgroundColor: '#E5E7EB', color: '#374151', textDecoration: 'none', borderRadius: '6px', fontWeight: '500', fontSize: '12px' }}>
-                  {t.services.waitlist}
-                </Link>
-              </div>
-            </div>
+          {/* MORE SERVICES BANNER */}
+          <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+            <Link href="/mas-servicios" style={{ textDecoration: 'none', display: 'block', background: 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)', borderRadius: '16px', padding: '32px', textAlign: 'center', color: 'white', boxShadow: '0 4px 12px rgba(30, 58, 138, 0.3)' }}>
+              <h3 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '8px' }}>
+                {language === 'es' ? '¿Necesita Otros Documentos?' : 'Need Other Documents?'}
+              </h3>
+              <p style={{ fontSize: '14px', color: '#BFDBFE', marginBottom: '16px', maxWidth: '500px', margin: '0 auto 16px' }}>
+                {language === 'es' 
+                  ? 'Carta de Venta, Declaración Jurada, Pagaré, Carta de Autorización, Designación de Guardián y más.' 
+                  : 'Bill of Sale, Affidavit, Promissory Note, Authorization Letter, Guardianship Designation and more.'}
+              </p>
+              <span style={{ display: 'inline-block', padding: '10px 28px', backgroundColor: 'white', color: '#1E3A8A', borderRadius: '8px', fontWeight: '700', fontSize: '14px' }}>
+                {language === 'es' ? 'Ver Más Servicios' : 'View More Services'} →
+              </span>
+            </Link>
           </div>
         </div>
       </section>
@@ -584,6 +619,36 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Vault Showcase */}
+      <section className="section-padding" style={{ padding: '80px 16px', background: '#F8FAFC' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', background: 'linear-gradient(135deg, #1E3A8A, #3B82F6)', borderRadius: '16px', marginBottom: '16px' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+            </div>
+            <h2 className="section-title" style={{ fontSize: '32px', fontWeight: '800', color: '#0F172A', marginBottom: '12px' }}>{t.vault.title}</h2>
+            <p style={{ fontSize: '16px', color: '#64748B', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>{t.vault.subtitle}</p>
+          </div>
+          <div className="vault-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginBottom: '32px' }}>
+            {[
+              { icon: '🕐', ...t.vault.feature1 },
+              { icon: '🔒', ...t.vault.feature2 },
+              { icon: '📄', ...t.vault.feature3 },
+              { icon: '🔑', ...t.vault.feature4 },
+            ].map((feature, i) => (
+              <div key={i} style={{ background: '#fff', borderRadius: '16px', padding: '28px 24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #E2E8F0', textAlign: 'center' }}>
+                <div style={{ fontSize: '32px', marginBottom: '12px' }}>{feature.icon}</div>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#0F172A', marginBottom: '8px' }}>{feature.title}</h3>
+                <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.5', margin: 0 }}>{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+          <Link href="/boveda-premium" style={{ display: 'block', textAlign: 'center', textDecoration: 'none', padding: '16px 24px', background: 'linear-gradient(135deg, #0F172A, #1E3A8A)', borderRadius: '12px', transition: 'opacity 0.2s' }}>
+            <p style={{ fontSize: '14px', color: '#FCD34D', fontWeight: '600', margin: 0 }}>⭐ {t.vault.premium} →</p>
+          </Link>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section id="contact" className="section-padding" style={{ padding: '80px 16px', backgroundColor: '#FCD34D' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
@@ -631,10 +696,16 @@ export default function HomePage() {
             <div>
               <h4 style={{ fontWeight: '700', marginBottom: '16px', fontSize: '15px' }}>{t.footer.services}</h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li><Link href="/poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>General Power of Attorney</Link></li>
-                <li><Link href="/limited-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>Limited Power of Attorney</Link></li>
-                <li><Link href="/trust" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>California Living Trust</Link></li>
-                <li><Link href="/llc" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Formación de LLC (California)' : 'LLC Formation (California)'}</Link></li>
+                <li><Link href="/poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Poder Notarial General' : 'General Power of Attorney'}</Link></li>
+                <li><Link href="/limited-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Poder Notarial Limitado' : 'Limited Power of Attorney'}</Link></li>
+                <li><Link href="/trust" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Fideicomiso en Vida' : 'California Living Trust'}</Link></li>
+                <li><Link href="/llc" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Formación de LLC' : 'LLC Formation'}</Link></li>
+                <li><Link href="/bill-of-sale" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Carta de Venta' : 'Bill of Sale'}</Link></li>
+                <li><Link href="/promissory-note" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Pagaré' : 'Promissory Note'}</Link></li>
+                <li><Link href="/authorization-letter" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Carta de Autorización' : 'Authorization Letter'}</Link></li>
+                <li><Link href="/guardianship" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Designación de Guardián' : 'Guardianship Designation'}</Link></li>
+                <li><Link href="/affidavit" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Declaración Jurada' : 'Affidavit'}</Link></li>
+                <li><Link href="/revocation-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Revocación de Poder' : 'Revocation of POA'}</Link></li>
               </ul>
             </div>
             <div>

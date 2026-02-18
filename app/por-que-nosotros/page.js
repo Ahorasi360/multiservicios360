@@ -250,9 +250,10 @@ export default function PorQueNosotrosPage() {
           {/* Desktop Nav */}
           <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <a href="/#services" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.services}</a>
-            <a href="/#team" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.about}</a>
             <Link href="/por-que-nosotros" style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '14px' }}>{t.nav.whyUs}</Link>
-            <a href="/#contact" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.contact}</a>
+            <Link href="/nuestra-historia" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{language === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
+            <Link href="/blog" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>Blog</Link>
+            <Link href="/contacto" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.contact}</Link>
             <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '13px', color: '#374151' }}>
               <GlobeIcon /> {language === 'es' ? 'EN' : 'ES'}
             </button>
@@ -277,9 +278,10 @@ export default function PorQueNosotrosPage() {
           <div style={{ backgroundColor: 'white', borderTop: '1px solid #E5E7EB', padding: '16px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <a href="/#services" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.services}</a>
-              <a href="/#team" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.about}</a>
               <Link href="/por-que-nosotros" onClick={() => setMenuOpen(false)} style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '16px', padding: '8px 0' }}>{t.nav.whyUs}</Link>
-              <a href="/#contact" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.contact}</a>
+              <Link href="/nuestra-historia" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{language === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
+              <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>Blog</Link>
+              <Link href="/contacto" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.contact}</Link>
               <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: '600' }}>
                 <PhoneIcon /> 855.246.7274
               </a>

@@ -96,7 +96,10 @@ export default function AdminDashboard() {
     if (!data) return 0;
     const poa = applyFilters(data.poaMatters).filter(m => m.status === 'paid' || m.status === 'completed');
     const limited = applyFilters(data.limitedPoaMatters).filter(m => m.status === 'paid' || m.status === 'completed');
-    return poa.reduce((sum, m) => sum + (m.total_price || 0), 0) + limited.reduce((sum, m) => sum + (m.total_price || 0), 0);
+    const trust = applyFilters(data.trustMatters || []).filter(m => m.status === 'paid' || m.status === 'completed');
+    const llc = applyFilters(data.llcMatters || []).filter(m => m.status === 'paid' || m.status === 'completed');
+    const simple = applyFilters(data.simpleDocMatters || []).filter(m => m.status === 'paid' || m.status === 'completed');
+    return poa.reduce((sum, m) => sum + (m.total_price || 0), 0) + limited.reduce((sum, m) => sum + (m.total_price || 0), 0) + trust.reduce((sum, m) => sum + (m.total_price || 0), 0) + llc.reduce((sum, m) => sum + (m.total_price || 0), 0) + simple.reduce((sum, m) => sum + (m.total_price || 0), 0);
   };
 
   // Styles
@@ -243,9 +246,15 @@ export default function AdminDashboard() {
     );
   }
 
-  const { stats, poaMatters, limitedPoaMatters, waitlist } = data;
+  const { stats, poaMatters, limitedPoaMatters, trustMatters: rawTrust, llcMatters: rawLlc, simpleDocMatters: rawSimple, waitlist } = data;
+  const trustMatters = rawTrust || [];
+  const llcMatters = rawLlc || [];
+  const simpleDocMatters = rawSimple || [];
   const filteredPoa = applyFilters(poaMatters);
   const filteredLimited = applyFilters(limitedPoaMatters);
+  const filteredTrust = applyFilters(trustMatters);
+  const filteredLlc = applyFilters(llcMatters);
+  const filteredSimple = applyFilters(simpleDocMatters);
   const filteredWaitlist = filterBySearch(waitlist);
 
   return (
@@ -292,6 +301,9 @@ export default function AdminDashboard() {
               { id: 'overview', label: 'Overview', count: null },
               { id: 'general-poa', label: 'General POA', count: poaMatters.length },
               { id: 'limited-poa', label: 'Limited POA', count: limitedPoaMatters.length },
+              { id: 'trust', label: 'Living Trust', count: trustMatters.length },
+              { id: 'llc', label: 'LLC', count: llcMatters.length },
+              { id: 'simple-docs', label: 'Simple Docs', count: simpleDocMatters.length },
               { id: 'waitlist', label: 'Waitlist', count: waitlist.length },
             ].map(tab => (
               <button
@@ -333,6 +345,9 @@ export default function AdminDashboard() {
           <button onClick={refreshData} style={s.refreshBtn}>↻ Refresh</button>
           {activeTab === 'general-poa' && <button onClick={() => exportToCSV(filteredPoa, 'general_poa')} style={s.exportBtn}>📥 Export CSV</button>}
           {activeTab === 'limited-poa' && <button onClick={() => exportToCSV(filteredLimited, 'limited_poa')} style={s.exportBtn}>📥 Export CSV</button>}
+          {activeTab === 'trust' && <button onClick={() => exportToCSV(filteredTrust, 'trust')} style={s.exportBtn}>📥 Export CSV</button>}
+          {activeTab === 'llc' && <button onClick={() => exportToCSV(filteredLlc, 'llc')} style={s.exportBtn}>📥 Export CSV</button>}
+          {activeTab === 'simple-docs' && <button onClick={() => exportToCSV(filteredSimple, 'simple_docs')} style={s.exportBtn}>📥 Export CSV</button>}
           {activeTab === 'waitlist' && <button onClick={() => exportToCSV(filteredWaitlist, 'waitlist')} style={s.exportBtn}>📥 Export CSV</button>}
         </div>
 
@@ -373,9 +388,21 @@ export default function AdminDashboard() {
                     <span>General POA</span>
                     <strong>{formatMoney(poaMatters.filter(m => m.status === 'paid' || m.status === 'completed').reduce((sum, m) => sum + (m.total_price || 0), 0))}</strong>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
                     <span>Limited POA</span>
                     <strong>{formatMoney(limitedPoaMatters.filter(m => m.status === 'paid' || m.status === 'completed').reduce((sum, m) => sum + (m.total_price || 0), 0))}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <span>Living Trust</span>
+                    <strong>{formatMoney(trustMatters.filter(m => m.status === 'paid' || m.status === 'completed').reduce((sum, m) => sum + (m.total_price || 0), 0))}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <span>LLC Formation</span>
+                    <strong>{formatMoney(llcMatters.filter(m => m.status === 'paid' || m.status === 'completed').reduce((sum, m) => sum + (m.total_price || 0), 0))}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0' }}>
+                    <span>Simple Documents</span>
+                    <strong>{formatMoney(simpleDocMatters.filter(m => m.status === 'paid' || m.status === 'completed').reduce((sum, m) => sum + (m.total_price || 0), 0))}</strong>
                   </div>
                 </div>
               </div>
@@ -417,7 +444,7 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {[...poaMatters.map(m => ({...m, type: 'General POA', table: 'poa'})), ...limitedPoaMatters.map(m => ({...m, type: 'Limited POA', table: 'limited'}))].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10).map(item => (
+                  {[...poaMatters.map(m => ({...m, type: 'General POA', table: 'poa'})), ...limitedPoaMatters.map(m => ({...m, type: 'Limited POA', table: 'limited'})), ...trustMatters.map(m => ({...m, type: 'Living Trust', table: 'trust'})), ...llcMatters.map(m => ({...m, type: 'LLC', table: 'llc'})), ...simpleDocMatters.map(m => ({...m, type: (m.document_type || 'simple').replace(/_/g, ' '), table: 'simple'}))].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 15).map(item => (
                     <tr key={`${item.table}-${item.id}`}>
                       <td style={s.td}><strong>{item.client_name}</strong></td>
                       <td style={s.td}>{item.client_email}</td>
@@ -429,7 +456,7 @@ export default function AdminDashboard() {
                       </td>
                     </tr>
                   ))}
-                  {poaMatters.length === 0 && limitedPoaMatters.length === 0 && (
+                  {poaMatters.length === 0 && limitedPoaMatters.length === 0 && trustMatters.length === 0 && llcMatters.length === 0 && simpleDocMatters.length === 0 && (
                     <tr><td colSpan={6} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders yet</td></tr>
                   )}
                 </tbody>
@@ -513,6 +540,126 @@ export default function AdminDashboard() {
                   </tr>
                 ))}
                 {filteredLimited.length === 0 && (
+                  <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Trust Tab */}
+        {activeTab === 'trust' && (
+          <div style={s.tableWrap}>
+            <div style={s.tableHeader}>
+              <h3 style={s.tableTitle}>Living Trust Orders ({filteredTrust.length})</h3>
+            </div>
+            <table style={s.table}>
+              <thead>
+                <tr>
+                  <th style={s.th}>Client</th>
+                  <th style={s.th}>Email</th>
+                  <th style={s.th}>Tier</th>
+                  <th style={s.th}>Status</th>
+                  <th style={s.th}>Price</th>
+                  <th style={s.th}>Date</th>
+                  <th style={s.th}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTrust.map(m => (
+                  <tr key={m.id}>
+                    <td style={s.td}><strong>{m.client_name}</strong></td>
+                    <td style={s.td}>{m.client_email}</td>
+                    <td style={s.td}>{m.review_tier?.replace('_', ' ') || '-'}</td>
+                    <td style={s.td}><span style={getBadgeStyle(m.status)}>{m.status?.replace('_', ' ')}</span></td>
+                    <td style={s.td}>{formatMoney(m.total_price)}</td>
+                    <td style={s.td}>{formatDate(m.created_at)}</td>
+                    <td style={s.td}>
+                      <button style={s.actionBtn} onClick={() => { setSelectedOrder({...m, table: 'trust_matters'}); setShowModal(true); }}>View</button>
+                    </td>
+                  </tr>
+                ))}
+                {filteredTrust.length === 0 && (
+                  <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* LLC Tab */}
+        {activeTab === 'llc' && (
+          <div style={s.tableWrap}>
+            <div style={s.tableHeader}>
+              <h3 style={s.tableTitle}>LLC Formation Orders ({filteredLlc.length})</h3>
+            </div>
+            <table style={s.table}>
+              <thead>
+                <tr>
+                  <th style={s.th}>Client</th>
+                  <th style={s.th}>Email</th>
+                  <th style={s.th}>LLC Name</th>
+                  <th style={s.th}>Status</th>
+                  <th style={s.th}>Price</th>
+                  <th style={s.th}>Date</th>
+                  <th style={s.th}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredLlc.map(m => (
+                  <tr key={m.id}>
+                    <td style={s.td}><strong>{m.client_name}</strong></td>
+                    <td style={s.td}>{m.client_email}</td>
+                    <td style={s.td}>{m.intake_data?.llc_name || m.intake_data?.company_name || '-'}</td>
+                    <td style={s.td}><span style={getBadgeStyle(m.status)}>{m.status?.replace('_', ' ')}</span></td>
+                    <td style={s.td}>{formatMoney(m.total_price)}</td>
+                    <td style={s.td}>{formatDate(m.created_at)}</td>
+                    <td style={s.td}>
+                      <button style={s.actionBtn} onClick={() => { setSelectedOrder({...m, table: 'llc_matters'}); setShowModal(true); }}>View</button>
+                    </td>
+                  </tr>
+                ))}
+                {filteredLlc.length === 0 && (
+                  <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Simple Docs Tab */}
+        {activeTab === 'simple-docs' && (
+          <div style={s.tableWrap}>
+            <div style={s.tableHeader}>
+              <h3 style={s.tableTitle}>Simple Document Orders ({filteredSimple.length})</h3>
+            </div>
+            <table style={s.table}>
+              <thead>
+                <tr>
+                  <th style={s.th}>Client</th>
+                  <th style={s.th}>Email</th>
+                  <th style={s.th}>Document Type</th>
+                  <th style={s.th}>Status</th>
+                  <th style={s.th}>Price</th>
+                  <th style={s.th}>Date</th>
+                  <th style={s.th}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSimple.map(m => (
+                  <tr key={m.id}>
+                    <td style={s.td}><strong>{m.client_name}</strong></td>
+                    <td style={s.td}>{m.client_email}</td>
+                    <td style={s.td}><span style={{ textTransform: 'capitalize' }}>{(m.document_type || '').replace(/_/g, ' ')}</span></td>
+                    <td style={s.td}><span style={getBadgeStyle(m.status)}>{m.status?.replace('_', ' ')}</span></td>
+                    <td style={s.td}>{formatMoney(m.total_price)}</td>
+                    <td style={s.td}>{formatDate(m.created_at)}</td>
+                    <td style={s.td}>
+                      <button style={s.actionBtn} onClick={() => { setSelectedOrder({...m, table: 'simple_doc_matters'}); setShowModal(true); }}>View</button>
+                    </td>
+                  </tr>
+                ))}
+                {filteredSimple.length === 0 && (
                   <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
                 )}
               </tbody>

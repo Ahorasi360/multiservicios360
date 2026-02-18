@@ -4,8 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 const SERVICES = {
-  trust: { name_es: 'Fideicomiso en Vida', name_en: 'Living Trust', desc_es: 'Proteja sus bienes y evite la sucesión.', desc_en: 'Protect your assets and avoid probate.', price: '$799', icon: '🏠' },
-  business: { name_es: 'Formación de Negocios', name_en: 'Business Formation', desc_es: 'LLC, Corporaciones, EIN y más.', desc_en: 'LLC, Corporations, EIN and more.', price: '$149', icon: '🏢' },
+  trust: { name_es: 'Fideicomiso en Vida', name_en: 'Living Trust', desc_es: 'Proteja sus bienes y evite la sucesión.', desc_en: 'Protect your assets and avoid probate.', price: '$599', icon: '🏠' },
+  business: { name_es: 'Formación de Negocios', name_en: 'Business Formation', desc_es: 'LLC, Corporaciones, EIN y más.', desc_en: 'LLC, Corporations, EIN and more.', price: '$799', icon: '🏢' },
   immigration: { name_es: 'Servicios de Inmigración', name_en: 'Immigration Services', desc_es: 'N-400, I-130, I-485, I-765, I-90.', desc_en: 'N-400, I-130, I-485, I-765, I-90.', price: '$99', icon: '✈️' }
 };
 

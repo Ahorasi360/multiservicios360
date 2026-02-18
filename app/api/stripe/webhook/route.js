@@ -18,6 +18,13 @@ const TABLE_MAP = {
   limited_poa: 'limited_poa_matters',
   living_trust: 'trust_matters',
   llc_formation: 'llc_matters',
+  // Simple documents (all share one table)
+  bill_of_sale: 'simple_doc_matters',
+  affidavit: 'simple_doc_matters',
+  revocation_poa: 'simple_doc_matters',
+  authorization_letter: 'simple_doc_matters',
+  promissory_note: 'simple_doc_matters',
+  guardianship_designation: 'simple_doc_matters',
 };
 
 // Map document types to vault document types
@@ -26,6 +33,12 @@ const VAULT_DOC_MAP = {
   limited_poa: 'poa_limited',
   living_trust: 'living_trust',
   llc_formation: 'operating_agreement',
+  bill_of_sale: 'bill_of_sale',
+  affidavit: 'affidavit',
+  revocation_poa: 'revocation_poa',
+  authorization_letter: 'authorization_letter',
+  promissory_note: 'promissory_note',
+  guardianship_designation: 'guardianship_designation',
 };
 
 export async function POST(request) {
@@ -281,6 +294,48 @@ export async function POST(request) {
         console.log(`Partner payment processed: ${partnerPaymentType} — $${paymentAmount} for partner ${partnerId}`);
       } catch (partnerPayErr) {
         console.error('Partner payment processing error (non-critical):', partnerPayErr);
+      }
+    }
+
+    // -----------------------------------------------
+    // VAULT PREMIUM UPGRADE
+    // -----------------------------------------------
+    const vaultSource = session.metadata?.source;
+    if (vaultSource === 'vault_premium') {
+      try {
+        const vaultTokenId = session.metadata?.vault_token_id;
+        const premiumType = session.metadata?.premium_type;
+        
+        if (vaultTokenId) {
+          const updateData = {
+            is_premium: true,
+            premium_type: premiumType,
+          };
+
+          if (premiumType === 'lifetime') {
+            updateData.premium_expires_at = null; // never expires
+            updateData.expires_at = new Date('2099-12-31').toISOString();
+          } else if (premiumType === 'annual') {
+            const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+            updateData.premium_expires_at = expiresAt;
+            updateData.expires_at = expiresAt;
+            updateData.premium_stripe_subscription_id = session.subscription || null;
+          } else if (premiumType === 'monthly') {
+            const expiresAt = new Date(Date.now() + 31 * 24 * 60 * 60 * 1000).toISOString();
+            updateData.premium_expires_at = expiresAt;
+            updateData.expires_at = expiresAt;
+            updateData.premium_stripe_subscription_id = session.subscription || null;
+          }
+
+          await supabase
+            .from('vault_tokens')
+            .update(updateData)
+            .eq('id', vaultTokenId);
+
+          console.log(`Vault Premium activated: ${premiumType} for token ${vaultTokenId}`);
+        }
+      } catch (vaultPremErr) {
+        console.error('Vault premium processing error:', vaultPremErr);
       }
     }
   }

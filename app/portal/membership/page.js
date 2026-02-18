@@ -1,9 +1,9 @@
 // app/portal/membership/page.js
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function PartnerMembershipPage() {
+function MembershipContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [partnerId, setPartnerId] = useState('');
@@ -222,5 +222,13 @@ export default function PartnerMembershipPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function PartnerMembershipPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}><p>Loading...</p></div>}>
+      <MembershipContent />
+    </Suspense>
   );
 }

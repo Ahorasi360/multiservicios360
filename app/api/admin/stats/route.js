@@ -26,6 +26,24 @@ export async function GET(request) {
       .select('*')
       .order('created_at', { ascending: false });
 
+    // Fetch Trust matters
+    const { data: trustMatters, error: trustError } = await supabase
+      .from('trust_matters')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    // Fetch LLC matters
+    const { data: llcMatters, error: llcError } = await supabase
+      .from('llc_matters')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    // Fetch Simple Doc matters
+    const { data: simpleDocMatters, error: simpleDocError } = await supabase
+      .from('simple_doc_matters')
+      .select('*')
+      .order('created_at', { ascending: false });
+
     // Fetch Waitlist
     const { data: waitlist, error: waitlistError } = await supabase
       .from('waitlist_leads')
@@ -33,22 +51,34 @@ export async function GET(request) {
       .order('created_at', { ascending: false });
 
     if (poaError || limitedError || waitlistError) {
-      console.error('Errors:', { poaError, limitedError, waitlistError });
+      console.error('Errors:', { poaError, limitedError, waitlistError, trustError, llcError, simpleDocError });
     }
 
     // Calculate stats
     const poa = poaMatters || [];
     const limited = limitedPoaMatters || [];
+    const trust = trustMatters || [];
+    const llc = llcMatters || [];
+    const simpleDocs = simpleDocMatters || [];
     const wait = waitlist || [];
 
     const poaPaid = poa.filter(m => m.status === 'paid' || m.status === 'completed');
     const limitedPaid = limited.filter(m => m.status === 'paid' || m.status === 'completed');
+    const trustPaid = trust.filter(m => m.status === 'paid' || m.status === 'completed');
+    const llcPaid = llc.filter(m => m.status === 'paid' || m.status === 'completed');
+    const simpleDocPaid = simpleDocs.filter(m => m.status === 'paid' || m.status === 'completed');
 
-    const totalOrders = poaPaid.length + limitedPaid.length;
+    const totalOrders = poaPaid.length + limitedPaid.length + trustPaid.length + llcPaid.length + simpleDocPaid.length;
     const totalRevenue = poaPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
-                         limitedPaid.reduce((sum, m) => sum + (m.total_price || 0), 0);
+                         limitedPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
+                         trustPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
+                         llcPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
+                         simpleDocPaid.reduce((sum, m) => sum + (m.total_price || 0), 0);
     const pendingOrders = poa.filter(m => m.status === 'pending_payment').length +
-                          limited.filter(m => m.status === 'draft' || m.status === 'pending_payment').length;
+                          limited.filter(m => m.status === 'draft' || m.status === 'pending_payment').length +
+                          trust.filter(m => m.status === 'draft' || m.status === 'pending_payment').length +
+                          llc.filter(m => m.status === 'draft' || m.status === 'pending_payment').length +
+                          simpleDocs.filter(m => m.status === 'draft').length;
 
     return NextResponse.json({
       success: true,
@@ -60,6 +90,9 @@ export async function GET(request) {
       },
       poaMatters: poa,
       limitedPoaMatters: limited,
+      trustMatters: trust,
+      llcMatters: llc,
+      simpleDocMatters: simpleDocs,
       waitlist: wait,
     });
   } catch (error) {
