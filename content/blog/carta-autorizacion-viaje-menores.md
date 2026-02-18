@@ -24,44 +24,72 @@ La respuesta corta: **prácticamente todos los países de América Latina y el C
 ### México
 La **Ley de Migración (Artículo 42)** requiere autorización parental escrita para menores que entran o salen del país acompañados por solo uno de sus padres o por un tercero. Sin este documento, las autoridades migratorias mexicanas pueden negar la entrada o salida del menor. Si su hijo viaja a Cancún, Guadalajara, Ciudad de México, o cualquier destino en México sin ambos padres, necesita esta carta.
 
+**[→ Prepare su carta de autorización para viajar a México por $49](/travel-authorization)**
+
 ### Guatemala, Honduras y El Salvador
 La Dirección General de Migración en cada país tiene requisitos similares. Un menor que viaja sin ambos padres necesita autorización notarizada del padre ausente. Esto aplica tanto para entrar como para salir del país.
+
+**[→ Obtenga su autorización de viaje para Centroamérica](/travel-authorization)**
 
 ### Colombia
 Colombia es especialmente estricto. El **Instituto Colombiano de Bienestar Familiar (ICBF)** requiere autorización notarizada del padre ausente para que un menor pueda salir del país. Si su hijo tiene doble nacionalidad (estadounidense y colombiano), las autoridades colombianas aplicarán las leyes colombianas. Esto afecta a familias en ciudades como Bogotá, Medellín, Cali y Barranquilla.
 
+**[→ No deje que le nieguen el viaje a Colombia — prepare su carta ahora](/travel-authorization)**
+
 ### Perú
 Los menores peruanos y residentes extranjeros menores de edad necesitan **autorización de viaje** para salir del país si no viajan con ambos padres. La autorización debe ser ante notario o juez. Si su hijo viaja a Lima, Cusco, o cualquier destino en Perú, asegúrese de tener la documentación.
+
+**[→ Autorización de viaje para Perú — lista en minutos](/travel-authorization)**
 
 ### Venezuela
 Venezuela requiere autorización notarizada del padre ausente. Dado las condiciones actuales del país, muchas familias venezolanas en Estados Unidos necesitan estos documentos cuando sus hijos viajan con un solo padre a visitar familia.
 
+**[→ Prepare su autorización de viaje para Venezuela](/travel-authorization)**
+
 ### Brasil
 Brasil tiene los requisitos **más estrictos** de toda Sudamérica. La ley brasileña exige **DOS cartas originales** de autorización de cada padre ausente. Para menores ciudadanos brasileños, las cartas deben ser ejecutadas ante un notario brasileño o en el consulado de Brasil más cercano, y deben estar en portugués. La Policía Federal de Brasil puede retener una carta a la entrada y solicitar la segunda a la salida.
+
+**[→ Viaja a Brasil preparado — obtenga su carta de autorización](/travel-authorization)**
 
 ### Argentina
 Argentina requiere un **Permiso de Viaje** (Permiso de Viaje de Menor) ante notario argentino o juez. Para menores de 6 años viajando solos, con un solo padre, o con un tercero, el permiso debe ser registrado ante la Dirección Nacional de Migraciones antes de la salida. Buenos Aires, Córdoba, Mendoza — cualquier destino requiere este permiso.
 
+**[→ Autorización de viaje para Argentina — empiece aquí](/travel-authorization)**
+
 ### Chile
 Chile requiere autorización notarizada del padre ausente para que un menor pueda salir del territorio nacional. Si su hijo viaja a Santiago, Valparaíso, o cualquier ciudad chilena sin ambos padres, necesita este documento.
+
+**[→ Prepare su carta antes de viajar a Chile](/travel-authorization)**
 
 ### Ecuador
 Ecuador exige autorización notarizada para menores que viajan sin ambos padres. Quito, Guayaquil, Cuenca — el requisito aplica para cualquier punto de salida.
 
+**[→ Carta de autorización para viajar a Ecuador por $49](/travel-authorization)**
+
 ### Bolivia
 Bolivia requiere permiso notarizado del padre ausente para menores que salen del país sin ambos progenitores.
+
+**[→ Obtenga su permiso de viaje para Bolivia](/travel-authorization)**
 
 ### Paraguay
 Paraguay es particularmente estricto: menores de **20 años** (no 18) necesitan autorización escrita y notarizada, traducida al español, para viajar sin ambos padres.
 
+**[→ Autorización de viaje para Paraguay — lista para notarizar](/travel-authorization)**
+
 ### Uruguay
 Uruguay requiere autorización del padre ausente, que debe ser otorgada ante escribano público (notario uruguayo).
+
+**[→ Prepare su carta de viaje para Uruguay](/travel-authorization)**
 
 ### República Dominicana
 Los ciudadanos y residentes dominicanos menores de edad necesitan un **Permiso de Menor** para salir del país si viajan solos, con un solo padre, o con un representante autorizado. Este es un trámite ante la Procuraduría General.
 
+**[→ Autorización de viaje para República Dominicana](/travel-authorization)**
+
 ### Costa Rica, Panamá y Nicaragua
 Estos países también requieren autorización parental para menores que viajan sin ambos padres. Costa Rica ha endurecido sus requisitos en los últimos años.
+
+**[→ Carta de autorización para Costa Rica, Panamá o Nicaragua](/travel-authorization)**
 
 ### Estados Unidos (Salida)
 Aunque ninguna ley federal lo exige, la **Oficina de Aduanas y Protección Fronteriza (CBP)** lo recomienda fuertemente. Los agentes de CBP pueden pedir prueba de consentimiento parental cuando un menor cruza la frontera acompañado por solo uno de sus padres o por un adulto que no sea padre o madre. Sin la carta, pueden detener a su familia por horas mientras investigan.

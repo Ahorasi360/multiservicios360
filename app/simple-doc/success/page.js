@@ -5,7 +5,6 @@ import { saveToVault } from '../../../lib/save-to-vault';
 import { PDFDocument } from 'pdf-lib';
 
 const NOTARY_DOCS = ['affidavit', 'revocation_poa'];
-// Guardianship gets notary for standard+ tiers (handled separately below)
 
 const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
 const DownloadIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>);
@@ -22,7 +21,6 @@ const DOC_TITLES = {
   authorization_letter: { en: 'AUTHORIZATION LETTER', es: 'CARTA DE AUTORIZACION' },
   promissory_note: { en: 'PROMISSORY NOTE', es: 'PAGARE' },
   guardianship_designation: { en: 'LEGAL PROTECTION PLAN FOR MINOR CHILDREN', es: 'PLAN DE PROTECCION LEGAL PARA HIJOS MENORES' },
-  travel_authorization: { en: 'PARENTAL TRAVEL AUTHORIZATION FOR MINOR CHILDREN', es: 'AUTORIZACIÓN PARENTAL DE VIAJE PARA HIJOS MENORES' },
 };
 
 // ============================================================
@@ -80,20 +78,16 @@ function renderSectionsToPDF(doc, sections, { m, cw, pw, ph, lang }) {
   };
 
   const addSignatureBlock = (label, name, curY) => {
-    curY = newPage(curY, 65); curY += 16;
-    // Signature line
+    curY = newPage(curY, 55); curY += 16;
     doc.setDrawColor(0); doc.setLineWidth(0.4);
-    doc.line(m, curY, m + 100, curY); curY += 6;
-    // Name (printed)
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(0, 0, 0);
-    doc.text(name, m, curY); curY += 6;
-    // Role label
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...GRAY);
-    doc.text(label, m, curY); curY += 12;
-    // Date line
-    doc.setDrawColor(0); doc.line(m, curY, m + 65, curY); curY += 6;
-    doc.setFontSize(9); doc.setTextColor(0, 0, 0);
-    doc.text(lang === 'es' ? 'Fecha' : 'Date', m, curY);
+    doc.line(m, curY, m + 90, curY); curY += 6;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(...NAVY);
+    doc.text(label, m, curY);
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(...GRAY);
+    doc.text(' / ' + name, m + doc.getTextWidth(label), curY); curY += 10;
+    doc.setTextColor(0, 0, 0);
+    doc.setDrawColor(0); doc.line(m, curY, m + 90, curY); curY += 6;
+    doc.setFontSize(9); doc.text(lang === 'es' ? 'Fecha' : 'Date', m, curY);
     return curY + 10;
   };
 
@@ -172,20 +166,6 @@ function renderSectionsToPDF(doc, sections, { m, cw, pw, ph, lang }) {
           y += 2;
           for (const f of section.fields) { y = addField(f.label, f.value, y); }
           y += 4;
-        }
-
-        // Field groups (for children etc) — labeled sets of boxed fields
-        if (section.field_groups) {
-          y += 2;
-          for (const group of section.field_groups) {
-            y = newPage(y, 30);
-            // Group title (e.g., "Minor 1 / Menor 1")
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(...NAVY);
-            doc.text(group.title, m + 4, y); y += 6;
-            doc.setFont('helvetica', 'normal'); doc.setTextColor(0, 0, 0);
-            for (const f of group.fields) { y = addField(f.label, f.value, y); }
-            y += 4;
-          }
         }
 
         // Post-text after fields
@@ -670,11 +650,8 @@ function SuccessContent() {
       doc.setTextColor(0, 0, 0);
     }
 
-    // === NOTARY FORM (appended AFTER page numbering — not counted in pages) ===
-    const formData = matter?.form_data || {};
-    const guardianshipTier = formData.tier || 'basic';
-    const guardianshipNeedsNotary = docType === 'guardianship_designation' && (guardianshipTier === 'standard' || guardianshipTier === 'premium');
-    const needsNotary = NOTARY_DOCS.includes(docType) || guardianshipNeedsNotary || docType === 'travel_authorization';
+    // === NOTARY FORM (affidavit & revocation only) ===
+    const needsNotary = NOTARY_DOCS.includes(docType);
     let finalBlob;
     const fileSlug = docType.replace(/_/g, '-');
     const clientName = matter?.client_name || 'Document';
@@ -782,7 +759,7 @@ function SuccessContent() {
 
         <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px', padding: '12px', marginBottom: '24px' }}><p style={{ fontSize: '12px', color: '#92400E', margin: 0 }}>{t.legalNote}</p></div>
 
-        {(NOTARY_DOCS.includes(docType) || docType === 'travel_authorization' || (docType === 'guardianship_designation' && matter?.form_data?.tier && matter.form_data.tier !== 'basic')) && (
+        {NOTARY_DOCS.includes(docType) && (
           <div style={{ backgroundColor: '#FEE2E2', border: '1px solid #F87171', borderRadius: '8px', padding: '12px', marginBottom: '24px' }}>
             <p style={{ fontSize: '12px', color: '#991B1B', margin: 0, fontWeight: '600' }}>
               {language === 'es' ? '\u26A0\uFE0F IMPORTANTE: Este documento requiere notarizacion. El formulario de reconocimiento notarial de California esta incluido al final del PDF. Lleve este documento a un notario publico para completar la notarizacion.' : '\u26A0\uFE0F IMPORTANT: This document requires notarization. The California notary acknowledgment form is included at the end of the PDF. Take this document to a notary public to complete the notarization.'}

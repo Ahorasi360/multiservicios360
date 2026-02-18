@@ -8,7 +8,6 @@ const PRICING = {
   authorization_letter: { amount: 4900, name: 'Authorization Letter', nameEs: 'Carta de Autorización' },
   promissory_note: { amount: 8900, name: 'Promissory Note', nameEs: 'Pagaré' },
   guardianship_designation: { amount: 12900, name: 'Guardianship Designation', nameEs: 'Designación de Guardián' },
-  travel_authorization: { amount: 4900, name: 'Travel Authorization Letter', nameEs: 'Carta de Autorización de Viaje' },
 };
 
 // Tiered pricing for guardianship
@@ -25,7 +24,6 @@ const SLUG_MAP = {
   authorization_letter: 'authorization-letter',
   promissory_note: 'promissory-note',
   guardianship_designation: 'guardianship',
-  travel_authorization: 'travel-authorization',
 };
 
 export async function POST(request) {

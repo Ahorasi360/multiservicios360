@@ -100,8 +100,10 @@ export default function BlogPostClient({ post, relatedPosts }) {
   var t = translations[lang];
   var cats = categoryLabels[lang];
 
-  var title = lang === 'en' ? post.title_en : post.title;
-  var content = lang === 'en' ? post.content_en : post.content;
+  var hasTranslation = post.hasEnglishContent;
+  var effectiveLang = (lang === 'en' && !hasTranslation) ? 'es' : lang;
+  var title = effectiveLang === 'en' ? (post.title_en || post.title) : post.title;
+  var content = effectiveLang === 'en' ? post.content_en : post.content;
   var readTime = estimateReadTime(content);
   var catColor = categoryColors[post.category] || categoryColors.general;
 
@@ -195,7 +197,8 @@ export default function BlogPostClient({ post, relatedPosts }) {
             <h2 className="text-xl font-extrabold text-gray-900 mb-6 text-center">{t.related}</h2>
             <div className="grid sm:grid-cols-3 gap-5">
               {relatedPosts.map(function(rp) {
-                var rpTitle = lang === 'en' ? rp.title_en : rp.title;
+                var rpLang = (lang === 'en' && !rp.hasEnglishContent) ? 'es' : lang;
+                var rpTitle = rpLang === 'en' ? (rp.title_en || rp.title) : rp.title;
                 var rpUrl = '/blog/' + rp.slug;
                 return (
                   <Link key={rp.slug} href={rpUrl} className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all no-underline overflow-hidden border border-gray-100">

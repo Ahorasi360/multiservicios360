@@ -94,8 +94,9 @@ export default function BlogListClient({ posts }) {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((post) => {
                 const cat = categoryColors[post.category] || categoryColors.general;
-                const title = lang === 'en' ? post.title_en : post.title;
-                const excerpt = lang === 'en' ? post.excerpt_en : post.excerpt;
+                const effLang = (lang === 'en' && !post.hasEnglishContent) ? 'es' : lang;
+                const title = effLang === 'en' ? (post.title_en || post.title) : post.title;
+                const excerpt = effLang === 'en' ? (post.excerpt_en || post.excerpt) : post.excerpt;
                 const postUrl = '/blog/' + post.slug;
                 return (
                   <Link key={post.slug} href={postUrl} className="group bg-white rounded-xl shadow-md hover:shadow-lg transition-all hover:-translate-y-1 no-underline overflow-hidden border border-gray-100">
