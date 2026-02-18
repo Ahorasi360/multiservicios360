@@ -56,7 +56,12 @@ function renderMarkdown(md) {
 
   var html = md
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="rounded-lg shadow-md my-6 max-w-full" />')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-700 underline hover:text-blue-900" target="_blank" rel="noopener">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(match, text, url) {
+      if (url.startsWith('/') || url.startsWith('#')) {
+        return '<a href="' + url + '" class="text-blue-700 underline hover:text-blue-900 font-semibold">' + text + '</a>';
+      }
+      return '<a href="' + url + '" class="text-blue-700 underline hover:text-blue-900" target="_blank" rel="noopener">' + text + '</a>';
+    })
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>')
     .replace(/^---$/gm, '<hr class="my-8 border-gray-200" />')
@@ -100,10 +105,10 @@ export default function BlogPostClient({ post, relatedPosts }) {
   var t = translations[lang];
   var cats = categoryLabels[lang];
 
-  var hasTranslation = post.hasEnglishContent;
+  var hasTranslation = post.hasEnglishContent || (post.content_en && post.content_en !== post.content);
   var effectiveLang = (lang === 'en' && !hasTranslation) ? 'es' : lang;
   var title = effectiveLang === 'en' ? (post.title_en || post.title) : post.title;
-  var content = effectiveLang === 'en' ? post.content_en : post.content;
+  var content = effectiveLang === 'en' ? (post.content_en || post.content) : post.content;
   var readTime = estimateReadTime(content);
   var catColor = categoryColors[post.category] || categoryColors.general;
 

@@ -92,7 +92,9 @@ Estos países también requieren autorización parental para menores que viajan 
 **[→ Carta de autorización para Costa Rica, Panamá o Nicaragua](/travel-authorization)**
 
 ### Estados Unidos (Salida)
-Aunque ninguna ley federal lo exige, la **Oficina de Aduanas y Protección Fronteriza (CBP)** lo recomienda fuertemente. Los agentes de CBP pueden pedir prueba de consentimiento parental cuando un menor cruza la frontera acompañado por solo uno de sus padres o por un adulto que no sea padre o madre. Sin la carta, pueden detener a su familia por horas mientras investigan.
+Muchas personas creen que esta carta no es necesaria porque "no hay ley que lo exija." Esto es técnicamente cierto — ninguna ley federal de EE.UU. lo requiere. Pero en la práctica, la **Oficina de Aduanas y Protección Fronteriza (CBP)** lo recomienda fuertemente y sus agentes **sí pueden pedir prueba de consentimiento parental** cuando un menor cruza la frontera con solo uno de sus padres o con un adulto que no sea padre o madre. Sin la carta, pueden detener a su familia por horas mientras investigan. ¿Vale la pena arriesgarse por no tener un documento de $49?
+
+**[→ No se arriesgue — CBP puede pedirle esta carta en la frontera](/travel-authorization)**
 
 ### Las Aerolíneas
 American Airlines, United, Delta, Avianca, Volaris, Copa Airlines, LATAM y otras pueden **negar el abordaje** si no tiene documentación de consentimiento parental para un menor que viaja sin ambos padres. No importa que usted tenga pasaporte y boleto — sin la carta, no vuelan.
@@ -162,3 +164,161 @@ No espere al último momento. Tenga su carta lista al menos una semana antes del
 ---
 
 *Multi Servicios 360 proporciona acceso a herramientas de preparación de documentos de autoayuda. No somos un bufete de abogados y no proporcionamos asesoría legal. Los requisitos migratorios cambian frecuentemente — verifique siempre con el consulado o embajada del país de destino antes de viajar. Este artículo es informativo y no constituye consejo legal.*
+
+---EN---
+
+Every summer, thousands of Latino families send their children to visit grandparents in Mexico, Guatemala, Honduras, El Salvador, Colombia, Peru, or the Dominican Republic. Sometimes they travel with dad, sometimes with mom, sometimes with an uncle or grandmother. And every summer, families are stopped at the airport or at the border because they don't have a document proving the absent parent authorized the trip.
+
+Don't let that happen to your family.
+
+## What is a Travel Authorization Letter?
+
+It is a signed and notarized document where you, as a parent, authorize another person to travel internationally with your minor child. It is the written proof that you gave your consent.
+
+## Which Countries Require It?
+
+The short answer: **virtually every country in Latin America and the Caribbean**. Here's a country-by-country breakdown:
+
+### Mexico
+Mexico's **Migration Law (Article 42)** requires written parental authorization for minors entering or leaving the country accompanied by only one parent or a third party. Without this document, Mexican immigration authorities can deny entry or exit. If your child is traveling to Cancún, Guadalajara, Mexico City, or any destination in Mexico without both parents, they need this letter.
+
+**[→ Prepare your travel authorization for Mexico for $49](/travel-authorization)**
+
+### Guatemala, Honduras, and El Salvador
+The immigration authority in each country has similar requirements. A minor traveling without both parents needs notarized authorization from the absent parent. This applies both for entering and leaving the country.
+
+**[→ Get your travel authorization for Central America](/travel-authorization)**
+
+### Colombia
+Colombia is especially strict. The **Colombian Institute of Family Welfare (ICBF)** requires notarized authorization from the absent parent for a minor to leave the country. If your child has dual nationality (American and Colombian), Colombian authorities will apply Colombian law. This affects families in cities like Bogotá, Medellín, Cali, and Barranquilla.
+
+**[→ Don't let them deny your trip to Colombia — prepare your letter now](/travel-authorization)**
+
+### Peru
+Peruvian minors and foreign minor residents need **travel authorization** to leave the country if they are not traveling with both parents. The authorization must be before a notary or judge. If your child is traveling to Lima, Cusco, or any destination in Peru, make sure you have the documentation.
+
+**[→ Travel authorization for Peru — ready in minutes](/travel-authorization)**
+
+### Venezuela
+Venezuela requires notarized authorization from the absent parent. Given the country's current conditions, many Venezuelan families in the United States need these documents when their children travel with only one parent to visit family.
+
+**[→ Prepare your travel authorization for Venezuela](/travel-authorization)**
+
+### Brazil
+Brazil has the **strictest requirements** in all of South America. Brazilian law requires **TWO original authorization letters** from each absent parent. For Brazilian citizen minors, the letters must be executed before a Brazilian notary or at the nearest Brazilian consulate, and must be in Portuguese. Brazil's Federal Police may retain one letter upon entry and request the second upon departure.
+
+**[→ Travel to Brazil prepared — get your authorization letter](/travel-authorization)**
+
+### Argentina
+Argentina requires a **Travel Permit** (Permiso de Viaje de Menor) before an Argentine notary or judge. For children under 6 traveling alone, with one parent, or with a third party, the permit must be registered with the National Migration Directorate before departure. Buenos Aires, Córdoba, Mendoza — any destination requires this permit.
+
+**[→ Travel authorization for Argentina — start here](/travel-authorization)**
+
+### Chile
+Chile requires notarized authorization from the absent parent for a minor to leave the national territory. If your child is traveling to Santiago, Valparaíso, or any Chilean city without both parents, they need this document.
+
+**[→ Prepare your letter before traveling to Chile](/travel-authorization)**
+
+### Ecuador
+Ecuador requires notarized authorization for minors traveling without both parents. Quito, Guayaquil, Cuenca — the requirement applies at any point of departure.
+
+**[→ Authorization letter for traveling to Ecuador for $49](/travel-authorization)**
+
+### Bolivia
+Bolivia requires notarized permission from the absent parent for minors leaving the country without both parents.
+
+**[→ Get your travel permit for Bolivia](/travel-authorization)**
+
+### Paraguay
+Paraguay is particularly strict: minors under **20 years old** (not 18) need written and notarized authorization, translated into Spanish, to travel without both parents.
+
+**[→ Travel authorization for Paraguay — ready to notarize](/travel-authorization)**
+
+### Uruguay
+Uruguay requires authorization from the absent parent, which must be granted before a public notary (escribano público).
+
+**[→ Prepare your travel letter for Uruguay](/travel-authorization)**
+
+### Dominican Republic
+Dominican citizens and residents who are minors need a **Minor's Permit** to leave the country if traveling alone, with one parent, or with an authorized representative. This is a process through the Attorney General's Office.
+
+**[→ Travel authorization for the Dominican Republic](/travel-authorization)**
+
+### Costa Rica, Panama, and Nicaragua
+These countries also require parental authorization for minors traveling without both parents. Costa Rica has tightened its requirements in recent years.
+
+**[→ Authorization letter for Costa Rica, Panama, or Nicaragua](/travel-authorization)**
+
+### United States (Departure)
+Many people believe this letter isn't necessary because "there's no law that requires it." This is technically true — no U.S. federal law mandates it. But in practice, **U.S. Customs and Border Protection (CBP)** strongly recommends it and their agents **can and do ask for proof of parental consent** when a minor crosses the border with only one parent or with a non-parent adult. Without the letter, they can detain your family for hours while they investigate. Is it worth the risk over a $49 document?
+
+**[→ Don't risk it — CBP can ask for this letter at the border](/travel-authorization)**
+
+### Airlines
+American Airlines, United, Delta, Avianca, Volaris, Copa Airlines, LATAM, and others can **deny boarding** if you don't have parental consent documentation for a minor traveling without both parents. It doesn't matter that you have a passport and ticket — without the letter, they won't fly.
+
+## When Do I Need It?
+
+The most common situations are:
+
+**Child travels with one parent** — Mom stays working and dad takes the kids to visit grandma in Mexico. Mom needs to sign the letter authorizing the trip.
+
+**Child travels with a grandparent or relative** — Grandparents take the grandchildren on vacation to Colombia or Peru. Both parents must authorize in writing.
+
+**Child travels with a family friend** — A godparent takes the child on a trip. Parents must give formal authorization.
+
+**Divorced or separated parents** — Especially important. The non-traveling parent must sign the authorization to avoid accusations of child abduction.
+
+**Dual nationality families** — If your child holds passports from both the United States and another country (Colombia, Peru, Mexico, etc.), the other country's authorities will apply their own laws. Having an American passport does not exempt you from complying with the destination country's requirements.
+
+## What Information Does It Include?
+
+Our authorization letter includes:
+
+**Authorizing parent's information** — Full name, date of birth, address, phone, and ID number (driver's license or passport).
+
+**Traveling adult's information** — Full name, relationship to the child, phone, and passport.
+
+**Information for each minor** — Full name, date of birth, and passport number.
+
+**Trip details** — Destination country, departure and return dates, and purpose of travel.
+
+**Emergency medical authority** — The person traveling with your child is authorized to make emergency medical decisions during the trip.
+
+**Legal citations** — The document cites recommendations from the U.S. Department of State, CBP, and applicable immigration laws so authorities take it seriously.
+
+## Does It Need to Be Notarized?
+
+**Yes, absolutely.** In practice:
+
+- CBP agents give much more weight to a notarized document
+- Mexico, Colombia, Peru, Argentina, Chile, Brazil, and virtually all of Latin America require notarization
+- Airlines prefer notarized documents
+- A notary verifies your identity, giving the document credibility
+
+Our document includes a notary acknowledgment page ready for you to sign before any notary public.
+
+## How Much Does It Cost?
+
+At Multi Servicios 360, the Travel Authorization Letter costs **$49**. You fill it out in Spanish using our guided system, and you receive the document in both Spanish and English, ready to notarize.
+
+Compared to the cost of a missed flight, hours of detention at the border, or the anguish of your family not being able to travel — $49 is a minimal investment for your peace of mind.
+
+## Important Tip: What Else to Bring
+
+In addition to the authorization letter, we recommend that the person traveling with your child also carry:
+
+- **Copy of the absent parent's passport** — Some countries ask for this (especially Colombia and Brazil)
+- **Original or certified birth certificate** of the minor
+- **Valid passport** for the minor
+- **Copy of the notarized letter** — Bring both the original AND a copy, in case authorities retain one
+
+## Prepare It Before the Trip
+
+Don't wait until the last minute. Have your letter ready at least one week before the trip to allow time for notarization. You will need to bring an official ID that matches the information in the document.
+
+**[Prepare your Travel Authorization Letter today for $49 →](/travel-authorization)**
+
+---
+
+*Multi Servicios 360 provides access to self-help document preparation tools. We are not a law firm and do not provide legal advice. Immigration requirements change frequently — always verify with the consulate or embassy of the destination country before traveling. This article is informational and does not constitute legal advice.*
