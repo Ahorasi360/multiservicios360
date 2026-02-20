@@ -5,6 +5,7 @@ import { saveToVault } from '../../../lib/save-to-vault';
 import { PDFDocument } from 'pdf-lib';
 
 const NOTARY_DOCS = ['affidavit', 'revocation_poa'];
+// Guardianship gets notary for standard+ tiers (handled separately below)
 
 const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
 const DownloadIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>);
@@ -21,6 +22,7 @@ const DOC_TITLES = {
   authorization_letter: { en: 'AUTHORIZATION LETTER', es: 'CARTA DE AUTORIZACION' },
   promissory_note: { en: 'PROMISSORY NOTE', es: 'PAGARE' },
   guardianship_designation: { en: 'LEGAL PROTECTION PLAN FOR MINOR CHILDREN', es: 'PLAN DE PROTECCION LEGAL PARA HIJOS MENORES' },
+  travel_authorization: { en: 'PARENTAL TRAVEL AUTHORIZATION FOR MINOR CHILDREN', es: 'AUTORIZACIÓN PARENTAL DE VIAJE PARA HIJOS MENORES' },
 };
 
 // ============================================================
@@ -78,16 +80,20 @@ function renderSectionsToPDF(doc, sections, { m, cw, pw, ph, lang }) {
   };
 
   const addSignatureBlock = (label, name, curY) => {
-    curY = newPage(curY, 55); curY += 16;
+    curY = newPage(curY, 65); curY += 16;
+    // Signature line
     doc.setDrawColor(0); doc.setLineWidth(0.4);
-    doc.line(m, curY, m + 90, curY); curY += 6;
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(...NAVY);
-    doc.text(label, m, curY);
-    doc.setFont('helvetica', 'normal'); doc.setTextColor(...GRAY);
-    doc.text(' / ' + name, m + doc.getTextWidth(label), curY); curY += 10;
-    doc.setTextColor(0, 0, 0);
-    doc.setDrawColor(0); doc.line(m, curY, m + 90, curY); curY += 6;
-    doc.setFontSize(9); doc.text(lang === 'es' ? 'Fecha' : 'Date', m, curY);
+    doc.line(m, curY, m + 100, curY); curY += 6;
+    // Name (printed)
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(0, 0, 0);
+    doc.text(name, m, curY); curY += 6;
+    // Role label
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...GRAY);
+    doc.text(label, m, curY); curY += 12;
+    // Date line
+    doc.setDrawColor(0); doc.line(m, curY, m + 65, curY); curY += 6;
+    doc.setFontSize(9); doc.setTextColor(0, 0, 0);
+    doc.text(lang === 'es' ? 'Fecha' : 'Date', m, curY);
     return curY + 10;
   };
 
@@ -166,6 +172,20 @@ function renderSectionsToPDF(doc, sections, { m, cw, pw, ph, lang }) {
           y += 2;
           for (const f of section.fields) { y = addField(f.label, f.value, y); }
           y += 4;
+        }
+
+        // Field groups (for children etc) — labeled sets of boxed fields
+        if (section.field_groups) {
+          y += 2;
+          for (const group of section.field_groups) {
+            y = newPage(y, 30);
+            // Group title (e.g., "Minor 1 / Menor 1")
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(...NAVY);
+            doc.text(group.title, m + 4, y); y += 6;
+            doc.setFont('helvetica', 'normal'); doc.setTextColor(0, 0, 0);
+            for (const f of group.fields) { y = addField(f.label, f.value, y); }
+            y += 4;
+          }
         }
 
         // Post-text after fields
@@ -402,6 +422,11 @@ function SuccessContent() {
   const [signatureAccepted, setSignatureAccepted] = useState(false);
   const [signatureError, setSignatureError] = useState('');
   const [isFinalized, setIsFinalized] = useState(false);
+  const [translationCache, setTranslationCache] = useState(null);
+  const [translating, setTranslating] = useState(false);
+  const [notarizing, setNotarizing] = useState(false);
+  const [notaryLink, setNotaryLink] = useState(null);
+  const [notaryError, setNotaryError] = useState('');
 
   const getLADate = () => {
     const now = new Date();
@@ -497,7 +522,7 @@ function SuccessContent() {
   // ============================================================
   // PDF GENERATION — Clause Library Driven
   // ============================================================
-  const generatePDF = async (isSpanish = false) => {
+  const generatePDF = async (isSpanish = false, returnOnly = false) => {
     if (!matter?.form_data) { alert('No data available'); return; }
     if (!validateDate(executionDate)) { setDateError(t.executionDateRequired); return; }
     setDateError('');
@@ -509,7 +534,42 @@ function SuccessContent() {
     const { buildDocument } = await import('../../../lib/clause-libraries');
 
     const doc = new jsPDF('p', 'mm', 'letter');
-    const d = matter.form_data;
+    let d = { ...matter.form_data };
+
+    // === TRANSLATE FREE-TEXT FIELDS FOR ENGLISH PDF ===
+    if (!isSpanish) {
+      let translations = translationCache;
+      if (!translations) {
+        try {
+          setTranslating(true);
+          const res = await fetch('/api/simple-doc/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ form_data: matter.form_data, document_type: docType }),
+          });
+          const result = await res.json();
+          if (result.success && result.translations) {
+            translations = result.translations;
+            setTranslationCache(translations);
+          }
+        } catch (err) {
+          console.error('Translation failed, using original text:', err);
+        } finally {
+          setTranslating(false);
+        }
+      }
+      // Apply translations to form data copy
+      if (translations) {
+        for (const [field, translated] of Object.entries(translations)) {
+          if (translated && d[field]) {
+            d[field] = translated;
+          }
+        }
+        // Mark that this doc contains translations
+        d._translated = true;
+      }
+    }
+
     const lang = isSpanish ? 'es' : 'en';
     const pw = 215.9, ph = 279.4, m = 20, cw = pw - 2 * m;
 
@@ -534,6 +594,16 @@ function SuccessContent() {
     doc.setDrawColor(245, 158, 11); doc.setLineWidth(1);
     doc.line(pw / 2 - 40, y, pw / 2 + 40, y); y += 12;
     doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(0, 0, 0);
+
+    // === TRANSLATION NOTICE (English PDF only) ===
+    if (!isSpanish && d._translated) {
+      doc.setFillColor(239, 246, 255); doc.setDrawColor(30, 58, 138); doc.setLineWidth(0.3);
+      doc.roundedRect(m, y - 2, cw, 12, 2, 2, 'FD');
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(8); doc.setTextColor(100, 116, 139);
+      doc.text('Note: Free-text declarations in this document were translated from the original Spanish provided by the declarant.', pw / 2, y + 4, { align: 'center' });
+      y += 16;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(0, 0, 0);
+    }
 
     // === BUILD & RENDER DOCUMENT BODY ===
     const sections = buildDocument(docType, d, lang, executionDate);
@@ -650,8 +720,11 @@ function SuccessContent() {
       doc.setTextColor(0, 0, 0);
     }
 
-    // === NOTARY FORM (affidavit & revocation only) ===
-    const needsNotary = NOTARY_DOCS.includes(docType);
+    // === NOTARY FORM (appended AFTER page numbering — not counted in pages) ===
+    const formData = matter?.form_data || {};
+    const guardianshipTier = formData.tier || 'basic';
+    const guardianshipNeedsNotary = docType === 'guardianship_designation' && (guardianshipTier === 'standard' || guardianshipTier === 'premium');
+    const needsNotary = NOTARY_DOCS.includes(docType) || guardianshipNeedsNotary || docType === 'travel_authorization';
     let finalBlob;
     const fileSlug = docType.replace(/_/g, '-');
     const clientName = matter?.client_name || 'Document';
@@ -677,6 +750,7 @@ function SuccessContent() {
     }
 
     const url = URL.createObjectURL(finalBlob);
+    if (returnOnly) return finalBlob;
     const link = document.createElement('a'); link.href = url; link.download = fileName; link.click();
     URL.revokeObjectURL(url);
 
@@ -699,6 +773,58 @@ function SuccessContent() {
     const s = encodeURIComponent(dn + ' - Multi Servicios 360');
     const b = encodeURIComponent(language === 'es' ? 'Adjunto encontrara su ' + dn + '.\n\nMulti Servicios 360\n855.246.7274' : 'Please find your ' + dn + ' attached.\n\nMulti Servicios 360\n855.246.7274');
     window.open('mailto:?subject=' + s + '&body=' + b);
+  };
+
+  const handleNotarize = async () => {
+    if (!matter?.form_data) { alert('No data available'); return; }
+    if (!matter.client_email) {
+      alert(language === 'es' ? 'Se necesita un correo electrónico para la notarización.' : 'An email is required for notarization.');
+      return;
+    }
+    setNotarizing(true);
+    setNotaryError('');
+    setNotaryLink(null);
+    try {
+      // Generate English PDF blob without downloading
+      const pdfBlob = await generatePDF(false, true);
+      if (!pdfBlob) { setNotaryError(language === 'es' ? 'Error al generar el PDF.' : 'Error generating PDF.'); setNotarizing(false); return; }
+
+      // Convert blob to base64
+      const arrayBuffer = await pdfBlob.arrayBuffer();
+      const uint8 = new Uint8Array(arrayBuffer);
+      let binary = '';
+      for (let i = 0; i < uint8.length; i++) binary += String.fromCharCode(uint8[i]);
+      const base64 = btoa(binary);
+
+      // Parse client name
+      const nameParts = (matter.client_name || 'Client').trim().split(/\s+/);
+      const firstName = nameParts[0] || 'Client';
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'N/A';
+
+      const docTitle = DOC_TITLES[docType]?.['en'] || docType;
+
+      const res = await fetch('/api/simple-doc/notarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pdf_base64: base64,
+          signer_email: matter.client_email,
+          signer_first_name: firstName,
+          signer_last_name: lastName,
+          document_name: docTitle + ' - ' + matter.client_name,
+        }),
+      });
+      const result = await res.json();
+      if (result.success && result.notarization_link) {
+        setNotaryLink(result.notarization_link);
+      } else {
+        setNotaryError(result.error || (language === 'es' ? 'Error al crear la solicitud de notarización.' : 'Error creating notarization request.'));
+      }
+    } catch (err) {
+      console.error('Notarization error:', err);
+      setNotaryError(language === 'es' ? 'Error de conexión. Intente de nuevo.' : 'Connection error. Please try again.');
+    }
+    setNotarizing(false);
   };
 
   if (loading) return (
@@ -750,7 +876,7 @@ function SuccessContent() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
           <button onClick={() => generatePDF(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}><DownloadIcon /> {t.downloadSpanish}</button>
-          <button onClick={() => generatePDF(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}><DownloadIcon /> {t.downloadEnglish}</button>
+          <button onClick={() => generatePDF(false)} disabled={translating} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: translating ? '#9CA3AF' : '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: translating ? 'wait' : 'pointer' }}><DownloadIcon /> {translating ? (language === 'es' ? 'Traduciendo...' : 'Translating...') : t.downloadEnglish}</button>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
           <button onClick={handlePrint} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#6B7280', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}><PrintIcon /> {t.print}</button>
@@ -759,11 +885,46 @@ function SuccessContent() {
 
         <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px', padding: '12px', marginBottom: '24px' }}><p style={{ fontSize: '12px', color: '#92400E', margin: 0 }}>{t.legalNote}</p></div>
 
-        {NOTARY_DOCS.includes(docType) && (
-          <div style={{ backgroundColor: '#FEE2E2', border: '1px solid #F87171', borderRadius: '8px', padding: '12px', marginBottom: '24px' }}>
+        {(NOTARY_DOCS.includes(docType) || docType === 'travel_authorization' || (docType === 'guardianship_designation' && matter?.form_data?.tier && matter.form_data.tier !== 'basic')) && (
+          <div style={{ backgroundColor: '#FEE2E2', border: '1px solid #F87171', borderRadius: '8px', padding: '12px', marginBottom: '16px' }}>
             <p style={{ fontSize: '12px', color: '#991B1B', margin: 0, fontWeight: '600' }}>
               {language === 'es' ? '\u26A0\uFE0F IMPORTANTE: Este documento requiere notarizacion. El formulario de reconocimiento notarial de California esta incluido al final del PDF. Lleve este documento a un notario publico para completar la notarizacion.' : '\u26A0\uFE0F IMPORTANT: This document requires notarization. The California notary acknowledgment form is included at the end of the PDF. Take this document to a notary public to complete the notarization.'}
             </p>
+          </div>
+        )}
+
+        {(NOTARY_DOCS.includes(docType) || docType === 'travel_authorization' || (docType === 'guardianship_designation' && matter?.form_data?.tier && matter.form_data.tier !== 'basic')) && (
+          <div style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)', borderRadius: '12px', padding: '20px', marginBottom: '24px', color: 'white' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '20px' }}>🔏</span>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', margin: 0 }}>
+                {language === 'es' ? 'Notarización en Línea' : 'Online Notarization'}
+              </h3>
+            </div>
+            <p style={{ fontSize: '13px', margin: '0 0 12px 0', opacity: 0.9 }}>
+              {language === 'es'
+                ? 'Conéctese con un notario certificado por video en minutos. Sin necesidad de ir a ningún lado. Disponible Lun-Vie, 9AM-9PM CT.'
+                : 'Connect with a certified notary by video in minutes. No need to go anywhere. Available Mon-Fri, 9AM-9PM CT.'}
+            </p>
+            {notaryLink ? (
+              <div>
+                <a href={notaryLink} target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: 'white', color: '#4F46E5', borderRadius: '8px', fontWeight: '700', fontSize: '14px', textDecoration: 'none', border: 'none', cursor: 'pointer' }}>
+                  🎥 {language === 'es' ? 'Conectar con Notario →' : 'Connect with Notary →'}
+                </a>
+                <p style={{ fontSize: '11px', margin: '8px 0 0 0', opacity: 0.7 }}>
+                  {language === 'es' ? 'El enlace fue enviado también a su correo electrónico.' : 'The link was also sent to your email.'}
+                </p>
+              </div>
+            ) : (
+              <div>
+                <button onClick={handleNotarize} disabled={notarizing} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: notarizing ? 'rgba(255,255,255,0.5)' : 'white', color: '#4F46E5', borderRadius: '8px', fontWeight: '700', fontSize: '14px', border: 'none', cursor: notarizing ? 'wait' : 'pointer' }}>
+                  {notarizing
+                    ? (language === 'es' ? '⏳ Preparando...' : '⏳ Preparing...')
+                    : (language === 'es' ? '🔏 Notarizar Ahora — $25' : '🔏 Notarize Now — $25')}
+                </button>
+                {notaryError && <p style={{ fontSize: '12px', color: '#FEE2E2', margin: '8px 0 0 0' }}>❌ {notaryError}</p>}
+              </div>
+            )}
           </div>
         )}
 
