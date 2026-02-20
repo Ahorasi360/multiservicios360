@@ -424,9 +424,6 @@ function SuccessContent() {
   const [isFinalized, setIsFinalized] = useState(false);
   const [translationCache, setTranslationCache] = useState(null);
   const [translating, setTranslating] = useState(false);
-  const [notarizing, setNotarizing] = useState(false);
-  const [notaryLink, setNotaryLink] = useState(null);
-  const [notaryError, setNotaryError] = useState('');
 
   const getLADate = () => {
     const now = new Date();
@@ -775,58 +772,6 @@ function SuccessContent() {
     window.open('mailto:?subject=' + s + '&body=' + b);
   };
 
-  const handleNotarize = async () => {
-    if (!matter?.form_data) { alert('No data available'); return; }
-    if (!matter.client_email) {
-      alert(language === 'es' ? 'Se necesita un correo electrónico para la notarización.' : 'An email is required for notarization.');
-      return;
-    }
-    setNotarizing(true);
-    setNotaryError('');
-    setNotaryLink(null);
-    try {
-      // Generate English PDF blob without downloading
-      const pdfBlob = await generatePDF(false, true);
-      if (!pdfBlob) { setNotaryError(language === 'es' ? 'Error al generar el PDF.' : 'Error generating PDF.'); setNotarizing(false); return; }
-
-      // Convert blob to base64
-      const arrayBuffer = await pdfBlob.arrayBuffer();
-      const uint8 = new Uint8Array(arrayBuffer);
-      let binary = '';
-      for (let i = 0; i < uint8.length; i++) binary += String.fromCharCode(uint8[i]);
-      const base64 = btoa(binary);
-
-      // Parse client name
-      const nameParts = (matter.client_name || 'Client').trim().split(/\s+/);
-      const firstName = nameParts[0] || 'Client';
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'N/A';
-
-      const docTitle = DOC_TITLES[docType]?.['en'] || docType;
-
-      const res = await fetch('/api/simple-doc/notarize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pdf_base64: base64,
-          signer_email: matter.client_email,
-          signer_first_name: firstName,
-          signer_last_name: lastName,
-          document_name: docTitle + ' - ' + matter.client_name,
-        }),
-      });
-      const result = await res.json();
-      if (result.success && result.notarization_link) {
-        setNotaryLink(result.notarization_link);
-      } else {
-        setNotaryError(result.error || (language === 'es' ? 'Error al crear la solicitud de notarización.' : 'Error creating notarization request.'));
-      }
-    } catch (err) {
-      console.error('Notarization error:', err);
-      setNotaryError(language === 'es' ? 'Error de conexión. Intente de nuevo.' : 'Connection error. Please try again.');
-    }
-    setNotarizing(false);
-  };
-
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F0F9FF' }}>
       <div style={{ textAlign: 'center' }}>
@@ -901,30 +846,26 @@ function SuccessContent() {
                 {language === 'es' ? 'Notarización en Línea' : 'Online Notarization'}
               </h3>
             </div>
-            <p style={{ fontSize: '13px', margin: '0 0 12px 0', opacity: 0.9 }}>
+            <p style={{ fontSize: '13px', margin: '0 0 4px 0', opacity: 0.9 }}>
               {language === 'es'
-                ? 'Conéctese con un notario certificado por video en minutos. Sin necesidad de ir a ningún lado. Disponible Lun-Vie, 9AM-9PM CT.'
-                : 'Connect with a certified notary by video in minutes. No need to go anywhere. Available Mon-Fri, 9AM-9PM CT.'}
+                ? 'Notarice su documento desde casa con un notario certificado por video. Solo necesita su documento PDF, una identificación con foto y una computadora con cámara.'
+                : 'Notarize your document from home with a certified notary by video. You just need your PDF document, a photo ID, and a computer with a camera.'}
             </p>
-            {notaryLink ? (
-              <div>
-                <a href={notaryLink} target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: 'white', color: '#4F46E5', borderRadius: '8px', fontWeight: '700', fontSize: '14px', textDecoration: 'none', border: 'none', cursor: 'pointer' }}>
-                  🎥 {language === 'es' ? 'Conectar con Notario →' : 'Connect with Notary →'}
-                </a>
-                <p style={{ fontSize: '11px', margin: '8px 0 0 0', opacity: 0.7 }}>
-                  {language === 'es' ? 'El enlace fue enviado también a su correo electrónico.' : 'The link was also sent to your email.'}
-                </p>
-              </div>
-            ) : (
-              <div>
-                <button onClick={handleNotarize} disabled={notarizing} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: notarizing ? 'rgba(255,255,255,0.5)' : 'white', color: '#4F46E5', borderRadius: '8px', fontWeight: '700', fontSize: '14px', border: 'none', cursor: notarizing ? 'wait' : 'pointer' }}>
-                  {notarizing
-                    ? (language === 'es' ? '⏳ Preparando...' : '⏳ Preparing...')
-                    : (language === 'es' ? '🔏 Notarizar Ahora — $25' : '🔏 Notarize Now — $25')}
-                </button>
-                {notaryError && <p style={{ fontSize: '12px', color: '#FEE2E2', margin: '8px 0 0 0' }}>❌ {notaryError}</p>}
-              </div>
-            )}
+            <p style={{ fontSize: '12px', margin: '0 0 12px 0', opacity: 0.7 }}>
+              {language === 'es'
+                ? '24/7 • Válido en los 50 estados • $25 por documento • Proporcionado por OneNotary'
+                : '24/7 • Valid in all 50 states • $25 per document • Powered by OneNotary'}
+            </p>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <a href="https://onenotary.com/notarize-a-document/" target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: 'white', color: '#4F46E5', borderRadius: '8px', fontWeight: '700', fontSize: '14px', textDecoration: 'none' }}>
+                🎥 {language === 'es' ? 'Notarizar Ahora — $25 →' : 'Notarize Now — $25 →'}
+              </a>
+            </div>
+            <p style={{ fontSize: '11px', margin: '10px 0 0 0', opacity: 0.6 }}>
+              {language === 'es'
+                ? 'Instrucciones: 1) Descargue su PDF arriba  2) Haga clic en el botón  3) Suba su PDF en OneNotary  4) Verifique su identidad  5) Conéctese con el notario'
+                : 'Instructions: 1) Download your PDF above  2) Click the button  3) Upload your PDF on OneNotary  4) Verify your identity  5) Connect with the notary'}
+            </p>
           </div>
         )}
 
