@@ -1,10 +1,9 @@
 export const metadata = {
   title: 'Nuestra Historia | Multi Servicios 360',
-  description: 'Acceso moderno a documentos legales para la comunidad latina en California. Conoce la historia de Multi Servicios 360 y nuestra misión.',
-  openGraph: {
-    title: 'Nuestra Historia | Multi Servicios 360',
-    description: 'Acceso moderno a documentos legales para la comunidad latina en California.',
-    url: 'https://multiservicios360.net/nuestra-historia',
+  description: 'La historia de Multi Servicios 360. Cómo empezamos a servir a la comunidad latina con preparación de documentos legales bilingüe.',
+  alternates: {
+    canonical: 'https://multiservicios360.net/nuestra-historia',
+    languages: { 'es': 'https://multiservicios360.net/nuestra-historia', 'en': 'https://multiservicios360.net/en/our-story', 'x-default': 'https://multiservicios360.net/nuestra-historia' },
   },
 };
 export default function Layout({ children }) { return children; }

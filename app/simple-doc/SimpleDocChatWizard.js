@@ -123,13 +123,13 @@ const WIZARD_TRANSLATIONS = {
   }
 };
 
-export default function SimpleDocChatWizard({ docType }) {
+export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   const docConfig = SIMPLE_DOC_TYPES[docType];
   if (!docConfig) return <div style={{ padding: '40px', textAlign: 'center', color: '#EF4444' }}>Invalid document type</div>;
 
   const QUESTIONS = buildQuestions(docConfig);
 
-  const [language, setLanguage] = useState('es');
+  const [language, setLanguage] = useState(initialLang);
   const [currentStep, setCurrentStep] = useState('client');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [intakeData, setIntakeData] = useState({});

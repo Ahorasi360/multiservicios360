@@ -452,8 +452,8 @@ const DocumentPreview = ({ data, language, isPaid }) => {
   );
 };
 
-export default function LimitedPOAWizard() {
-  const [language, setLanguage] = useState('es');
+export default function LimitedPOAWizard({ initialLang = 'es' }) {
+  const [language, setLanguage] = useState(initialLang);
   const [currentStep, setCurrentStep] = useState('client');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [intakeData, setIntakeData] = useState({});

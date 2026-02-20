@@ -383,8 +383,8 @@ const DocumentPreview = ({ intakeData, language, isPaid }) => {
   );
 };
 
-export default function PoAIntakeWizard() {
-  const [language, setLanguage] = useState('es');
+export default function PoAIntakeWizard({ initialLang = 'es' }) {
+  const [language, setLanguage] = useState(initialLang);
   const [currentStep, setCurrentStep] = useState('client');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [intakeData, setIntakeData] = useState({});

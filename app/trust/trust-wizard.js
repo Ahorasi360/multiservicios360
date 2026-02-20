@@ -64,8 +64,8 @@ function DocumentPreview({ intakeData, language, isPaid }) {
 }
 
 // Main Component
-export default function TrustIntakeWizard() {
-  const [language, setLanguage] = useState('es');
+export default function TrustIntakeWizard({ initialLang = 'es' }) {
+  const [language, setLanguage] = useState(initialLang);
   const [currentStep, setCurrentStep] = useState('client');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [intakeData, setIntakeData] = useState({});

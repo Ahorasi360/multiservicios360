@@ -1,10 +1,14 @@
 import SimpleDocChatWizard from '../simple-doc/SimpleDocChatWizard';
 
 export const metadata = {
-  title: 'Designación de Guardián / Guardianship Designation - Multi Servicios 360',
-  description: 'Designate a trusted guardian for your minor children in case of emergency. Bilingual English and Spanish document.',
+  title: 'Tutela Temporal / Guardianship | Multi Servicios 360',
+  description: 'Cree un acuerdo de tutela temporal para su hijo menor. Bilingüe inglés y español.',
+  alternates: {
+    canonical: 'https://multiservicios360.net/guardianship',
+    languages: { 'es': 'https://multiservicios360.net/guardianship', 'en': 'https://multiservicios360.net/en/guardianship', 'x-default': 'https://multiservicios360.net/guardianship' },
+  },
 };
 
 export default function Page() {
-  return <SimpleDocChatWizard docType="guardianship_designation" />;
+  return <SimpleDocChatWizard docType="guardianship" />;
 }

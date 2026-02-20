@@ -68,8 +68,8 @@ function DocumentPreview({ intakeData, language, isPaid }) {
 // ============================================
 // Main Component
 // ============================================
-export default function LLCIntakeWizard() {
-  const [language, setLanguage] = useState('es');
+export default function LLCIntakeWizard({ initialLang = 'es' }) {
+  const [language, setLanguage] = useState(initialLang);
   const [currentStep, setCurrentStep] = useState('client');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [intakeData, setIntakeData] = useState({});
