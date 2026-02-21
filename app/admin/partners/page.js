@@ -255,7 +255,7 @@ export default function AdminPartnersPage() {
               <span className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 font-bold text-sm">P</span>
               <span className="font-bold text-purple-400">Partner Pro</span>
             </div>
-            <p className="text-slate-400 text-sm">$899 — Comision 20-22%. Oficinas con 100+ clientes.</p>
+            <p className="text-slate-400 text-sm">$999 — Comision 20-25%. Oficinas con 100+ clientes.</p>
           </div>
           <div className="bg-slate-900 border border-yellow-500/30 rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-2">
@@ -475,8 +475,8 @@ export default function AdminPartnersPage() {
                   }}
                     className="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors">
                     <option value="start">Partner Start ($499)</option>
-                    <option value="pro">Partner Pro ($899)</option>
-                    <option value="elite">Partner Elite ($2,500+)</option>
+                    <option value="pro">Partner Pro ($999)</option>
+                    <option value="elite">Partner Elite ($2,500)</option>
                   </select>
                 </div>
               </div>

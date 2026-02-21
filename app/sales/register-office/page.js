@@ -21,17 +21,27 @@ function RegisterOfficeContent() {
     package_key: '',
   });
 
+  const [inviteValid, setInviteValid] = useState(false);
+  const [inviteChecking, setInviteChecking] = useState(true);
+
   useEffect(() => {
     const id = localStorage.getItem('salesId');
     if (!id) { router.push('/sales/login'); return; }
     setRepId(id);
     if (searchParams.get('cancelled')) setError('Payment was cancelled. You can try again.');
+    // Check invite code
+    const invite = searchParams.get('invite');
+    if (!invite) { setInviteChecking(false); return; }
+    fetch(`/api/sales/invite?code=${invite}`)
+      .then(r => r.json())
+      .then(d => { if (d.valid) setInviteValid(true); setInviteChecking(false); })
+      .catch(() => setInviteChecking(false));
   }, []);
 
   const packages = [
-    { key: 'basico', name: 'Básico', price: 499, commission: '20%', color: '#3B82F6', features: ['Portal access', 'All document types', '20% commission per sale', 'Email support'] },
-    { key: 'profesional', name: 'Profesional', price: 899, commission: '25%', color: '#8B5CF6', badge: 'Popular', features: ['Everything in Básico', '25% commission per sale', 'Priority support', 'Co-branded materials'] },
-    { key: 'avanzado', name: 'Avanzado', price: 2500, commission: '30%', color: '#D97706', badge: 'Premium', features: ['Everything in Profesional', '30% commission per sale', 'Dedicated account manager', 'Custom co-branding', 'Marketing support'] },
+    { key: 'start', name: 'Partner Start', price: 499, commission: '20%', color: '#3B82F6', features: ['Partner portal access', 'All document types', '20% commission per sale', 'Email support'] },
+    { key: 'pro', name: 'Partner Pro', price: 999, commission: '25%', color: '#8B5CF6', badge: 'Popular', features: ['Everything in Partner Start', '25% commission per sale', 'Priority support', 'Co-branded materials'] },
+    { key: 'elite', name: 'Partner Elite', price: 2500, commission: '30%', color: '#D97706', badge: 'Premium', features: ['Everything in Partner Pro', '30% commission per sale', 'Dedicated account manager', 'Custom co-branding', 'Marketing support'] },
   ];
 
   const partnerTypes = [
@@ -72,6 +82,21 @@ function RegisterOfficeContent() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F1F5F9' }}>
+      {/* Invite gate */}
+      {inviteChecking && (
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <p style={{ color: '#64748B', fontSize: 16 }}>Verifying access...</p>
+        </div>
+      )}
+      {!inviteChecking && !inviteValid && (
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
+          <div style={{ fontSize: 48 }}>🔒</div>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0F172A', margin: 0 }}>Invitation Required</h2>
+          <p style={{ color: '#64748B', fontSize: 15, textAlign: 'center', maxWidth: 380, margin: 0 }}>This page is only accessible with a valid invitation link from Multi Servicios 360.</p>
+          <button onClick={() => router.push('/sales/dashboard')} style={{ padding: '12px 24px', background: '#1E3A8A', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>← Back to Dashboard</button>
+        </div>
+      )}
+      {!inviteChecking && inviteValid && (<>
       {/* Header */}
       <div style={{ background: '#fff', padding: '14px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #E2E8F0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -248,6 +273,7 @@ function RegisterOfficeContent() {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }

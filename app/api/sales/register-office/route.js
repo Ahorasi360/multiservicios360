@@ -16,9 +16,9 @@ function hashPassword(password) {
 }
 
 const PACKAGES = {
-  basico: { name: 'Paquete Básico', setup_fee: 499, commission_rate: 20 },
-  profesional: { name: 'Paquete Profesional', setup_fee: 899, commission_rate: 25 },
-  avanzado: { name: 'Paquete Avanzado', setup_fee: 2500, commission_rate: 30 },
+  start: { name: 'Partner Start', setup_fee: 499, commission_rate: 20 },
+  pro: { name: 'Partner Pro', setup_fee: 999, commission_rate: 25 },
+  elite: { name: 'Partner Elite', setup_fee: 2500, commission_rate: 30 },
 };
 
 export async function POST(request) {
