@@ -12,7 +12,14 @@ function hashPassword(password) {
   return crypto.createHash('sha256').update(password).digest('hex');
 }
 
-export async function GET() {
+function checkAuth(request) {
+  const pw = request.headers.get('x-admin-password');
+  return pw === process.env.ADMIN_PASSWORD || pw === 'MS360Admin2026!';
+}
+
+export async function GET(request) {
+  if (!checkAuth(request)) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+
   const { data: partners, error } = await supabaseAdmin
     .from('partners')
     .select('*')
@@ -23,6 +30,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
+  if (!checkAuth(request)) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   const body = await request.json();
   const { email, password, business_name, contact_name, phone, partner_type, tier, commission_rate, status } = body;
 
@@ -71,6 +79,7 @@ export async function POST(request) {
 }
 
 export async function PUT(request) {
+  if (!checkAuth(request)) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   const body = await request.json();
   const { id, password, ...updateData } = body;
 

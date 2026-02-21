@@ -288,9 +288,15 @@ export async function POST(request) {
     // -----------------------------------------------
     const partnerPaymentId = session.metadata?.payment_id;
     const partnerPaymentType = session.metadata?.payment_type;
+    const partnerMetaType = session.metadata?.type; // used by sales registration flow
     const partnerId = session.metadata?.partner_id;
 
-    if (partnerId && partnerPaymentType && (partnerPaymentType === 'setup_fee' || partnerPaymentType === 'annual_renewal')) {
+    // Normalize: sales registration uses metadata.type = 'partner_setup_fee'
+    // Portal membership uses metadata.payment_type = 'setup_fee' or 'annual_renewal'
+    const normalizedPaymentType = partnerPaymentType ||
+      (partnerMetaType === 'partner_setup_fee' ? 'setup_fee' : null);
+
+    if (partnerId && normalizedPaymentType && (normalizedPaymentType === 'setup_fee' || normalizedPaymentType === 'annual_renewal')) {
       try {
         const paymentAmount = session.amount_total ? session.amount_total / 100 : 0;
 
@@ -309,13 +315,14 @@ export async function POST(request) {
 
         // Update partner record
         const partnerUpdate = {};
-        if (partnerPaymentType === 'setup_fee') {
+        if (normalizedPaymentType === 'setup_fee') {
           partnerUpdate.setup_fee_paid = true;
           partnerUpdate.setup_fee_paid_at = new Date().toISOString();
           partnerUpdate.setup_fee_payment_id = session.payment_intent;
+          partnerUpdate.status = 'paid_pending_approval'; // move to approval queue
           // Set membership expiry to 1 year from now
           partnerUpdate.membership_expires_at = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
-        } else if (partnerPaymentType === 'annual_renewal') {
+        } else if (normalizedPaymentType === 'annual_renewal') {
           // Extend membership by 1 year from current expiry or from now
           const { data: currentPartner } = await supabase
             .from('partners')
@@ -331,7 +338,7 @@ export async function POST(request) {
         await supabase.from('partners').update(partnerUpdate).eq('id', partnerId);
 
         // Auto-track sales rep setup fee share
-        if (partnerPaymentType === 'setup_fee') {
+        if (normalizedPaymentType === 'setup_fee') {
           const { data: activeCommissions } = await supabase
             .from('sales_commissions')
             .select('id, sales_rep_id, setup_fee_share_percent, setup_fee_amount')
@@ -363,7 +370,7 @@ export async function POST(request) {
           }
         }
 
-        console.log(`Partner payment processed: ${partnerPaymentType} — $${paymentAmount} for partner ${partnerId}`);
+        console.log(`Partner payment processed: ${normalizedPaymentType} — $${paymentAmount} for partner ${partnerId}`);
       } catch (partnerPayErr) {
         console.error('Partner payment processing error (non-critical):', partnerPayErr);
       }
