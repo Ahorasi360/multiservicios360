@@ -132,6 +132,13 @@ export default function StaffDashboard() {
   const fmt = (d) => d ? new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
   const serviceLabels = { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC' };
   const serviceColors = { general_poa:'#2563EB', limited_poa:'#7C3AED', living_trust:'#059669', llc_formation:'#D97706' };
+  const serviceSuccessUrls = { general_poa:'/poa/success', limited_poa:'/limited-poa/success', living_trust:'/trust/success', llc_formation:'/llc/success' };
+  function regenerateDoc(matter) {
+    const base = serviceSuccessUrls[matter.service_type];
+    if (!base) return alert('Regenerate not supported for this document type.');
+    const url = `${base}?matter_id=${matter.id}&regenerate=1`;
+    window.open(url, '_blank');
+  }
   const statusColors = { paid:'#059669', completed:'#059669', draft:'#94A3B8', pending_payment:'#D97706' };
 
   return (
@@ -214,6 +221,11 @@ export default function StaffDashboard() {
                             {m.status}
                           </span>
                           {m.tier && <span style={{ padding:'3px 10px', borderRadius:6, fontSize:11, fontWeight:600, background:'#F5F3FF', color:'#7C3AED' }}>{m.tier}</span>}
+                          {serviceSuccessUrls[m.service_type] && (
+                            <button onClick={() => regenerateDoc(m)} style={{ padding:'4px 10px', background:'#FFF7ED', color:'#C2410C', border:'1px solid #FED7AA', borderRadius:6, fontSize:11, fontWeight:600, cursor:'pointer' }}>
+                              🔄 Regenerate
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
