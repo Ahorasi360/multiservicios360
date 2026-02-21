@@ -130,13 +130,16 @@ export default function StaffDashboard() {
   }
 
   const fmt = (d) => d ? new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
-  const serviceLabels = { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC' };
-  const serviceColors = { general_poa:'#2563EB', limited_poa:'#7C3AED', living_trust:'#059669', llc_formation:'#D97706' };
-  const serviceSuccessUrls = { general_poa:'/poa/success', limited_poa:'/limited-poa/success', living_trust:'/trust/success', llc_formation:'/llc/success' };
+  const serviceLabels = { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC', simple_doc:'Simple Doc' };
+  const serviceColors = { general_poa:'#2563EB', limited_poa:'#7C3AED', living_trust:'#059669', llc_formation:'#D97706', simple_doc:'#0891B2' };
+  const serviceSuccessUrls = { general_poa:'/poa/success', limited_poa:'/limited-poa/success', living_trust:'/trust/success', llc_formation:'/llc/success', simple_doc:'/simple-doc/success' };
   function regenerateDoc(matter) {
     const base = serviceSuccessUrls[matter.service_type];
     if (!base) return alert('Regenerate not supported for this document type.');
-    const url = `${base}?matter_id=${matter.id}&regenerate=1`;
+    let url = `${base}?matter_id=${matter.id}&regenerate=1`;
+    if (matter.service_type === 'simple_doc' && matter.document_type) {
+      url += `&doc_type=${matter.document_type}`;
+    }
     window.open(url, '_blank');
   }
   const statusColors = { paid:'#059669', completed:'#059669', draft:'#94A3B8', pending_payment:'#D97706' };

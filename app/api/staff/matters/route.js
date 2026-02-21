@@ -27,6 +27,7 @@ export async function GET(request) {
       { name: 'limited_poa_matters', type: 'limited_poa' },
       { name: 'trust_matters', type: 'living_trust' },
       { name: 'llc_matters', type: 'llc_formation' },
+      { name: 'simple_doc_matters', type: 'simple_doc' },
     ];
 
     // Only query requested service or all
