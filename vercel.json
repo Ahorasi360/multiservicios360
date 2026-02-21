@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/vault-renewal",
+      "schedule": "0 10 * * *"
+    }
+  ]
+}

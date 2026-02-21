@@ -391,10 +391,7 @@ export async function POST(request) {
             premium_type: premiumType,
           };
 
-          if (premiumType === 'lifetime') {
-            updateData.premium_expires_at = null; // never expires
-            updateData.expires_at = new Date('2099-12-31').toISOString();
-          } else if (premiumType === 'annual') {
+          if (premiumType === 'annual') {
             const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
             updateData.premium_expires_at = expiresAt;
             updateData.expires_at = expiresAt;

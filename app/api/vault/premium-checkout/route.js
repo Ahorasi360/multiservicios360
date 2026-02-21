@@ -16,12 +16,6 @@ const VAULT_PLANS = {
     mode: 'subscription',
     interval: 'year',
   },
-  lifetime: {
-    amount: 9900,
-    name: 'Vault Premium - Lifetime',
-    nameEs: 'Bóveda Premium - De Por Vida',
-    mode: 'payment',
-  },
 };
 
 export async function POST(request) {
