@@ -26,7 +26,8 @@ export default function PartnerDashboard() {
       return;
     }
 
-    setPartner({ id: partnerId, business_name: partnerName });
+    const commissionRate = localStorage.getItem('partner_commission_rate') || '20';
+    setPartner({ id: partnerId, business_name: partnerName, commission_rate: commissionRate });
     fetchDashboardData(partnerId);
   }, []);
 
@@ -302,7 +303,7 @@ export default function PartnerDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-blue-100 text-sm">Your Commission Rate</p>
-                    <p className="text-3xl font-bold">20%</p>
+                    <p className="text-3xl font-bold">{partner?.commission_rate || 20}%</p>
                   </div>
                   <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

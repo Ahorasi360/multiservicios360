@@ -89,6 +89,78 @@ export async function POST(request) {
       }
 
       // -----------------------------------------------
+      // TRACK PARTNER (OFFICE) COMMISSION
+      // If this document came from a partner office,
+      // create a partner_referrals entry so the office
+      // sees their commission in their dashboard.
+      // -----------------------------------------------
+      try {
+        // Get the matter to find partner_id and client info
+        const { data: matter } = await supabase
+          .from(tableName)
+          .select('partner_id, client_name, client_email')
+          .eq('id', matterId)
+          .single();
+
+        if (matter?.partner_id) {
+          // Look up partner to get commission rate
+          const { data: partner } = await supabase
+            .from('partners')
+            .select('id, commission_rate')
+            .eq('id', matter.partner_id)
+            .single();
+
+          if (partner) {
+            const commRate = parseFloat(partner.commission_rate) || 20;
+            const commissionAmount = (totalPrice || 0) * (commRate / 100);
+
+            // Find client_id if exists in partner_clients
+            let clientId = null;
+            if (matter.client_email) {
+              const { data: client } = await supabase
+                .from('partner_clients')
+                .select('id')
+                .eq('partner_id', matter.partner_id)
+                .eq('client_email', matter.client_email)
+                .single();
+              if (client) clientId = client.id;
+            }
+
+            // Check if referral already exists for this matter
+            const { data: existingRef } = await supabase
+              .from('partner_referrals')
+              .select('id')
+              .eq('partner_id', matter.partner_id)
+              .eq('document_id', matterId)
+              .single();
+
+            if (!existingRef) {
+              const { error: refError } = await supabase
+                .from('partner_referrals')
+                .insert({
+                  partner_id: matter.partner_id,
+                  client_id: clientId,
+                  document_type: documentType,
+                  document_id: matterId,
+                  sale_amount: totalPrice || 0,
+                  commission_amount: commissionAmount,
+                  payment_method: 'stripe',
+                  status: 'pending',
+                });
+
+              if (refError) {
+                console.error('Partner referral creation error:', refError);
+              } else {
+                console.log(`Partner commission: $${commissionAmount.toFixed(2)} (${commRate}% of $${totalPrice}) for partner ${matter.partner_id}`);
+              }
+            }
+          }
+        }
+      } catch (partnerCommErr) {
+        console.error('Partner commission tracking error (non-critical):', partnerCommErr);
+      }
+
+      // -----------------------------------------------
       // TRACK SALES REP COMMISSION (automatic)
       // If this matter came from a partner, and that
       // partner was onboarded by a sales rep, give
