@@ -78,6 +78,21 @@ export async function PUT(request) {
     updateData.password_hash = hashPassword(password);
   }
 
+  // If approving a paid_pending_approval partner, send welcome email
+  let shouldSendWelcome = false;
+  let partnerBefore = null;
+  if (updateData.status === 'active') {
+    const { data: existing } = await supabaseAdmin
+      .from('partners')
+      .select('id, status, email, contact_name, business_name, temp_password, setup_fee_amount, registered_by_rep')
+      .eq('id', id)
+      .single();
+    if (existing?.status === 'paid_pending_approval') {
+      shouldSendWelcome = true;
+      partnerBefore = existing;
+    }
+  }
+
   const { data: partner, error } = await supabaseAdmin
     .from('partners')
     .update(updateData)
@@ -86,5 +101,52 @@ export async function PUT(request) {
     .single();
 
   if (error) return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+
+  // Send welcome email with credentials when approving
+  if (shouldSendWelcome && partnerBefore) {
+    try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://multiservicios360.net';
+      await sendWelcomeEmail({
+        to: partnerBefore.email,
+        name: partnerBefore.contact_name || partnerBefore.business_name,
+        role: 'partner',
+        loginUrl: `${siteUrl}/portal/login`,
+        email: partnerBefore.email,
+        password: partnerBefore.temp_password || 'Contact admin for password',
+        setupFee: partnerBefore.setup_fee_amount || 499,
+        membershipUrl: `${siteUrl}/portal/membership`,
+      });
+      console.log('Welcome email sent to approved partner:', partnerBefore.email);
+
+      // If registered by a sales rep, create the sales commission assignment
+      if (partnerBefore.registered_by_rep) {
+        const { data: repData } = await supabaseAdmin
+          .from('sales_reps')
+          .select('id, commission_rate, commission_duration_months')
+          .eq('id', partnerBefore.registered_by_rep)
+          .single();
+
+        if (repData) {
+          const startDate = new Date();
+          const endDate = new Date();
+          endDate.setMonth(endDate.getMonth() + (repData.commission_duration_months || 1));
+
+          await supabaseAdmin.from('sales_commissions').insert({
+            sales_rep_id: repData.id,
+            partner_id: id,
+            commission_rate: repData.commission_rate || 5,
+            duration_months: repData.commission_duration_months || 1,
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+            status: 'active',
+          });
+          console.log('Sales commission created for rep:', repData.id);
+        }
+      }
+    } catch (emailErr) {
+      console.error('Welcome email / commission error:', emailErr);
+    }
+  }
+
   return NextResponse.json({ success: true, partner });
 }

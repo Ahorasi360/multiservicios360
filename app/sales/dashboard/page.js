@@ -13,6 +13,7 @@ export default function SalesDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [message, setMessage] = useState('');
+  const [pendingOffices, setPendingOffices] = useState([]);
 
   // Change password
   const [showPwModal, setShowPwModal] = useState(false);
@@ -27,7 +28,16 @@ export default function SalesDashboard() {
     if (!id) { router.push('/sales/login'); return; }
     setRepId(id); setRepName(name || 'Sales Rep');
     fetchDashboard(id);
+    fetchPendingOffices(id);
   }, []);
+
+  async function fetchPendingOffices(id) {
+    try {
+      const res = await fetch('/api/sales/register-office', { headers: { 'x-sales-id': id || repId } });
+      const data = await res.json();
+      if (data.success) setPendingOffices(data.offices || []);
+    } catch (err) { console.error(err); }
+  }
 
   async function fetchDashboard(id) {
     setLoading(true);
@@ -107,6 +117,18 @@ export default function SalesDashboard() {
       )}
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: 20 }}>
+        {/* Register Office CTA */}
+        <button
+          onClick={() => router.push('/sales/register-office')}
+          style={{
+            width: '100%', padding: '18px 24px', marginBottom: 20, borderRadius: 14, border: 'none', cursor: 'pointer',
+            background: 'linear-gradient(135deg, #059669, #10B981)', color: '#fff',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+            fontSize: 17, fontWeight: 700, boxShadow: '0 4px 20px rgba(5,150,105,0.3)',
+          }}
+        >
+          🏢 Register New Office &amp; Process Payment
+        </button>
         {/* My Commission Card */}
         <div style={{ background: 'linear-gradient(135deg,#78350F,#D97706)', borderRadius: 16, padding: '24px 28px', marginBottom: 20, color: '#fff' }}>
           <div style={{ fontSize: 13, opacity: 0.7, marginBottom: 4 }}>Your Commission Terms</div>
@@ -142,12 +164,12 @@ export default function SalesDashboard() {
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-          {['overview', 'offices'].map(tab => (
+          {['overview', 'offices', 'registrations'].map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)} style={{
               padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
               background: activeTab === tab ? '#78350F' : '#fff', color: activeTab === tab ? '#fff' : '#475569',
               border: activeTab === tab ? 'none' : '1px solid #E2E8F0',
-            }}>{tab === 'overview' ? '📊 Overview' : '🏢 My Offices'}</button>
+            }}>{tab === 'overview' ? '📊 Overview' : tab === 'offices' ? '🏢 My Offices' : `📋 Registrations (${pendingOffices.length})`}</button>
           ))}
         </div>
 
@@ -203,6 +225,43 @@ export default function SalesDashboard() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Registrations Tab */}
+        {activeTab === 'registrations' && (
+          <div>
+            {pendingOffices.length === 0 ? (
+              <div style={{ background: '#fff', borderRadius: 12, padding: 40, textAlign: 'center', color: '#94A3B8', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
+                No registrations yet. Click &quot;Register New Office&quot; to get started.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {pendingOffices.map(o => {
+                  const statusColors = {
+                    pending_payment: { bg: '#FEF3C7', color: '#92400E', label: '⏳ Pending Payment' },
+                    paid_pending_approval: { bg: '#DBEAFE', color: '#1E40AF', label: '✅ Paid — Awaiting Approval' },
+                    active: { bg: '#DCFCE7', color: '#166534', label: '🟢 Active' },
+                    rejected: { bg: '#FEE2E2', color: '#991B1B', label: '❌ Rejected' },
+                  };
+                  const st = statusColors[o.status] || { bg: '#F1F5F9', color: '#64748B', label: o.status };
+                  return (
+                    <div key={o.id} style={{ background: '#fff', borderRadius: 10, padding: '18px 20px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', borderLeft: `4px solid ${st.color}` }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: 15, color: '#0F172A' }}>🏢 {o.business_name}</div>
+                          <div style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>
+                            {o.email} • {o.package_name} package • ${o.setup_fee_amount} • {fmtDate(o.created_at)}
+                          </div>
+                        </div>
+                        <span style={{ padding: '5px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, background: st.bg, color: st.color }}>{st.label}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

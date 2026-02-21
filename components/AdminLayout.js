@@ -9,6 +9,7 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊', exact: true },
   { href: '/admin/vault', label: 'Vault Manager', icon: '🔒' },
   { href: '/admin/partners', label: 'Partners', icon: '🤝' },
+  { href: '/admin/resources', label: 'Resources', icon: '📦' },
   { href: '/admin/professionals', label: 'Professionals', icon: '👔' },
   { href: '/admin/sales', label: 'Sales Team', icon: '💰' },
   { href: '/admin/staff', label: 'Staff Workers', icon: '👷' },

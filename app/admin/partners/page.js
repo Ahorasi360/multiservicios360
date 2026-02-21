@@ -161,7 +161,8 @@ export default function AdminPartnersPage() {
   const stats = {
     total: partners.length,
     active: partners.filter(p => p.status === 'active').length,
-    pending: partners.filter(p => p.status === 'pending').length,
+    pending_approval: partners.filter(p => p.status === 'paid_pending_approval').length,
+    pending: partners.filter(p => p.status === 'pending' || p.status === 'pending_payment').length,
     suspended: partners.filter(p => p.status === 'suspended').length,
   };
 
@@ -268,10 +269,10 @@ export default function AdminPartnersPage() {
         {/* Filter + Add Button */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-2">
-            {['all', 'active', 'pending', 'suspended'].map(f => (
+            {['all', 'paid_pending_approval', 'active', 'pending', 'suspended'].map(f => (
               <button key={f} onClick={() => setFilter(f)}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${filter === f ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>
-                {f === 'all' ? 'Todos' : f === 'active' ? 'Activos' : f === 'pending' ? 'Pendientes' : 'Suspendidos'}
+                {f === 'all' ? 'Todos' : f === 'paid_pending_approval' ? `🔔 Por Aprobar (${stats.pending_approval})` : f === 'active' ? 'Activos' : f === 'pending' ? 'Pendientes' : 'Suspendidos'}
               </button>
             ))}
           </div>
@@ -334,10 +335,11 @@ export default function AdminPartnersPage() {
                     <td className="px-6 py-4 text-center">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                         partner.status === 'active' ? 'bg-emerald-500/20 text-emerald-400' :
-                        partner.status === 'pending' ? 'bg-amber-500/20 text-amber-400' :
+                        partner.status === 'paid_pending_approval' ? 'bg-blue-500/20 text-blue-400' :
+                        partner.status === 'pending' || partner.status === 'pending_payment' ? 'bg-amber-500/20 text-amber-400' :
                         'bg-red-500/20 text-red-400'
                       }`}>
-                        {partner.status === 'active' ? 'Activo' : partner.status === 'pending' ? 'Pendiente' : 'Suspendido'}
+                        {partner.status === 'active' ? 'Activo' : partner.status === 'paid_pending_approval' ? '💳 Pagado - Por Aprobar' : partner.status === 'pending' || partner.status === 'pending_payment' ? 'Pendiente' : 'Suspendido'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">
@@ -362,6 +364,18 @@ export default function AdminPartnersPage() {
                             className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-medium hover:bg-emerald-500/30 transition-colors">
                             Aprobar
                           </button>
+                        )}
+                        {partner.status === 'paid_pending_approval' && (
+                          <>
+                            <button onClick={() => updateStatus(partner.id, 'active')}
+                              className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-medium hover:bg-emerald-500/30 transition-colors">
+                              ✅ Aprobar
+                            </button>
+                            <button onClick={() => { if(confirm('¿Rechazar esta oficina?')) updateStatus(partner.id, 'rejected'); }}
+                              className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-xs font-medium hover:bg-red-500/30 transition-colors">
+                              ❌ Rechazar
+                            </button>
+                          </>
                         )}
                         {partner.status === 'active' && (
                           <button onClick={() => updateStatus(partner.id, 'suspended')}
