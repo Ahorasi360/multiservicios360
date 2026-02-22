@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 export default function AdminPartnersPage() {
   const [partners, setPartners] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +46,11 @@ export default function AdminPartnersPage() {
   };
 
   useEffect(() => {
-    fetchPartners();
+    const saved = localStorage.getItem('adminPassword');
+    if (saved === 'MS360Admin2026!') {
+      setIsLoggedIn(true);
+      fetchPartners();
+    }
   }, []);
 
   async function fetchPartners() {
@@ -199,6 +206,34 @@ export default function AdminPartnersPage() {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-white text-xl">Cargando socios...</div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="bg-slate-800 rounded-2xl p-8 w-full max-w-sm border border-slate-700">
+          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-bold text-xl">MS</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white text-center mb-6">Admin Login</h1>
+          {loginError && <p className="text-red-400 text-sm text-center mb-4">{loginError}</p>}
+          <input
+            type="password"
+            placeholder="Admin password"
+            value={loginPassword}
+            onChange={e => setLoginPassword(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') { if (loginPassword === 'MS360Admin2026!') { localStorage.setItem('adminPassword', loginPassword); setIsLoggedIn(true); fetchPartners(); } else { setLoginError('Invalid password'); } } }}
+            className="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-blue-500"
+          />
+          <button
+            onClick={() => { if (loginPassword === 'MS360Admin2026!') { localStorage.setItem('adminPassword', loginPassword); setIsLoggedIn(true); fetchPartners(); } else { setLoginError('Invalid password'); } }}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors"
+          >
+            Login
+          </button>
+        </div>
       </div>
     );
   }
