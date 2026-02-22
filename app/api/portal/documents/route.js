@@ -5,8 +5,21 @@ import { NextResponse } from 'next/server';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
+
+const SERVICE_LABELS = {
+  general_poa: 'General POA',
+  limited_poa: 'Limited POA',
+  living_trust: 'Living Trust',
+  llc_formation: 'LLC Formation',
+  authorization_letter: 'Travel Authorization',
+  bill_of_sale: 'Bill of Sale',
+  affidavit: 'Affidavit',
+  promissory_note: 'Promissory Note',
+  guardianship_designation: 'Guardianship Designation',
+  revocation_poa: 'POA Revocation',
+};
 
 export async function GET(request) {
   try {
@@ -14,95 +27,66 @@ export async function GET(request) {
     const partnerId = searchParams.get('partner_id');
 
     if (!partnerId) {
-      return NextResponse.json(
-        { success: false, error: 'Partner ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: 'Partner ID is required' }, { status: 400 });
     }
 
-    // Get all referrals for this partner (these link to documents)
-    const { data: referrals, error: referralsError } = await supabase
+    let allDocs = [];
+
+    // Query all matter tables directly by partner_id
+    const tables = [
+      { name: 'poa_matters', type: 'general_poa' },
+      { name: 'limited_poa_matters', type: 'limited_poa' },
+      { name: 'trust_matters', type: 'living_trust' },
+      { name: 'llc_matters', type: 'llc_formation' },
+      { name: 'simple_doc_matters', type: 'simple_doc' },
+    ];
+
+    for (const table of tables) {
+      const { data, error } = await supabase
+        .from(table.name)
+        .select('id, client_name, client_email, status, total_price, created_at, document_type')
+        .eq('partner_id', partnerId)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        allDocs.push(...data.map(m => ({
+          id: m.id,
+          document_id: m.id,
+          document_type: m.document_type || table.type,
+          service_type: m.document_type || table.type,
+          service_label: SERVICE_LABELS[m.document_type || table.type] || table.type,
+          client_name: m.client_name || '—',
+          client_email: m.client_email || null,
+          status: m.status || 'pending',
+          total_price: m.total_price || 0,
+          created_at: m.created_at,
+        })));
+      }
+    }
+
+    // Also pull from partner_referrals for commission data
+    const { data: referrals } = await supabase
       .from('partner_referrals')
-      .select('*')
-      .eq('partner_id', partnerId)
-      .order('created_at', { ascending: false });
+      .select('document_id, commission_amount, status')
+      .eq('partner_id', partnerId);
 
-    if (referralsError) {
-      console.error('Fetch referrals error:', referralsError);
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch documents' },
-        { status: 500 }
-      );
-    }
+    const referralMap = {};
+    (referrals || []).forEach(r => { referralMap[r.document_id] = r; });
 
-    // Get client names for each referral
-    const clientIds = [...new Set(referrals?.map(r => r.client_id).filter(Boolean))];
-    
-    let clientsMap = {};
-    if (clientIds.length > 0) {
-      const { data: clients } = await supabase
-        .from('partner_clients')
-        .select('id, client_name, client_email')
-        .in('id', clientIds);
-      
-      clients?.forEach(c => {
-        clientsMap[c.id] = c;
-      });
-    }
+    // Merge commission data
+    allDocs = allDocs.map(doc => ({
+      ...doc,
+      commission_amount: referralMap[doc.id]?.commission_amount || null,
+      commission_status: referralMap[doc.id]?.status || null,
+    }));
 
-    // Fetch actual document details from poa_matters and limited_poa_matters
-    const documents = await Promise.all(
-      (referrals || []).map(async (referral) => {
-        let docDetails = null;
+    // Sort by newest first
+    allDocs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-        // Try to get document details based on type
-        if (referral.document_type === 'general_poa' && referral.document_id) {
-          const { data } = await supabase
-            .from('poa_matters')
-            .select('id, client_name, client_email, status, total_price, review_tier, created_at')
-            .eq('id', referral.document_id)
-            .single();
-          docDetails = data;
-        } else if (referral.document_type === 'limited_poa' && referral.document_id) {
-          const { data } = await supabase
-            .from('limited_poa_matters')
-            .select('id, client_name, client_email, status, total_price, review_tier, category, created_at')
-            .eq('id', referral.document_id)
-            .single();
-          docDetails = data;
-        }
-
-        // Get client info
-        const client = clientsMap[referral.client_id] || {};
-
-        return {
-          id: referral.id,
-          document_id: referral.document_id,
-          document_type: referral.document_type,
-          client_id: referral.client_id,
-          client_name: docDetails?.client_name || client.client_name || 'Unknown',
-          client_email: docDetails?.client_email || client.client_email || null,
-          status: docDetails?.status || 'pending_payment',
-          total_price: docDetails?.total_price || referral.sale_amount || 0,
-          review_tier: docDetails?.review_tier || null,
-          category: docDetails?.category || null,
-          commission_amount: referral.commission_amount,
-          commission_status: referral.status,
-          created_at: referral.created_at
-        };
-      })
-    );
-
-    return NextResponse.json({
-      success: true,
-      documents
-    });
+    return NextResponse.json({ success: true, documents: allDocs });
 
   } catch (error) {
     console.error('Documents GET error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Server error' }, { status: 500 });
   }
 }
