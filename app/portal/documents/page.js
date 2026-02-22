@@ -69,10 +69,26 @@ export default function PartnerDocuments() {
     const styles = {
       general_poa: 'bg-blue-500/20 text-blue-400',
       limited_poa: 'bg-green-500/20 text-green-400',
+      living_trust: 'bg-purple-500/20 text-purple-400',
+      llc_formation: 'bg-yellow-500/20 text-yellow-400',
+      authorization_letter: 'bg-pink-500/20 text-pink-400',
+      bill_of_sale: 'bg-orange-500/20 text-orange-400',
+      affidavit: 'bg-cyan-500/20 text-cyan-400',
+      promissory_note: 'bg-red-500/20 text-red-400',
+      guardianship_designation: 'bg-teal-500/20 text-teal-400',
+      revocation_poa: 'bg-slate-500/20 text-slate-400',
     };
     const labels = {
       general_poa: 'General POA',
       limited_poa: 'Limited POA',
+      living_trust: 'Living Trust',
+      llc_formation: 'LLC Formation',
+      authorization_letter: 'Travel Authorization',
+      bill_of_sale: 'Bill of Sale',
+      affidavit: 'Affidavit',
+      promissory_note: 'Promissory Note',
+      guardianship_designation: 'Guardianship',
+      revocation_poa: 'POA Revocation',
     };
     return (
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[type] || 'bg-slate-500/20 text-slate-400'}`}>
@@ -143,31 +159,24 @@ export default function PartnerDocuments() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-6">
-          <div className="flex bg-slate-800 rounded-lg p-1">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                filter === 'all' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              All Types
-            </button>
-            <button
-              onClick={() => setFilter('general_poa')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                filter === 'general_poa' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              General POA
-            </button>
-            <button
-              onClick={() => setFilter('limited_poa')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                filter === 'limited_poa' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Limited POA
-            </button>
+          <div className="flex flex-wrap bg-slate-800 rounded-lg p-1 gap-1">
+            {[
+              { key: 'all', label: 'All Types' },
+              { key: 'general_poa', label: 'General POA' },
+              { key: 'limited_poa', label: 'Limited POA' },
+              { key: 'living_trust', label: 'Living Trust' },
+              { key: 'llc_formation', label: 'LLC' },
+              { key: 'authorization_letter', label: 'Travel Auth' },
+              { key: 'bill_of_sale', label: 'Bill of Sale' },
+              { key: 'affidavit', label: 'Affidavit' },
+              { key: 'promissory_note', label: 'Promissory' },
+              { key: 'guardianship_designation', label: 'Guardianship' },
+            ].map(t => (
+              <button key={t.key} onClick={() => setFilter(t.key)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${filter === t.key ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'}`}>
+                {t.label}
+              </button>
+            ))}
           </div>
 
           <div className="flex bg-slate-800 rounded-lg p-1">
