@@ -15,7 +15,7 @@ const T = {
     hero: {
       badge: 'Bóveda Digital',
       title: 'Bóveda Premium',
-      subtitle: 'Acceso permanente a todos sus documentos legales. Descargue, consulte y comparta cuando lo necesite.',
+      subtitle: 'Acceso extendido a todos sus documentos legales mientras su membresía esté activa. Descargue, consulte y comparta cuando lo necesite.',
     },
     features: [
       { icon: '♾️', title: 'Acceso Permanente', desc: 'Sus documentos disponibles para siempre. Sin fecha de vencimiento.' },
@@ -32,8 +32,8 @@ const T = {
       freePrice: 'Incluida',
       included: 'Incluida con cada documento',
       features: [
-        { label: 'Acceso a documentos', free: '90 días', premium: 'Permanente' },
-        { label: 'Descargas', free: 'Ilimitadas (90 días)', premium: 'Ilimitadas (siempre)' },
+        { label: 'Acceso a documentos', free: '90 días', premium: 'Renovable (mensual o anual)' },
+        { label: 'Descargas', free: 'Ilimitadas (90 días)', premium: 'Ilimitadas (siempre activo)' },
         { label: 'Formato PDF bilingüe', free: true, premium: true },
         { label: 'Código de acceso único', free: true, premium: true },
         { label: 'Acceso después de 90 días', free: false, premium: true },
@@ -50,8 +50,8 @@ const T = {
         { name: 'Anual', price: '$49', period: '/año', desc: 'Ahorre $10.88 al año. El mejor valor.', badge: 'Mejor Valor', savings: 'Ahorre 18%' },
       ],
       cta: 'Activar Premium',
-      comingSoon: 'Próximamente',
-      comingSoonNote: 'La Bóveda Premium estará disponible muy pronto. Mientras tanto, todos los documentos incluyen 90 días de acceso a la Bóveda Digital estándar.',
+      comingSoon: 'Activar Ahora',
+      comingSoonNote: '',
     },
     howItWorks: {
       title: '¿Cómo Funciona?',
@@ -83,7 +83,7 @@ const T = {
     hero: {
       badge: 'Digital Vault',
       title: 'Vault Premium',
-      subtitle: 'Permanent access to all your legal documents. Download, view, and share whenever you need them.',
+      subtitle: 'Extended access to all your legal documents while your membership is active. Download, view, and share whenever you need them.',
     },
     features: [
       { icon: '♾️', title: 'Permanent Access', desc: 'Your documents available forever. No expiration date.' },
@@ -100,8 +100,8 @@ const T = {
       freePrice: 'Included',
       included: 'Included with every document',
       features: [
-        { label: 'Document access', free: '90 days', premium: 'Permanent' },
-        { label: 'Downloads', free: 'Unlimited (90 days)', premium: 'Unlimited (always)' },
+        { label: 'Document access', free: '90 days', premium: 'Renewable (monthly or annual)' },
+        { label: 'Downloads', free: 'Unlimited (90 days)', premium: 'Unlimited (while active)' },
         { label: 'Bilingual PDF format', free: true, premium: true },
         { label: 'Unique access code', free: true, premium: true },
         { label: 'Access after 90 days', free: false, premium: true },
@@ -118,8 +118,8 @@ const T = {
         { name: 'Annual', price: '$49', period: '/year', desc: 'Save $10.88 per year. Best value.', badge: 'Best Value', savings: 'Save 18%' },
       ],
       cta: 'Activate Premium',
-      comingSoon: 'Coming Soon',
-      comingSoonNote: 'Vault Premium will be available very soon. In the meantime, all documents include 90 days of standard Digital Vault access.',
+      comingSoon: 'Activate Now',
+      comingSoonNote: '',
     },
     howItWorks: {
       title: 'How It Works',
