@@ -1,5 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import Link from 'next/link';
 
 const GlobeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>);
@@ -148,6 +150,37 @@ const T = {
 export default function BovedaPremiumPage() {
   const [language, setLanguage] = useState('es');
   const [openFaq, setOpenFaq] = useState(null);
+  const [upgrading, setUpgrading] = useState(false);
+  const searchParams = useSearchParams();
+  const vaultToken = searchParams.get('token') || searchParams.get('vault_token_id') || '';
+  const clientEmail = searchParams.get('email') || '';
+
+  async function handleUpgrade(plan) {
+    if (!vaultToken) {
+      alert(language === 'es'
+        ? 'Por favor acceda a su bóveda primero para activar Premium.'
+        : 'Please access your vault first to activate Premium.');
+      return;
+    }
+    setUpgrading(true);
+    try {
+      const res = await fetch('/api/vault/premium-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, vault_token_id: vaultToken, client_email: clientEmail, language }),
+      });
+      const data = await res.json();
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Error processing request');
+        setUpgrading(false);
+      }
+    } catch (err) {
+      alert('Network error. Please try again.');
+      setUpgrading(false);
+    }
+  }
   const t = T[language];
 
   useEffect(() => {
@@ -280,17 +313,14 @@ export default function BovedaPremiumPage() {
                   </div>
                 )}
                 <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px', lineHeight: '1.5' }}>{plan.desc}</p>
-                <button disabled style={{ width: '100%', padding: '12px', backgroundColor: '#E2E8F0', color: '#64748B', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'not-allowed' }}>
-                  {t.pricing.comingSoon}
+                <button
+                  onClick={() => handleUpgrade(i === 0 ? 'monthly' : 'annual')}
+                  disabled={upgrading}
+                  style={{ width: '100%', padding: '12px', backgroundColor: upgrading ? '#94A3B8' : '#1E3A8A', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: upgrading ? 'not-allowed' : 'pointer' }}>
+                  {upgrading ? '...' : t.pricing.cta}
                 </button>
               </div>
             ))}
-          </div>
-
-          <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #F59E0B', borderRadius: '8px', padding: '16px 24px', maxWidth: '700px', margin: '0 auto' }}>
-            <p style={{ fontSize: '14px', color: '#92400E', margin: 0, lineHeight: '1.5' }}>
-              {t.pricing.comingSoonNote}
-            </p>
           </div>
         </div>
       </section>
