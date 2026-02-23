@@ -1,8 +1,62 @@
-// app/portal/dashboard/page.js
-
+// app/portal/dashboard/page.js - BILINGUAL ES/EN
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+
+const T = {
+  es: {
+    brand: 'Portal de Socios', partnerAccount: 'Cuenta de Socio', password: '🔑 Contraseña',
+    membership: '💳 Membresía', signOut: 'Cerrar Sesión', dashboard: 'Panel', myClients: 'Mis Clientes',
+    documents: 'Documentos', earnings: 'Ganancias', welcome: '¡Bienvenido de nuevo,',
+    overview: 'Aquí tienes un resumen de tu negocio', totalClients: 'Total de Clientes',
+    registeredClients: 'Clientes registrados', documentsCreated: 'Documentos Creados',
+    docTypes: 'Poderes, Fideicomisos, LLC y más', totalEarnings: 'Ganancias Totales',
+    lifetimeCommissions: 'Comisiones acumuladas', pendingPayout: 'Pago Pendiente',
+    nextPayment: 'Próximo ciclo de pago', quickActions: 'Acciones Rápidas',
+    addNewClient: 'Agregar Nuevo Cliente', registerClient: 'Registrar un nuevo cliente',
+    createDocument: 'Crear Documento', startDocument: 'Iniciar un nuevo documento',
+    viewEarnings: 'Ver Ganancias', trackCommissions: 'Rastrear comisiones',
+    commissionRate: 'Tu Tasa de Comisión', perDocument: 'Por cada documento completado',
+    recentClients: 'Clientes Recientes', latestClients: 'Tus últimos clientes registrados',
+    viewAll: 'Ver todos →', noClients: 'Sin clientes aún',
+    noClientsDesc: 'Comienza agregando tu primer cliente', addFirstClient: 'Agregar primer cliente',
+    noContact: 'Sin información de contacto', createDoc: 'Crear doc →',
+    terms: 'Términos', privacy: 'Privacidad', support: 'Soporte',
+    changePasswordTitle: '🔑 Cambiar Contraseña', currentPassword: 'Contraseña Actual',
+    newPassword: 'Nueva Contraseña', confirmPassword: 'Confirmar Nueva Contraseña',
+    cancel: 'Cancelar', update: 'Actualizar Contraseña', saving: 'Guardando...',
+    passwordMismatch: '❌ Las contraseñas no coinciden',
+    passwordShort: '❌ La contraseña debe tener al menos 6 caracteres',
+    passwordSuccess: '✅ Contraseña actualizada exitosamente', passwordError: '❌ Error al actualizar',
+    loading: 'Cargando panel...',
+  },
+  en: {
+    brand: 'Partner Portal', partnerAccount: 'Partner Account', password: '🔑 Password',
+    membership: '💳 Membership', signOut: 'Sign Out', dashboard: 'Dashboard', myClients: 'My Clients',
+    documents: 'Documents', earnings: 'Earnings', welcome: 'Welcome back,',
+    overview: "Here's an overview of your business performance", totalClients: 'Total Clients',
+    registeredClients: 'Registered clients', documentsCreated: 'Documents Created',
+    docTypes: 'POAs, Trusts, LLCs & Legal docs', totalEarnings: 'Total Earnings',
+    lifetimeCommissions: 'Lifetime commissions', pendingPayout: 'Pending Payout',
+    nextPayment: 'Next payment cycle', quickActions: 'Quick Actions',
+    addNewClient: 'Add New Client', registerClient: 'Register a new client',
+    createDocument: 'Create Document', startDocument: 'Start a new document',
+    viewEarnings: 'View Earnings', trackCommissions: 'Track commissions',
+    commissionRate: 'Your Commission Rate', perDocument: 'On every completed document',
+    recentClients: 'Recent Clients', latestClients: 'Your latest registered clients',
+    viewAll: 'View all →', noClients: 'No clients yet',
+    noClientsDesc: 'Start by adding your first client', addFirstClient: 'Add your first client',
+    noContact: 'No contact info', createDoc: 'Create doc →',
+    terms: 'Terms', privacy: 'Privacy', support: 'Support',
+    changePasswordTitle: '🔑 Change Password', currentPassword: 'Current Password',
+    newPassword: 'New Password', confirmPassword: 'Confirm New Password',
+    cancel: 'Cancel', update: 'Update Password', saving: 'Saving...',
+    passwordMismatch: '❌ Passwords do not match',
+    passwordShort: '❌ Password must be at least 6 characters',
+    passwordSuccess: '✅ Password updated successfully', passwordError: '❌ Error updating',
+    loading: 'Loading dashboard...',
+  }
+};
 
 export default function PartnerDashboard() {
   const router = useRouter();
@@ -16,18 +70,26 @@ export default function PartnerDashboard() {
   const [confirmPw, setConfirmPw] = useState('');
   const [pwSaving, setPwSaving] = useState(false);
   const [pwMessage, setPwMessage] = useState('');
+  const [lang, setLang] = useState('es');
+
+  const t = T[lang];
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('portal_lang') || 'es';
+    setLang(savedLang);
     const partnerId = localStorage.getItem('partner_id');
     const partnerName = localStorage.getItem('partner_name');
-    
-    if (!partnerId) {
-      router.push('/portal/login');
-      return;
-    }
-
+    if (!partnerId) { router.push('/portal/login'); return; }
     const commissionRate = localStorage.getItem('partner_commission_rate') || '20';
     setPartner({ id: partnerId, business_name: partnerName, commission_rate: commissionRate });
+    fetchDashboardData(partnerId);
+  }, []);
+
+  const toggleLang = () => {
+    const next = lang === 'es' ? 'en' : 'es';
+    setLang(next);
+    localStorage.setItem('portal_lang', next);
+  };
     fetchDashboardData(partnerId);
   }, []);
 
@@ -55,34 +117,32 @@ export default function PartnerDashboard() {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    if (newPw !== confirmPw) { setPwMessage('❌ Passwords do not match'); return; }
-    if (newPw.length < 6) { setPwMessage('❌ Password must be at least 6 characters'); return; }
+    if (newPw !== confirmPw) { setPwMessage(t.passwordMismatch); return; }
+    if (newPw.length < 6) { setPwMessage(t.passwordShort); return; }
     setPwSaving(true);
     try {
       const res = await fetch('/api/portal/change-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ partner_id: partner.id, current_password: currentPw, new_password: newPw }),
       });
       const data = await res.json();
       if (data.success) {
-        setPwMessage('✅ Password updated successfully');
+        setPwMessage(t.passwordSuccess);
         setTimeout(() => { setShowPwModal(false); setCurrentPw(''); setNewPw(''); setConfirmPw(''); setPwMessage(''); }, 1500);
-      } else { setPwMessage('❌ ' + (data.error || 'Failed to update')); }
-    } catch (err) { setPwMessage('❌ Error: ' + err.message); }
+      } else { setPwMessage(t.passwordError + ': ' + (data.error || '')); }
+    } catch (err) { setPwMessage(t.passwordError + ': ' + err.message); }
     setPwSaving(false);
   };
 
-  const formatMoney = (amount) => {
-    return '$' + (amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
-  };
+  const formatMoney = (amount) => '$' + (amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
+  const formatDate = (d) => new Date(d).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { month: 'short', day: 'numeric' });
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading dashboard...</p>
+          <p className="mt-4 text-slate-600">{lang === 'es' ? 'Cargando panel...' : 'Loading dashboard...'}</p>
         </div>
       </div>
     );
@@ -102,7 +162,7 @@ export default function PartnerDashboard() {
                 </div>
                 <div className="ml-3">
                   <h1 className="text-xl font-bold text-slate-800">Multi Servicios 360</h1>
-                  <p className="text-xs text-slate-500">Partner Portal</p>
+                  <p className="text-xs text-slate-500">{t.brand}</p>
                 </div>
               </div>
             </div>
@@ -118,31 +178,35 @@ export default function PartnerDashboard() {
               <div className="flex items-center space-x-3">
                 <div className="text-right hidden sm:block">
                   <p className="text-sm font-medium text-slate-800">{partner?.business_name}</p>
-                  <p className="text-xs text-slate-500">Partner Account</p>
+                  <p className="text-xs text-slate-500">{t.partnerAccount}</p>
                 </div>
                 <button
                   onClick={() => setShowPwModal(true)}
                   className="px-4 py-2 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                 >
-                  🔑 Password
+                  {t.password}
                 </button>
                 <button
                   onClick={() => window.location.href = '/portal/membership'}
                   className="px-4 py-2 text-sm text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                 >
-                  💳 Membership
+                  {t.membership}
                 </button>
                 <button
                   onClick={() => router.push('/portal/change-password')}
                   className="px-4 py-2 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                 >
-                  🔒 Change Password
+                  🔒
+                </button>
+                <button onClick={toggleLang}
+                  className="px-3 py-2 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
+                  {lang === 'es' ? 'EN' : 'ES'}
                 </button>
                 <button
                   onClick={handleLogout}
                   className="px-4 py-2 text-sm text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 >
-                  Sign Out
+                  {t.signOut}
                 </button>
               </div>
             </div>
@@ -154,39 +218,30 @@ export default function PartnerDashboard() {
       <nav className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-1">
-            <button
-              onClick={() => router.push('/portal/dashboard')}
-              className="px-4 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
-            >
-              Dashboard
+            <button onClick={() => router.push('/portal/dashboard')}
+              className="px-4 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
+              {t.dashboard}
             </button>
-            <button
-              onClick={() => router.push('/portal/clients')}
-              className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300"
-            >
-              My Clients
+            <button onClick={() => router.push('/portal/clients')}
+              className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">
+              {t.myClients}
             </button>
-            <button
-              onClick={() => router.push('/portal/documents')}
-              className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300"
-            >
-              Documents
+            <button onClick={() => router.push('/portal/documents')}
+              className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">
+              {t.documents}
             </button>
-            <button
-              onClick={() => router.push('/portal/earnings')}
-              className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300"
-            >
-              Earnings
+            <button onClick={() => router.push('/portal/earnings')}
+              className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">
+              {t.earnings}
             </button>
           </div>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-800">Welcome back, {partner?.business_name}!</h2>
-          <p className="text-slate-600 mt-1">Here's an overview of your business performance</p>
+          <h2 className="text-2xl font-bold text-slate-800">{t.welcome} {partner?.business_name}!</h2>
+          <p className="text-slate-600 mt-1">{t.overview}</p>
         </div>
 
         {/* Stats Cards */}
@@ -194,9 +249,9 @@ export default function PartnerDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Total Clients</p>
+                <p className="text-sm font-medium text-slate-500">{t.totalClients}</p>
                 <p className="text-3xl font-bold text-slate-800 mt-1">{stats?.totalClients || 0}</p>
-                <p className="text-xs text-slate-400 mt-1">Registered clients</p>
+                <p className="text-xs text-slate-400 mt-1">{t.registeredClients}</p>
               </div>
               <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center">
                 <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,9 +264,9 @@ export default function PartnerDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Documents Created</p>
+                <p className="text-sm font-medium text-slate-500">{t.documentsCreated}</p>
                 <p className="text-3xl font-bold text-slate-800 mt-1">{stats?.totalDocuments || 0}</p>
-               <p className="text-xs text-slate-400 mt-1">POAs, Trusts, LLCs & Legal docs</p>              </div>
+               <p className="text-xs text-slate-400 mt-1">{t.docTypes}</p>              </div>
               <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center">
                 <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -223,9 +278,9 @@ export default function PartnerDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Total Earnings</p>
+                <p className="text-sm font-medium text-slate-500">{t.totalEarnings}</p>
                 <p className="text-3xl font-bold text-emerald-600 mt-1">{formatMoney(stats?.totalEarnings)}</p>
-                <p className="text-xs text-slate-400 mt-1">Lifetime commissions</p>
+                <p className="text-xs text-slate-400 mt-1">{t.lifetimeCommissions}</p>
               </div>
               <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center">
                 <svg className="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,9 +293,9 @@ export default function PartnerDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Pending Payout</p>
+                <p className="text-sm font-medium text-slate-500">{t.pendingPayout}</p>
                 <p className="text-3xl font-bold text-amber-600 mt-1">{formatMoney(stats?.pendingPayout)}</p>
-                <p className="text-xs text-slate-400 mt-1">Next payment cycle</p>
+                <p className="text-xs text-slate-400 mt-1">{t.nextPayment}</p>
               </div>
               <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center">
                 <svg className="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,7 +311,7 @@ export default function PartnerDashboard() {
           {/* Quick Actions */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-semibold text-slate-800 mb-4">{t.quickActions}</h3>
               <div className="space-y-3">
                 <button
                   onClick={() => router.push('/portal/clients')}
@@ -268,11 +323,10 @@ export default function PartnerDashboard() {
                     </svg>
                   </div>
                   <div className="ml-4 text-left">
-                    <p className="font-medium text-slate-800">Add New Client</p>
-                    <p className="text-xs text-slate-500">Register a new client</p>
+                    <p className="font-medium text-slate-800">{t.addNewClient}</p>
+                    <p className="text-xs text-slate-500">{t.registerClient}</p>
                   </div>
                 </button>
-
                 <button
                   onClick={() => router.push('/portal/new-document')}
                   className="w-full flex items-center p-4 bg-green-50 hover:bg-green-100 rounded-xl transition-colors group"
@@ -283,11 +337,10 @@ export default function PartnerDashboard() {
                     </svg>
                   </div>
                   <div className="ml-4 text-left">
-                    <p className="font-medium text-slate-800">Create Document</p>
-                    <p className="text-xs text-slate-500">Start a new document</p>
+                    <p className="font-medium text-slate-800">{t.createDocument}</p>
+                    <p className="text-xs text-slate-500">{t.startDocument}</p>
                   </div>
                 </button>
-
                 <button
                   onClick={() => router.push('/portal/earnings')}
                   className="w-full flex items-center p-4 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-colors group"
@@ -298,17 +351,15 @@ export default function PartnerDashboard() {
                     </svg>
                   </div>
                   <div className="ml-4 text-left">
-                    <p className="font-medium text-slate-800">View Earnings</p>
-                    <p className="text-xs text-slate-500">Track commissions</p>
+                    <p className="font-medium text-slate-800">{t.viewEarnings}</p>
+                    <p className="text-xs text-slate-500">{t.trackCommissions}</p>
                   </div>
                 </button>
               </div>
-
-              {/* Commission Info */}
               <div className="mt-6 p-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-100 text-sm">Your Commission Rate</p>
+                    <p className="text-blue-100 text-sm">{t.commissionRate}</p>
                     <p className="text-3xl font-bold">{partner?.commission_rate || 20}%</p>
                   </div>
                   <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -327,14 +378,11 @@ export default function PartnerDashboard() {
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200">
               <div className="p-6 border-b border-slate-100 flex justify-between items-center">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800">Recent Clients</h3>
-                  <p className="text-sm text-slate-500">Your latest registered clients</p>
+                  <h3 className="text-lg font-semibold text-slate-800">{t.recentClients}</h3>
+                  <p className="text-sm text-slate-500">{t.latestClients}</p>
                 </div>
-                <button
-                  onClick={() => router.push('/portal/clients')}
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  View all →
+                <button onClick={() => router.push('/portal/clients')} className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                  {t.viewAll}
                 </button>
               </div>
               
@@ -345,13 +393,11 @@ export default function PartnerDashboard() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </div>
-                  <h4 className="text-slate-800 font-medium mb-1">No clients yet</h4>
-                  <p className="text-slate-500 text-sm mb-4">Start by adding your first client</p>
-                  <button
-                    onClick={() => router.push('/portal/clients')}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                  >
-                    Add your first client
+                  <h4 className="text-slate-800 font-medium mb-1">{t.noClients}</h4>
+                  <p className="text-slate-500 text-sm mb-4">{t.noClientsDesc}</p>
+                  <button onClick={() => router.push('/portal/clients')}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                    {t.addFirstClient}
                   </button>
                 </div>
               ) : (
@@ -366,18 +412,16 @@ export default function PartnerDashboard() {
                         </div>
                         <div className="ml-4">
                           <p className="font-medium text-slate-800">{client.client_name}</p>
-                          <p className="text-sm text-slate-500">{client.client_email || client.client_phone || 'No contact info'}</p>
+                          <p className="text-sm text-slate-500">{client.client_email || client.client_phone || t.noContact}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="text-sm text-slate-500">
-                          {new Date(client.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {new Date(client.created_at).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { month: 'short', day: 'numeric' })}
                         </p>
-                        <button
-                          onClick={() => router.push(`/portal/new-document?client_id=${client.id}`)}
-                          className="text-xs text-blue-600 hover:text-blue-700 font-medium"
-                        >
-                          Create doc →
+                        <button onClick={() => router.push(`/portal/new-document?client_id=${client.id}`)}
+                          className="text-xs text-blue-600 hover:text-blue-700 font-medium">
+                          {t.createDoc}
                         </button>
                       </div>
                     </div>
@@ -399,9 +443,9 @@ export default function PartnerDashboard() {
               <a href="https://multiservicios360.net" className="hover:text-blue-600">multiservicios360.net</a>
             </div>
             <div className="flex items-center space-x-4">
-              <a href="/terms" className="hover:text-blue-600">Terms</a>
-              <a href="/privacy" className="hover:text-blue-600">Privacy</a>
-              <a href="mailto:support@multiservicios360.net" className="hover:text-blue-600">Support</a>
+              <a href="/terms" className="hover:text-blue-600">{t.terms}</a>
+              <a href="/privacy" className="hover:text-blue-600">{t.privacy}</a>
+              <a href="mailto:support@multiservicios360.net" className="hover:text-blue-600">{t.support}</a>
             </div>
           </div>
         </footer>
@@ -411,30 +455,30 @@ export default function PartnerDashboard() {
       {showPwModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-7 max-w-md w-full shadow-2xl">
-            <h2 className="text-lg font-bold text-slate-800 mb-4">🔑 Change Password</h2>
+            <h2 className="text-lg font-bold text-slate-800 mb-4">{t.changePasswordTitle}</h2>
             {pwMessage && <p className={`text-sm mb-3 ${pwMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>{pwMessage}</p>}
             <form onSubmit={handleChangePassword}>
               <div className="mb-3">
-                <label className="block text-sm font-medium text-slate-600 mb-1">Current Password</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">{t.currentPassword}</label>
                 <input type="password" required value={currentPw} onChange={e=>setCurrentPw(e.target.value)}
                   className="w-full px-4 py-2.5 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none" />
               </div>
               <div className="mb-3">
-                <label className="block text-sm font-medium text-slate-600 mb-1">New Password</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">{t.newPassword}</label>
                 <input type="password" required value={newPw} onChange={e=>setNewPw(e.target.value)} minLength={6}
                   className="w-full px-4 py-2.5 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none" />
               </div>
               <div className="mb-5">
-                <label className="block text-sm font-medium text-slate-600 mb-1">Confirm New Password</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">{t.confirmPassword}</label>
                 <input type="password" required value={confirmPw} onChange={e=>setConfirmPw(e.target.value)}
                   className="w-full px-4 py-2.5 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none" />
               </div>
               <div className="flex gap-3">
                 <button type="button" onClick={()=>{setShowPwModal(false);setCurrentPw('');setNewPw('');setConfirmPw('');setPwMessage('');}}
-                  className="flex-1 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-medium hover:bg-slate-200">Cancel</button>
+                  className="flex-1 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-medium hover:bg-slate-200">{t.cancel}</button>
                 <button type="submit" disabled={pwSaving}
                   className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 disabled:opacity-50">
-                  {pwSaving ? 'Saving...' : 'Update Password'}
+                  {pwSaving ? t.saving : t.update}
                 </button>
               </div>
             </form>
