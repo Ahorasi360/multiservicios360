@@ -312,6 +312,9 @@ export default function ContactClient({ lang: initialLang = 'es' }) {
             <Link href="/llc" style={{ padding: '10px 20px', background: '#8B5CF6', color: '#fff', textDecoration: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700' }}>
               {lang === 'es' ? 'Formación de LLC' : 'LLC Formation'} →
             </Link>
+            <Link href="/mas-servicios" style={{ padding: '10px 20px', background: '#6366F1', color: '#fff', textDecoration: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700' }}>
+              {lang === 'es' ? 'Más Servicios' : 'More Services'} →
+            </Link>
             <Link href="/blog" style={{ padding: '10px 20px', background: '#0F172A', color: '#fff', textDecoration: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700' }}>
               Blog →
             </Link>

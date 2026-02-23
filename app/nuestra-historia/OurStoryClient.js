@@ -226,6 +226,12 @@ const SERVICES = [
   { name: { es: 'Poder Notarial Limitado', en: 'Limited Power of Attorney' }, href: '/limited-poa', price: '$99', color: '#F59E0B', icon: '📋' },
   { name: { es: 'Fideicomiso en Vida', en: 'Living Trust' }, href: '/trust', price: '$599', color: '#10B981', icon: '🏠' },
   { name: { es: 'Formación de LLC', en: 'LLC Formation' }, href: '/llc', price: '$799', color: '#8B5CF6', icon: '🏢' },
+  { name: { es: 'Carta de Autorización de Viaje', en: 'Travel Authorization' }, href: '/travel-authorization', price: '$49', color: '#EC4899', icon: '✈️' },
+  { name: { es: 'Carta de Venta', en: 'Bill of Sale' }, href: '/bill-of-sale', price: '$49', color: '#2563EB', icon: '🚗' },
+  { name: { es: 'Declaración Jurada', en: 'Affidavit' }, href: '/affidavit', price: '$49', color: '#7C3AED', icon: '📜' },
+  { name: { es: 'Pagaré', en: 'Promissory Note' }, href: '/promissory-note', price: '$49', color: '#D97706', icon: '💵' },
+  { name: { es: 'Designación de Guardián', en: 'Guardianship Designation' }, href: '/guardianship', price: '$99', color: '#BE185D', icon: '👨‍👧' },
+  { name: { es: 'Revocación de Poder', en: 'POA Revocation' }, href: '/revocation-poa', price: '$49', color: '#DC2626', icon: '❌' },
 ];
 
 export default function OurStoryClient({ lang: initialLang = 'es' }) {

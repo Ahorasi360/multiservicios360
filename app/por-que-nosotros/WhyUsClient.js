@@ -447,9 +447,16 @@ export default function WhyUsClient({ lang: initialLang = 'es' }) {
             <div>
               <h4 style={{ fontWeight: '700', marginBottom: '16px', fontSize: '15px' }}>{t.footer.services}</h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                {['Power of Attorney', 'Living Trust', 'LLC Formation', 'Immigration'].map((item, i) => (
-                  <li key={i}><a href="/#services" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{item}</a></li>
-                ))}
+                <li><Link href="/poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Poder Notarial General' : 'General Power of Attorney'}</Link></li>
+                <li><Link href="/limited-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Poder Notarial Limitado' : 'Limited Power of Attorney'}</Link></li>
+                <li><Link href="/trust" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Fideicomiso en Vida' : 'California Living Trust'}</Link></li>
+                <li><Link href="/llc" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Formación de LLC' : 'LLC Formation'}</Link></li>
+                <li><Link href="/travel-authorization" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Carta de Autorización de Viaje' : 'Travel Authorization'}</Link></li>
+                <li><Link href="/bill-of-sale" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Carta de Venta' : 'Bill of Sale'}</Link></li>
+                <li><Link href="/affidavit" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Declaración Jurada' : 'Affidavit'}</Link></li>
+                <li><Link href="/promissory-note" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Pagaré' : 'Promissory Note'}</Link></li>
+                <li><Link href="/guardianship" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Designación de Guardián' : 'Guardianship Designation'}</Link></li>
+                <li><Link href="/revocation-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{lang === 'es' ? 'Revocación de Poder' : 'POA Revocation'}</Link></li>
               </ul>
             </div>
             <div>
