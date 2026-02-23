@@ -298,8 +298,9 @@ export default function StaffDashboard() {
                 <div><label style={lbl}>Document Type</label>
                   <select value={uploadDocType} onChange={e=>setUploadDocType(e.target.value)} style={inp3}>
                     <optgroup label="Government / Filed"><option value="articles_of_org">Articles of Organization</option><option value="ein_letter">EIN Confirmation Letter</option><option value="sos_filing">SOS Filing</option><option value="amendment">Amendment</option><option value="certificate">Certificate</option></optgroup>
-                    <optgroup label="Generated"><option value="poa_general">General POA</option><option value="poa_limited">Limited POA</option><option value="living_trust">Living Trust</option><option value="operating_agreement">Operating Agreement</option></optgroup>
-                    <option value="other">Other</option>
+                    <optgroup label="Generated - Main"><option value="poa_general">General POA</option><option value="poa_limited">Limited POA</option><option value="living_trust">Living Trust</option><option value="operating_agreement">Operating Agreement</option></optgroup>
+                    <optgroup label="Generated - Simple Docs"><option value="bill_of_sale">Bill of Sale / Carta de Venta</option><option value="affidavit">Affidavit / Declaración Jurada</option><option value="revocation_poa">POA Revocation / Revocación de Poder</option><option value="authorization_letter">Authorization Letter / Carta de Autorización</option><option value="promissory_note">Promissory Note / Pagaré</option><option value="guardianship">Guardianship Designation / Designación de Guardián</option><option value="travel_authorization">Travel Authorization / Carta de Viaje</option></optgroup>
+                    <option value="other">Other / Otro</option>
                   </select>
                 </div>
               </div>
