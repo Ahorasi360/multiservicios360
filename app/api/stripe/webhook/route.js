@@ -89,10 +89,34 @@ export async function POST(request) {
       }
 
       // -----------------------------------------------
-      // TRACK PARTNER (OFFICE) COMMISSION
-      // If this document came from a partner office,
-      // create a partner_referrals entry so the office
-      // sees their commission in their dashboard.
+      // NOTIFY OWNER (email + SMS) ON EVERY SALE
+      // -----------------------------------------------
+      try {
+        const clientName = session.customer_details?.name || session.metadata?.clientName || 'Unknown';
+        const clientEmail = session.customer_details?.email || session.metadata?.clientEmail || '';
+
+        // Look up partner name if applicable
+        let partnerName = null;
+        const { data: matterForPartner } = await supabase
+          .from(tableName).select('partner_id').eq('id', matterId).single();
+        if (matterForPartner?.partner_id) {
+          const { data: partnerData } = await supabase
+            .from('partners').select('business_name').eq('id', matterForPartner.partner_id).single();
+          if (partnerData) partnerName = partnerData.business_name;
+        }
+
+        const { notifyOwnerOfSale } = await import('../../../../lib/notify-owner');
+        await notifyOwnerOfSale({
+          documentType,
+          clientName,
+          clientEmail,
+          amount: session.amount_total,
+          matterId,
+          partnerName,
+        });
+      } catch (notifyErr) {
+        console.error('Owner notification error (non-critical):', notifyErr.message);
+      }
       // -----------------------------------------------
       try {
         // Get the matter to find partner_id and client info
