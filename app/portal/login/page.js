@@ -179,7 +179,7 @@ export default function PartnerLogin() {
 
         <div style={styles.footer}>
           Not a partner yet?{' '}
-          <a href="/#contacto" style={styles.link}>Apply here</a>
+          <a href="/contacto" style={styles.link}>Apply here</a>
         </div>
 
         <div style={styles.backLink}>

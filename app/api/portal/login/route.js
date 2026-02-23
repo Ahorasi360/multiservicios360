@@ -81,10 +81,11 @@ export async function POST(request) {
 
       // Check if active
       if (partner.status !== 'active') {
-        return NextResponse.json(
-          { success: false, error: 'Your account is not active.' },
-          { status: 403 }
-        );
+        let msg = 'Your account is pending activation. Please contact support.';
+        if (partner.status === 'pending_payment') msg = 'Your account is pending payment. Please complete your setup fee to activate.';
+        if (partner.status === 'pending') msg = 'Your account is under review. You will receive an email once approved.';
+        if (partner.status === 'suspended') msg = 'Your account has been suspended. Please contact support.';
+        return NextResponse.json({ success: false, error: msg }, { status: 403 });
       }
 
       // Generate token
