@@ -1,126 +1,90 @@
 // app/api/portal/clients/route.js
-
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-// GET - Fetch all clients for a partner
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const partnerId = searchParams.get('partner_id');
+    if (!partnerId) return NextResponse.json({ success: false, error: 'Partner ID required' }, { status: 400 });
 
-    if (!partnerId) {
-      return NextResponse.json(
-        { success: false, error: 'Partner ID is required' },
-        { status: 400 }
-      );
-    }
-
-    const { data: clients, error } = await supabase
+    // Get registered clients
+    const { data: registeredClients } = await supabase
       .from('partner_clients')
       .select('*')
       .eq('partner_id', partnerId)
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Fetch clients error:', error);
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch clients' },
-        { status: 500 }
-      );
+    // Also pull unique clients from all matter tables
+    const tables = ['poa_matters','limited_poa_matters','trust_matters','llc_matters','simple_doc_matters'];
+    const matterClientMap = {};
+
+    for (const table of tables) {
+      const { data } = await supabase
+        .from(table)
+        .select('client_name, client_email, client_phone, created_at')
+        .eq('partner_id', partnerId);
+      if (data) {
+        data.forEach(m => {
+          if (m.client_email && !matterClientMap[m.client_email]) {
+            matterClientMap[m.client_email] = {
+              id: `matter-${m.client_email}`,
+              partner_id: partnerId,
+              client_name: m.client_name,
+              client_email: m.client_email,
+              client_phone: m.client_phone || null,
+              language_preference: 'es',
+              created_at: m.created_at,
+              from_matter: true,
+            };
+          }
+        });
+      }
     }
 
-    return NextResponse.json({
-      success: true,
-      clients: clients || []
-    });
+    // Merge: registered clients take priority, add matter clients not already registered
+    const registeredEmails = new Set((registeredClients || []).map(c => c.client_email));
+    const matterClients = Object.values(matterClientMap).filter(c => !registeredEmails.has(c.client_email));
 
+    const allClients = [...(registeredClients || []), ...matterClients];
+    allClients.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    return NextResponse.json({ success: true, clients: allClients });
   } catch (error) {
     console.error('Clients GET error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Server error' }, { status: 500 });
   }
 }
 
-// POST - Create a new client
 export async function POST(request) {
   try {
     const body = await request.json();
     const { partner_id, client_name, client_email, client_phone, language_preference } = body;
 
-    if (!partner_id) {
-      return NextResponse.json(
-        { success: false, error: 'Partner ID is required' },
-        { status: 400 }
-      );
-    }
+    if (!partner_id) return NextResponse.json({ success: false, error: 'Partner ID required' }, { status: 400 });
+    if (!client_name || client_name.trim() === '') return NextResponse.json({ success: false, error: 'Client name required' }, { status: 400 });
 
-    if (!client_name || client_name.trim() === '') {
-      return NextResponse.json(
-        { success: false, error: 'Client name is required' },
-        { status: 400 }
-      );
-    }
-
-    // Verify partner exists and is active
-    const { data: partner, error: partnerError } = await supabase
-      .from('partners')
-      .select('id, status')
-      .eq('id', partner_id)
-      .single();
-
-    if (partnerError || !partner) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid partner' },
-        { status: 400 }
-      );
-    }
-
-    if (partner.status !== 'active') {
-      return NextResponse.json(
-        { success: false, error: 'Partner account is not active' },
-        { status: 403 }
-      );
-    }
-
-    // Create the client
-    const { data: newClient, error: insertError } = await supabase
+    const { data, error } = await supabase
       .from('partner_clients')
       .insert({
         partner_id,
         client_name: client_name.trim(),
         client_email: client_email?.trim().toLowerCase() || null,
         client_phone: client_phone?.trim() || null,
-        language_preference: language_preference || 'es'
+        language_preference: language_preference || 'es',
       })
       .select()
       .single();
 
-    if (insertError) {
-      console.error('Insert client error:', insertError);
-      return NextResponse.json(
-        { success: false, error: 'Failed to create client' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      client: newClient
-    });
-
+    if (error) return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: true, client: data });
   } catch (error) {
     console.error('Clients POST error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Server error' }, { status: 500 });
   }
 }
