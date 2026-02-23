@@ -3,6 +3,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { saveToVault } from '../../../lib/save-to-vault';
 import { PDFDocument } from 'pdf-lib';
+import { lockPdf } from '../../../lib/lock-pdf';
 
 const NOTARY_DOCS = ['affidavit', 'revocation_poa'];
 // Guardianship gets notary for standard+ tiers (handled separately below)
@@ -736,14 +737,19 @@ function SuccessContent() {
         const [notaryPage] = await mainPdf.copyPages(notaryPdf, [0]);
         mainPdf.addPage(notaryPage);
         const pdfBytes = await mainPdf.save();
-        finalBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const lockedBytes = await lockPdf(pdfBytes);
+        finalBlob = new Blob([lockedBytes], { type: 'application/pdf' });
       } catch (notaryErr) {
         console.error('Notary form error:', notaryErr);
-        finalBlob = new Blob([doc.output('arraybuffer')], { type: 'application/pdf' });
+        const rawBytes = doc.output('arraybuffer');
+        const lockedFallback = await lockPdf(new Uint8Array(rawBytes));
+        finalBlob = new Blob([lockedFallback], { type: 'application/pdf' });
         alert(lang === 'es' ? 'Documento generado. El formulario notarial no se pudo adjuntar.' : 'Document generated. Notary form could not be attached.');
       }
     } else {
-      finalBlob = new Blob([doc.output('arraybuffer')], { type: 'application/pdf' });
+      const rawBytes = doc.output('arraybuffer');
+      const lockedBytes = await lockPdf(new Uint8Array(rawBytes));
+      finalBlob = new Blob([lockedBytes], { type: 'application/pdf' });
     }
 
     const url = URL.createObjectURL(finalBlob);

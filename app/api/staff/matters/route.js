@@ -12,6 +12,54 @@ function checkStaffAuth(request) {
   return staffId && staffId.length > 10;
 }
 
+const TABLE_MAP = {
+  general_poa: 'poa_matters',
+  limited_poa: 'limited_poa_matters',
+  living_trust: 'trust_matters',
+  llc_formation: 'llc_matters',
+  simple_doc: 'simple_doc_matters',
+};
+
+// PATCH — edit a matter's client info and intake data
+export async function PATCH(request) {
+  if (!checkStaffAuth(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  try {
+    const body = await request.json();
+    const { matter_id, service_type, client_name, client_email, client_phone, intake_data, staff_note } = body;
+
+    if (!matter_id || !service_type) return NextResponse.json({ error: 'Missing matter_id or service_type' }, { status: 400 });
+
+    const table = TABLE_MAP[service_type];
+    if (!table) return NextResponse.json({ error: 'Unknown service_type' }, { status: 400 });
+
+    const updates = {};
+    if (client_name) updates.client_name = client_name;
+    if (client_email) updates.client_email = client_email;
+    if (client_phone !== undefined) updates.client_phone = client_phone;
+    if (intake_data) updates.intake_data = intake_data;
+    if (staff_note !== undefined) updates.staff_note = staff_note;
+    updates.updated_at = new Date().toISOString();
+
+    const { data, error } = await supabase.from(table).update(updates).eq('id', matter_id).select().single();
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+    return NextResponse.json({ success: true, matter: data });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+function checkStaffAuth(request) {
+  const staffId = request.headers.get('x-staff-id');
+  return staffId && staffId.length > 10;
+}
+
 // GET — all matters across all 4 services
 export async function GET(request) {
   if (!checkStaffAuth(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

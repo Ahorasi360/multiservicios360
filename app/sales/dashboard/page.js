@@ -164,7 +164,7 @@ export default function SalesDashboard() {
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-          {['overview', 'offices', 'registrations'].map(tab => (
+          {['overview', 'offices', 'registrations', 'samples'].map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)} style={{
               padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
               background: activeTab === tab ? '#78350F' : '#fff', color: activeTab === tab ? '#fff' : '#475569',
@@ -264,6 +264,21 @@ export default function SalesDashboard() {
                 })}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'samples' && (
+          <div style={{ background:'#fff', borderRadius:14, padding:40, textAlign:'center', boxShadow:'0 1px 4px rgba(0,0,0,0.06)' }}>
+            <div style={{ fontSize:48, marginBottom:16 }}>📄</div>
+            <h3 style={{ fontSize:20, fontWeight:700, color:'#0F172A', marginBottom:8 }}>Sample Documents</h3>
+            <p style={{ color:'#64748B', fontSize:14, maxWidth:420, margin:'0 auto 24px' }}>
+              Preview all 8 document types with watermarked samples — great for showing prospects what they will receive.
+              Includes pricing and your commission per document.
+            </p>
+            <button onClick={() => router.push('/sales/samples')}
+              style={{ background:'linear-gradient(135deg,#1E3A8A,#2563EB)', color:'#fff', border:'none', padding:'14px 32px', borderRadius:12, fontSize:15, fontWeight:700, cursor:'pointer' }}>
+              📄 Open Sample Docs →
+            </button>
           </div>
         )}
       </div>

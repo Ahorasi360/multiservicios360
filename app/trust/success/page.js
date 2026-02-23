@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getTrustPDFBlob } from './trust-pdf-generator';
 import { saveToVault } from '../../../lib/save-to-vault';
+import { lockPdf } from '../../../lib/lock-pdf';
 
 function TrustSuccessContent() {
   const searchParams = useSearchParams();
@@ -169,7 +170,10 @@ function TrustSuccessContent() {
             data.matter?.review_tier || 'trust_plus',
             agreementData
           );
-          setPdfBlob(blob);
+          // Lock the PDF to prevent editing
+          const blobBytes = new Uint8Array(await blob.arrayBuffer());
+          const lockedBytes = await lockPdf(blobBytes);
+          setPdfBlob(new Blob([lockedBytes], { type: 'application/pdf' }));
         } catch (pdfError) {
           console.error('PDF generation error:', pdfError);
         }

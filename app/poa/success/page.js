@@ -4,6 +4,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PDFDocument } from 'pdf-lib';
 import { saveToVault } from '../../../lib/save-to-vault';
+import { lockPdf } from '../../../lib/lock-pdf';
 
 // Spanish to English relationship translations
 const RELATIONSHIP_TRANSLATIONS = {
@@ -1276,7 +1277,8 @@ If you do not faithfully perform your duties, you may be subject to:
         pdfDocFromJsPDF.addPage(notaryPage);
 
         const pdfBytes = await pdfDocFromJsPDF.save();
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const lockedBytes = await lockPdf(pdfBytes);
+        const blob = new Blob([lockedBytes], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;

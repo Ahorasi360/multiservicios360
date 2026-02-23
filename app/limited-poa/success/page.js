@@ -3,6 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PDFDocument } from 'pdf-lib';
+import { lockPdf } from '../../../lib/lock-pdf';
 
 // Spanish to English relationship translations
 const RELATIONSHIP_TRANSLATIONS = {
@@ -1140,7 +1141,8 @@ If you do not faithfully perform your duties under the law and under the power o
 
       // Save the merged PDF
       const pdfBytes = await pdfDocFromJsPDF.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const lockedBytes = await lockPdf(pdfBytes);
+      const blob = new Blob([lockedBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;

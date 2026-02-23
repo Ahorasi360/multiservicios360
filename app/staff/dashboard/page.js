@@ -9,6 +9,8 @@ export default function StaffDashboard() {
   const [staffId, setStaffId] = useState('');
   const [activeTab, setActiveTab] = useState('matters');
   const [matters, setMatters] = useState([]);
+  const [editMatter, setEditMatter] = useState(null);
+  const [editSaving, setEditSaving] = useState(false);
   const [vaults, setVaults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -142,6 +144,46 @@ export default function StaffDashboard() {
     }
     window.open(url, '_blank');
   }
+
+  function openEdit(matter) {
+    setEditMatter({
+      ...matter,
+      _client_name: matter.client_name || '',
+      _client_email: matter.client_email || '',
+      _client_phone: matter.client_phone || '',
+      _intake_json: JSON.stringify(matter.intake_data || {}, null, 2),
+      _staff_note: matter.staff_note || '',
+    });
+  }
+
+  async function handleEditSave() {
+    if (!editMatter) return;
+    setEditSaving(true);
+    try {
+      let intake_data = editMatter.intake_data;
+      try { intake_data = JSON.parse(editMatter._intake_json); } catch { return alert('Invalid JSON in intake data'); }
+      const res = await fetch('/api/staff/matters', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-staff-id': staffId },
+        body: JSON.stringify({
+          matter_id: editMatter.id,
+          service_type: editMatter.service_type,
+          client_name: editMatter._client_name,
+          client_email: editMatter._client_email,
+          client_phone: editMatter._client_phone,
+          intake_data,
+          staff_note: editMatter._staff_note,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMessage('✅ Matter updated. Regenerate the document to apply changes.');
+        setEditMatter(null);
+        fetchMatters(staffId);
+      } else { alert('Error: ' + data.error); }
+    } catch (err) { alert('Error: ' + err.message); }
+    setEditSaving(false);
+  }
   const statusColors = { paid:'#059669', completed:'#059669', draft:'#94A3B8', pending_payment:'#D97706' };
 
   return (
@@ -229,6 +271,9 @@ export default function StaffDashboard() {
                               🔄 Regenerate
                             </button>
                           )}
+                          <button onClick={() => openEdit(m)} style={{ padding:'4px 10px', background:'#EFF6FF', color:'#1D4ED8', border:'1px solid #BFDBFE', borderRadius:6, fontSize:11, fontWeight:600, cursor:'pointer' }}>
+                            ✏️ Edit
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -344,6 +389,62 @@ export default function StaffDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT MATTER MODAL */}
+      {editMatter && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:50, padding:16 }}>
+          <div style={{ background:'#fff', borderRadius:16, padding:28, maxWidth:600, width:'100%', maxHeight:'90vh', overflowY:'auto', boxShadow:'0 20px 60px rgba(0,0,0,0.2)' }}>
+            <h2 style={{ fontSize:18, fontWeight:700, color:'#0F172A', marginBottom:4 }}>✏️ Edit Matter</h2>
+            <p style={{ fontSize:12, color:'#64748B', marginBottom:4 }}>
+              {editMatter.service_type?.replace(/_/g,' ').toUpperCase()} — ID: {String(editMatter.id||'').slice(0,8)}...
+            </p>
+            <p style={{ fontSize:12, color:'#D97706', background:'#FFFBEB', border:'1px solid #FDE68A', borderRadius:8, padding:'8px 12px', marginBottom:20 }}>
+              ⚡ After saving, click <strong>🔄 Regenerate</strong> on the matter row to rebuild the PDF with corrected data.
+            </p>
+
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:12 }}>
+              <div>
+                <label style={lbl}>Client Name</label>
+                <input value={editMatter._client_name} onChange={e => setEditMatter(m => ({...m, _client_name: e.target.value}))} style={inp3} />
+              </div>
+              <div>
+                <label style={lbl}>Client Email</label>
+                <input type="email" value={editMatter._client_email} onChange={e => setEditMatter(m => ({...m, _client_email: e.target.value}))} style={inp3} />
+              </div>
+            </div>
+
+            <div style={{ marginBottom:12 }}>
+              <label style={lbl}>Client Phone</label>
+              <input value={editMatter._client_phone} onChange={e => setEditMatter(m => ({...m, _client_phone: e.target.value}))} style={inp3} />
+            </div>
+
+            <div style={{ marginBottom:12 }}>
+              <label style={lbl}>Staff Note (internal, not on document)</label>
+              <textarea value={editMatter._staff_note} onChange={e => setEditMatter(m => ({...m, _staff_note: e.target.value}))}
+                rows={2} placeholder="e.g. Client called 2/22 to correct spelling of attorney name"
+                style={{...inp3, resize:'vertical'}} />
+            </div>
+
+            <div style={{ marginBottom:20 }}>
+              <label style={lbl}>📋 Document Data (JSON)</label>
+              <textarea value={editMatter._intake_json} onChange={e => setEditMatter(m => ({...m, _intake_json: e.target.value}))}
+                rows={12} style={{...inp3, fontFamily:'monospace', fontSize:11, resize:'vertical', lineHeight:1.6}} />
+              <p style={{ fontSize:11, color:'#EF4444', marginTop:4 }}>⚠️ Only change field values. Do not modify key names or JSON structure.</p>
+            </div>
+
+            <div style={{ display:'flex', gap:12 }}>
+              <button type="button" onClick={() => setEditMatter(null)}
+                style={{ flex:1, padding:'12px', background:'#F1F5F9', color:'#475569', border:'none', borderRadius:10, fontSize:14, fontWeight:600, cursor:'pointer' }}>
+                Cancel
+              </button>
+              <button onClick={handleEditSave} disabled={editSaving}
+                style={{ flex:1, padding:'12px', background:editSaving?'#94A3B8':'linear-gradient(135deg,#1D4ED8,#2563EB)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor:editSaving?'not-allowed':'pointer' }}>
+                {editSaving ? 'Saving...' : '💾 Save Changes'}
+              </button>
+            </div>
           </div>
         </div>
       )}
