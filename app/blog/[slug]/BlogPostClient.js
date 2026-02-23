@@ -244,6 +244,7 @@ export default function BlogPostClient({ post, relatedPosts, lang }) {
             <Link href="/limited-poa" className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-5 py-3 rounded-lg no-underline shadow-md transition-colors">{t.lpoaBtn}</Link>
             <Link href="/trust" className="bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm px-5 py-3 rounded-lg no-underline shadow-md transition-colors">{t.trustBtn}</Link>
             <Link href="/llc" className="bg-slate-700 hover:bg-slate-600 text-white font-bold text-sm px-5 py-3 rounded-lg no-underline shadow-md transition-colors">{t.llcBtn}</Link>
+            <Link href={lang === 'en' ? '/en/more-services' : '/mas-servicios'} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-5 py-3 rounded-lg no-underline shadow-md transition-colors">{lang === 'en' ? 'More Services →' : 'Más Servicios →'}</Link>
           </div>
         </div>
       </section>
