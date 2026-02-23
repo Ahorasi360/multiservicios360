@@ -169,7 +169,7 @@ export default function SalesDashboard() {
               padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
               background: activeTab === tab ? '#78350F' : '#fff', color: activeTab === tab ? '#fff' : '#475569',
               border: activeTab === tab ? 'none' : '1px solid #E2E8F0',
-            }}>{tab === 'overview' ? '📊 Overview' : tab === 'offices' ? '🏢 My Offices' : `📋 Registrations (${pendingOffices.length})`}</button>
+            }}>{tab === 'overview' ? '📊 Overview' : tab === 'offices' ? '🏢 My Offices' : tab === 'samples' ? '📄 Samples' : `📋 Registrations (${pendingOffices.length})`}</button>
           ))}
         </div>
 

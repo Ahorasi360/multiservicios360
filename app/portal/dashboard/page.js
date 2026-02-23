@@ -90,8 +90,6 @@ export default function PartnerDashboard() {
     setLang(next);
     localStorage.setItem('portal_lang', next);
   };
-    fetchDashboardData(partnerId);
-  }, []);
 
   const fetchDashboardData = async (partnerId) => {
     try {

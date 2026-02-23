@@ -273,6 +273,7 @@ function RegisterOfficeContent() {
           </div>
         )}
       </div>
+    </>)}
     </div>
   );
 }
