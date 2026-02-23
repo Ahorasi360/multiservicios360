@@ -311,6 +311,10 @@ export default function MoreServicesClient({ lang = 'es' }) {
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '12px' }}>{language === 'es' ? 'Servicios' : 'Services'}</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <Link href="/poa" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>{language === 'es' ? 'Poder Notarial General' : 'General Power of Attorney'}</Link>
+              <Link href="/limited-poa" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>{language === 'es' ? 'Poder Notarial Limitado' : 'Limited Power of Attorney'}</Link>
+              <Link href="/trust" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>{language === 'es' ? 'Fideicomiso en Vida' : 'California Living Trust'}</Link>
+              <Link href="/llc" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>{language === 'es' ? 'Formación de LLC' : 'LLC Formation'}</Link>
               {SERVICES.map(({ key, href }) => (
                 <Link key={key} href={href} style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>
                   {t.services[key].title}
