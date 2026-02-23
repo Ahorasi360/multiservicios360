@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 
@@ -19,7 +20,7 @@ const VAULT_PLANS = {
 };
 
 export async function POST(request) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
+  function getStripe() { return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' }); }
 
   try {
     const body = await request.json();
@@ -78,7 +79,7 @@ export async function POST(request) {
       }];
     }
 
-    const session = await stripe.checkout.sessions.create(sessionConfig);
+    const session = await getStripe().checkout.sessions.create(sessionConfig);
     return NextResponse.json({ success: true, url: session.url });
   } catch (error) {
     console.error('Vault premium checkout error:', error);

@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -147,7 +148,7 @@ const T = {
   },
 };
 
-export default function BovedaPremiumPage() {
+function BovedaPremiumContent() {
   const [language, setLanguage] = useState('es');
   const [openFaq, setOpenFaq] = useState(null);
   const [upgrading, setUpgrading] = useState(false);
@@ -386,5 +387,13 @@ export default function BovedaPremiumPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function BovedaPremiumPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>}>
+      <BovedaPremiumContent />
+    </Suspense>
   );
 }

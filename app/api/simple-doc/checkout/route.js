@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 
@@ -29,7 +30,7 @@ const SLUG_MAP = {
 };
 
 export async function POST(request) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
+  function getStripe() { return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' }); }
 
   try {
     const body = await request.json();
@@ -50,7 +51,7 @@ export async function POST(request) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://multiservicios360.net';
     const slug = SLUG_MAP[document_type] || document_type;
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
         price_data: {

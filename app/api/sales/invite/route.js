@@ -1,12 +1,12 @@
+export const dynamic = 'force-dynamic';
 // app/api/sales/invite/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 // GET - Validate an invite code
 export async function GET(request) {
@@ -50,7 +50,7 @@ export async function POST(request) {
     codes.push({ code, note, expires_at, used: false });
   }
 
-  const { data, error } = await supabase.from('invite_codes').insert(codes).select();
+  const { data, error } = await getSupabase().from('invite_codes').insert(codes).select();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({ success: true, codes: data });
@@ -64,6 +64,6 @@ export async function DELETE(request) {
   }
 
   const { code } = await request.json();
-  await supabase.from('invite_codes').delete().eq('code', code.toUpperCase());
+  await getSupabase().from('invite_codes').delete().eq('code', code.toUpperCase());
   return NextResponse.json({ success: true });
 }

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 
 const PANDADOC_API = 'https://api.pandadoc.com/public/v1';

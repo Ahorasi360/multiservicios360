@@ -1,12 +1,12 @@
+export const dynamic = 'force-dynamic';
 // app/api/sales/change-password/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 function hashPassword(password) {
   return crypto.createHash('sha256').update(password).digest('hex');
@@ -27,7 +27,7 @@ export async function POST(request) {
 
     if (!rep) return NextResponse.json({ error: 'Current password is incorrect' }, { status: 401 });
 
-    await supabase.from('sales_reps').update({ password_hash: hashPassword(new_password) }).eq('id', rep_id);
+    await getSupabase().from('sales_reps').update({ password_hash: hashPassword(new_password) }).eq('id', rep_id);
     return NextResponse.json({ success: true });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });

@@ -1,12 +1,12 @@
+export const dynamic = 'force-dynamic';
 // app/api/staff/login/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 function hashPassword(password) {
   return crypto.createHash('sha256').update(password).digest('hex');
@@ -28,7 +28,7 @@ export async function POST(request) {
     if (worker.status !== 'active') return NextResponse.json({ error: 'Account is inactive' }, { status: 403 });
 
     // Update last login
-    await supabase.from('staff_workers').update({ last_login: new Date().toISOString() }).eq('id', worker.id);
+    await getSupabase().from('staff_workers').update({ last_login: new Date().toISOString() }).eq('id', worker.id);
 
     return NextResponse.json({ success: true, worker });
   } catch (err) {

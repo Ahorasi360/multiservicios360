@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // app/api/llc/generate-oa/route.js
 // Operating Agreement PDF Assembler
 // Reads clause library → filters by tier/intake → replaces tokens → generates PDF
@@ -12,10 +13,9 @@ import path from 'path';
 import { SPANISH_CLAUSES, SPANISH_PURPOSES } from '../../../../lib/oa-clauses-es';
 
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 // =====================================================
 // CLAUSE MANIFEST (inline to avoid import issues on Vercel)

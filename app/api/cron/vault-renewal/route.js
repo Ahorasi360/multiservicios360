@@ -1,13 +1,13 @@
+export const dynamic = 'force-dynamic';
 // app/api/cron/vault-renewal/route.js
 // Runs daily via Vercel Cron - checks vault expiry and sends drip emails
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { sendVaultRenewalEmail } from '../../../../lib/send-vault-renewal-email';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 export async function GET(request) {
   // Verify this is called by Vercel Cron (or admin)

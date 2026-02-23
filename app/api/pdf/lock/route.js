@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // app/api/pdf/lock/route.js
 // Server-side PDF locking using qpdf
 // Receives a PDF (base64 or file upload), returns a locked PDF that can't be edited or copied

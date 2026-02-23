@@ -1,11 +1,11 @@
+export const dynamic = 'force-dynamic';
 // app/api/admin/resources/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 // GET: List all resources
 export async function GET(request) {
@@ -110,7 +110,7 @@ export async function DELETE(request) {
       .single();
 
     if (resource?.file_url) {
-      await supabase.storage.from('vault-files').remove([resource.file_url]);
+      await getSupabase().storage.from('vault-files').remove([resource.file_url]);
     }
 
     const { error } = await supabase

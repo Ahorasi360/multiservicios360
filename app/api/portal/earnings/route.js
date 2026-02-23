@@ -1,11 +1,11 @@
+export const dynamic = 'force-dynamic';
 // app/api/portal/earnings/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 const SERVICE_LABELS = {
   general_poa: 'General POA', limited_poa: 'Limited POA', living_trust: 'Living Trust',
@@ -20,7 +20,7 @@ export async function GET(request) {
     const partnerId = searchParams.get('partner_id');
     if (!partnerId) return NextResponse.json({ success: false, error: 'Partner ID is required' }, { status: 400 });
 
-    const { data: partner } = await supabase.from('partners').select('commission_rate').eq('id', partnerId).single();
+    const { data: partner } = await getSupabase().from('partners').select('commission_rate').eq('id', partnerId).single();
     const commissionRate = (partner?.commission_rate || 20) / 100;
 
     // Get commissions from partner_referrals

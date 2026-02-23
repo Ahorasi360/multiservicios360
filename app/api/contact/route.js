@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // app/api/contact/route.js
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';

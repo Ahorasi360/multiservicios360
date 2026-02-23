@@ -1,13 +1,13 @@
+export const dynamic = 'force-dynamic';
 // app/api/portal/checkout/route.js
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getStripe() { return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' }); }
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://multiservicios360.net';
 
@@ -44,13 +44,13 @@ export async function POST(request) {
     // Get or create Stripe customer
     let customerId = partner.stripe_customer_id;
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email: partner.email,
         name: partner.business_name || partner.contact_name,
         metadata: { partner_id: partner.id },
       });
       customerId = customer.id;
-      await supabase.from('partners').update({ stripe_customer_id: customerId }).eq('id', partner.id);
+      await getSupabase().from('partners').update({ stripe_customer_id: customerId }).eq('id', partner.id);
     }
 
     // Create payment record
@@ -67,7 +67,7 @@ export async function POST(request) {
       .single();
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode: 'payment',
       payment_method_types: ['card'],
@@ -93,7 +93,7 @@ export async function POST(request) {
 
     // Store session ID
     if (payment) {
-      await supabase.from('partner_payments').update({ stripe_session_id: session.id }).eq('id', payment.id);
+      await getSupabase().from('partner_payments').update({ stripe_session_id: session.id }).eq('id', payment.id);
     }
 
     return NextResponse.json({ success: true, url: session.url });

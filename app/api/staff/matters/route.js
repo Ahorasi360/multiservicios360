@@ -1,11 +1,11 @@
+export const dynamic = 'force-dynamic';
 // app/api/staff/matters/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 function checkStaffAuth(request) {
   const staffId = request.headers.get('x-staff-id');
@@ -42,7 +42,7 @@ export async function GET(request) {
     let allMatters = [];
 
     for (const table of toQuery) {
-      let query = supabase.from(table.name).select('*').order('created_at', { ascending: false }).limit(200);
+      let query = getSupabase().from(table.name).select('*').order('created_at', { ascending: false }).limit(200);
       if (status) query = query.eq('status', status);
 
       const { data, error } = await query;
@@ -92,7 +92,7 @@ export async function PATCH(request) {
     if (staff_note !== undefined) updates.staff_note = staff_note;
     updates.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase.from(table).update(updates).eq('id', matter_id).select().single();
+    const { data, error } = await getSupabase().from(table).update(updates).eq('id', matter_id).select().single();
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
     return NextResponse.json({ success: true, matter: data });

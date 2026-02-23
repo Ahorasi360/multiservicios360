@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // app/api/admin/test-notify/route.js
 import { NextResponse } from 'next/server';
 

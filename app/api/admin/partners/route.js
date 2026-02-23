@@ -1,12 +1,12 @@
+export const dynamic = 'force-dynamic';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { sendWelcomeEmail } from '../../../../lib/send-welcome-email';
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 function hashPassword(password) {
   return crypto.createHash('sha256').update(password).digest('hex');
@@ -140,7 +140,7 @@ export async function PUT(request) {
           const endDate = new Date();
           endDate.setMonth(endDate.getMonth() + (repData.commission_duration_months || 1));
 
-          await supabaseAdmin.from('sales_commissions').insert({
+          await getSupabase().from('sales_commissions').insert({
             sales_rep_id: repData.id,
             partner_id: id,
             commission_rate: repData.commission_rate || 5,

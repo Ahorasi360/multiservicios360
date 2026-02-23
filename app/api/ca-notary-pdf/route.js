@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 
 // Server-side fetch of CA notary PDF (bypasses browser CORS restrictions)
