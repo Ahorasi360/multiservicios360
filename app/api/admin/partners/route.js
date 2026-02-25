@@ -18,7 +18,7 @@ function checkAuth(request) {
 export async function GET(request) {
   if (!checkAuth(request)) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
 
-  const { data: partners, error } = await supabaseAdmin
+  const { data: partners, error } = await supabase
     .from('partners')
     .select('*')
     .order('created_at', { ascending: false });
@@ -34,7 +34,7 @@ export async function POST(request) {
 
   const referralCode = business_name.substring(0, 3).toUpperCase() + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-  const { data: partner, error } = await supabaseAdmin
+  const { data: partner, error } = await supabase
     .from('partners')
     .insert({
       email: email.toLowerCase().trim(),
@@ -89,7 +89,7 @@ export async function PUT(request) {
   let shouldSendWelcome = false;
   let partnerBefore = null;
   if (updateData.status === 'active') {
-    const { data: existing } = await supabaseAdmin
+    const { data: existing } = await supabase
       .from('partners')
       .select('id, status, email, contact_name, business_name, temp_password, setup_fee_amount, registered_by_rep')
       .eq('id', id)
@@ -100,7 +100,7 @@ export async function PUT(request) {
     }
   }
 
-  const { data: partner, error } = await supabaseAdmin
+  const { data: partner, error } = await supabase
     .from('partners')
     .update(updateData)
     .eq('id', id)
@@ -127,7 +127,7 @@ export async function PUT(request) {
 
       // If registered by a sales rep, create the sales commission assignment
       if (partnerBefore.registered_by_rep) {
-        const { data: repData } = await supabaseAdmin
+        const { data: repData } = await supabase
           .from('sales_reps')
           .select('id, commission_rate, commission_duration_months')
           .eq('id', partnerBefore.registered_by_rep)
