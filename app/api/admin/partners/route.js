@@ -12,7 +12,7 @@ function hashPassword(password) {
 
 function checkAuth(request) {
   const pw = request.headers.get('x-admin-password');
-  return pw === process.env.ADMIN_PASSWORD || pw === 'MS360Admin2026!';
+  return pw === process.env.ADMIN_PASSWORD;
 }
 
 export async function GET(request) {

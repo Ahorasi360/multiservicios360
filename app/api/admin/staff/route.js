@@ -8,7 +8,7 @@ const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.
 
 function checkAuth(request) {
   const pw = request.headers.get('x-admin-password');
-  return pw === process.env.ADMIN_PASSWORD || pw === 'MS360Admin2026!';
+  return pw === process.env.ADMIN_PASSWORD;
 }
 
 function hashPassword(password) {

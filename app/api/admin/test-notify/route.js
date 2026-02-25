@@ -15,13 +15,13 @@ async function runTest(docType) {
   return NextResponse.json({ success: true, message: 'Test sent! Check flashpreviews@gmail.com' });
 }
 
-// GET — test from browser: /api/admin/test-notify?pwd=MS360Admin2026!
+// GET — test from browser: /api/admin/test-notify?pwd=YOUR_ADMIN_PASSWORD
 export async function GET(request) {
   try {
     const url = new URL(request.url);
     const pwd = url.searchParams.get('pwd');
     const docType = url.searchParams.get('docType') || 'llc_formation';
-    if (pwd !== 'MS360Admin2026!') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (pwd !== process.env.ADMIN_PASSWORD) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     return await runTest(docType);
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -32,7 +32,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const pwd = request.headers.get('x-admin-password');
-    if (pwd !== 'MS360Admin2026!') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (pwd !== process.env.ADMIN_PASSWORD) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const body = await request.json().catch(() => ({}));
     return await runTest(body.docType);
   } catch (err) {

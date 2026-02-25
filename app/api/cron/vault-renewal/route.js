@@ -12,7 +12,7 @@ export async function GET(request) {
   const authHeader = request.headers.get('authorization');
   const adminPw = request.headers.get('x-admin-password');
   const isVercelCron = authHeader === `Bearer ${process.env.CRON_SECRET}`;
-  const isAdmin = adminPw === process.env.ADMIN_PASSWORD || adminPw === 'MS360Admin2026!';
+  const isAdmin = adminPw === process.env.ADMIN_PASSWORD;
 
   if (!isVercelCron && !isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

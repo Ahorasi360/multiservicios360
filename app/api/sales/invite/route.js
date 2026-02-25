@@ -32,7 +32,7 @@ export async function GET(request) {
 // POST - Generate invite codes (admin only)
 export async function POST(request) {
   const pw = request.headers.get('x-admin-password');
-  if (pw !== process.env.ADMIN_PASSWORD && pw !== 'MS360Admin2026!') {
+  if (pw !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -57,7 +57,7 @@ export async function POST(request) {
 // DELETE - Revoke an invite code (admin only)
 export async function DELETE(request) {
   const pw = request.headers.get('x-admin-password');
-  if (pw !== process.env.ADMIN_PASSWORD && pw !== 'MS360Admin2026!') {
+  if (pw !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

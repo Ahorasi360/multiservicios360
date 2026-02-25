@@ -42,6 +42,7 @@ export async function POST(request) {
     const title = formData.get('title') || '';
     const description = formData.get('description') || '';
     const category = formData.get('category') || 'general';
+    const audience = formData.get('audience') || 'both'; // partner | sales | both
 
     if (!file || !title) {
       return NextResponse.json({ error: 'File and title are required' }, { status: 400 });
@@ -71,6 +72,7 @@ export async function POST(request) {
         title,
         description,
         category,
+        audience,
         file_name: fileName,
         file_url: storagePath,
         file_size: fileBuffer.length,

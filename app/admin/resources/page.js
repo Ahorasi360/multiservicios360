@@ -14,6 +14,7 @@ export default function AdminResourcesPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('flyers');
+  const [audience, setAudience] = useState('both');
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -50,6 +51,7 @@ export default function AdminResourcesPage() {
     formData.append('title', title);
     formData.append('description', description);
     formData.append('category', category);
+    formData.append('audience', audience);
     formData.append('admin_password', password);
     try {
       const res = await fetch('/api/admin/resources', { method: 'POST', body: formData });
@@ -123,7 +125,7 @@ export default function AdminResourcesPage() {
         <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A', margin: '0 0 16px' }}>📤 Upload New Resource</h2>
         <p style={{ fontSize: 13, color: '#64748B', marginBottom: 16 }}>Upload flyers, posters, and marketing materials. All active partner offices will see these.</p>
         <form onSubmit={handleUpload}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 14, marginBottom: 14 }}>
             <div>
               <label style={lbl}>Title *</label>
               <input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. POA Service Flyer" style={inp} />
@@ -132,6 +134,14 @@ export default function AdminResourcesPage() {
               <label style={lbl}>Category</label>
               <select value={category} onChange={e => setCategory(e.target.value)} style={inp}>
                 {Object.entries(categories).map(([k, v]) => <option key={k} value={k}>{v.icon} {v.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={lbl}>👁 Who Can See This</label>
+              <select value={audience} onChange={e => setAudience(e.target.value)} style={inp}>
+                <option value="both">🌐 Todos (Partners + Vendedores)</option>
+                <option value="partner">🏢 Solo Partners</option>
+                <option value="sales">💼 Solo Vendedores</option>
               </select>
             </div>
             <div>
@@ -172,6 +182,9 @@ export default function AdminResourcesPage() {
                       <div style={{ fontWeight: 600, fontSize: 14, color: '#0F172A' }}>{r.title}</div>
                       <div style={{ fontSize: 12, color: '#64748B' }}>
                         {cat.label} • {r.file_name} • {formatSize(r.file_size)} • {fmtDate(r.created_at)}
+                        {' • '}<span style={{ background: r.audience === 'sales' ? '#FEF3C7' : r.audience === 'partner' ? '#DBEAFE' : '#DCFCE7', color: r.audience === 'sales' ? '#92400E' : r.audience === 'partner' ? '#1E40AF' : '#166534', padding: '1px 8px', borderRadius: 10, fontSize: 11, fontWeight: 600 }}>
+                          {r.audience === 'sales' ? '💼 Solo Vendedores' : r.audience === 'partner' ? '🏢 Solo Partners' : '🌐 Todos'}
+                        </span>
                       </div>
                       {r.description && <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{r.description}</div>}
                     </div>
