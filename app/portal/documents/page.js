@@ -4,14 +4,36 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+const T = {
+  es: {
+    heading: 'Documentos', back: '← Panel', filterAll: 'Todos', 
+    nav: {dashboard:'Panel', clients:'Mis Clientes', documents:'Documentos', earnings:'Ganancias', resources:'Recursos'},
+    status: {paid:'Pagado', pending_payment:'Pago Pendiente', draft:'Borrador', processing:'Procesando', completed:'Completado'},
+    type: {general_poa:'Poder Notarial General', limited_poa:'Poder Notarial Limitado', living_trust:'Fideicomiso', llc_formation:'LLC', bill_of_sale:'Carta de Venta', affidavit:'Declaración Jurada', travel_authorization:'Carta de Viaje', guardianship:'Designación de Guardián'},
+    loading: 'Cargando documentos...', noDocuments: 'No hay documentos aún.',
+    client: 'Cliente', date: 'Fecha', download: 'Descargar',
+  },
+  en: {
+    heading: 'Documents', back: '← Dashboard', filterAll: t.filterAll,
+    nav: {dashboard:'Dashboard', clients:'My Clients', documents:'Documents', earnings:'Earnings', resources:'Resources'},
+    status: {paid:'Paid', pending_payment:'Pending Payment', draft:'Draft', processing:'Processing', completed:'Completed'},
+    type: {general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', travel_authorization:'Travel Authorization', guardianship:'Guardianship Designation'},
+    loading: t.loading, noDocuments: t.noDocuments,
+    client: 'Client', date: 'Date', download: 'Download',
+  }
+};
+
 export default function PartnerDocuments() {
   const router = useRouter();
+  const [lang, setLang] = useState('es');
+  const t = T[lang];
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, general_poa, limited_poa
   const [statusFilter, setStatusFilter] = useState('all'); // all, paid, pending_payment
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('portal_lang') || 'es'; setLang(savedLang);
     const partnerId = localStorage.getItem('partner_id');
     if (!partnerId) {
       router.push('/portal/login');
@@ -116,6 +138,8 @@ export default function PartnerDocuments() {
     );
   }
 
+
+  function toggleLang() { const nl=lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('portal_lang',nl); }
   return (
     <div className="min-h-screen bg-slate-900">
       {/* Navigation */}

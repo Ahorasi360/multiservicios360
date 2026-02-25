@@ -3,6 +3,41 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+const T = {
+  es: {
+    brand: 'Portal Profesional', password: '🔑 Contraseña', signout: 'Cerrar Sesión',
+    totalCases: 'Total de Casos', pendingReview: 'Pendiente de Revisión', inReview: 'En Revisión', approved: 'Aprobado',
+    filtert.filterAll: 'Todos', loading: 'Cargando casos...', noCases: 'Aún no hay casos asignados. Tu administrador asignará casos para revisión.',
+    clientVault: 'Bóveda del Cliente:', viewDocs: 'Ver Documentos ↗',
+    reviewNotes: 'Notas de Revisión', reviewPlaceholder: 'Agrega tus notas, comentarios o cambios requeridos...',
+    startReview: '🔍 Iniciar Revisión', approveLbl: '✅ Aprobar', needsChanges: '⚠️ Necesita Cambios', markCompleted: '🏁 Marcar Completado', saveNotes: '💾 Guardar Notas',
+    lastReviewed: 'Última revisión:', assigned: 'Asignado',
+    pwTitle: '🔑 Cambiar Contraseña', pwCurrent: 'Contraseña Actual', pwNew: 'Nueva Contraseña', pwConfirm: 'Confirmar Nueva Contraseña',
+    cancel: 'Cancelar', save: 'Actualizar', saving: 'Guardando...',
+    pwMismatch: '❌ Las contraseñas no coinciden',
+    t.statusLabels: { pending: 'Pendiente de Revisión', in_review: 'En Revisión', approved: 'Aprobado', needs_changes: 'Necesita Cambios', completed: 'Completado' },
+    t.serviceLabels: { general_poa: 'Poder Notarial General', limited_poa: 'Poder Notarial Limitado', living_trust: 'Fideicomiso en Vida', llc_formation: 'Formación de LLC' },
+    t.profLabels: { attorney: '⚖️ Abogado', notary: '📝 Notario', cpa: '📊 Contador', realtor: '🏠 Agente Inmobiliario', other: '👤 Profesional' },
+    doc: 'doc', docs: 'docs',
+  },
+  en: {
+    brand: 'Professional Portal', password: '🔑 Password', signout: 'Sign Out',
+    totalCases: t.totalCases, pendingReview: t.pendingReview, inReview: t.inReview, approved: t.approved,
+    filtert.filterAll: 't.filterAll', loading: {t.loading}, noCases: '{t.noCases}',
+    clientVault: 'Client Vault:', viewDocs: 'View Documents ↗',
+    reviewNotes: 'Review Notes', reviewPlaceholder: 'Add your review notes, comments, or required changes...',
+    startReview: t.startReview, approveLbl: t.approveLbl, needsChanges: t.needsChanges, markCompleted: t.markCompleted, saveNotes: t.saveNotes,
+    lastReviewed: 'Last reviewed:', assigned: t.assigned,
+    pwTitle: '🔑 Change Password', pwCurrent: 'Current Password', pwNew: 'New Password', pwConfirm: 'Confirm New Password',
+    cancel: 'Cancel', save: 'Update Password', saving: t.saving,
+    pwMismatch: t.pwMismatch,
+    t.statusLabels: { pending: t.pendingReview, in_review: t.inReview, approved: t.approved, needs_changes: 'Needs Changes', completed: 'Completed' },
+    t.serviceLabels: { general_poa: 'General POA', limited_poa: 'Limited POA', living_trust: 'Living Trust', llc_formation: 'LLC Formation' },
+    t.profLabels: { attorney: '⚖️ Attorney', notary: '📝 Notary', cpa: '📊 CPA', realtor: '🏠 Realtor', other: '👤 Professional' },
+    doc: 'doc', docs: 'docs',
+  }
+};
+
 export default function ProfessionalDashboard() {
   const router = useRouter();
   const [profId, setProfId] = useState('');
@@ -12,6 +47,8 @@ export default function ProfessionalDashboard() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [message, setMessage] = useState('');
+  const [lang, setLang] = useState('es');
+  const t = T[lang];
   const [expandedCase, setExpandedCase] = useState(null);
   const [reviewNotes, setReviewNotes] = useState('');
 
@@ -23,6 +60,7 @@ export default function ProfessionalDashboard() {
   const [pwSaving, setPwSaving] = useState(false);
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('prof_lang') || 'es'; setLang(savedLang);
     const id = localStorage.getItem('profId');
     const name = localStorage.getItem('profName');
     const type = localStorage.getItem('profProfession');
@@ -62,7 +100,7 @@ export default function ProfessionalDashboard() {
 
   async function handleChangePassword(e) {
     e.preventDefault();
-    if (newPw !== confirmPw) { setMessage('❌ Passwords do not match'); return; }
+    if (newPw !== confirmPw) { setMessage(t.pwMismatch); return; }
     setPwSaving(true);
     try {
       const res = await fetch('/api/professional/change-password', {
@@ -80,20 +118,22 @@ export default function ProfessionalDashboard() {
     setTimeout(() => setMessage(''), 3000);
   }
 
+  function toggleLang() { const nl = lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('prof_lang', nl); }
+
   function logout() {
     localStorage.removeItem('profId'); localStorage.removeItem('profName'); localStorage.removeItem('profProfession');
     router.push('/professional/login');
   }
 
-  const fmt = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
-  const serviceLabels = { general_poa: 'General POA', limited_poa: 'Limited POA', living_trust: 'Living Trust', llc_formation: 'LLC Formation' };
-  const statusLabels = { pending: 'Pending Review', in_review: 'In Review', approved: 'Approved', needs_changes: 'Needs Changes', completed: 'Completed' };
+  const fmt = (d) => d ? new Date(d).toLocaleDateString(lang==='es'?'es-MX':'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+  const t.serviceLabels = { general_poa: 'General POA', limited_poa: 'Limited POA', living_trust: 'Living Trust', llc_formation: 'LLC Formation' };
+  const t.statusLabels = { pending: t.pendingReview, in_review: t.inReview, approved: t.approved, needs_changes: 'Needs Changes', completed: 'Completed' };
   const statusColors = {
     pending: { bg: '#FEF3C7', color: '#92400E' }, in_review: { bg: '#EFF6FF', color: '#1E3A8A' },
     approved: { bg: '#DCFCE7', color: '#166534' }, needs_changes: { bg: '#FEE2E2', color: '#991B1B' },
     completed: { bg: '#F0FDF4', color: '#059669' },
   };
-  const profLabels = { attorney: '⚖️ Attorney', notary: '📝 Notary', cpa: '📊 CPA', realtor: '🏠 Realtor', other: '👤 Professional' };
+  const t.profLabels = { attorney: '⚖️ Attorney', notary: '📝 Notary', cpa: '📊 CPA', realtor: '🏠 Realtor', other: '👤 Professional' };
 
   const stats = {
     total: cases.length,
@@ -110,12 +150,13 @@ export default function ProfessionalDashboard() {
           <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#7C3AED,#A78BFA)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>⚖️</div>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15, color: '#0F172A' }}>Professional Portal</div>
-            <div style={{ fontSize: 11, color: '#64748B' }}>{profName} • {profLabels[profType] || profType}</div>
+            <div style={{ fontSize: 11, color: '#64748B' }}>{profName} • {t.profLabels[profType] || profType}</div>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={() => setShowPwModal(true)} style={{ padding: '8px 14px', background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0', borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>🔑 Password</button>
-          <button onClick={logout} style={{ padding: '8px 14px', background: '#FEF2F2', color: '#991B1B', border: '1px solid #FECACA', borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>Sign Out</button>
+          <button onClick={toggleLang} style={{ padding: '6px 12px', background: '#F1F5F9', border: '1px solid #E2E8F0', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#475569' }}>{lang==='es'?'🇺🇸 English':'🇲🇽 Español'}</button>
+          <button onClick={() => setShowPwModal(true)} style={{ padding: '8px 14px', background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0', borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>{t.password}</button>
+          <button onClick={logout} style={{ padding: '8px 14px', background: '#FEF2F2', color: '#991B1B', border: '1px solid #FECACA', borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>{t.signout}</button>
         </div>
       </div>
 
@@ -131,10 +172,10 @@ export default function ProfessionalDashboard() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
           {[
-            { label: 'Total Cases', value: stats.total, icon: '📋', color: '#3B82F6' },
-            { label: 'Pending Review', value: stats.pending, icon: '⏳', color: '#D97706' },
-            { label: 'In Review', value: stats.inReview, icon: '🔍', color: '#7C3AED' },
-            { label: 'Approved', value: stats.approved, icon: '✅', color: '#059669' },
+            { label: t.totalCases, value: stats.total, icon: '📋', color: '#3B82F6' },
+            { label: t.pendingReview, value: stats.pending, icon: '⏳', color: '#D97706' },
+            { label: t.inReview, value: stats.inReview, icon: '🔍', color: '#7C3AED' },
+            { label: t.approved, value: stats.approved, icon: '✅', color: '#059669' },
           ].map(s => (
             <div key={s.label} style={{ background: '#fff', borderRadius: 12, padding: '18px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
@@ -153,7 +194,7 @@ export default function ProfessionalDashboard() {
               padding: '8px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
               background: filter === f ? '#7C3AED' : '#fff', color: filter === f ? '#fff' : '#475569',
               border: filter === f ? 'none' : '1px solid #E2E8F0',
-            }}>{f === '' ? 'All' : statusLabels[f] || f}</button>
+            }}>{f === '' ? 't.filterAll' : t.statusLabels[f] || f}</button>
           ))}
         </div>
 
@@ -161,7 +202,7 @@ export default function ProfessionalDashboard() {
         {loading ? <div style={{ textAlign: 'center', padding: 40, color: '#64748B' }}>Loading cases...</div> : (
           cases.length === 0 ? (
             <div style={{ background: '#fff', borderRadius: 12, padding: 40, textAlign: 'center', color: '#94A3B8', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-              No cases assigned yet. Your administrator will assign cases for review.
+              {t.noCases}
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -176,7 +217,7 @@ export default function ProfessionalDashboard() {
                       <div>
                         <div style={{ fontWeight: 600, fontSize: 15, color: '#0F172A', marginBottom: 4 }}>{c.client_name || 'Unknown Client'}</div>
                         <div style={{ fontSize: 12, color: '#64748B' }}>
-                          {c.client_email || ''} • {serviceLabels[c.matter_type] || c.matter_type} • Assigned {fmt(c.assigned_at)}
+                          {c.client_email || ''} • {t.serviceLabels[c.matter_type] || c.matter_type} • Assigned {fmt(c.assigned_at)}
                         </div>
                         {c.service_label && c.service_label !== c.matter_type && (
                           <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{c.service_label}</div>
@@ -185,11 +226,11 @@ export default function ProfessionalDashboard() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         {c.document_count > 0 && (
                           <span style={{ background: '#EFF6FF', color: '#1E3A8A', padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
-                            📄 {c.document_count} doc{c.document_count > 1 ? 's' : ''}
+                            📄 {c.document_count} {c.document_count > 1 ? t.docs : t.doc}
                           </span>
                         )}
                         <span style={{ background: sc.bg, color: sc.color, padding: '4px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600 }}>
-                          {statusLabels[c.status]}
+                          {t.statusLabels[c.status]}
                         </span>
                         <span style={{ fontSize: 14, color: '#94A3B8' }}>{isExpanded ? '▲' : '▼'}</span>
                       </div>
@@ -216,7 +257,7 @@ export default function ProfessionalDashboard() {
                               value={reviewNotes}
                               onChange={e => setReviewNotes(e.target.value)}
                               rows={3}
-                              placeholder="Add your review notes, comments, or required changes..."
+                              placeholder={t.reviewPlaceholder}
                               style={{ width: '100%', padding: '10px 14px', fontSize: 14, border: '2px solid #E2E8F0', borderRadius: 8, outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
                             />
                           </div>
@@ -288,7 +329,7 @@ export default function ProfessionalDashboard() {
                   style={{ flex: 1, padding: '12px', background: '#F1F5F9', color: '#475569', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
                 <button type="submit" disabled={pwSaving}
                   style={{ flex: 1, padding: '12px', background: 'linear-gradient(135deg,#7C3AED,#A78BFA)', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', opacity: pwSaving ? 0.6 : 1 }}>
-                  {pwSaving ? 'Saving...' : 'Update Password'}
+                  {pwSaving ? t.saving : 'Update Password'}
                 </button>
               </div>
             </form>

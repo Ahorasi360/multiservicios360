@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 function MembershipContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [lang, setLang] = useState('es');
+  const t = T[lang];
   const [partnerId, setPartnerId] = useState('');
   const [membership, setMembership] = useState(null);
   const [payments, setPayments] = useState([]);
@@ -14,13 +16,14 @@ function MembershipContent() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('portal_lang') || 'es'; setLang(savedLang);
     const id = localStorage.getItem('partnerId');
     if (!id) { router.push('/portal/login'); return; }
     setPartnerId(id);
     fetchMembership(id);
 
-    if (searchParams.get('success')) setMessage('✅ Payment successful! Your membership is now active.');
-    if (searchParams.get('cancelled')) setMessage('⚠️ Payment was cancelled. You can try again anytime.');
+    if (searchParams.get('success')) setMessage(t.successMsg);
+    if (searchParams.get('cancelled')) setMessage(t.cancelMsg);
   }, []);
 
   async function fetchMembership(id) {
@@ -74,6 +77,8 @@ function MembershipContent() {
 
   const sc = statusConfig[membership?.membership_status] || statusConfig.inactive;
 
+
+  function toggleLang() { const nl=lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('portal_lang',nl); }
   return (
     <div style={{ minHeight: '100vh', background: '#F1F5F9' }}>
       {/* Top bar */}
@@ -224,6 +229,33 @@ function MembershipContent() {
     </div>
   );
 }
+
+const T = {
+  es: {
+    heading: '💳 Membresía Vault Premium', back: '← Panel',
+    activeTitle: '✅ Membresía Activa', inactiveTitle: '📭 Sin Membresía Activa',
+    monthly: 'Mensual — $4.99/mes', annual: 'Anual — $49/año (ahorra 18%)',
+    subscribeLbl: 'Suscribirse', processing: 'Procesando...',
+    benefits: ['Documentos guardados de por vida en tu bóveda digital', 'Descarga tus documentos cuando quieras', 'Comparte documentos con familiares o abogados', 'Actualizaciones de documentos a precio reducido'],
+    paymentHistory: 'Historial de Pagos', noPayments: 'Sin pagos aún.',
+    status: {active:'Activo', past_due:'Vencido', cancelled:'Cancelado', inactive:'Inactivo'},
+    successMsg: '✅ ¡Pago exitoso! Tu membresía está activa.', cancelMsg: '⚠️ Pago cancelado. Puedes intentarlo de nuevo.',
+    loading: 'Cargando...',
+    expiresOn: 'Vence el', renewsOn: 'Se renueva el',
+  },
+  en: {
+    heading: '💳 Vault Premium Membership', back: '← Dashboard',
+    activeTitle: '✅ Active Membership', inactiveTitle: '📭 No Active Membership',
+    monthly: 'Monthly — $4.99/month', annual: 'Annual — $49/year (save 18%)',
+    subscribeLbl: 'Subscribe', processing: t.processing,
+    benefits: ['Documents stored forever in your digital vault', 'Download your documents anytime', 'Share documents with family or attorneys', 'Document updates at a reduced price'],
+    paymentHistory: 'Payment History', noPayments: 'No payments yet.',
+    status: {active:'Active', past_due:'Past Due', cancelled:'Cancelled', inactive:'Inactive'},
+    successMsg: t.successMsg, cancelMsg: t.cancelMsg,
+    loading: 'Loading...',
+    expiresOn: 'Expires on', renewsOn: 'Renews on',
+  }
+};
 
 export default function PartnerMembershipPage() {
   return (

@@ -3,8 +3,45 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+const T = {
+  es: {
+    brand: 'Portal de Personal', welcome: 'Bienvenido,', password: '🔑 Contraseña', signout: 'Cerrar Sesión',
+    tabMatters: '📋 Órdenes', tabVaults: '🔐 Bóvedas',
+    search: 'Buscar por nombre o email...', allServices: 'Todos los Servicios', allStatuses: 'Todos los Estados',
+    search_btn: '🔍 Buscar', loading: 'Cargando...', noMatters: 'No hay órdenes.',
+    uploadBtn: '⬆️ Subir Documento', resendEmail: '📧 Reenviar', viewVault: '🔗 Ver Bóveda',
+    uploadTitle: '⬆️ Subir Documento al Vault', clientName: 'Nombre del Cliente', clientEmail: 'Email del Cliente',
+    docType: 'Tipo de Documento', matterId: 'ID de la Orden (opcional)', selectFile: 'Seleccionar archivo', uploading: 'Subiendo...', uploadBtnLbl: 'Subir Documento',
+    cancel: 'Cancelar', save: 'Actualizar', saving: 'Guardando...',
+    pwTitle: '🔑 Cambiar Contraseña', pwCurrent: 'Contraseña Actual', pwNew: 'Nueva Contraseña', pwConfirm: 'Confirmar Nueva Contraseña',
+    pwMismatch: '❌ Las contraseñas no coinciden',
+    status: { draft:'Borrador', paid:'Pagado', pending_payment:'Pago Pendiente', processing:'Procesando', completed:'Completado', cancelled:'Cancelado', pending:'Pendiente' },
+    services: { general_poa:'Poder Notarial General', limited_poa:'Poder Notarial Limitado', living_trust:'Fideicomiso', llc_formation:'Formación LLC', bill_of_sale:'Carta de Venta', affidavit:'Declaración Jurada', travel_authorization:'Carta de Viaje', guardianship:'Guardianship' },
+    assigned: 'Asignado', client: 'Cliente', service: 'Servicio', noVaults: 'Sin bóvedas.',
+    emailSent: '✅ Email enviado', emailFail: '❌ Error al enviar',
+  },
+  en: {
+    brand: 'Staff Portal', welcome: 'Welcome,', password: '🔑 Password', signout: 'Sign Out',
+    tabMatters: t.tabMatters, tabVaults: t.tabVaults,
+    search: t.search, allServices: t.allServices, allStatuses: t.allStatuses,
+    search_btn: '🔍 Search', loading: t.loading, noMatters: t.noMatters,
+    uploadBtn: '⬆️ Upload Document', resendEmail: '📧 Resend', viewVault: '🔗 View Vault',
+    uploadTitle: '⬆️ Upload Document to Vault', clientName: 'Client Name', clientEmail: 'Client Email',
+    docType: 'Document Type', matterId: 'Matter ID (optional)', selectFile: 'Select file', uploading: 'Uploading...', uploadBtnLbl: 'Upload Document',
+    cancel: 'Cancel', save: 'Update', saving: t.saving,
+    pwTitle: '🔑 Change Password', pwCurrent: 'Current Password', pwNew: 'New Password', pwConfirm: 'Confirm New Password',
+    pwMismatch: t.pwMismatch,
+    status: { draft:'Draft', paid:'Paid', pending_payment:'Pending Payment', processing:'Processing', completed:'Completed', cancelled:'Cancelled', pending:'Pending' },
+    services: { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC Formation', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', travel_authorization:'Travel Authorization', guardianship:'Guardianship' },
+    assigned: 'Assigned', client: 'Client', service: 'Service', noVaults: 'No vaults.',
+    emailSent: t.emailSent, emailFail: t.emailFail,
+  }
+};
+
 export default function StaffDashboard() {
   const router = useRouter();
+  const [lang, setLang] = useState('es');
+  const t = T[lang];
   const [staffName, setStaffName] = useState('');
   const [staffId, setStaffId] = useState('');
   const [activeTab, setActiveTab] = useState('matters');
@@ -35,6 +72,7 @@ export default function StaffDashboard() {
   const [pwSaving, setPwSaving] = useState(false);
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('staff_lang') || 'es'; setLang(savedLang);
     const id = localStorage.getItem('staffId');
     const name = localStorage.getItem('staffName');
     if (!id) { router.push('/staff/login'); return; }
@@ -73,9 +111,9 @@ export default function StaffDashboard() {
         body: JSON.stringify({ action: 'resend_email', token_id: tokenId }),
       });
       const data = await res.json();
-      if (data.success) { setMessage('✅ Email sent successfully'); setTimeout(()=>setMessage(''), 3000); }
-      else { setMessage('❌ Failed to send email'); setTimeout(()=>setMessage(''), 3000); }
-    } catch { setMessage('❌ Error sending email'); setTimeout(()=>setMessage(''), 3000); }
+      if (data.success) { setMessage(t.emailSent); setTimeout(()=>setMessage(''), 3000); }
+      else { setMessage(t.emailFail); setTimeout(()=>setMessage(''), 3000); }
+    } catch { setMessage(t.emailFail); setTimeout(()=>setMessage(''), 3000); }
   }
 
   async function handleUpload(e) {
@@ -112,7 +150,7 @@ export default function StaffDashboard() {
 
   async function handleChangePassword(e) {
     e.preventDefault();
-    if (newPw !== confirmPw) { setMessage('❌ Passwords do not match'); return; }
+    if (newPw !== confirmPw) { setMessage(t.pwMismatch); return; }
     if (newPw.length < 6) { setMessage('❌ Password must be at least 6 characters'); return; }
     setPwSaving(true);
     try {
@@ -131,7 +169,7 @@ export default function StaffDashboard() {
     setTimeout(() => setMessage(''), 4000);
   }
 
-  const fmt = (d) => d ? new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+  const fmt = (d) => d ? new Date(d).toLocaleDateString(lang==='es'?'es-MX':'en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
   const serviceLabels = { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC', simple_doc:'Simple Doc' };
   const serviceColors = { general_poa:'#2563EB', limited_poa:'#7C3AED', living_trust:'#059669', llc_formation:'#D97706', simple_doc:'#0891B2' };
   const serviceSuccessUrls = { general_poa:'/poa/success', limited_poa:'/limited-poa/success', living_trust:'/trust/success', llc_formation:'/llc/success', simple_doc:'/simple-doc/success' };
@@ -193,14 +231,14 @@ export default function StaffDashboard() {
         <div style={{ display:'flex', alignItems:'center', gap:12 }}>
           <div style={{ width:36, height:36, background:'linear-gradient(135deg,#059669,#10B981)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16 }}>👷</div>
           <div>
-            <div style={{ fontWeight:700, fontSize:15, color:'#0F172A' }}>Staff Portal</div>
+            <div style={{ fontWeight:700, fontSize:15, color:'#0F172A' }}>{t.brand}</div>
             <div style={{ fontSize:11, color:'#64748B' }}>Welcome, {staffName}</div>
           </div>
         </div>
         <div style={{ display:'flex', gap:8 }}>
           <button onClick={() => setShowPwModal(true)} style={{ padding:'8px 14px', background:'#F1F5F9', color:'#475569', borderRadius:8, fontSize:13, fontWeight:500, border:'1px solid #E2E8F0', cursor:'pointer' }}>🔑 Password</button>
           <a href="/" target="_blank" style={{ padding:'8px 14px', background:'#F1F5F9', color:'#475569', borderRadius:8, fontSize:13, fontWeight:500, textDecoration:'none', border:'1px solid #E2E8F0' }}>View Site ↗</a>
-          <button onClick={logout} style={{ padding:'8px 14px', background:'#FEF2F2', color:'#991B1B', border:'1px solid #FECACA', borderRadius:8, fontSize:13, fontWeight:500, cursor:'pointer' }}>Sign Out</button>
+          <button onClick={logout} style={{ padding:'8px 14px', background:'#FEF2F2', color:'#991B1B', border:'1px solid #FECACA', borderRadius:8, fontSize:13, fontWeight:500, cursor:'pointer' }}>{t.signout}</button>
         </div>
       </div>
 
@@ -385,7 +423,7 @@ export default function StaffDashboard() {
               <div style={{ display:'flex', gap:12 }}>
                 <button type="button" onClick={()=>{setShowPwModal(false);setCurrentPw('');setNewPw('');setConfirmPw('');}} style={{ flex:1, padding:'12px', background:'#F1F5F9', color:'#475569', border:'none', borderRadius:10, fontSize:14, fontWeight:600, cursor:'pointer' }}>Cancel</button>
                 <button type="submit" disabled={pwSaving} style={{ flex:1, padding:'12px', background:pwSaving?'#94A3B8':'linear-gradient(135deg,#059669,#10B981)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:600, cursor:pwSaving?'not-allowed':'pointer' }}>
-                  {pwSaving ? 'Saving...' : 'Update Password'}
+                  {pwSaving ? t.saving : 'Update Password'}
                 </button>
               </div>
             </form>
@@ -442,7 +480,7 @@ export default function StaffDashboard() {
               </button>
               <button onClick={handleEditSave} disabled={editSaving}
                 style={{ flex:1, padding:'12px', background:editSaving?'#94A3B8':'linear-gradient(135deg,#1D4ED8,#2563EB)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor:editSaving?'not-allowed':'pointer' }}>
-                {editSaving ? 'Saving...' : '💾 Save Changes'}
+                {editSaving ? t.saving : '💾 Save Changes'}
               </button>
             </div>
           </div>

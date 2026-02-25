@@ -154,13 +154,33 @@ const DOCS = [
   },
 ];
 
+const T = {
+  es: {
+    brand: 'Documentos de Muestra', brandSub: 'Vista Previa de Ventas — Copias Protegidas',
+    back: '← Panel',
+    search: 'Buscar documentos...', pages: 'página', clickPreview: 'Clic para ver vista previa →',
+    previewTitle: 'Vista Previa del Documento', watermark: '⚠️ Documento de Muestra — Solo para demostración',
+    close: '✕ Cerrar', fieldLabels: { 'Principal Name':'Nombre del Titular', 'Agent/Attorney':'Agente/Apoderado', 'Powers Granted':'Poderes Otorgados', 'Principal':'Principal', 'Agent':'Agente', 'Specific Purpose':'Propósito Específico', 'Trustmaker (Grantor)':'Otorgante (Fideicomitente)', 'Successor Trustee':'Fideicomisario Sucesor', 'Beneficiaries':'Beneficiarios', 'LLC Name':'Nombre de la LLC', 'Registered Agent':'Agente Registrado', 'Members':'Miembros', 'Seller':'Vendedor', 'Buyer':'Comprador', 'Item Description':'Descripción del Artículo', 'Parent/Guardian':'Padre/Tutor', 'Minor Child':'Menor de Edad', 'Authorized Adult':'Adulto Autorizado', 'Affiant (Declarant)':'Declarante', 'Statement of Truth':'Declaración de Verdad', 'Facts Declared':'Hechos Declarados', 'Parent/Designating Party':'Padre/Parte Designante', 'Designated Guardian':'Guardián Designado', 'Minor Children':'Menores de Edad' },
+  },
+  en: {
+    brand: 'Sample Documents', brandSub: 'Sales Preview — Protected Copies',
+    back: '← Dashboard',
+    search: 'Search documents...', pages: 'page', clickPreview: 'Click to see full preview →',
+    previewTitle: 'Document Preview', watermark: '⚠️ Sample Document — For demonstration only',
+    close: '✕ Close', fieldLabels: {},
+  }
+};
+
 export default function SalesSamplesPage() {
   const router = useRouter();
+  const [lang, setLang] = useState('es');
+  const t = T[lang];
   const [repId, setRepId] = useState('');
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('sales_lang') || 'es'; setLang(savedLang);
     const id = localStorage.getItem('salesId');
     if (!id) { router.push('/sales/login'); return; }
     setRepId(id);
@@ -171,6 +191,8 @@ export default function SalesSamplesPage() {
     d.subtitle.toLowerCase().includes(search.toLowerCase())
   );
 
+
+  function toggleLang() { const nl=lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('sales_lang',nl); }
   return (
     <div style={{ minHeight:'100vh', background:'#F8FAFC', fontFamily:'system-ui, sans-serif' }}>
       {/* Header */}

@@ -1,24 +1,51 @@
-// app/portal/resources/page.js
+// app/portal/resources/page.js - BILINGUAL ES/EN
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+const T = {
+  es: {
+    title: 'Recursos de Marketing', brand: 'MS', back: '← Volver al Panel',
+    nav: { dashboard: 'Panel', clients: 'Mis Clientes', documents: 'Documentos', earnings: 'Ganancias', resources: 'Recursos' },
+    heading: '📦 Recursos de Marketing', desc: 'Descarga flyers, posters y materiales de marketing para tu oficina',
+    all: 'Todos', loading: 'Cargando recursos...', empty: 'No hay recursos disponibles aún',
+    emptyDesc: 'Vuelve pronto — la oficina central está preparando materiales para ti.',
+    download: '⬇️ Descargar', unavailable: 'No disponible',
+    cats: { flyers: 'Flyers', posters: 'Posters', brochures: 'Folletos', social_media: 'Redes Sociales', training: 'Capacitación', general: 'General' },
+  },
+  en: {
+    title: 'Marketing Resources', brand: 'MS', back: '← Back to Dashboard',
+    nav: { dashboard: 'Dashboard', clients: 'My Clients', documents: 'Documents', earnings: 'Earnings', resources: 'Resources' },
+    heading: '📦 Marketing Resources', desc: 'Download flyers, posters, and marketing materials for your office',
+    all: 'All', loading: 'Loading resources...', empty: 'No resources available yet',
+    emptyDesc: 'Check back soon — headquarters is preparing marketing materials for you.',
+    download: '⬇️ Download', unavailable: 'Unavailable',
+    cats: { flyers: 'Flyers', posters: 'Posters', brochures: 'Brochures', social_media: 'Social Media', training: 'Training', general: 'General' },
+  }
+};
+
 export default function PortalResourcesPage() {
   const router = useRouter();
+  const [lang, setLang] = useState('es');
   const [partnerId, setPartnerId] = useState('');
   const [partnerName, setPartnerName] = useState('');
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
 
+  const t = T[lang];
+
   useEffect(() => {
+    const savedLang = localStorage.getItem('portal_lang') || 'es';
+    setLang(savedLang);
     const id = localStorage.getItem('partner_id');
     const name = localStorage.getItem('partner_name');
     if (!id) { router.push('/portal/login'); return; }
-    setPartnerId(id);
-    setPartnerName(name || '');
+    setPartnerId(id); setPartnerName(name || '');
     fetchResources(id);
   }, []);
+
+  function toggleLang() { const nl = lang === 'es' ? 'en' : 'es'; setLang(nl); localStorage.setItem('portal_lang', nl); }
 
   async function fetchResources(id) {
     try {
@@ -29,135 +56,105 @@ export default function PortalResourcesPage() {
     setLoading(false);
   }
 
-  const categories = {
-    flyers: { label: 'Flyers', icon: '📄', color: '#3B82F6' },
-    posters: { label: 'Posters', icon: '🖼️', color: '#8B5CF6' },
-    brochures: { label: 'Brochures', icon: '📰', color: '#059669' },
-    social_media: { label: 'Social Media', icon: '📱', color: '#D97706' },
-    training: { label: 'Training', icon: '📚', color: '#DC2626' },
-    general: { label: 'General', icon: '📋', color: '#64748B' },
+  const catMeta = {
+    flyers: { icon: '📄', color: '#3B82F6' }, posters: { icon: '🖼️', color: '#8B5CF6' },
+    brochures: { icon: '📰', color: '#059669' }, social_media: { icon: '📱', color: '#D97706' },
+    training: { icon: '📚', color: '#DC2626' }, general: { icon: '📋', color: '#64748B' },
   };
 
   const filtered = filter === 'all' ? resources : resources.filter(r => r.category === filter);
-  const formatSize = (bytes) => bytes > 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + ' MB' : Math.round(bytes / 1024) + ' KB';
+  const formatSize = (bytes) => bytes > 1024*1024 ? (bytes/1024/1024).toFixed(1)+' MB' : Math.round(bytes/1024)+' KB';
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading resources...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div style={{ minHeight:'100vh', background:'#F8FAFC', display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ color:'#64748B' }}>{t.loading}</div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-sm font-bold text-white">MS</span>
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-slate-800">Marketing Resources</h1>
-                <p className="text-xs text-slate-500">{partnerName}</p>
-              </div>
+    <div style={{ minHeight:'100vh', background:'#F8FAFC' }}>
+      <header style={{ background:'#fff', borderBottom:'1px solid #E2E8F0', padding:'0 24px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto', display:'flex', justifyContent:'space-between', alignItems:'center', height:64 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:14 }}>
+            <div style={{ width:40, height:40, background:'linear-gradient(135deg,#3B82F6,#1E3A8A)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <span style={{ fontWeight:'bold', color:'#fff', fontSize:14 }}>{t.brand}</span>
             </div>
-            <button onClick={() => router.push('/portal/dashboard')} className="px-4 py-2 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-              ← Back to Dashboard
+            <div>
+              <div style={{ fontWeight:700, fontSize:16, color:'#1E293B' }}>{t.title}</div>
+              <div style={{ fontSize:12, color:'#64748B' }}>{partnerName}</div>
+            </div>
+          </div>
+          <div style={{ display:'flex', gap:8 }}>
+            <button onClick={toggleLang} style={{ padding:'6px 12px', background:'#F1F5F9', border:'1px solid #E2E8F0', borderRadius:20, fontSize:12, fontWeight:600, cursor:'pointer', color:'#475569' }}>
+              {lang==='es'?'🇺🇸 English':'🇲🇽 Español'}
             </button>
+            <button onClick={() => router.push('/portal/dashboard')} style={{ padding:'8px 16px', fontSize:13, color:'#64748B', border:'none', background:'transparent', cursor:'pointer' }}>{t.back}</button>
           </div>
         </div>
       </header>
 
-      {/* Navigation Tabs - match portal style */}
-      <nav className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-1">
-            <button onClick={() => router.push('/portal/dashboard')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Dashboard</button>
-            <button onClick={() => router.push('/portal/clients')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">My Clients</button>
-            <button onClick={() => router.push('/portal/documents')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Documents</button>
-            <button onClick={() => router.push('/portal/earnings')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Earnings</button>
-            <button className="px-4 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Resources</button>
-          </div>
+      <nav style={{ background:'#fff', borderBottom:'1px solid #E2E8F0', padding:'0 24px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto', display:'flex', gap:0 }}>
+          {[['dashboard','/portal/dashboard'],['clients','/portal/clients'],['documents','/portal/documents'],['earnings','/portal/earnings'],['resources','/portal/resources']].map(([key,path])=>(
+            <button key={key} onClick={() => router.push(path)} style={{ padding:'12px 16px', fontSize:14, fontWeight:500, color: key==='resources'?'#3B82F6':'#64748B', borderBottom: key==='resources'?'2px solid #3B82F6':'2px solid transparent', background:'transparent', border:'none', borderBottom: key==='resources'?'2px solid #3B82F6':'2px solid transparent', cursor:'pointer' }}>
+              {t.nav[key]}
+            </button>
+          ))}
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Info */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-800">📦 Marketing Resources</h2>
-          <p className="text-slate-600 mt-1">Download flyers, posters, and marketing materials for your office</p>
+      <main style={{ maxWidth:1100, margin:'0 auto', padding:'32px 24px' }}>
+        <div style={{ marginBottom:24 }}>
+          <h2 style={{ fontSize:24, fontWeight:700, color:'#1E293B', margin:'0 0 6px' }}>{t.heading}</h2>
+          <p style={{ color:'#64748B', margin:0 }}>{t.desc}</p>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          <button onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}>
-            All ({resources.length})
+        <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:24 }}>
+          <button onClick={() => setFilter('all')} style={{ padding:'8px 18px', borderRadius:20, fontSize:13, fontWeight:600, cursor:'pointer', background:filter==='all'?'#3B82F6':'#fff', color:filter==='all'?'#fff':'#64748B', border:'1px solid #E2E8F0' }}>
+            {t.all} ({resources.length})
           </button>
-          {Object.entries(categories).map(([key, cat]) => {
+          {Object.entries(catMeta).map(([key, cat]) => {
             const count = resources.filter(r => r.category === key).length;
-            if (count === 0) return null;
+            if (!count) return null;
             return (
-              <button key={key} onClick={() => setFilter(key)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === key ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}>
-                {cat.icon} {cat.label} ({count})
+              <button key={key} onClick={() => setFilter(key)} style={{ padding:'8px 18px', borderRadius:20, fontSize:13, fontWeight:600, cursor:'pointer', background:filter===key?'#3B82F6':'#fff', color:filter===key?'#fff':'#64748B', border:'1px solid #E2E8F0' }}>
+                {cat.icon} {t.cats[key]} ({count})
               </button>
             );
           })}
         </div>
 
-        {/* Resources Grid */}
         {filtered.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-16 text-center">
-            <div className="text-5xl mb-4">📭</div>
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">No resources available yet</h3>
-            <p className="text-slate-500">Check back soon — headquarters is preparing marketing materials for you.</p>
+          <div style={{ background:'#fff', borderRadius:16, padding:64, textAlign:'center', border:'1px solid #E2E8F0' }}>
+            <div style={{ fontSize:48, marginBottom:16 }}>📭</div>
+            <h3 style={{ fontSize:18, fontWeight:600, color:'#1E293B', margin:'0 0 8px' }}>{t.empty}</h3>
+            <p style={{ color:'#64748B', margin:0 }}>{t.emptyDesc}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map(resource => {
-              const cat = categories[resource.category] || categories.general;
-              const isImage = resource.file_type?.startsWith('image/');
-              const isPDF = resource.file_type === 'application/pdf';
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:20 }}>
+            {filtered.map(r => {
+              const cat = catMeta[r.category] || catMeta.general;
+              const isPDF = r.file_type === 'application/pdf';
+              const isImage = r.file_type?.startsWith('image/');
               return (
-                <div key={resource.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
-                  {/* File type indicator */}
-                  <div className="h-3" style={{ background: cat.color }} />
-                  <div className="p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" style={{ background: `${cat.color}15` }}>
-                          {isPDF ? '📄' : isImage ? '🖼️' : cat.icon}
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-slate-800 text-sm leading-tight">{resource.title}</h3>
-                          <span className="text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block" style={{ background: `${cat.color}15`, color: cat.color }}>
-                            {cat.label}
-                          </span>
-                        </div>
+                <div key={r.id} style={{ background:'#fff', borderRadius:16, border:'1px solid #E2E8F0', overflow:'hidden' }}>
+                  <div style={{ height:4, background:cat.color }} />
+                  <div style={{ padding:20 }}>
+                    <div style={{ display:'flex', alignItems:'flex-start', gap:12, marginBottom:12 }}>
+                      <div style={{ width:48, height:48, borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:24, background:`${cat.color}15` }}>
+                        {isPDF ? '📄' : isImage ? '🖼️' : cat.icon}
+                      </div>
+                      <div>
+                        <div style={{ fontWeight:600, fontSize:14, color:'#1E293B' }}>{r.title}</div>
+                        <span style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:20, background:`${cat.color}15`, color:cat.color }}>{t.cats[r.category] || r.category}</span>
                       </div>
                     </div>
-                    {resource.description && (
-                      <p className="text-slate-500 text-sm mb-3 line-clamp-2">{resource.description}</p>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <div className="text-xs text-slate-400">
-                        {formatSize(resource.file_size)} • {resource.file_name}
-                      </div>
-                      {resource.download_url ? (
-                        <a href={resource.download_url} download={resource.file_name} target="_blank" rel="noopener noreferrer"
-                          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                          ⬇️ Download
-                        </a>
-                      ) : (
-                        <span className="text-xs text-slate-400">Unavailable</span>
-                      )}
+                    {r.description && <p style={{ fontSize:13, color:'#64748B', margin:'0 0 12px' }}>{r.description}</p>}
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                      <span style={{ fontSize:11, color:'#94A3B8' }}>{formatSize(r.file_size)}</span>
+                      {r.download_url
+                        ? <a href={r.download_url} download={r.file_name} target="_blank" rel="noreferrer" style={{ padding:'8px 16px', background:'#3B82F6', color:'#fff', borderRadius:8, fontSize:13, fontWeight:600, textDecoration:'none' }}>{t.download}</a>
+                        : <span style={{ fontSize:12, color:'#94A3B8' }}>{t.unavailable}</span>}
                     </div>
                   </div>
                 </div>

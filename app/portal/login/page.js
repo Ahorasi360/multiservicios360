@@ -1,189 +1,86 @@
-"use client";
+// portal/login/page - BILINGUAL ES/EN
+'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+const T = {
+  es: {
+    title: 'Portal de Socios', subtitle: 'Multi Servicios 360',
+    email: 'Correo electrónico', password: 'Contraseña',
+    signin: 'Iniciar Sesión', signing: 'Iniciando sesión...',
+    contact: 'Contacta a tu administrador para acceso',
+    error_conn: 'Error de conexión. Intenta de nuevo.',
+    not_partner: '¿No eres socio aún?', apply: 'Aplica aquí',
+  },
+  en: {
+    title: 'Partner Portal', subtitle: 'Multi Servicios 360',
+    email: 'Email', password: 'Password',
+    signin: 'Sign In', signing: 'Signing in...',
+    contact: 'Contact your administrator for access',
+    error_conn: 'Connection error. Please try again.',
+    not_partner: 'Not a partner yet?', apply: 'Apply here',
+  }
+};
+
 export default function PartnerLogin() {
-  const router = useRouter();
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [lang, setLang] = useState('es');
+  const router = useRouter();
+  const t = T[lang];
 
-  const handleSubmit = async (e) => {
+  async function handleLogin(e) {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-
+    setLoading(true); setError('');
     try {
       const res = await fetch('/api/portal/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ email, password }),
       });
-
       const data = await res.json();
-
-      if (res.ok && data.success) {
+      if (data.success && data.partner) {
         localStorage.setItem('partner_token', data.token);
         localStorage.setItem('partner_id', data.partner.id);
         localStorage.setItem('partner_name', data.partner.business_name);
         router.push('/portal/dashboard');
       } else {
-        setError(data.error || 'Invalid email or password');
+        setError(data.error || 'Invalid credentials');
       }
     } catch (err) {
-      setError('Connection error. Please try again.');
+      setError(t.error_conn);
     }
-
     setLoading(false);
-  };
-
-  const styles = {
-    container: {
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '16px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-    },
-    card: {
-      backgroundColor: 'rgba(255,255,255,0.1)',
-      backdropFilter: 'blur(20px)',
-      padding: '32px',
-      borderRadius: '16px',
-      boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-      width: '100%',
-      maxWidth: '400px',
-      border: '1px solid rgba(255,255,255,0.2)'
-    },
-    logo: {
-      width: '64px',
-      height: '64px',
-      background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-      borderRadius: '16px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: '0 auto 16px'
-    },
-    logoText: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      color: 'white'
-    },
-    title: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      color: 'white',
-      textAlign: 'center',
-      marginBottom: '8px'
-    },
-    subtitle: {
-      color: '#94a3b8',
-      textAlign: 'center',
-      marginBottom: '32px'
-    },
-    error: {
-      backgroundColor: 'rgba(239,68,68,0.2)',
-      border: '1px solid rgba(239,68,68,0.5)',
-      color: '#fecaca',
-      padding: '12px 16px',
-      borderRadius: '8px',
-      marginBottom: '24px'
-    },
-    label: {
-      display: 'block',
-      color: '#cbd5e1',
-      fontSize: '14px',
-      fontWeight: '500',
-      marginBottom: '8px'
-    },
-    input: {
-      width: '100%',
-      padding: '12px 16px',
-      backgroundColor: 'rgba(255,255,255,0.1)',
-      border: '1px solid rgba(255,255,255,0.2)',
-      borderRadius: '8px',
-      color: 'white',
-      fontSize: '16px',
-      marginBottom: '16px',
-      boxSizing: 'border-box'
-    },
-    button: {
-      width: '100%',
-      padding: '12px',
-      background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-      color: 'white',
-      fontWeight: '600',
-      border: 'none',
-      borderRadius: '8px',
-      fontSize: '16px',
-      cursor: 'pointer',
-      marginTop: '8px'
-    },
-    footer: {
-      marginTop: '24px',
-      textAlign: 'center',
-      color: '#94a3b8',
-      fontSize: '14px'
-    },
-    link: {
-      color: '#60a5fa',
-      textDecoration: 'none'
-    },
-    backLink: {
-      marginTop: '32px',
-      paddingTop: '24px',
-      borderTop: '1px solid rgba(255,255,255,0.1)',
-      textAlign: 'center'
-    }
-  };
+  }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <div style={styles.logo}>
-          <span style={styles.logoText}>MS</span>
+    <div style={{ minHeight:'100vh', background:'linear-gradient(135deg,#0F172A,#1E3A5F,#0F172A)', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
+      <div style={{ background:'#fff', borderRadius:16, padding:'40px 36px', maxWidth:400, width:'100%', boxShadow:'0 25px 50px rgba(0,0,0,0.3)', textAlign:'center' }}>
+        {/* Lang toggle */}
+        <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:12 }}>
+          <button onClick={()=>setLang(lang==='es'?'en':'es')} style={{ padding:'4px 12px', fontSize:12, fontWeight:600, background:'#F1F5F9', border:'1px solid #E2E8F0', borderRadius:20, cursor:'pointer', color:'#475569' }}>
+            {lang==='es'?'🇺🇸 English':'🇲🇽 Español'}
+          </button>
         </div>
-        <h1 style={styles.title}>Partner Portal</h1>
-        <p style={styles.subtitle}>Multi Servicios 360</p>
-
-        {error && <div style={styles.error}>{error}</div>}
-
-        <form onSubmit={handleSubmit}>
-          <label style={styles.label}>Email</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            style={styles.input}
-            placeholder="partner@example.com"
-            required
-          />
-
-          <label style={styles.label}>Password</label>
-          <input
-            type="password"
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            style={styles.input}
-            placeholder="••••••••"
-            required
-          />
-
-          <button type="submit" disabled={loading} style={styles.button}>
-            {loading ? 'Signing in...' : 'Sign In'}
+        <div style={{ width:56, height:56, background:'linear-gradient(135deg,#3B82F6,#06B6D4)', borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}><span style={{ fontSize:20, fontWeight:'bold', color:'white' }}>MS</span></div>
+        <h1 style={{ fontSize:22, fontWeight:700, color:'#0F172A', margin:'0 0 4px' }}>{t.title}</h1>
+        <p style={{ fontSize:14, color:'#64748B', margin:'0 0 24px' }}>{t.subtitle}</p>
+        <form onSubmit={handleLogin}>
+          <input type="email" value={email} onChange={e=>{setEmail(e.target.value);setError('');}} placeholder={t.email} required
+            style={{ width:'100%', padding:'12px 14px', fontSize:15, border:'2px solid #E2E8F0', borderRadius:10, outline:'none', boxSizing:'border-box', marginBottom:12 }} />
+          <input type="password" value={password} onChange={e=>{setPassword(e.target.value);setError('');}} placeholder={t.password} required
+            style={{ width:'100%', padding:'12px 14px', fontSize:15, border:'2px solid #E2E8F0', borderRadius:10, outline:'none', boxSizing:'border-box', marginBottom:12 }} />
+          {error && <p style={{ color:'#EF4444', fontSize:14, margin:'0 0 12px' }}>❌ {error}</p>}
+          <button type="submit" disabled={loading} style={{ width:'100%', padding:'12px', background:'linear-gradient(135deg,#3B82F6,#06B6D4)', color:'#fff', border:'none', borderRadius:10, fontSize:15, fontWeight:600, cursor:'pointer', opacity:loading?0.6:1 }}>
+            {loading ? t.signing : t.signin}
           </button>
         </form>
-
-        <div style={styles.footer}>
-          Not a partner yet?{' '}
-          <a href="/contacto" style={styles.link}>Apply here</a>
-        </div>
-
-        <div style={styles.backLink}>
-          <a href="/" style={{...styles.link, color: '#94a3b8'}}>← Back to main site</a>
+        <p style={{ fontSize:12, color:'#94A3B8', margin:'20px 0 0' }}>{t.contact}</p>
+        <div style={{ marginTop:16, fontSize:13, color:'#64748B' }}>
+          {t.not_partner}{' '}
+          <a href="/contacto" style={{ color:'#3B82F6', textDecoration:'none' }}>{t.apply}</a>
         </div>
       </div>
     </div>

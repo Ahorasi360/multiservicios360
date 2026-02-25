@@ -281,7 +281,36 @@ function RegisterOfficeContent() {
   );
 }
 
+const T = {
+  es: {
+    title: 'Registrar Nueva Oficina', subtitle: 'Multi Servicios 360 — Portal de Ventas',
+    back: '← Volver al Panel',
+    businessName: 'Nombre del Negocio', contactName: 'Nombre del Contacto', email: 'Correo Electrónico',
+    phone: 'Teléfono', type: 'Tipo de Socio', package: 'Paquete',
+    types: { tax_preparer:'Preparador de Impuestos', notary:'Notario', insurance:'Agente de Seguros', real_estate:'Agente Inmobiliario', other:'Otro' },
+    packages: { start:'Start — $499', pro:'Pro — $999', elite:'Elite — $2,500' },
+    submitBtn: '🔒 Proceder al Pago', processing: 'Procesando...',
+    required: 'Campo requerido',
+    successTitle: '✅ ¡Registro Exitoso!', successDesc: 'La oficina ha sido registrada. El link de pago fue enviado.',
+    errorTitle: '❌ Error al registrar',
+  },
+  en: {
+    title: 'Register New Office', subtitle: 'Multi Servicios 360 — Sales Portal',
+    back: '← Back to Dashboard',
+    businessName: 'Business Name', contactName: 'Contact Name', email: 'Email Address',
+    phone: 'Phone', type: 'Partner Type', package: 'Package',
+    types: { tax_preparer:'Tax Preparer', notary:'Notary', insurance:'Insurance Agent', real_estate:'Real Estate Agent', other:'Other' },
+    packages: { start:'Start — $499', pro:'Pro — $999', elite:'Elite — $2,500' },
+    submitBtn: '🔒 Proceed to Payment', processing: 'Processing...',
+    required: 'Required field',
+    successTitle: '✅ Registration Successful!', successDesc: 'The office has been registered. The payment link was sent.',
+    errorTitle: '❌ Registration error',
+  }
+};
+
 export default function RegisterOfficePage() {
+
+  function toggleLang() { const nl=lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('sales_lang',nl); }
   return (
     <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F1F5F9' }}>Loading...</div>}>
       <RegisterOfficeContent />

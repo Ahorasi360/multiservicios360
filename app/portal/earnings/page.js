@@ -4,8 +4,33 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+const T = {
+  es: {
+    heading: 'Mis Ganancias', back: '← Panel',
+    nav: {dashboard:'Panel', clients:'Mis Clientes', documents:'Documentos', earnings:'Ganancias', resources:'Recursos'},
+    totalEarnings: 'Total Ganado', pendingPayout: 'Pago Pendiente', paidOut: 'Pagado', totalDocs: 'Documentos Totales',
+    all: 'Todos', thisMonth: 'Este Mes', lastMonth: 'Mes Anterior',
+    status: {pending:'Pendiente', paid:'Pagado', cancelled:'Cancelado'},
+    filterAll: 'Todos', loading: 'Cargando ganancias...', noEarnings: 'Sin ganancias aún.',
+    type: {general_poa:'Poder Notarial General', limited_poa:'Poder Notarial Limitado', living_trust:'Fideicomiso', llc_formation:'LLC', bill_of_sale:'Carta de Venta', affidavit:'Declaración Jurada', travel_authorization:'Carta de Viaje'},
+    commission: 'Comisión', date: 'Fecha',
+  },
+  en: {
+    heading: 'My Earnings', back: '← Dashboard',
+    nav: {dashboard:'Dashboard', clients:'My Clients', documents:'Documents', earnings:'Earnings', resources:'Resources'},
+    totalEarnings: 'Total Earnings', pendingPayout: 'Pending Payout', paidOut: 'Paid Out', totalDocs: 'Total Documents',
+    all: t.all, thisMonth: t.thisMonth, lastMonth: t.lastMonth,
+    status: {pending:'Pending', paid:'Paid', cancelled:'Cancelled'},
+    filterAll: t.all, loading: t.loading, noEarnings: t.noEarnings,
+    type: {general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC Formation', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', travel_authorization:'Travel Authorization'},
+    commission: 'Commission', date: 'Date',
+  }
+};
+
 export default function PartnerEarnings() {
   const router = useRouter();
+  const [lang, setLang] = useState('es');
+  const t = T[lang];
   const [earnings, setEarnings] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,6 +38,7 @@ export default function PartnerEarnings() {
   const [statusFilter, setStatusFilter] = useState('all'); // all, pending, paid
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('portal_lang') || 'es'; setLang(savedLang);
     const partnerId = localStorage.getItem('partner_id');
     if (!partnerId) {
       router.push('/portal/login');
@@ -123,6 +149,8 @@ export default function PartnerEarnings() {
     );
   }
 
+
+  function toggleLang() { const nl=lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('portal_lang',nl); }
   return (
     <div className="min-h-screen bg-slate-900">
       {/* Navigation */}
