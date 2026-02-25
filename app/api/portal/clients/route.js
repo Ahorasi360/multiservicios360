@@ -3,12 +3,11 @@ export const dynamic = 'force-dynamic';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-function getSupabase() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-}
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 export async function GET(request) {
   try {
+    const supabase = getSupabase();
     const { searchParams } = new URL(request.url);
     const partnerId = searchParams.get('partner_id');
     if (!partnerId) return NextResponse.json({ success: false, error: 'Partner ID required' }, { status: 400 });
@@ -63,6 +62,7 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    const supabase = getSupabase();
     const body = await request.json();
     const { partner_id, client_name, client_email, client_phone, language_preference } = body;
 

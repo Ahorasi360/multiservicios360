@@ -13,9 +13,7 @@ import path from 'path';
 import { SPANISH_CLAUSES, SPANISH_PURPOSES } from '../../../../lib/oa-clauses-es';
 
 
-function getSupabase() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-}
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 // =====================================================
 // CLAUSE MANIFEST (inline to avoid import issues on Vercel)

@@ -4,9 +4,7 @@ import { NextResponse } from 'next/server';
 import { sendWelcomeEmail } from '../../../../lib/send-welcome-email';
 import crypto from 'crypto';
 
-function getSupabase() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-}
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 function checkAuth(request) {
   const pw = request.headers.get('x-admin-password');

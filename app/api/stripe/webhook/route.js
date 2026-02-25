@@ -6,9 +6,7 @@ import crypto from 'crypto';
 
 function getStripe() { return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' }); }
 
-function getSupabase() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-}
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 // Map document types to their Supabase table names
 const TABLE_MAP = {
@@ -23,6 +21,7 @@ const TABLE_MAP = {
   authorization_letter: 'simple_doc_matters',
   promissory_note: 'simple_doc_matters',
   guardianship_designation: 'simple_doc_matters',
+  travel_authorization: 'simple_doc_matters',
 };
 
 // Map document types to vault document types
@@ -210,7 +209,7 @@ export async function POST(request) {
               const commissionAmount = (totalPrice || 0) * (commission.commission_rate / 100);
 
               // Create commission entry
-              await getSupabase().from('sales_commission_entries').insert({
+              await supabase.from('sales_commission_entries').insert({
                 sales_commission_id: commission.id,
                 sales_rep_id: commission.sales_rep_id,
                 partner_id: matter.partner_id,
@@ -357,7 +356,7 @@ export async function POST(request) {
           partnerUpdate.membership_expires_at = new Date(baseDate.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString();
         }
 
-        await getSupabase().from('partners').update(partnerUpdate).eq('id', partnerId);
+        await supabase.from('partners').update(partnerUpdate).eq('id', partnerId);
 
         // Auto-track sales rep setup fee share
         if (normalizedPaymentType === 'setup_fee') {
@@ -370,12 +369,12 @@ export async function POST(request) {
           if (activeCommissions) {
             for (const comm of activeCommissions) {
               if (comm.setup_fee_amount > 0) {
-                await getSupabase().from('sales_commissions')
+                await supabase.from('sales_commissions')
                   .update({ setup_fee_paid: true })
                   .eq('id', comm.id);
 
                 // Record as commission entry
-                await getSupabase().from('sales_commission_entries').insert({
+                await supabase.from('sales_commission_entries').insert({
                   sales_commission_id: comm.id,
                   sales_rep_id: comm.sales_rep_id,
                   partner_id: partnerId,
