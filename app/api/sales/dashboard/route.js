@@ -13,7 +13,7 @@ export async function GET(request) {
     // Get rep info (exclude setup fee fields)
     const { data: rep, error } = await supabase
       .from('sales_reps')
-      .select('id, name, email, phone, status, commission_rate, commission_duration_months, created_at')
+      .select('id, name, email, phone, status, commission_rate, commission_duration_months, setup_fee_share_enabled, setup_fee_share_percent, notes, created_at')
       .eq('id', repId)
       .single();
 
