@@ -29,6 +29,9 @@ function RegisterOfficeContent() {
     if (!id) { router.push('/sales/login'); return; }
     setRepId(id);
     if (searchParams.get('cancelled')) setError('Payment was cancelled. You can try again.');
+    // If sales rep came from their own dashboard, allow directly
+    const salesIdParam = searchParams.get('sales_id');
+    if (salesIdParam && salesIdParam === id) { setInviteValid(true); setInviteChecking(false); return; }
     // Check invite code
     const invite = searchParams.get('invite');
     if (!invite) { setInviteChecking(false); return; }

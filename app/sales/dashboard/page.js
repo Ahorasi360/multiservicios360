@@ -119,7 +119,7 @@ export default function SalesDashboard() {
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: 20 }}>
         {/* Register Office CTA */}
         <button
-          onClick={() => router.push('/sales/register-office')}
+          onClick={() => router.push(`/sales/register-office?sales_id=${repId}`)}
           style={{
             width: '100%', padding: '18px 24px', marginBottom: 20, borderRadius: 14, border: 'none', cursor: 'pointer',
             background: 'linear-gradient(135deg, #059669, #10B981)', color: '#fff',
