@@ -79,7 +79,7 @@ export default function VaultContent({ token }) {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString(lang === 'en' ? 'en-US' : 'es-MX', {
+    return new Date(dateStr).toLocaleDateString(lang === 'en' ? 'en-US' : 'es', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',

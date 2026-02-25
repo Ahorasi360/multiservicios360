@@ -133,7 +133,7 @@ export default function PartnerDashboard() {
   };
 
   const formatMoney = (amount) => '$' + (amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
-  const formatDate = (d) => new Date(d).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { month: 'short', day: 'numeric' });
+  const formatDate = (d) => new Date(d).toLocaleDateString(lang === 'es' ? 'es' : 'en-US', { month: 'short', day: 'numeric' });
 
   if (loading) {
     return (
@@ -419,7 +419,7 @@ export default function PartnerDashboard() {
                       </div>
                       <div className="text-right">
                         <p className="text-sm text-slate-500">
-                          {new Date(client.created_at).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { month: 'short', day: 'numeric' })}
+                          {new Date(client.created_at).toLocaleDateString(lang === 'es' ? 'es' : 'en-US', { month: 'short', day: 'numeric' })}
                         </p>
                         <button onClick={() => router.push(`/portal/new-document?client_id=${client.id}`)}
                           className="text-xs text-blue-600 hover:text-blue-700 font-medium">

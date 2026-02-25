@@ -22,19 +22,19 @@ const T = {
   },
   en: {
     brand: 'Staff Portal', welcome: 'Welcome,', password: '🔑 Password', signout: 'Sign Out',
-    tabMatters: t.tabMatters, tabVaults: t.tabVaults,
-    search: t.search, allServices: t.allServices, allStatuses: t.allStatuses,
-    search_btn: '🔍 Search', loading: t.loading, noMatters: t.noMatters,
+    tabMatters: '📋 Matters', tabVaults: '🔐 Vaults',
+    search: 'Search by name or email...', allServices: 'All Services', allStatuses: 'All Statuses',
+    search_btn: '🔍 Search', loading: 'Loading...', noMatters: 'No matters found.',
     uploadBtn: '⬆️ Upload Document', resendEmail: '📧 Resend', viewVault: '🔗 View Vault',
     uploadTitle: '⬆️ Upload Document to Vault', clientName: 'Client Name', clientEmail: 'Client Email',
     docType: 'Document Type', matterId: 'Matter ID (optional)', selectFile: 'Select file', uploading: 'Uploading...', uploadBtnLbl: 'Upload Document',
-    cancel: 'Cancel', save: 'Update', saving: t.saving,
+    cancel: 'Cancel', save: 'Update', saving: 'Saving...',
     pwTitle: '🔑 Change Password', pwCurrent: 'Current Password', pwNew: 'New Password', pwConfirm: 'Confirm New Password',
-    pwMismatch: t.pwMismatch,
+    pwMismatch: '❌ Passwords do not match',
     status: { draft:'Draft', paid:'Paid', pending_payment:'Pending Payment', processing:'Processing', completed:'Completed', cancelled:'Cancelled', pending:'Pending' },
     services: { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC Formation', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', travel_authorization:'Travel Authorization', guardianship:'Guardianship' },
     assigned: 'Assigned', client: 'Client', service: 'Service', noVaults: 'No vaults.',
-    emailSent: t.emailSent, emailFail: t.emailFail,
+    emailSent: '✅ Email sent successfully', emailFail: '❌ Failed to send email',
   }
 };
 
@@ -169,7 +169,7 @@ export default function StaffDashboard() {
     setTimeout(() => setMessage(''), 4000);
   }
 
-  const fmt = (d) => d ? new Date(d).toLocaleDateString(lang==='es'?'es-MX':'en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+  const fmt = (d) => d ? new Date(d).toLocaleDateString(lang==='es'?'es':'en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
   const serviceLabels = { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC', simple_doc:'Simple Doc' };
   const serviceColors = { general_poa:'#2563EB', limited_poa:'#7C3AED', living_trust:'#059669', llc_formation:'#D97706', simple_doc:'#0891B2' };
   const serviceSuccessUrls = { general_poa:'/poa/success', limited_poa:'/limited-poa/success', living_trust:'/trust/success', llc_formation:'/llc/success', simple_doc:'/simple-doc/success' };

@@ -62,7 +62,7 @@ var translations = {
 function formatDate(dateStr, lang) {
   if (!dateStr) return '';
   var d = new Date(dateStr);
-  return d.toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', {
+  return d.toLocaleDateString(lang === 'es' ? 'es' : 'en-US', {
     year: 'numeric', month: 'long', day: 'numeric',
   });
 }

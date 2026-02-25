@@ -61,7 +61,7 @@ export default function PartnerLogin() {
         {/* Lang toggle */}
         <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:12 }}>
           <button onClick={()=>setLang(lang==='es'?'en':'es')} style={{ padding:'4px 12px', fontSize:12, fontWeight:600, background:'#F1F5F9', border:'1px solid #E2E8F0', borderRadius:20, cursor:'pointer', color:'#475569' }}>
-            {lang==='es'?'🇺🇸 English':'🇲🇽 Español'}
+            {lang==='es'?'English':'Español'}
           </button>
         </div>
         <div style={{ width:56, height:56, background:'linear-gradient(135deg,#3B82F6,#06B6D4)', borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}><span style={{ fontSize:20, fontWeight:'bold', color:'white' }}>MS</span></div>

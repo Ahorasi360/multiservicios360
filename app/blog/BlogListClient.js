@@ -70,7 +70,7 @@ const translations = {
 
 function formatDate(dateStr, lang) {
   if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  return new Date(dateStr).toLocaleDateString(lang === 'es' ? 'es' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 function estimateReadTime(excerpt) {

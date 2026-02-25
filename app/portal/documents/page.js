@@ -14,11 +14,11 @@ const T = {
     client: 'Cliente', date: 'Fecha', download: 'Descargar',
   },
   en: {
-    heading: 'Documents', back: '← Dashboard', filterAll: t.filterAll,
+    heading: 'Documents', back: '← Dashboard', filterAll: 'All',
     nav: {dashboard:'Dashboard', clients:'My Clients', documents:'Documents', earnings:'Earnings', resources:'Resources'},
     status: {paid:'Paid', pending_payment:'Pending Payment', draft:'Draft', processing:'Processing', completed:'Completed'},
     type: {general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', travel_authorization:'Travel Authorization', guardianship:'Guardianship Designation'},
-    loading: t.loading, noDocuments: t.noDocuments,
+    loading: 'Loading documents...', noDocuments: 'No documents yet.',
     client: 'Client', date: 'Date', download: 'Download',
   }
 };

@@ -164,7 +164,7 @@ export default function SalesDashboard() {
   function logout() { localStorage.removeItem('salesId'); localStorage.removeItem('salesName'); router.push('/sales/login'); }
 
   const fmt = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const fmtDate = (d) => d ? new Date(d).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+  const fmtDate = (d) => d ? new Date(d).toLocaleDateString(lang === 'es' ? 'es' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -204,7 +204,7 @@ export default function SalesDashboard() {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={toggleLang} style={{ padding: '6px 12px', background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-            {lang === 'es' ? '🇺🇸 English' : '🇲🇽 Español'}
+            {lang === 'es' ? 'English' : 'Español'}
           </button>
           <button onClick={() => setShowPwModal(true)} style={{ padding: '8px 14px', background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>{t.password}</button>
           <button onClick={logout} style={{ padding: '8px 14px', background: '#FEF2F2', color: '#991B1B', border: '1px solid #FECACA', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}>{t.signout}</button>

@@ -60,7 +60,7 @@ export default function SalesLoginPage() {
         {/* Lang toggle */}
         <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:12 }}>
           <button onClick={()=>setLang(lang==='es'?'en':'es')} style={{ padding:'4px 12px', fontSize:12, fontWeight:600, background:'#F1F5F9', border:'1px solid #E2E8F0', borderRadius:20, cursor:'pointer', color:'#475569' }}>
-            {lang==='es'?'🇺🇸 English':'🇲🇽 Español'}
+            {lang==='es'?'English':'Español'}
           </button>
         </div>
         <div style={{ width:56, height:56, background:'linear-gradient(135deg,#D97706,#F59E0B)', borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', fontSize:22 }}>💰</div>

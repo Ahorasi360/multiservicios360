@@ -247,11 +247,11 @@ const T = {
     heading: '💳 Vault Premium Membership', back: '← Dashboard',
     activeTitle: '✅ Active Membership', inactiveTitle: '📭 No Active Membership',
     monthly: 'Monthly — $4.99/month', annual: 'Annual — $49/year (save 18%)',
-    subscribeLbl: 'Subscribe', processing: t.processing,
+    subscribeLbl: 'Subscribe', processing: 'Processing...',
     benefits: ['Documents stored forever in your digital vault', 'Download your documents anytime', 'Share documents with family or attorneys', 'Document updates at a reduced price'],
     paymentHistory: 'Payment History', noPayments: 'No payments yet.',
     status: {active:'Active', past_due:'Past Due', cancelled:'Cancelled', inactive:'Inactive'},
-    successMsg: t.successMsg, cancelMsg: t.cancelMsg,
+    successMsg: '✅ Payment successful! Your membership is now active.', cancelMsg: '⚠️ Payment was cancelled. You can try again anytime.',
     loading: 'Loading...',
     expiresOn: 'Expires on', renewsOn: 'Renews on',
   }

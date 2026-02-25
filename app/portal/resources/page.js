@@ -86,7 +86,7 @@ export default function PortalResourcesPage() {
           </div>
           <div style={{ display:'flex', gap:8 }}>
             <button onClick={toggleLang} style={{ padding:'6px 12px', background:'#F1F5F9', border:'1px solid #E2E8F0', borderRadius:20, fontSize:12, fontWeight:600, cursor:'pointer', color:'#475569' }}>
-              {lang==='es'?'🇺🇸 English':'🇲🇽 Español'}
+              {lang==='es'?'English':'Español'}
             </button>
             <button onClick={() => router.push('/portal/dashboard')} style={{ padding:'8px 16px', fontSize:13, color:'#64748B', border:'none', background:'transparent', cursor:'pointer' }}>{t.back}</button>
           </div>

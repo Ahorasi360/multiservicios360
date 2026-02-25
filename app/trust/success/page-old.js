@@ -560,7 +560,7 @@ function TrustSuccessContent() {
 
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
             <button onClick={() => setLanguage(language === 'en' ? 'es' : 'en')} style={{ padding: '10px 16px', backgroundColor: '#F3F4F6', color: '#374151', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-              {language === 'en' ? '🇲🇽 Español' : '🇺🇸 English'}
+              {language === 'en' ? 'Español' : 'English'}
             </button>
             <a href="/" style={{ padding: '10px 20px', backgroundColor: '#F3F4F6', color: '#374151', borderRadius: '6px', textDecoration: 'none', fontWeight: '600' }}>{t.backHome}</a>
           </div>

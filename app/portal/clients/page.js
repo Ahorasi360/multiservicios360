@@ -255,7 +255,7 @@ export default function PartnerClients() {
                 <select value={formData.language_preference} onChange={(e) => setFormData({...formData, language_preference: e.target.value})}
                   className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="es">🌎 Español</option>
-                  <option value="en">🇺🇸 English</option>
+                  <option value="en">English</option>
                 </select>
               </div>
               <div className="flex space-x-4 pt-4">

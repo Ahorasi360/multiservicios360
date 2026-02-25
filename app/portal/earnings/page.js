@@ -19,9 +19,9 @@ const T = {
     heading: 'My Earnings', back: '← Dashboard',
     nav: {dashboard:'Dashboard', clients:'My Clients', documents:'Documents', earnings:'Earnings', resources:'Resources'},
     totalEarnings: 'Total Earnings', pendingPayout: 'Pending Payout', paidOut: 'Paid Out', totalDocs: 'Total Documents',
-    all: t.all, thisMonth: t.thisMonth, lastMonth: t.lastMonth,
+    all: 'All', thisMonth: 'This Month', lastMonth: 'Last Month',
     status: {pending:'Pending', paid:'Paid', cancelled:'Cancelled'},
-    filterAll: t.all, loading: t.loading, noEarnings: t.noEarnings,
+    filterAll: 'All', loading: 'Loading earnings...', noEarnings: 'No earnings yet.',
     type: {general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC Formation', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', travel_authorization:'Travel Authorization'},
     commission: 'Commission', date: 'Date',
   }

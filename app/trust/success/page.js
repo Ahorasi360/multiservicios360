@@ -714,7 +714,7 @@ function TrustSuccessContent() {
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
             <button onClick={() => setLanguage(language === 'en' ? 'es' : 'en')} 
               style={{ padding: '12px 20px', backgroundColor: 'white', color: '#6B7280', border: '1px solid #D1D5DB', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}>
-              {language === 'en' ? '🇲🇽 Español' : '🇺🇸 English'}
+              {language === 'en' ? 'Español' : 'English'}
             </button>
             <a href="/" style={{ padding: '12px 24px', backgroundColor: '#F3F4F6', color: '#374151', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', fontSize: '14px', display: 'inline-block' }}>
               {t.backHome}
