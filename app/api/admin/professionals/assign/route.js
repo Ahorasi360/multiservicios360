@@ -14,8 +14,7 @@ export async function GET(request) {
   try {
     const url = new URL(request.url);
     const profId = url.searchParams.get('professional_id');
-    const supabase = getSupabase();
-    let query = getSupabase().from('professional_assignments').select('*').order('assigned_at', { ascending: false });
+    let query = supabase.from('professional_assignments').select('*').order('assigned_at', { ascending: false });
     if (profId) query = query.eq('professional_id', profId);
     const { data, error } = await query;
     if (error) throw error;
@@ -30,8 +29,7 @@ export async function POST(request) {
   try {
     const { professional_id, matter_type, matter_id, client_name, client_email, service_label } = await request.json();
     if (!professional_id || !matter_type || !matter_id) return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    const supabase = getSupabase();
-    const { data, error } = await getSupabase().from('professional_assignments').insert({
+    const { data, error } = await supabase.from('professional_assignments').insert({
       professional_id, matter_type, matter_id,
       client_name: client_name || '', client_email: client_email || '',
       service_label: service_label || matter_type, status: 'pending',
@@ -47,8 +45,7 @@ export async function DELETE(request) {
   if (!checkAuth(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const { id } = await request.json();
-    const supabase = getSupabase();
-    const { error } = await getSupabase().from('professional_assignments').delete().eq('id', id);
+    const { error } = await supabase.from('professional_assignments').delete().eq('id', id);
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (err) {

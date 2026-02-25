@@ -18,7 +18,7 @@ export async function GET(request) {
     const partnerId = searchParams.get('partner_id');
     if (!partnerId) return NextResponse.json({ success: false, error: 'Partner ID is required' }, { status: 400 });
 
-    const { data: partner } = await getSupabase().from('partners').select('commission_rate').eq('id', partnerId).single();
+    const { data: partner } = await supabase.from('partners').select('commission_rate').eq('id', partnerId).single();
     const commissionRate = (partner?.commission_rate || 20) / 100;
 
     // Get commissions from partner_referrals

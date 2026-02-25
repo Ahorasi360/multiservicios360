@@ -25,7 +25,7 @@ export async function POST(request) {
 
     if (!partner) return NextResponse.json({ error: 'Current password is incorrect' }, { status: 401 });
 
-    await getSupabase().from('partners').update({ password_hash: hashPassword(new_password) }).eq('id', partner_id);
+    await supabase.from('partners').update({ password_hash: hashPassword(new_password) }).eq('id', partner_id);
     return NextResponse.json({ success: true });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });

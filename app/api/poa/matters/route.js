@@ -80,7 +80,7 @@ export async function POST(request) {
       );
     }
 
-    await getSupabase().from('poa_audit_log').insert({
+    await supabase.from('poa_audit_log').insert({
       matter_id: matter.id,
       action: 'matter_created',
       new_value: { review_tier, status: 'pending_payment', total_price },

@@ -108,7 +108,7 @@ export async function DELETE(request) {
       .single();
 
     if (resource?.file_url) {
-      await getSupabase().storage.from('vault-files').remove([resource.file_url]);
+      await supabase.storage.from('vault-files').remove([resource.file_url]);
     }
 
     const { error } = await supabase

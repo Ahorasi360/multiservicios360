@@ -11,7 +11,7 @@ export async function GET(request) {
     const partnerId = searchParams.get('partner_id');
     if (!partnerId) return NextResponse.json({ success: false, error: 'Partner ID is required' }, { status: 400 });
 
-    const { data: partner } = await getSupabase().from('partners').select('commission_rate').eq('id', partnerId).single();
+    const { data: partner } = await supabase.from('partners').select('commission_rate').eq('id', partnerId).single();
     const commissionRate = (partner?.commission_rate || 20) / 100;
 
     const tables = ['poa_matters','limited_poa_matters','trust_matters','llc_matters','simple_doc_matters'];
@@ -22,7 +22,7 @@ export async function GET(request) {
     let recentDocs = [];
 
     for (const table of tables) {
-      const { data } = await getSupabase().from(table).select('client_name, client_email, total_price, created_at, status').eq('partner_id', partnerId);
+      const { data } = await supabase.from(table).select('client_name, client_email, total_price, created_at, status').eq('partner_id', partnerId);
       if (data) {
         totalDocuments += data.length;
         data.forEach(d => { if (d.client_email) clientEmails.add(d.client_email); });
@@ -35,14 +35,14 @@ export async function GET(request) {
       }
     }
 
-    const { data: referrals } = await getSupabase().from('partner_referrals').select('commission_amount, status, created_at').eq('partner_id', partnerId);
+    const { data: referrals } = await supabase.from('partner_referrals').select('commission_amount, status, created_at').eq('partner_id', partnerId);
     let totalEarnings = referrals?.reduce((sum, r) => sum + (parseFloat(r.commission_amount) || 0), 0) || 0;
     let pendingPayout = referrals?.filter(r => r.status === 'pending').reduce((sum, r) => sum + (parseFloat(r.commission_amount) || 0), 0) || 0;
     let totalPaid = referrals?.filter(r => r.status === 'paid').reduce((sum, r) => sum + (parseFloat(r.commission_amount) || 0), 0) || 0;
     if (totalEarnings === 0 && totalRevenue > 0) { totalEarnings = totalRevenue * commissionRate; pendingPayout = totalEarnings; }
     const thisMonthEarnings = referrals?.filter(r => new Date(r.created_at) >= thisMonthStart).reduce((sum, r) => sum + (parseFloat(r.commission_amount) || 0), 0) || (thisMonthRevenue * commissionRate);
 
-    const { count: registeredClients } = await getSupabase().from('partner_clients').select('*', { count: 'exact', head: true }).eq('partner_id', partnerId);
+    const { count: registeredClients } = await supabase.from('partner_clients').select('*', { count: 'exact', head: true }).eq('partner_id', partnerId);
     const totalClients = Math.max(clientEmails.size, registeredClients || 0);
 
     recentDocs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));

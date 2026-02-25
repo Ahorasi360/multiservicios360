@@ -142,7 +142,7 @@ export async function DELETE(request) {
 
   try {
     const { id } = await request.json();
-    const { error } = await getSupabase().from('sales_reps').delete().eq('id', id);
+    const { error } = await supabase.from('sales_reps').delete().eq('id', id);
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (err) {

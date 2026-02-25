@@ -26,7 +26,7 @@ export async function POST(request) {
     if (worker.status !== 'active') return NextResponse.json({ error: 'Account is inactive' }, { status: 403 });
 
     // Update last login
-    await getSupabase().from('staff_workers').update({ last_login: new Date().toISOString() }).eq('id', worker.id);
+    await supabase.from('staff_workers').update({ last_login: new Date().toISOString() }).eq('id', worker.id);
 
     return NextResponse.json({ success: true, worker });
   } catch (err) {

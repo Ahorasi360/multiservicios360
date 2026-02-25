@@ -40,7 +40,7 @@ export async function GET(request) {
     let allMatters = [];
 
     for (const table of toQuery) {
-      let query = getSupabase().from(table.name).select('*').order('created_at', { ascending: false }).limit(200);
+      let query = supabase.from(table.name).select('*').order('created_at', { ascending: false }).limit(200);
       if (status) query = query.eq('status', status);
 
       const { data, error } = await query;
@@ -90,7 +90,7 @@ export async function PATCH(request) {
     if (staff_note !== undefined) updates.staff_note = staff_note;
     updates.updated_at = new Date().toISOString();
 
-    const { data, error } = await getSupabase().from(table).update(updates).eq('id', matter_id).select().single();
+    const { data, error } = await supabase.from(table).update(updates).eq('id', matter_id).select().single();
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
     return NextResponse.json({ success: true, matter: data });

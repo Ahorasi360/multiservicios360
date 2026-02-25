@@ -48,7 +48,7 @@ export async function POST(request) {
     codes.push({ code, note, expires_at, used: false });
   }
 
-  const { data, error } = await getSupabase().from('invite_codes').insert(codes).select();
+  const { data, error } = await supabase.from('invite_codes').insert(codes).select();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({ success: true, codes: data });
@@ -62,6 +62,6 @@ export async function DELETE(request) {
   }
 
   const { code } = await request.json();
-  await getSupabase().from('invite_codes').delete().eq('code', code.toUpperCase());
+  await supabase.from('invite_codes').delete().eq('code', code.toUpperCase());
   return NextResponse.json({ success: true });
 }

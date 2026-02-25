@@ -138,7 +138,7 @@ export async function PUT(request) {
           const endDate = new Date();
           endDate.setMonth(endDate.getMonth() + (repData.commission_duration_months || 1));
 
-          await getSupabase().from('sales_commissions').insert({
+          await supabase.from('sales_commissions').insert({
             sales_rep_id: repData.id,
             partner_id: id,
             commission_rate: repData.commission_rate || 5,

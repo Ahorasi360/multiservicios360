@@ -48,7 +48,7 @@ export async function POST(request) {
         metadata: { partner_id: partner.id },
       });
       customerId = customer.id;
-      await getSupabase().from('partners').update({ stripe_customer_id: customerId }).eq('id', partner.id);
+      await supabase.from('partners').update({ stripe_customer_id: customerId }).eq('id', partner.id);
     }
 
     // Create payment record
@@ -91,7 +91,7 @@ export async function POST(request) {
 
     // Store session ID
     if (payment) {
-      await getSupabase().from('partner_payments').update({ stripe_session_id: session.id }).eq('id', payment.id);
+      await supabase.from('partner_payments').update({ stripe_session_id: session.id }).eq('id', payment.id);
     }
 
     return NextResponse.json({ success: true, url: session.url });
