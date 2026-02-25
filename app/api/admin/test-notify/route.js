@@ -1,21 +1,37 @@
-export const dynamic = 'force-dynamic';
+﻿export const dynamic = 'force-dynamic';
 // app/api/admin/test-notify/route.js
 import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
 
 async function runTest(docType) {
-  const { notifyOwnerOfSale } = await import('../../../../lib/notify-owner');
-  await notifyOwnerOfSale({
-    documentType: docType || 'llc_formation',
-    clientName: 'Juan Pérez (TEST)',
-    clientEmail: 'test@example.com',
-    amount: docType === 'llc_formation' ? 29900 : 14900,
-    matterId: 'TEST-' + Date.now(),
-    partnerName: docType !== 'llc_formation' ? 'Tax Office Glendale' : null,
-  });
-  return NextResponse.json({ success: true, message: 'Test sent! Check flashpreviews@gmail.com' });
+  const adminEmail = process.env.ADMIN_NOTIFY_EMAIL || 'flashpreviews@gmail.com';
+  const resendKey = process.env.RESEND_API_KEY;
+
+  try {
+    const resend = new Resend(resendKey);
+    const result = await resend.emails.send({
+      from: 'Multi Servicios 360 <notifications@multiservicios360.net>',
+      to: adminEmail,
+      subject: 'TEST — Nueva Venta Multi Servicios 360',
+      html: `<h2>TEST Email</h2><p>Si lo ves, las notificaciones funcionan.</p><p>Enviado a: ${adminEmail}</p><p>Key prefix: ${resendKey ? resendKey.substring(0,8) + '...' : 'NOT SET'}</p>`,
+    });
+    return NextResponse.json({ 
+      success: true, 
+      to: adminEmail,
+      resend_id: result?.data?.id,
+      resend_error: result?.error,
+      key_prefix: resendKey ? resendKey.substring(0,8) + '...' : 'NOT SET',
+    });
+  } catch (err) {
+    return NextResponse.json({ 
+      success: false, 
+      error: err.message,
+      to: adminEmail,
+      key_prefix: resendKey ? resendKey.substring(0,8) + '...' : 'NOT SET',
+    });
+  }
 }
 
-// GET — test from browser: /api/admin/test-notify?pwd=YOUR_ADMIN_PASSWORD
 export async function GET(request) {
   try {
     const url = new URL(request.url);
@@ -28,7 +44,6 @@ export async function GET(request) {
   }
 }
 
-// POST — test from PowerShell
 export async function POST(request) {
   try {
     const pwd = request.headers.get('x-admin-password');
