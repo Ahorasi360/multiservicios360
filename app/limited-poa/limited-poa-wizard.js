@@ -511,6 +511,10 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
         if (email) setClientEmail(email);
         if (phone) setClientPhone(phone);
         if (lang) setLanguage(lang);
+        // Pre-fill principal_name so user doesn't have to type it again
+        if (name) {
+          setIntakeData(prev => ({ ...prev, principal_name: name }));
+        }
       }
     }
   }, []);

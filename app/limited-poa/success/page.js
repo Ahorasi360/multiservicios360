@@ -162,6 +162,10 @@ function SuccessContent() {
   const [signatureAccepted, setSignatureAccepted] = useState(false);
   const [signatureError, setSignatureError] = useState('');
 
+  // Translation state for English PDF
+  const [translationCache, setTranslationCache] = useState(null);
+  const [translating, setTranslating] = useState(false);
+
   const matterId = searchParams.get('matter_id');
 
   useEffect(() => {
@@ -387,7 +391,46 @@ function SuccessContent() {
       return;
     }
 
-    const d = matterData.intake_data || {};
+    const d = { ...matterData.intake_data || {} };
+
+    // Translate free-text fields for English PDF
+    if (lang === 'en') {
+      const freeTextFields = {};
+      if (d.insurance_claim_desc) freeTextFields.insurance_claim_desc = d.insurance_claim_desc;
+      if (d.special_instructions) freeTextFields.special_instructions = d.special_instructions;
+      if (d.re_property_address && /[áéíóúñ]/i.test(d.re_property_address)) freeTextFields.re_property_address = d.re_property_address;
+
+      if (Object.keys(freeTextFields).length > 0) {
+        let cached = translationCache;
+        if (!cached) {
+          try {
+            setTranslating(true);
+            const res = await fetch('/api/translate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                fields: freeTextFields,
+                document_type: 'Limited Power of Attorney'
+              }),
+            });
+            const result = await res.json();
+            if (result.success && result.translations) {
+              cached = result.translations;
+              setTranslationCache(cached);
+            }
+          } catch (err) {
+            console.error('Translation failed:', err);
+          } finally {
+            setTranslating(false);
+          }
+        }
+        if (cached) {
+          for (const [key, val] of Object.entries(cached)) {
+            if (val) d[key] = val;
+          }
+        }
+      }
+    }
     const { jsPDF } = await import('jspdf');
     const doc = new jsPDF();
 
@@ -1386,9 +1429,10 @@ If you do not faithfully perform your duties under the law and under the power o
             </button>
             <button
               onClick={() => generatePDF('en')}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '14px 20px', backgroundColor: '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}
+              disabled={translating}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '14px 20px', backgroundColor: translating ? '#9CA3AF' : '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: translating ? 'wait' : 'pointer' }}
             >
-              <DownloadIcon /> {t.downloadEnglish}
+              <DownloadIcon /> {translating ? (language === 'es' ? 'Traduciendo...' : 'Translating...') : t.downloadEnglish}
             </button>
           </div>
 
