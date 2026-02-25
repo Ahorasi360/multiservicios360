@@ -232,6 +232,10 @@ export default function PartnerDashboard() {
               className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">
               {t.earnings}
             </button>
+            <button onClick={() => router.push('/portal/resources')}
+              className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">
+              {lang === 'es' ? '📦 Recursos' : '📦 Resources'}
+            </button>
           </div>
         </div>
       </nav>
