@@ -163,6 +163,20 @@ export default function AdminPartnersPage() {
     }
   }
 
+  async function deletePartner(id, name) {
+    if (!confirm(`⚠️ ¿Eliminar permanentemente "${name}"?\n\nEsta acción no se puede deshacer.`)) return;
+    try {
+      const res = await fetch('/api/admin/partners', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': localStorage.getItem('adminPassword') || '' },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.success) fetchPartners();
+      else alert('Error: ' + (data.error || 'No se pudo eliminar'));
+    } catch (err) { alert('Error: ' + err.message); }
+  }
+
   const filtered = filter === 'all' ? partners : partners.filter(p => p.status === filter);
 
   const stats = {
@@ -422,6 +436,13 @@ export default function AdminPartnersPage() {
                           <button onClick={() => updateStatus(partner.id, 'active')}
                             className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-medium hover:bg-emerald-500/30 transition-colors">
                             Reactivar
+                          </button>
+                        )}
+                        {partner.email !== 'demo@multiservicios360.net' && (
+                          <button onClick={() => deletePartner(partner.id, partner.business_name)}
+                            className="px-3 py-1.5 bg-red-900/30 text-red-400 rounded-lg text-xs font-medium hover:bg-red-900/50 transition-colors"
+                            title="Eliminar permanentemente">
+                            🗑
                           </button>
                         )}
                       </div>
