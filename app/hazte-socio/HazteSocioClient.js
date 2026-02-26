@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -42,6 +42,7 @@ function HazteSocioContent() {
   const ref = searchParams.get('ref') || '';
 
   const [step, setStep] = useState(1); // 1=landing, 2=form, 3=success
+  const formRef = useRef(null);
   const [selectedPkg, setSelectedPkg] = useState('pro');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
@@ -134,7 +135,7 @@ function HazteSocioContent() {
           </div>
 
           <button
-            onClick={() => setStep(2)}
+            onClick={() => { setStep(2); setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }}
             style={{ backgroundColor: 'white', color: BLUE, padding: '16px 40px', border: 'none', borderRadius: '10px', fontSize: '18px', fontWeight: '800', cursor: 'pointer' }}
           >
             Quiero ser socio →
@@ -208,7 +209,7 @@ function HazteSocioContent() {
             {PACKAGES.map(p => (
               <div
                 key={p.key}
-                onClick={() => { setSelectedPkg(p.key); setStep(2); }}
+                onClick={() => { setSelectedPkg(p.key); setStep(2); setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }}
                 style={{ border: `2px solid ${p.color}`, borderRadius: '16px', padding: '28px', cursor: 'pointer', position: 'relative', backgroundColor: 'white', transition: 'transform 0.1s', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
               >
                 {p.badge && (
@@ -241,7 +242,7 @@ function HazteSocioContent() {
 
       {/* APPLICATION FORM */}
       {step === 2 && (
-        <section id="formulario" style={{ padding: '64px 16px', backgroundColor: '#F8FAFF' }}>
+        <section id="formulario" ref={formRef} style={{ padding: '64px 16px', backgroundColor: '#F8FAFF' }}>
           <div style={{ maxWidth: '560px', margin: '0 auto' }}>
             <h2 style={{ fontSize: '28px', fontWeight: '800', color: BLUE, textAlign: 'center', marginBottom: '8px' }}>Complete su solicitud</h2>
             <p style={{ textAlign: 'center', color: GRAY, marginBottom: '32px' }}>Plan seleccionado: <strong style={{ color: pkg.color }}>{pkg.name} — ${pkg.price} ({pkg.commission} comisión)</strong></p>
@@ -322,7 +323,7 @@ function HazteSocioContent() {
           <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'white', marginBottom: '16px' }}>¿Listo para unirse?</h2>
           <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '24px' }}>Everardo ya está generando ingresos. Usted también puede.</p>
           <button
-            onClick={() => setStep(2)}
+            onClick={() => { setStep(2); setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }}
             style={{ backgroundColor: 'white', color: BLUE, padding: '16px 40px', border: 'none', borderRadius: '10px', fontSize: '18px', fontWeight: '800', cursor: 'pointer' }}
           >
             Quiero ser socio →
