@@ -113,6 +113,10 @@ export async function PUT(request) {
   if (shouldSendWelcome && partnerBefore) {
     try {
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://multiservicios360.net';
+      const tierLabels = { start: 'Partner Start', pro: 'Partner Pro', elite: 'Partner Elite', referral: 'Referral' };
+      const commRates = { start: 20, pro: 25, elite: 30 };
+      const tierKey = partnerBefore.tier || 'start';
+      const alreadyPaid = partnerBefore.setup_fee_paid === true;
       await sendWelcomeEmail({
         to: partnerBefore.email,
         name: partnerBefore.contact_name || partnerBefore.business_name,
@@ -120,8 +124,11 @@ export async function PUT(request) {
         loginUrl: `${siteUrl}/portal/login`,
         email: partnerBefore.email,
         password: partnerBefore.temp_password || 'Contact admin for password',
-        setupFee: partnerBefore.setup_fee_amount || 499,
+        setupFee: alreadyPaid ? null : (partnerBefore.setup_fee_amount || 499),
         membershipUrl: `${siteUrl}/portal/membership`,
+        tier: tierLabels[tierKey] || tierKey,
+        commissionRate: partnerBefore.commission_rate || commRates[tierKey] || 20,
+        alreadyPaid,
       });
       console.log('Welcome email sent to approved partner:', partnerBefore.email);
 

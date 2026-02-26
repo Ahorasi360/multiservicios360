@@ -9,6 +9,8 @@ export default function AdminPartnersPage() {
   const [loginError, setLoginError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState(null);
+  const [approveModal, setApproveModal] = useState(null); // partner to approve
+  const [approving, setApproving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -416,7 +418,7 @@ export default function AdminPartnersPage() {
                         )}
                         {partner.status === 'paid_pending_approval' && (
                           <>
-                            <button onClick={() => updateStatus(partner.id, 'active')}
+                            <button onClick={() => setApproveModal(partner)}
                               className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-medium hover:bg-emerald-500/30 transition-colors">
                               ✅ Aprobar
                             </button>
@@ -462,6 +464,56 @@ export default function AdminPartnersPage() {
       </div>
 
       {/* ADD / EDIT MODAL */}
+      {/* APPROVE PARTNER MODAL */}
+      {approveModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 shadow-2xl">
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 rounded-t-2xl">
+              <h2 className="text-xl font-bold text-white">✅ Confirmar Aprobación</h2>
+              <p className="text-emerald-100 text-sm mt-1">Se enviará acceso al portal al socio</p>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="bg-slate-700/50 rounded-xl p-4 space-y-2">
+                <div className="flex justify-between text-sm"><span className="text-slate-400">Negocio:</span><span className="text-white font-semibold">{approveModal.business_name}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-400">Contacto:</span><span className="text-white">{approveModal.contact_name}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-400">Email:</span><span className="text-white">{approveModal.email}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-400">Plan:</span><span className="text-emerald-400 font-bold">{approveModal.tier?.toUpperCase()} — {approveModal.commission_rate}% comisión</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-400">Pagó:</span><span className="text-emerald-400 font-bold">${approveModal.setup_fee_amount}</span></div>
+              </div>
+
+              {approveModal.temp_password && (
+                <div className="bg-blue-900/30 border border-blue-500/30 rounded-xl p-4">
+                  <p className="text-blue-300 text-xs font-semibold mb-1">🔑 CONTRASEÑA TEMPORAL (se enviará al socio):</p>
+                  <p className="text-white font-mono text-lg font-bold">{approveModal.temp_password}</p>
+                  <p className="text-slate-400 text-xs mt-1">El socio puede cambiarla desde su portal.</p>
+                </div>
+              )}
+
+              <div className="bg-amber-900/20 border border-amber-500/30 rounded-xl p-3">
+                <p className="text-amber-300 text-xs">Al aprobar se enviará email de bienvenida con credenciales de acceso al portal.</p>
+              </div>
+            </div>
+            <div className="p-6 pt-0 flex gap-3">
+              <button
+                onClick={async () => {
+                  setApproving(true);
+                  await updateStatus(approveModal.id, 'active');
+                  setApproveModal(null);
+                  setApproving(false);
+                }}
+                disabled={approving}
+                className="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all disabled:opacity-50"
+              >
+                {approving ? 'Aprobando...' : '✅ Aprobar y Enviar Credenciales'}
+              </button>
+              <button onClick={() => setApproveModal(null)} className="px-4 py-3 bg-slate-700 text-slate-300 rounded-xl font-medium text-sm hover:bg-slate-600">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">

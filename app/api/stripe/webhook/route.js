@@ -428,6 +428,14 @@ export async function POST(request) {
         }).eq('ref', ref);
 
         // 2. Create partner record (pending approval)
+        // Generate temp password for new partner
+        const { default: cryptoMod } = await import('crypto');
+        const tempPassword = cryptoMod.randomBytes(4).toString('hex').toUpperCase() + '!' + cryptoMod.randomBytes(2).toString('hex');
+        const passwordHash = cryptoMod.createHash('sha256').update(tempPassword).digest('hex');
+
+        // Generate referral code
+        const refCode = businessName.substring(0, 3).toUpperCase() + cryptoMod.randomBytes(3).toString('hex').toUpperCase();
+
         const { data: newPartner, error: partnerErr } = await supabase.from('partners').insert({
           business_name: businessName,
           contact_name: contactName,
@@ -436,11 +444,17 @@ export async function POST(request) {
           partner_type: partnerType,
           tier: pkg.tier,
           commission_rate: pkg.commission_rate,
+          package_name: packageKey,
+          setup_fee_amount: amountPaid,
+          annual_fee_amount: amountPaid,
           status: 'paid_pending_approval',
           setup_fee_paid: true,
           setup_fee_paid_at: new Date().toISOString(),
           setup_fee_payment_id: session.payment_intent,
           membership_expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+          password_hash: passwordHash,
+          temp_password: tempPassword,
+          referral_code: refCode,
         }).select().single();
 
         if (partnerErr) {
