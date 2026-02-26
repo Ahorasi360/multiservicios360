@@ -1,7 +1,28 @@
 "use client";
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function ProtegeClient() {
+  const [form, setForm] = useState({ nombre: '', telefono: '', email: '' });
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!form.nombre || !form.telefono) return;
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/leads/protege-tu-casa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) setStatus('success');
+      else setStatus('error');
+    } catch {
+      setStatus('error');
+    }
+  }
+
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#FAFAFA', fontFamily: "'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" }}>
 
@@ -194,6 +215,84 @@ export default function ProtegeClient() {
             "Yo pensé que eso era solo para gente rica. Pero cuando mi vecino murió sin trust, su familia tardó casi dos años para poder vender la casa. Eso me hizo pensar y lo hice de inmediato."
           </blockquote>
           <div style={{ fontSize: '14px', color: '#9CA3AF', fontWeight: '600' }}>— Cliente de Multi Servicios 360, Los Ángeles, CA</div>
+        </div>
+      </section>
+
+      {/* LEAD CAPTURE FORM */}
+      <section style={{ padding: '64px 16px', backgroundColor: 'white' }}>
+        <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <h2 style={{ fontSize: 'clamp(22px, 4vw, 32px)', fontWeight: '800', color: '#1E3A8A', marginBottom: '12px' }}>
+              ¿Tiene preguntas? Le llamamos gratis
+            </h2>
+            <p style={{ fontSize: '16px', color: '#6B7280' }}>
+              Déjenos sus datos y un especialista le contacta en menos de 24 horas — sin compromiso.
+            </p>
+          </div>
+
+          {status === 'success' ? (
+            <div style={{ backgroundColor: '#F0FDF4', border: '2px solid #86EFAC', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
+              <div style={{ fontSize: '48px', marginBottom: '12px' }}>✅</div>
+              <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#15803D', marginBottom: '8px' }}>¡Recibimos su solicitud!</h3>
+              <p style={{ fontSize: '15px', color: '#374151' }}>Le llamaremos a la brevedad. Si prefiere llamar ahora: <strong>855.246.7274</strong></p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} style={{ backgroundColor: '#F8FAFF', borderRadius: '16px', padding: '32px', border: '1px solid #DBEAFE' }}>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
+                  Nombre completo *
+                </label>
+                <input
+                  type="text"
+                  placeholder="María García"
+                  value={form.nombre}
+                  onChange={e => setForm({ ...form, nombre: e.target.value })}
+                  required
+                  style={{ width: '100%', padding: '12px 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
+                  Teléfono *
+                </label>
+                <input
+                  type="tel"
+                  placeholder="(213) 555-0000"
+                  value={form.telefono}
+                  onChange={e => setForm({ ...form, telefono: e.target.value })}
+                  required
+                  style={{ width: '100%', padding: '12px 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
+                  Email <span style={{ fontWeight: '400', color: '#9CA3AF' }}>(opcional)</span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="maria@email.com"
+                  value={form.email}
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  style={{ width: '100%', padding: '12px 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                style={{ width: '100%', padding: '16px', backgroundColor: status === 'loading' ? '#93C5FD' : '#1E3A8A', color: 'white', border: 'none', borderRadius: '10px', fontSize: '17px', fontWeight: '800', cursor: status === 'loading' ? 'not-allowed' : 'pointer' }}
+              >
+                {status === 'loading' ? 'Enviando...' : '📞 Quiero mi consulta gratuita'}
+              </button>
+              {status === 'error' && (
+                <p style={{ marginTop: '12px', fontSize: '13px', color: '#DC2626', textAlign: 'center' }}>
+                  Hubo un error. Por favor llame directamente al 855.246.7274
+                </p>
+              )}
+              <p style={{ marginTop: '12px', fontSize: '12px', color: '#9CA3AF', textAlign: 'center' }}>
+                Su información es privada y nunca se comparte con terceros.
+              </p>
+            </form>
+          )}
         </div>
       </section>
 
