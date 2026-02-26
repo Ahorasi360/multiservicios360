@@ -12,7 +12,7 @@ async function runTest() {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const result = await resend.emails.send({
-      from: 'Multi Servicios 360 <notifications@multiservicios360.net>',
+      from: 'Multi Servicios 360 <notifications@out.multiservicios360.net>',
       to: adminEmail,
       subject: 'TEST — Nueva Venta Multi Servicios 360',
       html: `<h2>✅ Email de prueba</h2><p>Si ves esto, las notificaciones de venta funcionan.</p><p><strong>Enviado a:</strong> ${adminEmail}</p>`,

@@ -23,7 +23,7 @@ export async function POST(request) {
 
     // Send to the department
     await resend.emails.send({
-      from: 'Multi Servicios 360 <no-reply@multiservicios360.net>',
+      from: 'Multi Servicios 360 <no-reply@out.multiservicios360.net>',
       to: [dept.email],
       replyTo: email,
       subject: `[${dept.label}] New message from ${name}`,
@@ -58,7 +58,7 @@ export async function POST(request) {
 
     // Send confirmation to the person who wrote in
     await resend.emails.send({
-      from: 'Multi Servicios 360 <no-reply@multiservicios360.net>',
+      from: 'Multi Servicios 360 <no-reply@out.multiservicios360.net>',
       to: [email],
       subject: 'We received your message / Recibimos su mensaje — Multi Servicios 360',
       html: `

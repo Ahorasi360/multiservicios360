@@ -117,7 +117,7 @@ export async function GET(request) {
       const emailData = EMAILS[emailKey](lead);
 
       await resend.emails.send({
-        from: 'Anthony Galeano — Multi Servicios 360 <no-reply@multiservicios360.net>',
+        from: 'Anthony Galeano — Multi Servicios 360 <no-reply@out.multiservicios360.net>',
         to: [lead.email],
         ...emailData,
       });
@@ -125,7 +125,7 @@ export async function GET(request) {
       // Also notify Anthony
       if (emailKey === 'day1') {
         await resend.emails.send({
-          from: 'Multi Servicios 360 <no-reply@multiservicios360.net>',
+          from: 'Multi Servicios 360 <no-reply@out.multiservicios360.net>',
           to: ['info@multiservicios360.net'],
           subject: `📞 Lead sin pagar 24h — ${lead.business_name || lead.contact_name}`,
           html: `<p><strong>${lead.contact_name}</strong> (${lead.business_name}) visitó /hazte-socio hace 24h y no completó el pago. Tel: <a href="tel:${lead.phone}">${lead.phone}</a> — Email: ${lead.email}</p><p>Ref: ${lead.ref}</p>`

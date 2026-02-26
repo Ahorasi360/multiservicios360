@@ -95,7 +95,7 @@ export async function POST(request) {
 
       // Notify Anthony immediately
       await resend.emails.send({
-        from: 'Multi Servicios 360 <no-reply@multiservicios360.net>',
+        from: 'Multi Servicios 360 <no-reply@out.multiservicios360.net>',
         to: ['info@multiservicios360.net'],
         subject: `🤝 Nueva Aplicación de Socio — ${business_name}`,
         html: `
