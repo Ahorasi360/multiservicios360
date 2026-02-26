@@ -6,16 +6,16 @@ export const TIERS = [
     label_en: 'Trust Core (Self-Prepared)',
     label_es: 'Fideicomiso Básico (Autopreparado)',
     price: 599,
-    desc_en: 'Essential trust with all required clauses. Declaration, trustee appointments, basic distributions, California-compliant.',
-    desc_es: 'Fideicomiso esencial con todas las cláusulas requeridas. Declaración, nombramientos de fideicomisario, distribuciones básicas, conforme a California.'
+    desc_en: 'Essential trust with all required clauses. Declaration, trustee appointments, basic distributions, California-compliant. Platform access only — does not include legal services.',
+    desc_es: 'Fideicomiso esencial con todas las cláusulas requeridas. Declaración, nombramientos, distribuciones básicas, conforme a California. Solo acceso a plataforma — no incluye servicios legales.'
   },
   {
     value: 'trust_plus',
     label_en: 'Trust Plus (Enhanced)',
     label_es: 'Fideicomiso Plus (Mejorado)',
     price: 899,
-    desc_en: "Core + Optional clauses: Minor's trust, real property management, digital assets, per stirpes, mediation requirement, and more.",
-    desc_es: 'Básico + Cláusulas opcionales: Fideicomiso para menores, gestión de bienes raíces, activos digitales, por estirpe, requisito de mediación, y más.',
+    desc_en: "Core + Optional clauses: Minor\'s trust, real property management, digital assets, per stirpes, mediation and more. Platform access only — does not include legal services.",
+    desc_es: 'Básico + Cláusulas opcionales: Fideicomiso para menores, gestión de bienes raíces, activos digitales, por estirpe, mediación y más. Solo acceso a plataforma — no incluye servicios legales.',
     popular: true
   },
   {
@@ -23,8 +23,18 @@ export const TIERS = [
     label_en: 'Trust Elite (Premium)',
     label_es: 'Fideicomiso Elite (Premium)',
     price: 1299,
-    desc_en: 'Plus + Advanced clauses: Special needs provisions, incentive trusts, no-contest clause, arbitration, asset protection, and full customization.',
-    desc_es: 'Plus + Cláusulas avanzadas: Provisiones para necesidades especiales, fideicomisos de incentivo, cláusula de no contestación, arbitraje, protección de activos, y personalización completa.'
+    desc_en: 'Plus + Advanced clauses: Special needs provisions, incentive trusts, no-contest clause, arbitration, asset protection and full customization. Platform access only — does not include legal services.',
+    desc_es: 'Plus + Cláusulas avanzadas: Provisiones para necesidades especiales, fideicomisos de incentivo, cláusula de no contestación, arbitraje, protección de activos y personalización completa. Solo acceso a plataforma — no incluye servicios legales.'
+  },
+  {
+    value: 'trust_attorney',
+    label_en: 'Attorney Review Coordination',
+    label_es: 'Coordinación de Revisión con Abogado',
+    price: 1599,
+    desc_en: 'Platform fee to coordinate review by an independent licensed California attorney (subject to availability, 48-72 hrs). Attorney fees are NOT included — attorneys charge separately.',
+    desc_es: 'Cargo de plataforma para coordinar revisión por un abogado independiente licenciado en California (sujeto a disponibilidad, 48-72 hrs). Los honorarios del abogado NO están incluidos — el abogado cobra por separado.',
+    attorney_note_en: '* Attorney review is performed by an independent licensed attorney. Their fees are separate and not included in this platform price.',
+    attorney_note_es: '* La revisión legal es realizada por un abogado independiente licenciado. Sus honorarios son separados y no están incluidos en el precio de la plataforma.'
   }
 ];
 

@@ -110,6 +110,8 @@ export async function POST(request) {
           amount: session.amount_total,
           matterId,
           partnerName,
+          reviewTier: session.metadata?.reviewTier || null,
+          selectedAddons: session.metadata?.selectedAddons ? session.metadata.selectedAddons.split(',') : [],
         });
       } catch (notifyErr) {
         console.error('Owner notification error (non-critical):', notifyErr.message);

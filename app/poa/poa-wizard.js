@@ -69,10 +69,10 @@ const TRANSLATIONS = {
     progress: "Progress", 
     tierSelect: "Select Review Tier", 
     submit: "Unlock Document", 
-    tierClarification: "Clarification: This service does not include legal services. Documents are self-prepared. Attorneys are independent, and any review or consultation is subject to availability and contracted separately.", 
+    tierClarification: "All prices are platform access fees only. This service does not include legal services or attorney advice. If you select an attorney coordination tier, the attorney is independent and charges separately. Documents are self-prepared using our software.", 
     upsellNotaryDesc: "Administrative notary coordination (independent provider)", 
     basePrice: "Platform Access", 
-    paymentNote: "Payment for platform access.", 
+    paymentNote: "Payment is for platform access only — not for legal services.", 
     clientInfo: "Client Information", 
     clientName: "Your Full Name", 
     clientEmail: "Your Email", 
@@ -140,7 +140,7 @@ const TRANSLATIONS = {
     progress: "Progreso", 
     tierSelect: "Seleccionar Nivel", 
     submit: "Desbloquear Documento", 
-    tierClarification: "Aclaración: Este servicio no incluye servicios legales. Los documentos son autopreparados. Los abogados son independientes y cualquier revisión o consulta está sujeta a disponibilidad y se contrata por separado.", 
+    tierClarification: "Todos los precios son cargos de acceso a plataforma únicamente. Este servicio no incluye servicios legales ni asesoramiento de abogado. Si selecciona un nivel de coordinación con abogado, el abogado es independiente y cobra por separado. Los documentos son autopreparados usando nuestro software.", 
     upsellNotaryDesc: "Coordinación administrativa de notario (proveedor independiente)", 
     basePrice: "Acceso a la Plataforma", 
     paymentNote: "Pago por acceso a la plataforma.", 
@@ -208,28 +208,32 @@ const TRANSLATIONS = {
 const TIERS = [
   { 
     value: 'draft_only', 
-    label_en: 'Self-Prepared Document (Basic Access)', 
-    label_es: 'Documento Autopreparado (Acceso Básico)', 
+    label_en: 'Self-Prepared Document', 
+    label_es: 'Documento Autopreparado', 
     price: 149, 
-    desc_en: 'Software access to prepare your Power of Attorney. PDF in English and Spanish.', 
-    desc_es: 'Acceso al software para preparar su Poder Notarial. PDF en Inglés y Español.' 
+    desc_en: 'Platform access to prepare your Power of Attorney. PDF in English and Spanish. This is a platform fee only — does not include legal services or attorney advice.', 
+    desc_es: 'Acceso a la plataforma para preparar su Poder Notarial. PDF en inglés y español. Este es un cargo de plataforma únicamente — no incluye servicios legales ni asesoramiento de abogado.' 
   },
   { 
     value: 'attorney_review_silent', 
-    label_en: 'Professional Review (Advanced Platform)', 
-    label_es: 'Revisión Profesional (Plataforma Avanzada)', 
+    label_en: 'Platform + Attorney Review Coordination', 
+    label_es: 'Plataforma + Coordinación de Revisión con Abogado', 
     price: 349, 
-    desc_en: 'Platform infrastructure for optional legal review, subject to availability of independent California-licensed attorneys (estimated delivery 48 hours).', 
-    desc_es: 'Infraestructura de plataforma para revisión legal opcional, sujeta a disponibilidad de abogados independientes licenciados en California (entrega estimada 48 horas).', 
-    popular: true 
+    desc_en: 'Platform fee to coordinate an optional review by an independent licensed California attorney (subject to availability, ~48 hrs). Attorney fees are NOT included — the attorney charges separately.', 
+    desc_es: 'Cargo de plataforma para coordinar revisión opcional por un abogado independiente licenciado en California (sujeto a disponibilidad, ~48 hrs). Los honorarios del abogado NO están incluidos — el abogado cobra por separado.',
+    popular: true,
+    attorney_note_en: '* Attorney review by an independent licensed attorney. Their fees are separate.',
+    attorney_note_es: '* Revisión por abogado independiente licenciado. Sus honorarios son separados.'
   },
   { 
     value: 'attorney_review_call', 
-    label_en: 'Professional Consultation (Premium Platform)', 
-    label_es: 'Consulta Profesional (Plataforma Premium)', 
+    label_en: 'Platform + Attorney Consultation Coordination', 
+    label_es: 'Plataforma + Coordinación de Consulta con Abogado', 
     price: 499, 
-    desc_en: 'Infrastructure to coordinate an optional legal consultation, subject to availability of independent licensed attorneys (up to 30 min) + optional review (48 hours).', 
-    desc_es: 'Infraestructura para coordinación de consulta legal opcional, sujeta a disponibilidad de abogados independientes licenciados (hasta 30 min) + revisión opcional (48 horas).' 
+    desc_en: 'Platform fee to coordinate an optional 30-min consultation + review by an independent licensed attorney (subject to availability). Attorney fees are NOT included — the attorney charges separately.', 
+    desc_es: 'Cargo de plataforma para coordinar consulta de 30 min + revisión por un abogado independiente licenciado (sujeto a disponibilidad). Los honorarios del abogado NO están incluidos — el abogado cobra por separado.',
+    attorney_note_en: '* Attorney consultation and review by an independent licensed attorney. Their fees are separate.',
+    attorney_note_es: '* Consulta y revisión por abogado independiente licenciado. Sus honorarios son separados.'
   },
 ];
 

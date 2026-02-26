@@ -58,7 +58,7 @@ export const TRANSLATIONS = {
     // Tier selection
     tierSelect: 'Select Your Package',
     popular: 'MOST POPULAR',
-    tierClarification: 'Platform fees cover document preparation, automation, Entity Vault™, and compliance support. State filing fees are set by California and paid separately. Attorney fees, if applicable, are separate and not included.',
+    tierClarification: 'All prices are platform access fees only — they do not include legal services, attorney advice, or California state filing fees ($70–$750 depending on filing speed). If you select the Elite tier with attorney coordination, the attorney is independent and charges separately. Multi Servicios 360 is not a law firm.',
     tierValueNote: 'All packages include the same core documents. Pricing reflects complexity handling, support level, and processing priority.',
     
     // Entity Vault
@@ -118,7 +118,7 @@ export const TRANSLATIONS = {
     // Payment
     submit: 'Proceed to Payment',
     paying: 'Processing...',
-    paymentNote: 'You will be redirected to Stripe for secure payment.',
+    paymentNote: 'Payment is for platform access only — not for legal services or state filing fees.',
 
     // Attorney flags
     attorneyReviewRecommended: 'Attorney Review Recommended',
@@ -200,7 +200,7 @@ export const TRANSLATIONS = {
     // Tier selection
     tierSelect: 'Seleccione Su Paquete',
     popular: 'MÁS POPULAR',
-    tierClarification: 'Las tarifas de plataforma cubren preparación de documentos, automatización, Entity Vault™ y soporte de cumplimiento. Las tarifas estatales son establecidas por California y se pagan por separado. Los honorarios de abogado, si aplican, son separados y no están incluidos.',
+    tierClarification: 'Todos los precios son cargos de acceso a plataforma únicamente — no incluyen servicios legales, asesoramiento de abogado, ni cuotas estatales de California ($70–$750 según velocidad de trámite). Si selecciona el nivel Elite con coordinación de abogado, el abogado es independiente y cobra por separado. Multi Servicios 360 no es un bufete de abogados.',
     tierValueNote: 'Todos los paquetes incluyen los mismos documentos base. El precio refleja el manejo de complejidad, nivel de soporte y prioridad de procesamiento.',
     
     // Entity Vault
@@ -260,7 +260,7 @@ export const TRANSLATIONS = {
     // Payment
     submit: 'Proceder al Pago',
     paying: 'Procesando...',
-    paymentNote: 'Será redirigido a Stripe para pago seguro.',
+    paymentNote: 'El pago es solo por acceso a la plataforma — no por servicios legales ni cuotas estatales.',
 
     // Attorney flags
     attorneyReviewRecommended: 'Revisión de Abogado Recomendada',

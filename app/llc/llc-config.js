@@ -6,8 +6,8 @@ export const TIERS = [
     label_en: 'LLC Standard',
     label_es: 'LLC Estándar',
     price: 799,
-    desc_en: 'Simple LLC — 1-2 owners, equal ownership, self-guided.',
-    desc_es: 'LLC simple — 1-2 dueños, participación igual, autoguiado.',
+    desc_en: 'Platform access for simple LLC — 1-2 owners, equal ownership. Platform fee only — does not include legal services, state filing fees, or attorney advice.',
+    desc_es: 'Acceso a plataforma para LLC simple — 1-2 dueños, participación igual. Cargo de plataforma únicamente — no incluye servicios legales, cuotas estatales, ni asesoramiento de abogado.',
     features_en: [
       '1-2 owners with equal ownership',
       'Member-managed or single manager',
@@ -33,8 +33,8 @@ export const TIERS = [
     label_es: 'LLC Plus',
     price: 1199,
     popular: true,
-    desc_en: 'Complex ownership & control handled correctly.',
-    desc_es: 'Propiedad y control complejos manejados correctamente.',
+    desc_en: 'Platform access for complex ownership & control. Platform fee only — does not include legal services, state filing fees, or attorney advice.',
+    desc_es: 'Acceso a plataforma para propiedad y control complejos. Cargo de plataforma únicamente — no incluye servicios legales, cuotas estatales, ni asesoramiento de abogado.',
     features_en: [
       'Everything in Standard, PLUS:',
       'Unequal profit/loss allocations',
@@ -59,8 +59,8 @@ export const TIERS = [
     label_en: 'LLC Elite',
     label_es: 'LLC Elite',
     price: 1699,
-    desc_en: 'White-glove setup with attorney coordination.',
-    desc_es: 'Configuración premium con coordinación de abogado.',
+    desc_en: 'Platform fee to coordinate setup with an independent licensed attorney (subject to availability). Attorney fees are NOT included — the attorney charges separately. Does not include state filing fees.',
+    desc_es: 'Cargo de plataforma para coordinar la configuración con un abogado independiente licenciado (sujeto a disponibilidad). Los honorarios del abogado NO están incluidos — el abogado cobra por separado. No incluye cuotas estatales.',
     features_en: [
       'Everything in Plus, PLUS:',
       'Priority intake + build',
