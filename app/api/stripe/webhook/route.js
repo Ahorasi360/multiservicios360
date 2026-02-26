@@ -400,6 +400,107 @@ export async function POST(request) {
     }
 
     // -----------------------------------------------
+    // HAZTE-SOCIO PARTNER REGISTRATION PAYMENT
+    // -----------------------------------------------
+    const paymentSource = session.metadata?.source;
+    if (paymentSource === 'hazte-socio') {
+      try {
+        const ref         = session.metadata?.ref || 'direct';
+        const packageKey  = session.metadata?.package_key || 'pro';
+        const businessName = session.metadata?.business_name || '';
+        const contactName  = session.metadata?.contact_name || '';
+        const email        = session.metadata?.email || session.customer_details?.email || '';
+        const phone        = session.metadata?.phone || '';
+        const partnerType  = session.metadata?.partner_type || 'tax_preparer';
+        const amountPaid   = session.amount_total ? session.amount_total / 100 : 0;
+
+        const PACKAGES = {
+          start: { name: 'Partner Start', commission_rate: 20, tier: 'start' },
+          pro:   { name: 'Partner Pro',   commission_rate: 25, tier: 'pro' },
+          elite: { name: 'Partner Elite', commission_rate: 30, tier: 'elite' },
+        };
+        const pkg = PACKAGES[packageKey] || PACKAGES.pro;
+
+        // 1. Mark lead as paid
+        await supabase.from('partner_leads').update({
+          status: 'paid',
+          paid_at: new Date().toISOString(),
+        }).eq('ref', ref);
+
+        // 2. Create partner record (pending approval)
+        const { data: newPartner, error: partnerErr } = await supabase.from('partners').insert({
+          business_name: businessName,
+          contact_name: contactName,
+          email,
+          phone,
+          partner_type: partnerType,
+          tier: pkg.tier,
+          commission_rate: pkg.commission_rate,
+          status: 'paid_pending_approval',
+          setup_fee_paid: true,
+          setup_fee_paid_at: new Date().toISOString(),
+          setup_fee_payment_id: session.payment_intent,
+          membership_expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+        }).select().single();
+
+        if (partnerErr) {
+          console.error('Partner creation error:', partnerErr);
+        } else {
+          console.log('Partner created:', newPartner.id, '—', businessName);
+        }
+
+        // 3. Notify Anthony — email + SMS
+        const { notifyOwnerOfSale } = await import('../../../../lib/notify-owner');
+        await notifyOwnerOfSale({
+          documentType: 'partner_registration',
+          clientName: contactName,
+          clientEmail: email,
+          amount: session.amount_total,
+          matterId: newPartner?.id || ref,
+          partnerName: businessName,
+          reviewTier: pkg.name,
+          selectedAddons: [],
+        });
+
+        // 4. Send welcome email to new partner
+        const { Resend } = await import('resend');
+        const resend = new (Resend)(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: 'Anthony Galeano — Multi Servicios 360 <no-reply@out.multiservicios360.net>',
+          to: [email],
+          subject: '¡Bienvenido a la Red de Socios — Multi Servicios 360!',
+          html: `
+            <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;">
+              <div style="background:linear-gradient(135deg,#1E3A8A,#1D4ED8);padding:32px;border-radius:12px 12px 0 0;text-align:center;">
+                <h1 style="color:white;margin:0;font-size:24px;font-weight:900;">¡Bienvenido, ${contactName}!</h1>
+                <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:15px;">Ya es socio oficial de Multi Servicios 360</p>
+              </div>
+              <div style="background:white;padding:32px;border:1px solid #E5E7EB;border-radius:0 0 12px 12px;">
+                <p style="font-size:15px;color:#374151;line-height:1.7;">Su pago de <strong>$${amountPaid}</strong> fue procesado exitosamente.</p>
+                <div style="background:#F0F4FF;border-left:4px solid #1E3A8A;padding:16px 20px;border-radius:0 8px 8px 0;margin:20px 0;">
+                  <p style="margin:0 0 6px;font-size:14px;color:#1E3A8A;font-weight:700;">Plan: ${pkg.name}</p>
+                  <p style="margin:0;font-size:14px;color:#374151;">Comisión: <strong>${pkg.commission_rate}%</strong> por cada venta</p>
+                </div>
+                <p style="font-size:15px;color:#374151;line-height:1.7;">En las próximas <strong>24 horas</strong> le enviaremos las credenciales de acceso a su portal de socio.</p>
+                <div style="text-align:center;margin:24px 0;">
+                  <p style="font-size:14px;color:#6B7280;margin:0 0 8px;">¿Preguntas? Estamos aquí:</p>
+                  <a href="tel:8552467274" style="font-size:22px;font-weight:900;color:#1E3A8A;text-decoration:none;">📞 855.246.7274</a>
+                  <p style="font-size:13px;color:#6B7280;margin:4px 0 0;">Lunes–Sábado 9am–6pm | En español</p>
+                </div>
+                <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0;">
+                <p style="margin:0;font-size:13px;color:#6B7280;">Anthony Galeano — Fundador, Multi Servicios 360</p>
+              </div>
+            </div>
+          `,
+        });
+
+        console.log('Hazte-socio payment fully processed for:', businessName, '—', pkg.name);
+      } catch (hazteErr) {
+        console.error('Hazte-socio payment processing error:', hazteErr);
+      }
+    }
+
+    // -----------------------------------------------
     // VAULT PREMIUM UPGRADE
     // -----------------------------------------------
     const vaultSource = session.metadata?.source;
