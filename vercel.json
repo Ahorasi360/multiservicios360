@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/vault-renewal",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/partner-followup",
+      "schedule": "0 11 * * *"
     }
   ]
 }
