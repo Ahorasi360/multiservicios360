@@ -6,7 +6,7 @@ excerpt_en: "How to revoke a power of attorney in California: step-by-step guide
 category: legal
 date: 2026-02-21
 author: Multi Servicios 360
-image: /blog/revocation-poa.jpg
+image: /blog/revocacion-poder-notarial-2026.jpg
 published: true
 ---
 

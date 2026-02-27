@@ -6,7 +6,7 @@ excerpt_en: "Learn what a general power of attorney in California is, when you n
 category: legal
 date: 2026-02-27
 author: Multi Servicios 360
-image: /blog/poa-general.jpg
+image: /blog/poder-notarial-general-2026.jpg
 published: true
 ---
 

@@ -6,7 +6,7 @@ excerpt_en: "Living trust vs will: discover which is better for you in Californi
 category: legal
 date: 2026-02-26
 author: Multi Servicios 360
-image: /blog/living-trust-familia.jpg
+image: /blog/fideicomiso-vs-testamento-2026.jpg
 published: true
 ---
 

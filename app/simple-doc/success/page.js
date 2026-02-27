@@ -875,6 +875,34 @@ function SuccessContent() {
           </div>
         )}
 
+        {/* Vault Subscription Upsell */}
+        <div style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 100%)', borderRadius: '12px', padding: '20px', marginBottom: '24px', color: 'white' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span style={{ fontSize: '22px' }}>🔒</span>
+            <h3 style={{ fontSize: '16px', fontWeight: '700', margin: 0 }}>
+              {language === 'es' ? 'Tu Bóveda Digital — 90 días GRATIS incluidos' : 'Your Digital Vault — 90 FREE days included'}
+            </h3>
+          </div>
+          <p style={{ fontSize: '13px', margin: '0 0 12px 0', opacity: 0.9 }}>
+            {language === 'es'
+              ? 'Tu documento ya está guardado de forma segura en tu Bóveda Digital. Tienes acceso gratuito por 90 días. Después de eso, activa tu suscripción para mantener acceso ilimitado y guardar todos tus documentos futuros.'
+              : 'Your document is already securely saved in your Digital Vault. You have free access for 90 days. After that, activate your subscription to keep unlimited access and save all your future documents.'}
+          </p>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
+            <a href="/boveda-premium?plan=monthly" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', backgroundColor: 'white', color: '#1E3A8A', borderRadius: '8px', fontWeight: '700', fontSize: '14px', textDecoration: 'none' }}>
+              {language === 'es' ? '📅 Mensual — $4.99/mes' : '📅 Monthly — $4.99/mo'}
+            </a>
+            <a href="/boveda-premium?plan=annual" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', backgroundColor: '#F59E0B', color: '#1F2937', borderRadius: '8px', fontWeight: '700', fontSize: '14px', textDecoration: 'none' }}>
+              {language === 'es' ? '⭐ Anual — $49/año (ahorra 18%)' : '⭐ Annual — $49/yr (save 18%)'}
+            </a>
+          </div>
+          <p style={{ fontSize: '11px', margin: 0, opacity: 0.65 }}>
+            {language === 'es'
+              ? '✓ Documentos ilimitados  ✓ Acceso 24/7  ✓ Cancela cuando quieras  ✓ Descuentos en futuros documentos'
+              : '✓ Unlimited documents  ✓ 24/7 access  ✓ Cancel anytime  ✓ Discounts on future documents'}
+          </p>
+        </div>
+
         <div style={{ textAlign: 'left', backgroundColor: '#EFF6FF', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>
           <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#1E40AF', marginBottom: '12px' }}>{t.nextSteps}</h3>
           <ol style={{ margin: 0, paddingLeft: '20px', color: '#1E40AF' }}>

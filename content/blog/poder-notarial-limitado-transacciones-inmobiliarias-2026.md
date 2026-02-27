@@ -6,7 +6,7 @@ excerpt_en: "Limited power of attorney for real estate: how it works, when you n
 category: legal
 date: 2026-02-24
 author: Multi Servicios 360
-image: /blog/poa-inmobiliario.jpg
+image: /blog/poder-limitado-inmobiliario-2026.jpg
 published: true
 ---
 
