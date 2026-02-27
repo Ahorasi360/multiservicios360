@@ -6,7 +6,7 @@ excerpt_en: "Affidavit in California: what it is, when you need it, how to creat
 category: legal
 date: 2026-02-20
 author: Multi Servicios 360
-image: /blog/declaracion-jurada-california.jpg
+image: /blog/affidavit-california.jpg
 published: true
 ---
 

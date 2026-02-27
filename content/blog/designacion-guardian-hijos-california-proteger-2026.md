@@ -6,7 +6,7 @@ excerpt_en: "Guardianship designation in California: how to protect your childre
 category: legal
 date: 2026-02-22
 author: Multi Servicios 360
-image: /blog/designacion-guardian-california.jpg
+image: /blog/guardianship-designation.jpg
 published: true
 ---
 

@@ -6,7 +6,7 @@ excerpt_en: "How to form an LLC in California in 2026: complete guide, costs, be
 category: legal
 date: 2026-02-25
 author: Multi Servicios 360
-image: /blog/llc-california-2026.jpg
+image: /blog/llc-formation.jpg
 published: true
 ---
 

@@ -6,7 +6,7 @@ excerpt_en: "Avoid probate in California: 5 legal strategies to protect your est
 category: legal
 date: 2026-02-23
 author: Multi Servicios 360
-image: /blog/evitar-probate-california.jpg
+image: /blog/probate-reality.jpg
 published: true
 ---
 

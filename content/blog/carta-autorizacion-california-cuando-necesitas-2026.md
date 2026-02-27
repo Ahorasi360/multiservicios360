@@ -6,7 +6,7 @@ excerpt_en: "Authorization letter in California: what it is, when you need it, h
 category: legal
 date: 2026-02-18
 author: Multi Servicios 360
-image: /blog/carta-autorizacion-california.jpg
+image: /blog/authorization-letter.jpg
 published: true
 ---
 

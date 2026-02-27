@@ -6,7 +6,7 @@ excerpt_en: "Promissory note in California: how to lend money to family legally,
 category: legal
 date: 2026-02-19
 author: Multi Servicios 360
-image: /blog/pagare-prestamos-california.jpg
+image: /blog/promissory-note.jpg
 published: true
 ---
 
