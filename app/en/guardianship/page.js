@@ -10,5 +10,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <SimpleDocChatWizard docType="guardianship" initialLang="en" />;
+  return <SimpleDocChatWizard docType="guardianship_designation" initialLang="en" />;
 }
