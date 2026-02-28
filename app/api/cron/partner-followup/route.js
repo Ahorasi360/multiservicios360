@@ -8,6 +8,70 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://multiservicios360.net';
 
 const EMAILS = {
+  day1_cold: (lead) => ({
+    subject: `${lead.contact_name?.split(' ')[0] || 'Hola'}, ¿recibió mi mensaje sobre Multi Servicios 360?`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#1E3A8A,#1D4ED8);color:white;padding:28px 24px;border-radius:8px 8px 0 0;">
+          <h1 style="margin:0;font-size:20px;font-weight:800;">Hola ${lead.contact_name?.split(' ')[0] || ''},</h1>
+        </div>
+        <div style="padding:24px;background:white;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;">
+          <p style="font-size:15px;color:#374151;line-height:1.7;">Le escribí ayer sobre la oportunidad de generar ingresos adicionales como socio de <strong>Multi Servicios 360</strong>. Quería asegurarme que lo vió.</p>
+          <p style="font-size:15px;color:#374151;line-height:1.7;">Somos una plataforma de documentos legales en español — poder notarial, fideicomisos, LLC — y pagamos <strong style="color:#15803D;">20–30% de comisión</strong> a preparadores de impuestos como usted por cada cliente que refieran.</p>
+          <div style="background:#f0f4ff;border-left:4px solid #1E3A8A;padding:14px 16px;margin:20px 0;border-radius:0 6px 6px 0;">
+            <p style="margin:0;font-size:14px;color:#374151;"><strong>Ejemplo:</strong><br>5 clientes por mes × $500 promedio × 20% = <strong style="color:#15803D;">$500/mes extra</strong> sin trabajo adicional.</p>
+          </div>
+          <p style="font-size:15px;color:#374151;">Everardo Miramontes, quien lo conoce, ya es socio. Si tiene preguntas, llámeme directamente:</p>
+          <p style="font-size:20px;font-weight:800;color:#1E3A8A;">📞 855.246.7274</p>
+          <a href="${SITE_URL}/hazte-socio?ref=${lead.ref}" style="display:inline-block;margin-top:16px;padding:14px 28px;background:#1E3A8A;color:white;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none;">Ver planes y registrarme →</a>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
+          <p style="font-size:12px;color:#9ca3af;">Anthony Galeano — Multi Servicios 360<br>${SITE_URL}</p>
+        </div>
+      </div>
+    `
+  }),
+
+  day3_cold: (lead) => ({
+    subject: `Último recordatorio — ingresos extra para su oficina de impuestos`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#1E3A8A,#1D4ED8);color:white;padding:28px 24px;border-radius:8px 8px 0 0;">
+          <h1 style="margin:0;font-size:20px;font-weight:800;">Hola ${lead.contact_name?.split(' ')[0] || ''},</h1>
+        </div>
+        <div style="padding:24px;background:white;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;">
+          <p style="font-size:15px;color:#374151;line-height:1.7;">Esta es la última vez que le escribo sobre esta oportunidad.</p>
+          <p style="font-size:15px;color:#374151;line-height:1.7;">Si sus clientes necesitan documentos legales en español — poderes notariales, fideicomisos, cartas de viaje — y usted los refiere a Multi Servicios 360, <strong>usted cobra comisión automáticamente</strong>.</p>
+          <div style="background:#fffbea;border:2px solid #fbbf24;padding:16px;border-radius:10px;margin:20px 0;text-align:center;">
+            <p style="margin:0;font-size:15px;color:#374151;">Sin inversión de tiempo · Sin conocimiento legal · <strong style="color:#15803D;">Solo referir y cobrar</strong></p>
+          </div>
+          <a href="${SITE_URL}/hazte-socio?ref=${lead.ref}" style="display:inline-block;margin-top:8px;padding:14px 28px;background:#1E3A8A;color:white;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none;">Ver cómo funciona →</a>
+          <p style="font-size:14px;color:#6b7280;margin-top:16px;">📞 855.246.7274 &nbsp;|&nbsp; info@multiservicios360.net</p>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
+          <p style="font-size:11px;color:#9ca3af;">Multi Servicios 360 | ${SITE_URL}<br>Para no recibir más emails, responda con "Eliminar".</p>
+        </div>
+      </div>
+    `
+  }),
+
+  day7_cold: (lead) => ({
+    subject: `¿Le puedo llamar 5 minutos, ${lead.contact_name?.split(' ')[0] || ''}?`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#1E3A8A,#1D4ED8);color:white;padding:28px 24px;border-radius:8px 8px 0 0;">
+          <h1 style="margin:0;font-size:20px;font-weight:800;">Hola ${lead.contact_name?.split(' ')[0] || ''},</h1>
+        </div>
+        <div style="padding:24px;background:white;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;">
+          <p style="font-size:15px;color:#374151;line-height:1.7;">Le he enviado un par de mensajes sobre la oportunidad de ser socio de Multi Servicios 360. Sé que está ocupado.</p>
+          <p style="font-size:15px;color:#374151;line-height:1.7;">Solo necesito 5 minutos de su tiempo para explicarle cómo Everardo y otros preparadores en su área ya están generando ingresos extra sin cambiar su forma de trabajar.</p>
+          <p style="font-size:18px;font-weight:800;color:#1E3A8A;">📞 Llámeme: 855.246.7274</p>
+          <p style="font-size:14px;color:#6b7280;">O responda este email con el mejor horario para hablar.</p>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
+          <p style="font-size:12px;color:#9ca3af;">Anthony Galeano — Multi Servicios 360<br>Para no recibir más emails, responda con "Eliminar".</p>
+        </div>
+      </div>
+    `
+  }),
+
   day1: (lead) => ({
     subject: `${lead.contact_name?.split(' ')[0] || 'Hola'}, ¿tiene preguntas sobre ser socio?`,
     html: `
@@ -88,11 +152,11 @@ export async function GET(request) {
   const now = new Date();
   const results = { sent: [], skipped: [], errors: [] };
 
-  // Get all leads that applied but haven't paid and have email
+  // Get all leads that were emailed, visited, or applied but haven't paid
   const { data: leads, error } = await supabase
     .from('partner_leads')
     .select('*')
-    .in('status', ['visited', 'applied'])
+    .in('status', ['emailed', 'visited', 'applied'])
     .not('email', 'is', null)
     .not('followup_sent', 'cs', '{"unsubscribed"}');
 
@@ -114,7 +178,9 @@ export async function GET(request) {
       if (!emailKey) { results.skipped.push(lead.ref); continue; }
       if (!lead.email) { results.skipped.push(lead.ref + ' (no email)'); continue; }
 
-      const emailData = EMAILS[emailKey](lead);
+      const emailData = lead.status === 'emailed'
+        ? EMAILS[emailKey + '_cold']?.(lead) || EMAILS[emailKey](lead)
+        : EMAILS[emailKey](lead);
 
       await resend.emails.send({
         from: 'Anthony Galeano — Multi Servicios 360 <no-reply@out.multiservicios360.net>',
