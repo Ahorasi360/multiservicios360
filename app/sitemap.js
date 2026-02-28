@@ -57,31 +57,27 @@ export default function sitemap() {
     const posts = getAllPosts();
     posts.forEach((post) => {
       const lastMod = post.date ? new Date(post.date) : new Date();
+      // Higher priority for 2026 posts and travel category (most searches)
+      const is2026 = post.slug.includes('2026');
+      const isTravel = post.category === 'travel' || post.slug.includes('carta-autorizacion');
+      const priority = is2026 && isTravel ? 0.9 : is2026 ? 0.8 : isTravel ? 0.75 : 0.6;
+      const changeFreq = is2026 ? 'weekly' : 'monthly';
+
       // Spanish version
       blogPosts.push({
         url: `${baseUrl}/blog/${post.slug}`,
         lastModified: lastMod,
-        changeFrequency: 'monthly',
-        priority: 0.6,
-        alternates: {
-          languages: {
-            es: `${baseUrl}/blog/${post.slug}`,
-            en: `${baseUrl}/en/blog/${post.slug}`,
-          },
-        },
+        changeFrequency: changeFreq,
+        priority,
+        alternates: { languages: { es: `${baseUrl}/blog/${post.slug}`, en: `${baseUrl}/en/blog/${post.slug}` } },
       });
       // English version
       blogPosts.push({
         url: `${baseUrl}/en/blog/${post.slug}`,
         lastModified: lastMod,
-        changeFrequency: 'monthly',
-        priority: 0.6,
-        alternates: {
-          languages: {
-            en: `${baseUrl}/en/blog/${post.slug}`,
-            es: `${baseUrl}/blog/${post.slug}`,
-          },
-        },
+        changeFrequency: changeFreq,
+        priority: priority - 0.05,
+        alternates: { languages: { en: `${baseUrl}/en/blog/${post.slug}`, es: `${baseUrl}/blog/${post.slug}` } },
       });
     });
   } catch (e) {
