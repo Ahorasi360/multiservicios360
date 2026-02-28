@@ -823,6 +823,9 @@ function LLCSuccessContent() {
         </div>
 
         {/* Next Steps */}
+        <div style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '12px', padding: '20px', marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#166534', marginBottom: '12px' }}>{tx.nextStepsTitle}</h3>
+          <ol style={{ margin: 0, paddingLeft: '20px', lineHeight: '2' }}>
             {[tx.step1, tx.step2, tx.step3, tx.step4, tx.step5, tx.step6].map((s, i) => (
               <li key={i} style={{ fontSize: '14px', color: '#374151', fontWeight: i === 3 ? '600' : '400' }}>{s}</li>
             ))}
