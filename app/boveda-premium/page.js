@@ -153,8 +153,9 @@ function BovedaPremiumContent() {
   const [openFaq, setOpenFaq] = useState(null);
   const [upgrading, setUpgrading] = useState(false);
   const searchParams = useSearchParams();
-  const vaultToken = searchParams.get('token') || searchParams.get('vault_token_id') || '';
+  const vaultToken = searchParams.get('token') || searchParams.get('vault_token_id') || searchParams.get('vault') || '';
   const clientEmail = searchParams.get('email') || '';
+  const defaultPlan = searchParams.get('plan') || '';
 
   async function handleUpgrade(plan) {
     if (!vaultToken) {
@@ -190,6 +191,13 @@ function BovedaPremiumContent() {
       if (saved) setLanguage(saved);
     }
   }, []);
+
+  // Auto-trigger checkout if plan param is present (from email links)
+  useEffect(() => {
+    if (defaultPlan && vaultToken && (defaultPlan === 'monthly' || defaultPlan === 'annual')) {
+      handleUpgrade(defaultPlan);
+    }
+  }, [defaultPlan, vaultToken]);
 
   const toggleLanguage = () => {
     const newLang = language === 'es' ? 'en' : 'es';
