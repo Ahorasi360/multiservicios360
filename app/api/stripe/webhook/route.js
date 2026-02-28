@@ -36,6 +36,7 @@ const VAULT_DOC_MAP = {
   authorization_letter: 'authorization_letter',
   promissory_note: 'promissory_note',
   guardianship_designation: 'guardianship_designation',
+  travel_authorization: 'travel_authorization',
 };
 
 export async function POST(request) {
