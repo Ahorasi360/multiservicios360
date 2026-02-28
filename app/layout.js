@@ -7,7 +7,7 @@ export const metadata = {
   verification: {
     google: 'google6dee70b79b4cd078',
     other: {
-      'msvalidate.01': 'B31244A5BEB800476FBFDBB970B09C56',
+      'msvalidate.01': '5A812EC19201D8F827C57F3900AA4FC3',
     },
   },
   openGraph: {
