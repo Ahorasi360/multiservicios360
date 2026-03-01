@@ -236,7 +236,7 @@ export default function WhyUsClient({ lang: initialLang = 'es' }) {
       `}</style>
 
       {/* Navigation */}
-      <Navbar lang={lang} />
+      <Navbar lang={language} />
 
       {/* Hero Section */}
       <section style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #1D4ED8 100%)', color: 'white', padding: '80px 16px', position: 'relative', overflow: 'hidden' }}>
