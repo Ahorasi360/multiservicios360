@@ -158,7 +158,7 @@ export async function GET(request) {
     .select('*')
     .in('status', ['emailed', 'visited', 'applied'])
     .not('email', 'is', null)
-    .not('followup_sent', 'cs', '{"unsubscribed"}');
+    .or('followup_sent.is.null,followup_sent->>unsubscribed.is.null');
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
