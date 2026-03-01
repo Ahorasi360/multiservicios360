@@ -51,7 +51,7 @@ function DocumentPreview({ intakeData, language, isPaid }) {
       </div>
       <div style={{ marginBottom: '12px' }}>
         <div style={{ fontWeight: 'bold', borderBottom: '1px solid #E5E7EB', paddingBottom: '2px', marginBottom: '4px' }}>{labels.assets}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', fontSize: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '4px', fontSize: '10px' }}>
           {[['owns_ca_real_estate', 'CA Real Estate'], ['owns_business', 'Business'], ['has_digital_assets', 'Digital Assets'], ['has_specific_gifts', 'Specific Gifts']].map(([k, l]) => (
             <div key={k} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '12px', height: '12px', border: '1px solid #000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px' }}>{intakeData[k] ? 'X' : ''}</span><span>{l}</span></div>
           ))}
@@ -82,8 +82,16 @@ export default function TrustIntakeWizard({ initialLang = 'es' }) {
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [attorneyFlags, setAttorneyFlags] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const shouldShowQuestion = (q, data) => {
     if (!q.showIf) return true;
@@ -298,10 +306,10 @@ export default function TrustIntakeWizard({ initialLang = 'es' }) {
 
         {/* Step 2: Intake Questions */}
         {currentStep === 'intake' && (
-          <div style={st.grid2}>
+          <div style={{ ...st.grid2, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             <div style={st.card}>
               <div style={{ marginBottom: '16px' }}><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}><span style={{ fontSize: '14px', fontWeight: '500' }}>{t.progress}</span><span style={st.badge}>{progress}%</span></div><div style={st.progressBar}><div style={{ ...st.progressFill, width: `${progress}%` }}></div></div></div>
-              <div style={st.chatContainer}>{messages.map((m, i) => <div key={i} style={m.role === 'user' ? st.msgUser : st.msgAssistant}>{m.content}</div>)}<div ref={messagesEndRef} /></div>
+              <div style={{ ...st.chatContainer, height: isMobile ? '50vh' : '400px', minHeight: '240px' }}>{messages.map((m, i) => <div key={i} style={m.role === 'user' ? st.msgUser : st.msgAssistant}>{m.content}</div>)}<div ref={messagesEndRef} /></div>
               <div style={{ display: 'flex', gap: '8px' }}><input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSend()} placeholder={t.typeAnswer} style={{ ...st.input, flex: 1 }} disabled={isLoading} /><button onClick={handleSend} disabled={isLoading || !input.trim()} style={{ padding: '12px 20px', backgroundColor: isLoading || !input.trim() ? '#9CA3AF' : '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', cursor: isLoading || !input.trim() ? 'not-allowed' : 'pointer' }}><SendIcon /></button></div>
               {language === 'es' && <p style={{ fontSize: '12px', color: '#6B7280', marginTop: '12px', textAlign: 'center' }}>{t.legalNote}</p>}
             </div>
@@ -318,7 +326,7 @@ export default function TrustIntakeWizard({ initialLang = 'es' }) {
 
         {/* Step 3: Tier Selection */}
         {currentStep === 'tier' && (
-          <div style={st.grid2}>
+          <div style={{ ...st.grid2, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             <div style={st.card}>
               <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px' }}>{t.tierSelect}</h2>
               {TIERS.map(tier => (

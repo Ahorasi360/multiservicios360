@@ -87,8 +87,16 @@ export default function LLCIntakeWizard({ initialLang = 'es' }) {
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [attorneyFlags, setAttorneyFlags] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // ============================================
   // Question logic
@@ -478,7 +486,7 @@ export default function LLCIntakeWizard({ initialLang = 'es' }) {
 
         {/* ============ STEP 2: INTAKE QUESTIONS ============ */}
         {currentStep === 'intake' && (
-          <div style={st.grid2}>
+          <div style={{ ...st.grid2, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             {/* LEFT: Chat */}
             <div style={st.card}>
               <div style={{ marginBottom: '16px' }}>
@@ -488,7 +496,7 @@ export default function LLCIntakeWizard({ initialLang = 'es' }) {
                 </div>
                 <div style={st.progressBar}><div style={{ ...st.progressFill, width: `${progress}%` }}></div></div>
               </div>
-              <div style={st.chatContainer}>
+              <div style={{ ...st.chatContainer, height: isMobile ? '50vh' : '400px', minHeight: '240px' }}>
                 {messages.map((m, i) => (
                   <div key={i} style={m.role === 'user' ? st.msgUser : st.msgAssistant}>{m.content}</div>
                 ))}
@@ -539,7 +547,7 @@ export default function LLCIntakeWizard({ initialLang = 'es' }) {
 
         {/* ============ STEP 3: TIER + UPSELLS + PAYMENT ============ */}
         {currentStep === 'tier' && (
-          <div style={st.grid2}>
+          <div style={{ ...st.grid2, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             {/* LEFT: Tier + Upsells */}
             <div style={st.card}>
               <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px' }}>{t.tierSelect}</h2>

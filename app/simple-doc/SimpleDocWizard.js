@@ -11,6 +11,7 @@ const ArrowIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" heig
 export default function SimpleDocWizard({ docType }) {
   const config = SIMPLE_DOC_TYPES[docType];
   const [lang, setLang] = useState('es');
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({});
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
@@ -21,6 +22,13 @@ export default function SimpleDocWizard({ docType }) {
 
   const t = config.translations[lang];
   const shared = SHARED_TRANSLATIONS[lang];
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     const saved = typeof window !== 'undefined' && localStorage.getItem('ms360_lang');
@@ -182,7 +190,7 @@ export default function SimpleDocWizard({ docType }) {
           {/* Client Info */}
           <div style={{ marginBottom: '32px', paddingBottom: '24px', borderBottom: '1px solid #E5E7EB' }}>
             <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0F172A', marginBottom: '20px' }}>{shared.clientInfo}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#1F2937', marginBottom: '6px' }}>
                   {shared.clientName} <span style={{ color: '#DC2626' }}>*</span>
@@ -200,7 +208,7 @@ export default function SimpleDocWizard({ docType }) {
                 />
               </div>
             </div>
-            <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#1F2937', marginBottom: '6px' }}>{shared.clientPhone}</label>
                 <input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)}
