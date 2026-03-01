@@ -124,6 +124,62 @@ function renderMarkdown(md) {
   return html;
 }
 
+// ─── ServicesDropdown Component ──────────────────────────────────────────────
+function ServicesDropdown({ lang, label }) {
+  const [open, setOpen] = useState(false);
+  const isEs = lang === 'es';
+
+  const links = isEs ? [
+    { label: '⚖️ Poder Notarial General', url: '/poa' },
+    { label: '📋 Poder Notarial Limitado', url: '/limited-poa' },
+    { label: '🏡 Fideicomiso en Vida', url: '/trust' },
+    { label: '🏗️ Formación de LLC', url: '/llc' },
+    { label: '📄 Testamento Simple', url: '/simple-will' },
+    { label: '📜 Testamento de Traspaso', url: '/pour-over-will' },
+    { label: '🏥 Autorización HIPAA', url: '/hipaa-authorization' },
+    { label: '🔏 Certificación de Fideicomiso', url: '/certification-of-trust' },
+    { label: '🏢 S-Corporation', url: '/s-corp-formation' },
+    { label: '🏛️ C-Corporation', url: '/c-corp-formation' },
+    { label: '📋 Actas Corporativas', url: '/corporate-minutes' },
+    { label: '🏦 Resolución Bancaria', url: '/banking-resolution' },
+    { label: '✈️ Carta de Viaje', url: '/travel-authorization' },
+    { label: '📁 Todos los Servicios', url: '/mas-servicios' },
+  ] : [
+    { label: '⚖️ General Power of Attorney', url: '/en/poa' },
+    { label: '📋 Limited Power of Attorney', url: '/en/limited-poa' },
+    { label: '🏡 Living Trust', url: '/en/trust' },
+    { label: '🏗️ LLC Formation', url: '/en/llc' },
+    { label: '📄 Simple Will', url: '/en/simple-will' },
+    { label: '📜 Pour-Over Will', url: '/en/pour-over-will' },
+    { label: '🏥 HIPAA Authorization', url: '/en/hipaa-authorization' },
+    { label: '🔏 Certification of Trust', url: '/en/certification-of-trust' },
+    { label: '🏢 S-Corporation', url: '/en/s-corp-formation' },
+    { label: '🏛️ C-Corporation', url: '/en/c-corp-formation' },
+    { label: '📋 Corporate Minutes', url: '/en/corporate-minutes' },
+    { label: '🏦 Banking Resolution', url: '/en/banking-resolution' },
+    { label: '✈️ Travel Authorization', url: '/en/travel-authorization' },
+    { label: '📁 All Services', url: '/en/more-services' },
+  ];
+
+  return (
+    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button className="flex items-center gap-1 text-gray-700 hover:text-blue-700 text-sm font-medium bg-transparent border-none cursor-pointer p-0">
+        {label}
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      {open && (
+        <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 min-w-[220px]">
+          {links.map(link => (
+            <a key={link.url} href={link.url} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 no-underline transition-colors">
+              {link.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── ShareButtons Component ──────────────────────────────────────────────────
 function ShareButtons({ title, slug, lang, shareLabel, copyLabel, copiedLabel }) {
   const [copied, setCopied] = useState(false);
@@ -321,11 +377,11 @@ export default function BlogPostClient({ post, relatedPosts, lang }) {
             <div className="hidden sm:block"><span className="text-gray-900 font-bold text-sm block leading-tight">Multi Servicios 360</span><span className="text-gray-500 text-[10px] uppercase tracking-widest">Document Preparation</span></div>
           </Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/#services" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.services}</Link>
-            <Link href="/por-que-nosotros" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.whyUs}</Link>
-            <Link href="/nuestra-historia" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.ourStory}</Link>
+            <ServicesDropdown lang={lang} label={t.services} />
+            <Link href={lang === 'en' ? '/en/our-story' : '/por-que-nosotros'} className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.whyUs}</Link>
+            <Link href={lang === 'en' ? '/en/our-story' : '/nuestra-historia'} className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.ourStory}</Link>
             <Link href={blogBase} className="text-blue-700 font-bold text-sm no-underline border-b-2 border-blue-700 pb-0.5">Blog</Link>
-            <Link href="/contacto" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.contact}</Link>
+            <Link href={lang === 'en' ? '/en/contact' : '/contacto'} className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.contact}</Link>
           </div>
           <div className="flex items-center gap-3">
             {hasTranslation ? (
