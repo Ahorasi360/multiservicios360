@@ -724,6 +724,14 @@ export default function HomeClient({ lang = 'es' }) {
                 <li><Link href="/affidavit" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Declaración Jurada' : 'Affidavit'}</Link></li>
                 <li><Link href="/revocation-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Revocación de Poder' : 'Revocation of POA'}</Link></li>
                 <li><Link href="/travel-authorization" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Carta de Autorización de Viaje' : 'Travel Authorization Letter'}</Link></li>
+                <li><Link href="/simple-will" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Testamento Simple' : 'Simple Will'}</Link></li>
+                <li><Link href="/pour-over-will" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Testamento de Traspaso' : 'Pour-Over Will'}</Link></li>
+                <li><Link href="/hipaa-authorization" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Autorización HIPAA' : 'HIPAA Authorization'}</Link></li>
+                <li><Link href="/certification-of-trust" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Certificación de Fideicomiso' : 'Certification of Trust'}</Link></li>
+                <li><Link href="/s-corp-formation" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Formación S-Corporation' : 'S-Corp Formation'}</Link></li>
+                <li><Link href="/c-corp-formation" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Formación C-Corporation' : 'C-Corp Formation'}</Link></li>
+                <li><Link href="/corporate-minutes" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Actas Corporativas' : 'Corporate Minutes'}</Link></li>
+                <li><Link href="/banking-resolution" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Resolución Bancaria' : 'Banking Resolution'}</Link></li>
               </ul>
             </div>
             <div>

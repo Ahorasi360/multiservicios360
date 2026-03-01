@@ -81,6 +81,62 @@ const TRANSLATIONS = {
         price: '$49',
         tags: ['Viaje', 'Menores', 'Internacional'],
       },
+      pourOverWill: {
+        title: 'Testamento de Traspaso al Fideicomiso',
+        subtitle: 'Pour-Over Will',
+        desc: 'Complemento esencial para su fideicomiso en vida. Garantiza que cualquier bien no incluido en el fideicomiso pase automáticamente a él al fallecer.',
+        price: '$199',
+        tags: ['Planificación Patrimonial', 'Fideicomiso', 'Herencia'],
+      },
+      simpleWill: {
+        title: 'Testamento Simple',
+        subtitle: 'Last Will & Testament',
+        desc: 'Declare sus deseos sobre cómo distribuir sus bienes, quién cuidará a sus hijos menores y quién administrará su patrimonio.',
+        price: '$149',
+        tags: ['Herencia', 'Hijos Menores', 'Ejecutor'],
+      },
+      hipaaAuthorization: {
+        title: 'Autorización HIPAA',
+        subtitle: 'HIPAA Authorization',
+        desc: 'Autorice a un familiar a acceder a su información médica confidencial en caso de emergencia o incapacidad.',
+        price: '$99',
+        tags: ['Médico', 'Emergencia', 'Privacidad'],
+      },
+      certificationOfTrust: {
+        title: 'Certificación de Fideicomiso',
+        subtitle: 'Certification of Trust',
+        desc: 'Confirma la existencia y términos de su fideicomiso. Requerido por bancos e instituciones financieras.',
+        price: '$99',
+        tags: ['Fideicomiso', 'Bancos', 'Notarización'],
+      },
+      sCorpFormation: {
+        title: 'Formación de S-Corporation',
+        subtitle: 'S-Corp Formation Package',
+        desc: 'Paquete completo para formar su S-Corporation en California. Incluye estatutos, actas de organización y acuerdo de accionistas.',
+        price: '$499',
+        tags: ['Negocios', 'Impuestos', 'Accionistas'],
+      },
+      cCorpFormation: {
+        title: 'Formación de C-Corporation',
+        subtitle: 'C-Corp Formation Package',
+        desc: 'Paquete completo para formar su C-Corporation. Ideal para negocios que buscan inversionistas.',
+        price: '$499',
+        tags: ['Negocios', 'Inversionistas', 'Escalable'],
+      },
+      corporateMinutes: {
+        title: 'Actas Corporativas',
+        subtitle: 'Corporate Minutes',
+        desc: 'Documente oficialmente las decisiones y reuniones de su corporación. Requerido anualmente para mantener su protección corporativa.',
+        price: '$149',
+        tags: ['Corporación', 'Cumplimiento', 'Anual'],
+      },
+      bankingResolution: {
+        title: 'Resolución Bancaria',
+        subtitle: 'Banking Resolution',
+        desc: 'Autorice a representantes de su empresa a abrir cuentas bancarias o realizar transacciones financieras.',
+        price: '$99',
+        tags: ['Banco', 'Corporación', 'Autorización'],
+      },
     },
     moreComing: '¿Necesita otro tipo de documento?',
     moreComingDesc: 'Estamos constantemente agregando nuevos documentos a nuestra plataforma. Contáctenos para consultas.',
@@ -153,6 +209,62 @@ const TRANSLATIONS = {
         price: '$49',
         tags: ['Travel', 'Minors', 'International'],
       },
+      pourOverWill: {
+        title: 'Pour-Over Will',
+        subtitle: 'Testamento de Traspaso',
+        desc: 'Essential complement to your living trust. Ensures any assets not held in the trust automatically transfer into it upon your death.',
+        price: '$199',
+        tags: ['Estate Planning', 'Trust', 'Inheritance'],
+      },
+      simpleWill: {
+        title: 'Last Will & Testament',
+        subtitle: 'Testamento Simple',
+        desc: 'State your wishes for distributing your assets, who will care for your minor children, and who will administer your estate.',
+        price: '$149',
+        tags: ['Inheritance', 'Minor Children', 'Executor'],
+      },
+      hipaaAuthorization: {
+        title: 'HIPAA Authorization',
+        subtitle: 'Autorización HIPAA',
+        desc: 'Authorize a family member or loved one to access your confidential medical information in case of emergency or incapacity.',
+        price: '$99',
+        tags: ['Medical', 'Emergency', 'Privacy'],
+      },
+      certificationOfTrust: {
+        title: 'Certification of Trust',
+        subtitle: 'Certificación de Fideicomiso',
+        desc: 'Confirms the existence and terms of your trust without revealing private details. Required by banks and financial institutions.',
+        price: '$99',
+        tags: ['Trust', 'Banks', 'Notarization'],
+      },
+      sCorpFormation: {
+        title: 'S-Corporation Formation Package',
+        subtitle: 'Formación S-Corp',
+        desc: 'Complete package to form your S-Corporation in California. Includes bylaws, organizational minutes, and shareholder agreement.',
+        price: '$499',
+        tags: ['Business', 'Tax', 'Shareholders'],
+      },
+      cCorpFormation: {
+        title: 'C-Corporation Formation Package',
+        subtitle: 'Formación C-Corp',
+        desc: 'Complete package to form your C-Corporation. Ideal for businesses seeking investors or planning significant growth.',
+        price: '$499',
+        tags: ['Business', 'Investors', 'Scalable'],
+      },
+      corporateMinutes: {
+        title: 'Corporate Minutes',
+        subtitle: 'Actas Corporativas',
+        desc: 'Officially document your corporation\'s decisions and meetings. Required annually to maintain your corporate protection.',
+        price: '$149',
+        tags: ['Corporation', 'Compliance', 'Annual'],
+      },
+      bankingResolution: {
+        title: 'Banking Resolution',
+        subtitle: 'Resolución Bancaria',
+        desc: 'Officially authorize company representatives to open bank accounts, obtain loans, or conduct financial transactions.',
+        price: '$99',
+        tags: ['Bank', 'Corporation', 'Authorization'],
+      },
     },
     moreComing: 'Need a different type of document?',
     moreComingDesc: 'We are constantly adding new documents to our platform. Contact us for inquiries.',
@@ -160,7 +272,28 @@ const TRANSLATIONS = {
   },
 };
 
+// New doc icons
+const WillIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>);
+const HeartPulseIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>);
+const BadgeCheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>);
+const BuildingCorpIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>);
+const ClipboardIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>);
+const BankIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>);
+const PourOverIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 13v4M10 15h4"/></svg>);
+const CertIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>);
+
 const SERVICES = [
+  // Estate Planning — NEW
+  { key: 'pourOverWill', href: '/pour-over-will', Icon: PourOverIcon, color: '#7C3AED', bgColor: '#F5F3FF' },
+  { key: 'simpleWill', href: '/simple-will', Icon: WillIcon, color: '#1E3A8A', bgColor: '#EFF6FF' },
+  { key: 'hipaaAuthorization', href: '/hipaa-authorization', Icon: HeartPulseIcon, color: '#DC2626', bgColor: '#FEF2F2' },
+  { key: 'certificationOfTrust', href: '/certification-of-trust', Icon: CertIcon, color: '#059669', bgColor: '#ECFDF5' },
+  // Corporate — NEW
+  { key: 'sCorpFormation', href: '/s-corp-formation', Icon: BuildingCorpIcon, color: '#D97706', bgColor: '#FFFBEB' },
+  { key: 'cCorpFormation', href: '/c-corp-formation', Icon: BuildingCorpIcon, color: '#B45309', bgColor: '#FEF3C7' },
+  { key: 'corporateMinutes', href: '/corporate-minutes', Icon: ClipboardIcon, color: '#0284C7', bgColor: '#F0F9FF' },
+  { key: 'bankingResolution', href: '/banking-resolution', Icon: BankIcon, color: '#065F46', bgColor: '#ECFDF5' },
+  // Original docs
   { key: 'billOfSale', href: '/bill-of-sale', Icon: CarIcon, color: '#2563EB', bgColor: '#EFF6FF' },
   { key: 'affidavit', href: '/affidavit', Icon: ScrollIcon, color: '#7C3AED', bgColor: '#F5F3FF' },
   { key: 'revocationPoa', href: '/revocation-poa', Icon: XCircleIcon, color: '#DC2626', bgColor: '#FEF2F2' },
