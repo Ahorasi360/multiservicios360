@@ -353,7 +353,7 @@ export default function NegociosClient({ lang = 'es' }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
 
       <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh' }}>
-        <Navbar lang={t.lang} currentPath={t.lang === 'es' ? '/negocios' : '/en/business'} />
+        <Navbar lang={t.lang} currentPath={t.lang === 'es' ? '/negocios' : '/en/business'} langSwitchUrl={t.langSwitchUrl} />
 
         {/* ── HERO ─────────────────────────────────────────── */}
         <section style={{ background: 'linear-gradient(135deg, #0C1445 0%, #1E3A8A 50%, #1D4ED8 100%)', padding: '72px 24px 80px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>

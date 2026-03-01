@@ -8,12 +8,13 @@ const MenuIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="22" heigh
 const CloseIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>);
 const ChevronDown = () => (<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>);
 
-export default function Navbar({ lang = 'es', currentPath = '' }) {
+export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = null }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
   const isEs = lang === 'es';
-  const altLangUrl = isEs ? currentPath.replace(/^\//, '/en/').replace('/en/en/', '/en/') || '/en' : currentPath.replace(/^\/en\//, '/') || '/';
+  const altLangUrl = langSwitchUrl || (isEs ? currentPath.replace(/^\//, '/en/').replace('/en/en/', '/en/') || '/en' : currentPath.replace(/^\/en\//, '/') || '/');
+  // ^ Use explicit langSwitchUrl if provided (needed for pages with different en/es slug names)
 
   const t = {
     services: isEs ? 'Servicios' : 'Services',
@@ -112,7 +113,7 @@ export default function Navbar({ lang = 'es', currentPath = '' }) {
             <Link href={isEs ? '/contacto' : '/en/contact'} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px', padding: '8px 12px' }}>{t.contact}</Link>
 
             {/* Language toggle */}
-            <Link href={isEs ? (currentPath ? `/en${currentPath}` : '/en') : (currentPath ? currentPath.replace(/^\/en/, '') || '/' : '/')}
+            <Link href={altLangUrl}
               style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', borderRadius: '6px', fontWeight: '500', fontSize: '13px', color: '#374151', textDecoration: 'none', marginLeft: '4px' }}>
               <GlobeIcon /> {isEs ? 'EN' : 'ES'}
             </Link>
@@ -149,7 +150,7 @@ export default function Navbar({ lang = 'es', currentPath = '' }) {
               <Link href={isEs ? '/por-que-nosotros' : '/en/why-us'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.whyUs}</Link>
               <Link href={isEs ? '/blog' : '/en/blog'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.blog}</Link>
               <Link href={isEs ? '/contacto' : '/en/contact'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.contact}</Link>
-              <Link href={isEs ? (currentPath ? `/en${currentPath}` : '/en') : (currentPath ? currentPath.replace(/^\/en/, '') || '/' : '/')}
+              <Link href={altLangUrl}
                 style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px' }}>
                 <GlobeIcon /> {isEs ? 'Switch to English' : 'Cambiar a Español'}
               </Link>

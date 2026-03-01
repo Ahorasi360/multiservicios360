@@ -391,7 +391,7 @@ export default function FamiliaClient({ lang = 'es' }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
 
       <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh' }}>
-        <Navbar lang={t.lang} currentPath={t.lang === 'es' ? '/planificacion-familiar' : '/en/family-planning'} />
+        <Navbar lang={t.lang} currentPath={t.lang === 'es' ? '/planificacion-familiar' : '/en/family-planning'} langSwitchUrl={t.langSwitchUrl} />
 
         {/* ── HERO ─────────────────────────────────────────── */}
         <section style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 40%, #4338CA 100%)', padding: '72px 24px 80px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
