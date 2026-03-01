@@ -11,7 +11,7 @@ const PRICING = {
   guardianship_designation: { amount: 12900, name: 'Guardianship Designation', nameEs: 'Designación de Guardián' },
   travel_authorization: { amount: 4900, name: 'Travel Authorization Letter', nameEs: 'Carta de Autorización de Viaje' },
   // Estate Planning
-  pour_over_will: { amount: 19900, name: 'Pour-Over Will', nameEs: 'Testamento con Cláusula de Fideicomiso' },
+  pour_over_will: { amount: 19900, name: 'Pour-Over Will', nameEs: 'Testamento de Traspaso al Fideicomiso' },
   simple_will: { amount: 14900, name: 'Last Will and Testament', nameEs: 'Testamento Simple' },
   hipaa_authorization: { amount: 9900, name: 'HIPAA Authorization', nameEs: 'Autorización HIPAA' },
   certification_of_trust: { amount: 9900, name: 'Certification of Trust', nameEs: 'Certificación de Fideicomiso' },

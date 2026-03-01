@@ -23,7 +23,7 @@ const DOC_NAMES = {
     promissory_note: 'Pagaré',
     authorization_letter: 'Carta de Autorización',
     revocation_poa: 'Revocación de Poder Notarial',
-    pour_over_will: 'Testamento con Cláusula de Fideicomiso',
+    pour_over_will: 'Testamento de Traspaso al Fideicomiso',
     simple_will: 'Testamento Simple',
     hipaa_authorization: 'Autorización HIPAA',
     certification_of_trust: 'Certificación de Fideicomiso',
