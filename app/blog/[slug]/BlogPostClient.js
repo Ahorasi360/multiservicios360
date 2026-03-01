@@ -422,7 +422,17 @@ export default function BlogPostClient({ post, relatedPosts, lang }) {
           <span className="text-gray-400 text-sm">{t.by} {post.author}</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-8 leading-tight">{title}</h1>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">{title}</h1>
+
+        {/* Legal disclaimer below title */}
+        <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-6">
+          <span className="text-amber-500 text-sm mt-0.5 flex-shrink-0">⚠️</span>
+          <p className="text-amber-800 text-xs leading-relaxed m-0">
+            {lang === 'en'
+              ? 'The content of this article is informational only and does not constitute legal advice. Multi Servicios 360 is not a law firm. If you need advice specific to your situation, consult a licensed attorney in California.'
+              : 'El contenido de este artículo es informativo y no constituye asesoría legal. Multi Servicios 360 no es un bufete de abogados. Si necesita orientación específica sobre su situación, consulte con un abogado licenciado en California.'}
+          </p>
+        </div>
 
         <div className="prose-custom" dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
 
