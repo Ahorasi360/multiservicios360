@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { saveToVault } from '../../../lib/save-to-vault';
 import { PDFDocument } from 'pdf-lib';
 import { lockPdf } from '../../../lib/lock-pdf';
+import Navbar from '../../components/Navbar';
 
 const NOTARY_DOCS = ['affidavit', 'revocation_poa', 'certification_of_trust'];
 // Guardianship gets notary for standard+ tiers (handled separately below)
@@ -24,6 +25,16 @@ const DOC_TITLES = {
   promissory_note: { en: 'PROMISSORY NOTE', es: 'PAGARE' },
   guardianship_designation: { en: 'LEGAL PROTECTION PLAN FOR MINOR CHILDREN', es: 'PLAN DE PROTECCION LEGAL PARA HIJOS MENORES' },
   travel_authorization: { en: 'PARENTAL TRAVEL AUTHORIZATION FOR MINOR CHILDREN', es: 'AUTORIZACIÓN PARENTAL DE VIAJE PARA HIJOS MENORES' },
+  // Estate Planning
+  pour_over_will: { en: 'POUR-OVER WILL', es: 'TESTAMENTO DE TRASPASO AL FIDEICOMISO' },
+  simple_will: { en: 'LAST WILL AND TESTAMENT', es: 'TESTAMENTO SIMPLE' },
+  hipaa_authorization: { en: 'HIPAA AUTHORIZATION', es: 'AUTORIZACIÓN HIPAA' },
+  certification_of_trust: { en: 'CERTIFICATION OF TRUST', es: 'CERTIFICACIÓN DE FIDEICOMISO' },
+  // Corporate
+  s_corp_formation: { en: 'S-CORPORATION FORMATION PACKAGE', es: 'PAQUETE DE FORMACIÓN S-CORPORATION' },
+  c_corp_formation: { en: 'C-CORPORATION FORMATION PACKAGE', es: 'PAQUETE DE FORMACIÓN C-CORPORATION' },
+  corporate_minutes: { en: 'CORPORATE MINUTES', es: 'ACTAS CORPORATIVAS' },
+  banking_resolution: { en: 'BANKING RESOLUTION', es: 'RESOLUCIÓN BANCARIA' },
 };
 
 // ============================================================
@@ -791,6 +802,8 @@ function SuccessContent() {
   const docTitleDisplay = DOC_TITLES[docType]?.[language] || docType;
 
   return (
+    <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <Navbar lang={language} />
     <div style={{ minHeight: '100vh', backgroundColor: '#F0F9FF', padding: '24px' }}>
       <div style={{ maxWidth: '600px', margin: '0 auto', backgroundColor: 'white', borderRadius: '12px', padding: '48px 32px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
@@ -914,6 +927,7 @@ function SuccessContent() {
         <a href="/" style={{ display: 'inline-block', marginTop: '24px', padding: '12px 24px', color: '#2563EB', border: '2px solid #2563EB', borderRadius: '8px', textDecoration: 'none', fontWeight: '600' }}>{t.backHome}</a>
       </div>
       <div style={{ textAlign: 'center', padding: '24px', color: '#6B7280', fontSize: '12px' }}>Multi Servicios 360 | www.multiservicios360.net | 855.246.7274</div>
+    </div>
     </div>
   );
 }
