@@ -7,7 +7,7 @@ const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { document_type, client_name, client_email, client_phone, partner_code, form_data, language, tier } = body;
+    const { document_type, client_name, client_email, client_phone, partner_code, form_data, language, tier, professional_upsell } = body;
 
     if (!document_type || !client_name || !client_email) {
       return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
@@ -43,6 +43,7 @@ export async function POST(request) {
         form_data: finalFormData,
         language: language || 'es',
         status: 'draft',
+        professional_upsell: professional_upsell === true,
       })
       .select('id')
       .single();

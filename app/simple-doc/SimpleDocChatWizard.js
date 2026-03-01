@@ -19,6 +19,8 @@ function buildQuestions(docConfig) {
     question_es: docConfig.translations.es.fields[field.id]?.label || field.id,
     placeholder_en: docConfig.translations.en.fields[field.id]?.placeholder || '',
     placeholder_es: docConfig.translations.es.fields[field.id]?.placeholder || '',
+    helper_en: docConfig.translations.en.fields[field.id]?.helper || '',
+    helper_es: docConfig.translations.es.fields[field.id]?.helper || '',
     selectOptions_en: field.type === 'select' ? docConfig.translations.en.fields[field.id]?.options : undefined,
     selectOptions_es: field.type === 'select' ? docConfig.translations.es.fields[field.id]?.options : undefined,
   }));
@@ -164,8 +166,23 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
     'trust', 'poa', 'limited_poa',
   ];
   const showProfessionalUpsell = PROFESSIONAL_UPSELL_DOCS.includes(docType);
-  const PROFESSIONAL_UPSELL_AMOUNT = 19900; // $199
+  const PROFESSIONAL_UPSELL_AMOUNT = 19900; // $199 — cargo de plataforma por coordinación
   const professionalUpsellDisplay = '$199';
+
+  // Upsell labels and descriptions by doc type
+  const isCorporateDoc = ['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType);
+  const upsellLabel_es = isCorporateDoc
+    ? '⚖️ Coordinación con Abogado Corporativo'
+    : '⚖️ Coordinación con Abogado';
+  const upsellLabel_en = isCorporateDoc
+    ? '⚖️ Corporate Attorney Coordination'
+    : '⚖️ Attorney Coordination';
+  const upsellDesc_es = isCorporateDoc
+    ? 'Cargo de plataforma para coordinar revisión de su documento por un abogado corporativo independiente de nuestra red. El abogado le contactará en ~48 hrs. Los honorarios del abogado NO están incluidos — el abogado cobra por separado.'
+    : 'Cargo de plataforma para coordinar revisión de su documento por un abogado independiente licenciado en California. El abogado le contactará en ~48 hrs. Los honorarios del abogado NO están incluidos — el abogado cobra por separado.';
+  const upsellDesc_en = isCorporateDoc
+    ? 'Platform fee to coordinate review of your document by an independent corporate attorney from our network. Attorney will contact you within ~48 hrs. Attorney fees are NOT included — the attorney charges separately.'
+    : 'Platform fee to coordinate review of your document by an independent licensed California attorney. Attorney will contact you within ~48 hrs. Attorney fees are NOT included — the attorney charges separately.';
 
   const t = WIZARD_TRANSLATIONS[language];
 
@@ -223,8 +240,12 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
       setMessages([{ role: 'assistant', content: t.greeting }]);
       const q = QUESTIONS[0];
       const questionText = language === 'en' ? q.question_en : q.question_es;
+      const helperText = language === 'en' ? q.helper_en : q.helper_es;
       const isOptional = !q.required;
       let fullQuestion = questionText + (isOptional ? ` ${t.optional}` : '');
+
+      // Add helper/definition text for legal terms
+      if (helperText) fullQuestion += `\n\n💡 ${helperText}`;
 
       // Add format hints
       if (q.fieldType === 'date') fullQuestion += `\n\n${t.dateFormat}`;
@@ -321,8 +342,12 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
       if (nextIdx < QUESTIONS.length) {
         const nq = QUESTIONS[nextIdx];
         const qt = language === 'en' ? nq.question_en : nq.question_es;
+        const helperText = language === 'en' ? nq.helper_en : nq.helper_es;
         const isOptional = !nq.required;
         let fullQuestion = qt + (isOptional ? ` ${t.optional}` : '');
+
+        // Add helper/definition text for legal terms
+        if (helperText) fullQuestion += `\n\n💡 ${helperText}`;
 
         if (nq.fieldType === 'date') fullQuestion += `\n\n${t.dateFormat}`;
         if (nq.fieldType === 'number') fullQuestion += `\n\n${t.numberFormat}`;
@@ -373,6 +398,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
           form_data: intakeData,
           language,
           tier: selectedTier || undefined,
+          professional_upsell: professionalUpsell,
         })
       });
       const saveData = await saveRes.json();
@@ -393,6 +419,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
           client_email: clientEmail,
           language,
           tier: selectedTier || undefined,
+          professional_upsell: professionalUpsell,
         })
       });
       const stripeData = await stripeRes.json();
@@ -792,7 +819,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
 
                 {professionalUpsell && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#2563EB' }}>
-                    <span>{language === 'es' ? '⚖️ Conexión con Profesional' : '⚖️ Professional Review'}</span>
+                    <span>{language === 'es' ? (isCorporateDoc ? '⚖️ Coordinación Abogado Corporativo' : '⚖️ Coordinación con Abogado') : (isCorporateDoc ? '⚖️ Corporate Attorney Coordination' : '⚖️ Attorney Coordination')}</span>
                     <span>{professionalUpsellDisplay}</span>
                   </div>
                 )}
@@ -813,23 +840,16 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
                       </div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: '600', fontSize: '14px', color: '#1F2937' }}>
-                          {language === 'es'
-                            ? (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
-                                ? '⚖️ Revisión por Abogado Corporativo — '
-                                : '⚖️ Revisión por Abogado — ')
-                            : (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
-                                ? '⚖️ Corporate Attorney Review — '
-                                : '⚖️ Attorney Review — ')}
-                          <span style={{ color: '#059669' }}>{professionalUpsellDisplay}</span>
+                          {language === 'es' ? upsellLabel_es : upsellLabel_en}
+                          {' '}<span style={{ color: '#059669' }}>— {professionalUpsellDisplay}</span>
                         </div>
                         <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '4px', lineHeight: '1.5' }}>
+                          {language === 'es' ? upsellDesc_es : upsellDesc_en}
+                        </div>
+                        <div style={{ fontSize: '11px', color: '#DC2626', marginTop: '6px', fontWeight: '500' }}>
                           {language === 'es'
-                            ? (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
-                                ? 'Un abogado corporativo de nuestra red revisará su documento y le contactará dentro de 48 horas con sus recomendaciones.'
-                                : 'Un abogado de nuestra red revisará su documento y le contactará dentro de 48 horas. Incluye recomendaciones de notarización si aplica.')
-                            : (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
-                                ? 'A corporate attorney from our network will review your document and contact you within 48 hours with recommendations.'
-                                : 'An attorney from our network will review your document and contact you within 48 hours. Includes notarization guidance if applicable.')}
+                            ? '⚠️ Este cargo de $199 es solo por coordinación de plataforma. El abogado es independiente y cobra sus honorarios por separado.'
+                            : '⚠️ This $199 charge is for platform coordination only. The attorney is independent and charges their fees separately.'}
                         </div>
                       </div>
                     </div>

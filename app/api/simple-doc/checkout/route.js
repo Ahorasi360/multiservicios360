@@ -52,7 +52,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { document_type, matter_id, client_name, client_email, language, tier } = body;
+    const { document_type, matter_id, client_name, client_email, language, tier, professional_upsell } = body;
 
     // Use tiered pricing for guardianship, flat pricing for everything else
     let pricing;
@@ -69,21 +69,43 @@ export async function POST(request) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://multiservicios360.net';
     const slug = SLUG_MAP[document_type] || document_type;
 
-    const session = await getStripe().checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{
+    const lineItems = [{
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: isSpanish ? pricing.nameEs : pricing.name,
+          description: isSpanish
+            ? 'Preparación de documento legal - Multi Servicios 360'
+            : 'Legal document preparation - Multi Servicios 360',
+        },
+        unit_amount: pricing.amount,
+      },
+      quantity: 1,
+    }];
+
+    // Add professional coordination as separate line item
+    if (professional_upsell) {
+      const isCorporate = ['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(document_type);
+      lineItems.push({
         price_data: {
           currency: 'usd',
           product_data: {
-            name: isSpanish ? pricing.nameEs : pricing.name,
+            name: isSpanish
+              ? (isCorporate ? 'Coordinación con Abogado Corporativo — Cargo de Plataforma' : 'Coordinación con Abogado — Cargo de Plataforma')
+              : (isCorporate ? 'Corporate Attorney Coordination — Platform Fee' : 'Attorney Coordination — Platform Fee'),
             description: isSpanish
-              ? 'Preparación de documento legal - Multi Servicios 360'
-              : 'Legal document preparation - Multi Servicios 360',
+              ? 'Cargo de coordinación de plataforma únicamente. Los honorarios del abogado independiente son separados.'
+              : 'Platform coordination fee only. Independent attorney fees are charged separately.',
           },
-          unit_amount: pricing.amount,
+          unit_amount: 19900,
         },
         quantity: 1,
-      }],
+      });
+    }
+
+    const session = await getStripe().checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
       mode: 'payment',
       success_url: `${baseUrl}/simple-doc/success?session_id={CHECKOUT_SESSION_ID}&matter_id=${matter_id}&doc_type=${document_type}`,
       cancel_url: `${baseUrl}/${slug}?canceled=true`,
@@ -95,6 +117,7 @@ export async function POST(request) {
         language: language,
         tier: tier || '',
         source: 'simple_doc',
+        professional_upsell: professional_upsell ? 'true' : 'false',
       },
       billing_address_collection: 'required',
       phone_number_collection: { enabled: true },

@@ -22,6 +22,11 @@ export default function AdminProfessionalsPage() {
   const [assignments, setAssignments] = useState([]);
   const [expandedProf, setExpandedProf] = useState(null);
   const [assignForm, setAssignForm] = useState({ matter_type:'', matter_id:'', client_name:'', client_email:'', service_label:'' });
+
+  // Coordination requests (clients who paid for attorney/notary coordination)
+  const [coordRequests, setCoordRequests] = useState([]);
+  const [coordLoading, setCoordLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('professionals');
   const defaultForm = {
     name:'', email:'', phone:'', password:'', profession:'attorney', license_number:'',
     specialty:'', languages:'en,es', location:'', status:'active', notes:'',
@@ -40,7 +45,17 @@ export default function AdminProfessionalsPage() {
 
   const getAdminPw = () => password || 'MS360Admin2026!';
 
-  useEffect(() => { if (authenticated) fetchAll(); }, [authenticated]);
+  useEffect(() => { if (authenticated) { fetchAll(); fetchCoordRequests(); } }, [authenticated]);
+
+  async function fetchCoordRequests() {
+    setCoordLoading(true);
+    try {
+      const res = await fetch('/api/admin/coord-requests', { headers: { 'x-admin-password': getAdminPw() } });
+      const data = await res.json();
+      if (data.requests) setCoordRequests(data.requests);
+    } catch (err) { console.error(err); }
+    setCoordLoading(false);
+  }
 
   async function fetchAll() {
     setLoading(true);
@@ -216,88 +231,200 @@ export default function AdminProfessionalsPage() {
 
   return (
     <AdminLayout title="Professionals Network">
-      {/* Stats */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:14, marginBottom:24 }}>
+      {/* Tabs */}
+      <div style={{ display:'flex', gap:8, marginBottom:24, borderBottom:'2px solid #E2E8F0', paddingBottom:0 }}>
         {[
-          { label:'Total', value:stats.total, icon:'👥', color:'#3B82F6' },
-          { label:'Attorneys', value:stats.attorneys, icon:'⚖️', color:'#7C3AED' },
-          { label:'Notaries', value:stats.notaries, icon:'📝', color:'#2563EB' },
-          { label:'CPAs', value:stats.cpas, icon:'📊', color:'#059669' },
-          { label:'Realtors', value:stats.realtors, icon:'🏠', color:'#D97706' },
-        ].map(s => (
-          <div key={s.label} style={{ background:'#fff', borderRadius:12, padding:'18px', boxShadow:'0 1px 3px rgba(0,0,0,0.06)' }}>
-            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
-              <span style={{ fontSize:12, color:'#64748B', fontWeight:500 }}>{s.label}</span>
-              <span style={{ fontSize:18 }}>{s.icon}</span>
-            </div>
-            <div style={{ fontSize:26, fontWeight:700, color:s.color }}>{s.value}</div>
-          </div>
+          { id:'professionals', label:'👥 Red de Profesionales', count: professionals.length },
+          { id:'coordination', label:'⚖️ Solicitudes de Coordinación', count: coordRequests.filter(r => !r.assigned_to).length },
+        ].map(tab => (
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            padding:'10px 20px', fontSize:14, fontWeight:600, cursor:'pointer', border:'none',
+            background:'transparent', color: activeTab===tab.id ? '#1E3A8A' : '#64748B',
+            borderBottom: activeTab===tab.id ? '3px solid #1E3A8A' : '3px solid transparent',
+            marginBottom:'-2px',
+          }}>
+            {tab.label}
+            {tab.count > 0 && <span style={{ marginLeft:6, background: tab.id==='coordination' ? '#EF4444' : '#2563EB', color:'#fff', padding:'2px 7px', borderRadius:10, fontSize:11 }}>{tab.count}</span>}
+          </button>
         ))}
       </div>
 
-      {/* Filter + Search + Add */}
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, flexWrap:'wrap', gap:10 }}>
-        <div style={{ display:'flex', gap:6 }}>
-          {['all','attorney','notary','cpa','realtor'].map(f => (
-            <button key={f} onClick={() => setFilter(f)} style={{
-              padding:'8px 14px', borderRadius:8, fontSize:13, fontWeight:600, cursor:'pointer',
-              background: filter===f ? '#1E3A8A' : '#fff', color: filter===f ? '#fff' : '#475569',
-              border: filter===f ? 'none' : '1px solid #E2E8F0',
-            }}>{f === 'all' ? 'All' : profLabels[f] || f}</button>
-          ))}
-        </div>
-        <div style={{ display:'flex', gap:10 }}>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search name, email, specialty..."
-            style={{ padding:'8px 14px', fontSize:13, border:'2px solid #E2E8F0', borderRadius:8, outline:'none', width:240 }} />
-          <button onClick={openAdd} style={{ padding:'10px 20px', background:'linear-gradient(135deg,#1E3A8A,#2563EB)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:600, cursor:'pointer', whiteSpace:'nowrap' }}>
-            + Add Professional
-          </button>
-        </div>
-      </div>
-
-      {/* Cards */}
-      {loading ? <div style={{ textAlign:'center', padding:40, color:'#64748B' }}>Loading...</div> : (
-        filtered.length === 0 ? (
-          <div style={{ background:'#fff', borderRadius:12, padding:40, textAlign:'center', color:'#94A3B8', boxShadow:'0 1px 3px rgba(0,0,0,0.06)' }}>No professionals found</div>
-        ) : (
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(320px,1fr))', gap:14 }}>
-            {filtered.map(p => (
-              <div key={p.id} style={{ background:'#fff', borderRadius:12, padding:'20px', boxShadow:'0 1px 3px rgba(0,0,0,0.06)', borderLeft:`4px solid ${profColors[p.profession]||'#94A3B8'}` }}>
-                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'start', marginBottom:12 }}>
-                  <div>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
-                      <span style={{ fontSize:18 }}>{profIcons[p.profession]}</span>
-                      <span style={{ fontWeight:700, fontSize:15, color:'#0F172A' }}>{p.name}</span>
+      {/* COORDINATION REQUESTS TAB */}
+      {activeTab === 'coordination' && (
+        <div>
+          <div style={{ background:'#FFFBEB', border:'1px solid #F59E0B', borderRadius:8, padding:'12px 16px', marginBottom:16 }}>
+            <p style={{ fontSize:13, color:'#92400E', margin:0 }}>
+              <strong>⚖️ Solicitudes de Coordinación:</strong> Estos clientes pagaron el cargo de coordinación de plataforma ($199) y esperan ser contactados por un profesional. Asígneles un abogado o notario de su red lo antes posible.
+            </p>
+          </div>
+          {coordLoading ? <div style={{ textAlign:'center', padding:40, color:'#64748B' }}>Cargando...</div> : (
+            coordRequests.length === 0 ? (
+              <div style={{ background:'#fff', borderRadius:12, padding:40, textAlign:'center', color:'#94A3B8' }}>No hay solicitudes de coordinación pendientes</div>
+            ) : (
+              <div>
+                {/* Summary */}
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:16 }}>
+                  {[
+                    { label:'Total Solicitudes', value: coordRequests.length, color:'#3B82F6' },
+                    { label:'Sin Asignar', value: coordRequests.filter(r => !r.assigned_professional).length, color:'#EF4444' },
+                    { label:'Asignadas', value: coordRequests.filter(r => r.assigned_professional).length, color:'#059669' },
+                  ].map(s => (
+                    <div key={s.label} style={{ background:'#fff', borderRadius:10, padding:'14px 16px', boxShadow:'0 1px 3px rgba(0,0,0,0.06)', textAlign:'center' }}>
+                      <div style={{ fontSize:11, color:'#64748B', fontWeight:600, marginBottom:4 }}>{s.label}</div>
+                      <div style={{ fontSize:24, fontWeight:700, color:s.color }}>{s.value}</div>
                     </div>
-                    <span style={{ padding:'3px 8px', borderRadius:4, fontSize:11, fontWeight:600, background:`${profColors[p.profession]}15`, color:profColors[p.profession] }}>
-                      {profLabels[p.profession]}
-                    </span>
-                  </div>
-                  <span style={{
-                    padding:'3px 8px', borderRadius:4, fontSize:11, fontWeight:600,
-                    background: p.status==='active'?'#DCFCE7':'#FEE2E2', color: p.status==='active'?'#166534':'#991B1B',
-                  }}>{p.status}</span>
+                  ))}
                 </div>
-                <div style={{ fontSize:13, color:'#475569', lineHeight:1.6 }}>
-                  {p.email && <div>📧 {p.email}</div>}
-                  {p.phone && <div>📞 {p.phone}</div>}
-                  {p.license_number && <div>🪪 License: {p.license_number}</div>}
-                  {p.specialty && <div>🎯 {p.specialty}</div>}
-                  {p.location && <div>📍 {p.location}</div>}
-                  {p.languages && <div>🌐 {p.languages.includes('es') ? 'English & Spanish' : 'English'}</div>}
+                {/* Table */}
+                <div style={{ background:'#fff', borderRadius:12, boxShadow:'0 1px 3px rgba(0,0,0,0.06)', overflow:'hidden' }}>
+                  <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
+                    <thead>
+                      <tr style={{ background:'#F8FAFC', borderBottom:'2px solid #E2E8F0' }}>
+                        <th style={{ padding:'12px 16px', textAlign:'left', fontWeight:600, color:'#475569' }}>Cliente</th>
+                        <th style={{ padding:'12px 16px', textAlign:'left', fontWeight:600, color:'#475569' }}>Documento</th>
+                        <th style={{ padding:'12px 16px', textAlign:'left', fontWeight:600, color:'#475569' }}>Idioma</th>
+                        <th style={{ padding:'12px 16px', textAlign:'left', fontWeight:600, color:'#475569' }}>Fecha</th>
+                        <th style={{ padding:'12px 16px', textAlign:'left', fontWeight:600, color:'#475569' }}>Estado</th>
+                        <th style={{ padding:'12px 16px', textAlign:'left', fontWeight:600, color:'#475569' }}>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {coordRequests.map((r, i) => (
+                        <tr key={r.id} style={{ borderBottom:'1px solid #F1F5F9', background: i%2===0 ? '#fff' : '#FAFAFA' }}>
+                          <td style={{ padding:'12px 16px' }}>
+                            <div style={{ fontWeight:600, color:'#0F172A' }}>{r.client_name}</div>
+                            <div style={{ color:'#64748B', fontSize:12 }}>{r.client_email}</div>
+                            {r.client_phone && <div style={{ color:'#94A3B8', fontSize:12 }}>{r.client_phone}</div>}
+                          </td>
+                          <td style={{ padding:'12px 16px' }}>
+                            <span style={{ background:'#EFF6FF', color:'#1E40AF', padding:'3px 8px', borderRadius:4, fontSize:12, fontWeight:600 }}>
+                              {r.document_type?.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
+                            </span>
+                          </td>
+                          <td style={{ padding:'12px 16px', color:'#475569' }}>
+                            {r.language === 'es' ? '🇲🇽 Español' : '🇺🇸 English'}
+                          </td>
+                          <td style={{ padding:'12px 16px', color:'#94A3B8', fontSize:12 }}>
+                            {r.created_at ? new Date(r.created_at).toLocaleDateString('es-US') : '—'}
+                          </td>
+                          <td style={{ padding:'12px 16px' }}>
+                            <span style={{
+                              padding:'3px 8px', borderRadius:4, fontSize:11, fontWeight:600,
+                              background: r.assigned_professional ? '#DCFCE7' : '#FEF2F2',
+                              color: r.assigned_professional ? '#166534' : '#991B1B',
+                            }}>
+                              {r.assigned_professional ? '✅ Asignado' : '🔴 Pendiente'}
+                            </span>
+                          </td>
+                          <td style={{ padding:'12px 16px' }}>
+                            <button
+                              onClick={() => {
+                                const prof = professionals.find(p => p.profession === 'attorney' && p.status === 'active');
+                                const msg = `Cliente: ${r.client_name}\nEmail: ${r.client_email}\nDocumento: ${r.document_type}\nIdioma: ${r.language}\n\nAbogados disponibles:\n${professionals.filter(p=>p.profession==='attorney'&&p.status==='active').map(p=>`• ${p.name} — ${p.email}`).join('\n') || 'Ninguno registrado'}`;
+                                alert(msg);
+                              }}
+                              style={{ padding:'6px 12px', background:'#EFF6FF', color:'#1E3A8A', border:'1px solid #BFDBFE', borderRadius:6, fontSize:12, fontWeight:600, cursor:'pointer' }}>
+                              Ver Detalle →
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                {p.notes && <div style={{ fontSize:12, color:'#94A3B8', marginTop:8, fontStyle:'italic' }}>{p.notes}</div>}
-                <div style={{ display:'flex', gap:8, marginTop:14 }}>
-                  <button onClick={() => openEdit(p)} style={{ padding:'6px 14px', background:'#EFF6FF', color:'#1E3A8A', border:'none', borderRadius:6, fontSize:12, fontWeight:600, cursor:'pointer' }}>✏️ Edit</button>
-                  <button onClick={() => toggleStatus(p.id, p.status)} style={{ padding:'6px 14px', background:p.status==='active'?'#FEF2F2':'#F0FDF4', color:p.status==='active'?'#991B1B':'#166534', border:'none', borderRadius:6, fontSize:12, fontWeight:600, cursor:'pointer' }}>
-                    {p.status==='active' ? '⏸️ Deactivate' : '▶️ Activate'}
-                  </button>
+              </div>
+            )
+          )}
+        </div>
+      )}
+
+      {/* PROFESSIONALS TAB */}
+      {activeTab === 'professionals' && (
+        <div>
+          {/* Stats */}
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:14, marginBottom:24 }}>
+            {[
+              { label:'Total', value:stats.total, icon:'👥', color:'#3B82F6' },
+              { label:'Attorneys', value:stats.attorneys, icon:'⚖️', color:'#7C3AED' },
+              { label:'Notaries', value:stats.notaries, icon:'📝', color:'#2563EB' },
+              { label:'CPAs', value:stats.cpas, icon:'📊', color:'#059669' },
+              { label:'Realtors', value:stats.realtors, icon:'🏠', color:'#D97706' },
+            ].map(s => (
+              <div key={s.label} style={{ background:'#fff', borderRadius:12, padding:'18px', boxShadow:'0 1px 3px rgba(0,0,0,0.06)' }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
+                  <span style={{ fontSize:12, color:'#64748B', fontWeight:500 }}>{s.label}</span>
+                  <span style={{ fontSize:18 }}>{s.icon}</span>
                 </div>
+                <div style={{ fontSize:26, fontWeight:700, color:s.color }}>{s.value}</div>
               </div>
             ))}
           </div>
-        )
-      )}
+
+      {/* Filter + Search + Add */}
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, flexWrap:'wrap', gap:10 }}>
+            <div style={{ display:'flex', gap:6 }}>
+              {['all','attorney','notary','cpa','realtor'].map(f => (
+                <button key={f} onClick={() => setFilter(f)} style={{
+                  padding:'8px 14px', borderRadius:8, fontSize:13, fontWeight:600, cursor:'pointer',
+                  background: filter===f ? '#1E3A8A' : '#fff', color: filter===f ? '#fff' : '#475569',
+                  border: filter===f ? 'none' : '1px solid #E2E8F0',
+                }}>{f === 'all' ? 'All' : profLabels[f] || f}</button>
+              ))}
+            </div>
+            <div style={{ display:'flex', gap:10 }}>
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search name, email, specialty..."
+                style={{ padding:'8px 14px', fontSize:13, border:'2px solid #E2E8F0', borderRadius:8, outline:'none', width:240 }} />
+              <button onClick={openAdd} style={{ padding:'10px 20px', background:'linear-gradient(135deg,#1E3A8A,#2563EB)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:600, cursor:'pointer', whiteSpace:'nowrap' }}>
+                + Add Professional
+              </button>
+            </div>
+          </div>
+
+      {/* Cards */}
+          {loading ? <div style={{ textAlign:'center', padding:40, color:'#64748B' }}>Loading...</div> : (
+            filtered.length === 0 ? (
+              <div style={{ background:'#fff', borderRadius:12, padding:40, textAlign:'center', color:'#94A3B8', boxShadow:'0 1px 3px rgba(0,0,0,0.06)' }}>No professionals found</div>
+            ) : (
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(320px,1fr))', gap:14 }}>
+                {filtered.map(p => (
+                  <div key={p.id} style={{ background:'#fff', borderRadius:12, padding:'20px', boxShadow:'0 1px 3px rgba(0,0,0,0.06)', borderLeft:`4px solid ${profColors[p.profession]||'#94A3B8'}` }}>
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'start', marginBottom:12 }}>
+                      <div>
+                        <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
+                          <span style={{ fontSize:18 }}>{profIcons[p.profession]}</span>
+                          <span style={{ fontWeight:700, fontSize:15, color:'#0F172A' }}>{p.name}</span>
+                        </div>
+                        <span style={{ padding:'3px 8px', borderRadius:4, fontSize:11, fontWeight:600, background:`${profColors[p.profession]}15`, color:profColors[p.profession] }}>
+                          {profLabels[p.profession]}
+                        </span>
+                      </div>
+                      <span style={{
+                        padding:'3px 8px', borderRadius:4, fontSize:11, fontWeight:600,
+                        background: p.status==='active'?'#DCFCE7':'#FEE2E2', color: p.status==='active'?'#166534':'#991B1B',
+                      }}>{p.status}</span>
+                    </div>
+                    <div style={{ fontSize:13, color:'#475569', lineHeight:1.6 }}>
+                      {p.email && <div>📧 {p.email}</div>}
+                      {p.phone && <div>📞 {p.phone}</div>}
+                      {p.license_number && <div>🪪 License: {p.license_number}</div>}
+                      {p.specialty && <div>🎯 {p.specialty}</div>}
+                      {p.location && <div>📍 {p.location}</div>}
+                      {p.languages && <div>🌐 {p.languages.includes('es') ? 'English & Spanish' : 'English'}</div>}
+                    </div>
+                    {p.notes && <div style={{ fontSize:12, color:'#94A3B8', marginTop:8, fontStyle:'italic' }}>{p.notes}</div>}
+                    <div style={{ display:'flex', gap:8, marginTop:14 }}>
+                      <button onClick={() => openEdit(p)} style={{ padding:'6px 14px', background:'#EFF6FF', color:'#1E3A8A', border:'none', borderRadius:6, fontSize:12, fontWeight:600, cursor:'pointer' }}>✏️ Edit</button>
+                      <button onClick={() => toggleStatus(p.id, p.status)} style={{ padding:'6px 14px', background:p.status==='active'?'#FEF2F2':'#F0FDF4', color:p.status==='active'?'#991B1B':'#166534', border:'none', borderRadius:6, fontSize:12, fontWeight:600, cursor:'pointer' }}>
+                        {p.status==='active' ? '⏸️ Deactivate' : '▶️ Activate'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          )}
+        </div>
+      )} {/* end professionals tab */}
 
       {/* MODAL */}
       {showModal && (
