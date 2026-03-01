@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SIMPLE_DOC_TYPES } from '../../lib/simple-doc-config';
+import { useDraftSave } from '../../lib/useDraftSave';
 
 const SendIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>);
 const GlobeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>);
@@ -144,6 +145,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   const [editValue, setEditValue] = useState('');
   const [selectedTier, setSelectedTier] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
   const messagesEndRef = useRef(null);
 
   const isGuardianship = docType === 'guardianship_designation';
@@ -154,6 +156,19 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   };
 
   const t = WIZARD_TRANSLATIONS[language];
+
+  // Auto-save draft
+  const { checkForDraft, markCompleted } = useDraftSave({
+    email: clientEmail,
+    docType,
+    clientName,
+    language,
+    intakeData,
+    currentQuestionIndex,
+    messages,
+    step: currentStep,
+    enabled: !!clientEmail && !draftRestored,
+  });
   const docTitle = language === 'es' ? docConfig.translations.es.title : docConfig.translations.en.title;
   const docSubtitle = language === 'es' ? docConfig.translations.es.subtitle : docConfig.translations.en.subtitle;
   const priceDisplay = isGuardianship && selectedTier ? TIER_PRICING[selectedTier].display : docConfig.priceDisplay;
@@ -366,6 +381,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
       });
       const stripeData = await stripeRes.json();
       if (stripeData.url) {
+        await markCompleted(); // Mark draft as done before redirect
         window.location.href = stripeData.url;
       } else {
         alert(stripeData.error || t.failedSubmit);
@@ -632,7 +648,24 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
                 )}
               </div>
 
-              <button onClick={() => { if (clientName && clientEmail) setCurrentStep('intake'); else alert(t.provideNameEmail); }}
+              <button onClick={async () => {
+                if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
+                // Check for existing draft
+                const draft = await checkForDraft(clientEmail);
+                if (draft && Object.keys(draft.intake_data || {}).length > 0) {
+                  const lang = draft.language || 'es';
+                  const msg = lang === 'en'
+                    ? `We found a saved draft from ${new Date(draft.updated_at).toLocaleDateString('en-US')}. Do you want to continue where you left off?`
+                    : `Encontramos un borrador guardado del ${new Date(draft.updated_at).toLocaleDateString('es-US')}. ¿Deseas continuar donde lo dejaste?`;
+                  if (window.confirm(msg)) {
+                    setIntakeData(draft.intake_data || {});
+                    setCurrentQuestionIndex(draft.current_question_index || 0);
+                    if (draft.messages?.length > 0) setMessages(draft.messages);
+                    setDraftRestored(true);
+                  }
+                }
+                setCurrentStep('intake');
+              }}
                 style={{ ...st.btnPrimary, ...st.btnGreen }}>
                 {t.continue}
               </button>

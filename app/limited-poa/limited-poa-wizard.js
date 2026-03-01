@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import { useDraftSave } from '../../lib/useDraftSave';
 
 const SendIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>);
 const GlobeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>);
@@ -470,8 +471,22 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
+
+  // Auto-save draft
+  const { checkForDraft, markCompleted } = useDraftSave({
+    email: clientEmail,
+    docType: 'limited_poa',
+    clientName,
+    language,
+    intakeData,
+    currentQuestionIndex,
+    messages,
+    step: currentStep,
+    enabled: !!clientEmail && !draftRestored,
+  });
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -687,7 +702,7 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
           })
         });
         const stripeResult = await stripeRes.json();
-        if (stripeResult.success && stripeResult.url) window.location.href = stripeResult.url;
+        if (stripeResult.success && stripeResult.url) { await markCompleted(); window.location.href = stripeResult.url; }
         else { alert('Error creating payment.'); setIsLoading(false); }
       }
     } catch (e) { alert('Error submitting.'); setIsLoading(false); }
@@ -942,7 +957,22 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#92400E', marginBottom: '4px' }}>{t.clientPhone}</label>
                   <input type="tel" value={clientPhone} onChange={(e) => setClientPhone(e.target.value)} style={st.input} />
                 </div>
-                <button onClick={() => { if (clientName && clientEmail) setCurrentStep('intake'); else alert(t.provideNameEmail); }} style={{ ...st.btnPrimary, backgroundColor: !clientName || !clientEmail ? '#D1D5DB' : '#F59E0B', color: 'white', cursor: !clientName || !clientEmail ? 'not-allowed' : 'pointer' }}>{t.continue}</button>
+                <button onClick={async () => {
+                  if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
+                  const draft = await checkForDraft(clientEmail);
+                  if (draft && Object.keys(draft.intake_data || {}).length > 0) {
+                    const msg = language === 'en'
+                      ? `We found a saved draft from ${new Date(draft.updated_at).toLocaleDateString('en-US')}. Continue where you left off?`
+                      : `Encontramos un borrador del ${new Date(draft.updated_at).toLocaleDateString('es-US')}. ¿Continuar donde lo dejaste?`;
+                    if (window.confirm(msg)) {
+                      setIntakeData(draft.intake_data || {});
+                      setCurrentQuestionIndex(draft.current_question_index || 0);
+                      if (draft.messages?.length > 0) setMessages(draft.messages);
+                      setDraftRestored(true);
+                    }
+                  }
+                  setCurrentStep('intake');
+                }} style={{ ...st.btnPrimary, backgroundColor: !clientName || !clientEmail ? '#D1D5DB' : '#F59E0B', color: 'white', cursor: !clientName || !clientEmail ? 'not-allowed' : 'pointer' }}>{t.continue}</button>
               </div>
             </div>
           </div>

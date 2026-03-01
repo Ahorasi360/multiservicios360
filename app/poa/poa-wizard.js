@@ -1,5 +1,6 @@
 ﻿"use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useDraftSave } from '../../lib/useDraftSave';
 
 const SendIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>);
 const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
@@ -406,6 +407,7 @@ export default function PoAIntakeWizard({ initialLang = 'es' }) {
   const [editValue, setEditValue] = useState('');
   const [isMobile, setIsMobile] = useState(false);
   const [showAnswersPanel, setShowAnswersPanel] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
 
@@ -415,6 +417,19 @@ export default function PoAIntakeWizard({ initialLang = 'es' }) {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
+  // Auto-save draft
+  const { checkForDraft, markCompleted } = useDraftSave({
+    email: clientEmail,
+    docType: 'poa',
+    clientName,
+    language,
+    intakeData,
+    currentQuestionIndex,
+    messages,
+    step: currentStep,
+    enabled: !!clientEmail && !draftRestored,
+  });
 
   const getVisibleQuestions = () => QUESTIONS.filter(q => { 
     if (!q.showIf) return true; 
@@ -631,7 +646,7 @@ setCurrentQuestionIndex(nextIdx);
   }) 
 });
         const stripeData = await stripeRes.json();
-        if (stripeData.url) window.location.href = stripeData.url;
+        if (stripeData.url) { await markCompleted(); window.location.href = stripeData.url; }
         else alert(t.failedSubmit);
       } else { alert(result.error || t.failedSubmit); }
     } catch (e) { alert(t.failedSubmit); }
@@ -879,7 +894,22 @@ setCurrentQuestionIndex(nextIdx);
                 <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500', fontSize: '14px' }}>{t.clientPhone}</label>
                 <input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)} style={st.input} />
               </div>
-              <button onClick={() => { if (clientName && clientEmail) setCurrentStep('intake'); else alert(t.provideNameEmail); }} style={{ ...st.btnPrimary, ...st.btnGreen }}>{t.continue}</button>
+              <button onClick={async () => {
+                if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
+                const draft = await checkForDraft(clientEmail);
+                if (draft && Object.keys(draft.intake_data || {}).length > 0) {
+                  const msg = language === 'en'
+                    ? `We found a saved draft from ${new Date(draft.updated_at).toLocaleDateString('en-US')}. Continue where you left off?`
+                    : `Encontramos un borrador del ${new Date(draft.updated_at).toLocaleDateString('es-US')}. ¿Continuar donde lo dejaste?`;
+                  if (window.confirm(msg)) {
+                    setIntakeData(draft.intake_data || {});
+                    setCurrentQuestionIndex(draft.current_question_index || 0);
+                    if (draft.messages?.length > 0) setMessages(draft.messages);
+                    setDraftRestored(true);
+                  }
+                }
+                setCurrentStep('intake');
+              }} style={{ ...st.btnPrimary, ...st.btnGreen }}>{t.continue}</button>
             </div>
           </div>
         )}
