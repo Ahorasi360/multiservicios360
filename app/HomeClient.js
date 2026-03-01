@@ -424,13 +424,7 @@ export default function HomeClient({ lang = 'es' }) {
                 <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: 'rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', border: '2px solid rgba(255,255,255,0.4)', boxShadow: '0 4px 14px rgba(0,0,0,0.1)' }}>
                   {t.hero.ctaLLC} <ArrowRightIcon />
                 </Link>
-                <Link href={language === 'es' ? '/planificacion-familiar' : '/en/family-planning'} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#7C3AED', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(124, 58, 237, 0.4)' }}>
-                  📋 {t.nav.family}
-                </Link>
-                <Link href={language === 'es' ? '/negocios' : '/en/business'} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#1D4ED8', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(29, 78, 216, 0.4)' }}>
-                  🏢 {t.nav.business}
-                </Link>
-                <Link href="/mas-servicios" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(139, 92, 246, 0.4)' }}>
+                <Link href={language === 'es' ? '/mas-servicios' : '/en/more-services'} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(139, 92, 246, 0.4)' }}>
                   {t.hero.ctaMore} <ArrowRightIcon />
                 </Link>
               </div>
@@ -447,29 +441,22 @@ export default function HomeClient({ lang = 'es' }) {
               </div>
             </div>
             <div className="hero-preview" style={{ display: 'flex', justifyContent: 'center' }}>
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', fontWeight: '600', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px', textAlign: 'center' }}>
-                  {language === 'es' ? '— Documentos Principales —' : '— Main Documents —'}
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '32px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   {[
-                    { icon: '⚖️', label: language === 'es' ? 'Poder Notarial\nGeneral' : 'General Power\nof Attorney', price: '$199', url: '/poa', color: 'rgba(59,130,246,0.25)' },
-                    { icon: '🏡', label: language === 'es' ? 'Fideicomiso\nen Vida' : 'Living\nTrust', price: '$499+', url: '/trust', color: 'rgba(16,185,129,0.25)' },
-                    { icon: '🏗️', label: language === 'es' ? 'Formación\nde LLC' : 'LLC\nFormation', price: '$299+', url: '/llc', color: 'rgba(139,92,246,0.25)' },
-                    { icon: '📄', label: language === 'es' ? 'Testamento\nSimple' : 'Last Will &\nTestament', price: '$149', url: '/simple-will', color: 'rgba(245,158,11,0.25)' },
+                    { svg: <ScaleIcon />, label: language === 'es' ? 'General POA' : 'General POA', link: '/poa' },
+                    { svg: <FileTextIcon />, label: language === 'es' ? 'Limited POA' : 'Limited POA', link: '/limited-poa' },
+                    { svg: <HomeIcon />, label: language === 'es' ? 'Living Trust' : 'Living Trust', link: '/trust' },
+                    { svg: <BuildingIcon />, label: 'LLC', link: '/llc' },
                   ].map((item, i) => (
-                    <a key={i} href={item.url} style={{ backgroundColor: item.color, borderRadius: '14px', padding: '18px 14px', textAlign: 'center', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.15)', display: 'block', transition: 'transform 0.15s, background 0.15s' }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.backgroundColor = item.color; }}>
-                      <div style={{ fontSize: '28px', marginBottom: '8px' }}>{item.icon}</div>
-                      <div style={{ color: 'white', fontSize: '12px', fontWeight: '600', lineHeight: '1.3', whiteSpace: 'pre-line', marginBottom: '6px' }}>{item.label}</div>
-                      <div style={{ color: '#FCD34D', fontSize: '13px', fontWeight: '700' }}>{item.price}</div>
-                    </a>
+                    <Link key={i} href={item.link} style={{ backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: '14px', padding: '20px', textAlign: 'center', textDecoration: 'none', color: 'white', transition: 'background 0.2s', display: 'block' }}
+                      onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.22)'}
+                      onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.12)'}>
+                      <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.svg}</div>
+                      <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
+                    </Link>
                   ))}
                 </div>
-                <a href={language === 'es' ? '/mas-servicios' : '/en/more-services'} style={{ display: 'block', textAlign: 'center', padding: '10px', color: 'rgba(255,255,255,0.65)', fontSize: '12px', textDecoration: 'none', marginTop: '12px' }}>
-                  {language === 'es' ? 'Ver todos los servicios →' : 'View all services →'}
-                </a>
               </div>
             </div>
           </div>
