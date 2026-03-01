@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Navbar from '../components/Navbar';
 
 const GlobeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>);
 
@@ -319,30 +320,7 @@ export default function MoreServicesClient({ lang = 'es' }) {
       `}</style>
 
       {/* Nav */}
-      <nav style={{ backgroundColor: 'white', borderBottom: '1px solid #E2E8F0', padding: '12px 16px', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #1E3A8A, #3B82F6)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '11px' }}>M360</div>
-              <div>
-                <div style={{ fontWeight: '700', fontSize: '14px', color: '#0F172A' }}>Multi Servicios 360</div>
-                <div style={{ fontSize: '10px', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Document Preparation</div>
-              </div>
-            </Link>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Link href="/#services" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.services}</Link>
-            <Link href="/por-que-nosotros" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{language === 'es' ? '¿Por Qué Nosotros?' : 'Why Us?'}</Link>
-            <Link href="/nuestra-historia" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{language === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
-            <Link href="/blog" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>Blog</Link>
-            <Link href="/contacto" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.contact}</Link>
-            <Link href={language === 'es' ? '/en/more-services' : '/mas-servicios'} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', fontWeight: '500', fontSize: '13px', color: '#374151', textDecoration: 'none' }}>
-              <GlobeIcon /> {language === 'es' ? 'EN' : 'ES'}
-            </Link>
-            <a href="tel:8552467274" style={{ padding: '8px 16px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '6px', fontWeight: '600', fontSize: '13px' }}>855.246.7274</a>
-          </div>
-        </div>
-      </nav>
+      <Navbar lang={language} />
 
       {/* Hero */}
       <section style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #2563EB 100%)', padding: '60px 16px', color: 'white', textAlign: 'center' }}>

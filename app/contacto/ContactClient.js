@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Navbar from '../components/Navbar';
 
 const T = {
   es: {
@@ -158,26 +159,7 @@ export default function ContactClient({ lang: initialLang = 'es' }) {
       </div>
 
       {/* Nav */}
-      <nav style={{ background: '#fff', borderBottom: '1px solid #E2E8F0', padding: '12px 24px', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #1E3A8A, #3B82F6)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: '#fff', fontWeight: '800', fontSize: '11px' }}>M360</span>
-            </div>
-            <span style={{ fontWeight: '700', fontSize: '14px', color: '#0F172A' }}>Multi Servicios 360</span>
-          </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Link href="/#services" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>{t.nav.services}</Link>
-            <Link href="/por-que-nosotros" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>{lang === 'es' ? '¿Por Qué Nosotros?' : 'Why Us?'}</Link>
-            <Link href="/nuestra-historia" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>{lang === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
-            <Link href="/blog" style={{ color: '#475569', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>{t.nav.blog}</Link>
-            <Link href="/contacto" style={{ color: '#1E3A8A', textDecoration: 'none', fontSize: '14px', fontWeight: '700' }}>{t.nav.contact}</Link>
-            <Link href={lang === 'es' ? '/en/contact' : '/contacto'} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', fontWeight: '500', fontSize: '13px', color: '#374151', textDecoration: 'none' }}>
-              🌐 {lang === 'es' ? 'EN' : 'ES'}
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar lang={lang} />
 
       {/* Hero */}
       <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)', padding: '64px 24px', textAlign: 'center' }}>
