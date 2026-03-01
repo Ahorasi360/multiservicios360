@@ -699,6 +699,11 @@ export default function HomeClient({ lang = 'es' }) {
                 <li><Link href="/c-corp-formation" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Formación C-Corporation' : 'C-Corp Formation'}</Link></li>
                 <li><Link href="/corporate-minutes" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Actas Corporativas' : 'Corporate Minutes'}</Link></li>
                 <li><Link href="/banking-resolution" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Resolución Bancaria' : 'Banking Resolution'}</Link></li>
+                <li><Link href="/small-estate-affidavit" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Declaración Jurada de Sucesión' : 'Small Estate Affidavit'}</Link></li>
+                <li><Link href="/quitclaim-deed" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Escritura de Traspaso' : 'Quitclaim Deed'}</Link></li>
+                <li><Link href="/contractor-agreement" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Contrato de Contratista' : 'Contractor Agreement'}</Link></li>
+                <li><Link href="/demand-letter" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Carta de Demanda' : 'Demand Letter'}</Link></li>
+                <li><Link href="/apostille-letter" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Solicitud de Apostilla' : 'Apostille Request'}</Link></li>
               </ul>
             </div>
             <div>
