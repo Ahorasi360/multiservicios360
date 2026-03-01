@@ -404,8 +404,17 @@ export default function PoAIntakeWizard({ initialLang = 'es' }) {
   const [previewTab, setPreviewTab] = useState('answers');
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+  const [showAnswersPanel, setShowAnswersPanel] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const getVisibleQuestions = () => QUESTIONS.filter(q => { 
     if (!q.showIf) return true; 
@@ -820,7 +829,7 @@ setCurrentQuestionIndex(nextIdx);
     btnPrimary: { width: '100%', padding: '14px', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '600', cursor: 'pointer' },
     btnGreen: { backgroundColor: '#059669', color: 'white' },
     btnDisabled: { backgroundColor: '#9CA3AF', cursor: 'not-allowed' },
-    chatContainer: { height: '400px', overflowY: 'auto', marginBottom: '16px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px' },
+    chatContainer: { height: '55vh', minHeight: '280px', overflowY: 'auto', marginBottom: '16px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px' },
     msgUser: { backgroundColor: '#2563EB', color: 'white', padding: '12px 16px', borderRadius: '16px 16px 4px 16px', maxWidth: '80%', marginLeft: 'auto', marginBottom: '12px' },
     msgAssistant: { backgroundColor: 'white', color: '#1F2937', padding: '12px 16px', borderRadius: '16px 16px 16px 4px', maxWidth: '80%', marginBottom: '12px', border: '1px solid #E5E7EB', whiteSpace: 'pre-wrap' },
     badge: { backgroundColor: '#DBEAFE', color: '#1E40AF', padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' },
@@ -876,7 +885,7 @@ setCurrentQuestionIndex(nextIdx);
         )}
 
         {currentStep === 'intake' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             <div style={st.card}>
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
@@ -934,7 +943,7 @@ setCurrentQuestionIndex(nextIdx);
         )}
 
         {currentStep === 'tier' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             <div style={st.card}>
               <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px' }}>{t.tierSelect}</h2>
               {TIERS.map((tier) => (

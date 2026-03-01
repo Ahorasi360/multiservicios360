@@ -469,8 +469,16 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
   const [isPaid, setIsPaid] = useState(false);
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const getVisibleQuestions = (data = intakeData) => QUESTIONS.filter(q => {
     if (!q.showIf) return true;
@@ -870,7 +878,7 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
     card: { backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', padding: '20px' },
     input: { width: '100%', padding: '12px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' },
     btnPrimary: { width: '100%', padding: '14px', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '15px' },
-    chatContainer: { height: '380px', overflowY: 'auto', padding: '12px', backgroundColor: '#FFFBEB', borderRadius: '8px', marginBottom: '12px' },
+    chatContainer: { height: isMobile ? '50vh' : '380px', minHeight: '260px', overflowY: 'auto', padding: '12px', backgroundColor: '#FFFBEB', borderRadius: '8px', marginBottom: '12px' },
     msgUser: { backgroundColor: '#F59E0B', color: 'white', padding: '10px 14px', borderRadius: '12px 12px 4px 12px', maxWidth: '80%', marginLeft: 'auto', marginBottom: '10px' },
     msgAssistant: { backgroundColor: 'white', color: '#92400E', padding: '10px 14px', borderRadius: '12px 12px 12px 4px', maxWidth: '80%', marginBottom: '10px', border: '1px solid #FDE68A', whiteSpace: 'pre-wrap' },
     msgSection: { textAlign: 'center', padding: '8px 16px', backgroundColor: '#FEF3C7', borderRadius: '20px', color: '#92400E', fontWeight: '600', fontSize: '13px', margin: '8px auto', display: 'inline-block' },
@@ -941,7 +949,7 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
         )}
 
         {currentStep === 'intake' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '16px' }}>
             <div style={st.card}>
               <div style={st.chatContainer}>
                 {messages.map((msg, i) => (
@@ -980,7 +988,7 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
         )}
 
         {currentStep === 'tier' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '16px' }}>
             <div style={st.card}>
               <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#92400E' }}>{t.tierSelect}</h2>
               {TIERS.map((tier) => (
@@ -1038,13 +1046,7 @@ export default function LimitedPOAWizard({ initialLang = 'es' }) {
         </div>
       </div>
 
-      <style jsx>{`
-        @media (max-width: 900px) {
-          div[style*="gridTemplateColumns"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+
     </div>
   );
 }

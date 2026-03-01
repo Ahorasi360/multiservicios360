@@ -143,6 +143,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [selectedTier, setSelectedTier] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
 
   const isGuardianship = docType === 'guardianship_designation';
@@ -159,6 +160,13 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   const priceCents = isGuardianship && selectedTier ? TIER_PRICING[selectedTier].amount : docConfig.price;
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Partner mode: pre-fill client info
   useEffect(() => {
@@ -457,7 +465,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
     btnPrimary: { width: '100%', padding: '14px', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '600', cursor: 'pointer' },
     btnGreen: { backgroundColor: '#059669', color: 'white' },
     btnDisabled: { backgroundColor: '#9CA3AF', cursor: 'not-allowed' },
-    chatContainer: { height: '400px', overflowY: 'auto', marginBottom: '16px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px' },
+    chatContainer: { height: '55vh', minHeight: '260px', overflowY: 'auto', marginBottom: '16px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px' },
     msgUser: { backgroundColor: '#2563EB', color: 'white', padding: '12px 16px', borderRadius: '16px 16px 4px 16px', maxWidth: '80%', marginLeft: 'auto', marginBottom: '12px' },
     msgAssistant: { backgroundColor: 'white', color: '#1F2937', padding: '12px 16px', borderRadius: '16px 16px 16px 4px', maxWidth: '80%', marginBottom: '12px', border: '1px solid #E5E7EB', whiteSpace: 'pre-wrap' },
     badge: { backgroundColor: '#DBEAFE', color: '#1E40AF', padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' },
@@ -501,7 +509,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '16px' }}>
               {/* BASIC */}
               <div onClick={() => setSelectedTier('basic')} style={{ cursor: 'pointer', border: '2px solid #E2E8F0', borderRadius: '16px', padding: '28px 20px', textAlign: 'center', backgroundColor: 'white', transition: 'all 0.2s', position: 'relative' }}>
                 <div style={{ fontSize: '14px', fontWeight: '600', color: '#64748B', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
@@ -638,7 +646,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
 
         {/* Step 2: Chat Q&A - matches POA layout */}
         {currentStep === 'intake' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             {/* Left: Chat */}
             <div style={st.card}>
               <div style={{ marginBottom: '16px' }}>
@@ -706,7 +714,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
 
         {/* Step 3: Payment - matches POA tier selection layout */}
         {currentStep === 'payment' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '24px' }}>
             {/* Left: Review */}
             <div style={st.card}>
               <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px' }}>{t.reviewBeforePayment}</h2>
