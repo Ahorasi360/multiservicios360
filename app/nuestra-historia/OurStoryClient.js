@@ -360,35 +360,6 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
           </div>
         </Section>
 
-        {/* Services CTA */}
-        <div style={{ padding: '60px 0 48px' }}>
-          <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
-          <P center muted>{t.services.intro}</P>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginTop: '24px' }}>
-            {SERVICES.map((svc, i) => (
-              <Link key={i} href={svc.href} style={{ textDecoration: 'none' }}>
-                <div style={{ background: '#fff', borderRadius: '14px', padding: '24px', border: '2px solid #E2E8F0', transition: 'all 0.2s', cursor: 'pointer', textAlign: 'center' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = svc.color; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-                  <div style={{ fontSize: '32px', marginBottom: '8px' }}>{svc.icon}</div>
-                  <div style={{ fontWeight: '700', fontSize: '15px', color: '#0F172A', marginBottom: '4px' }}>{svc.name[lang]}</div>
-                  <div style={{ fontSize: '13px', color: '#64748B', marginBottom: '12px' }}>{lang === 'es' ? 'Desde' : 'From'} {svc.price}</div>
-                  <div style={{ display: 'inline-block', padding: '8px 20px', background: svc.color, color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: '700' }}>
-                    {t.services.cta} →
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '32px' }}>
-            <p style={{ fontSize: '16px', color: '#475569', margin: '0 0 6px' }}>{t.services.question}</p>
-            <a href="tel:8552467274" style={{ fontSize: '22px', fontWeight: '800', color: '#1E3A8A', textDecoration: 'none' }}>
-              {t.services.callUs} (855) 246-7274
-            </a>
-          </div>
-        </div>
       </div>
 
       {/* Footer */}
