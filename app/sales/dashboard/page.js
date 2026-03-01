@@ -252,7 +252,7 @@ export default function SalesDashboard() {
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 14, marginBottom: 24 }}>
           {[
             { label: t.totalOffices, value: stats.total_offices || 0, icon: '🏢', color: '#3B82F6' },
             { label: t.active, value: stats.active_offices || 0, icon: '✅', color: '#22C55E' },

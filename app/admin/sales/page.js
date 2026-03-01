@@ -159,7 +159,7 @@ export default function AdminSalesPage() {
   return (
     <AdminLayout title="Sales Team">
       {/* Stats */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:24 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(140px, 1fr))', gap:16, marginBottom:24 }}>
         {[
           { label:'Total Reps', value:stats.total, icon:'👥', color:'#3B82F6' },
           { label:'Active', value:stats.active, icon:'✅', color:'#22C55E' },
@@ -195,6 +195,7 @@ export default function AdminSalesPage() {
       {/* Table */}
       {loading ? <div style={{ textAlign:'center', padding:40, color:'#64748B' }}>Loading...</div> : (
         <div style={{ background:'#fff', borderRadius:12, boxShadow:'0 1px 3px rgba(0,0,0,0.06)', overflow:'hidden' }}>
+          <div style={{ overflowX:'auto', WebkitOverflowScrolling:'touch' }}>
           <table style={{ width:'100%', borderCollapse:'collapse' }}>
             <thead>
               <tr style={{ background:'#F8FAFC' }}>
@@ -286,6 +287,7 @@ export default function AdminSalesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 

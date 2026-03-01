@@ -109,7 +109,7 @@ export default function AdminStaffPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:14, marginBottom:24 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(140px, 1fr))', gap:14, marginBottom:24 }}>
         {[
           { label:'Total Staff', value:workers.length, icon:'👥', color:'#3B82F6' },
           { label:'Active', value:workers.filter(w=>w.status==='active').length, icon:'✅', color:'#22C55E' },

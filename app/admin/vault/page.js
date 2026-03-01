@@ -124,11 +124,11 @@ export default function AdminVaultPage() {
         <div style={{ background:'#fff', borderRadius:12, padding:'28px 24px', boxShadow:'0 1px 3px rgba(0,0,0,0.06)' }}>
           <h2 style={{ fontSize:18, fontWeight:700, color:'#0F172A', margin:'0 0 20px' }}>Upload Document to Client Vault</h2>
           <form onSubmit={handleUpload}>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:16 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:16, marginBottom:16 }}>
               <div><label style={lbl}>Client Name</label><input type="text" value={clientName} onChange={(e)=>setClientName(e.target.value)} placeholder="John Doe" style={inp}/></div>
               <div><label style={lbl}>Client Email</label><input type="email" value={clientEmail} onChange={(e)=>setClientEmail(e.target.value)} placeholder="john@email.com" style={inp}/></div>
             </div>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:16 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:16, marginBottom:16 }}>
               <div><label style={lbl}>Matter ID <span style={{color:'#94A3B8',fontWeight:400}}>(optional)</span></label><input type="text" value={matterId} onChange={(e)=>setMatterId(e.target.value)} placeholder="Links to existing vault" style={inp}/></div>
               <div><label style={lbl}>Document Type</label>
                 <select value={docType} onChange={(e)=>setDocType(e.target.value)} style={inp}>
@@ -138,7 +138,7 @@ export default function AdminVaultPage() {
                 </select>
               </div>
             </div>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:20 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:16, marginBottom:20 }}>
               <div><label style={lbl}>Language</label><select value={language} onChange={(e)=>setLanguage(e.target.value)} style={inp}><option value="en">English</option><option value="es">Spanish</option></select></div>
               <div><label style={lbl}>File (PDF)</label><input id="vault-file-input" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onChange={(e)=>setUploadFile(e.target.files[0])} style={{...inp,padding:'10px 12px'}}/></div>
             </div>

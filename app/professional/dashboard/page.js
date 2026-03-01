@@ -165,7 +165,7 @@ export default function ProfessionalDashboard() {
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: 20 }}>
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 14, marginBottom: 24 }}>
           {[
             { label: t.totalCases, value: stats.total, icon: '📋', color: '#3B82F6' },
             { label: t.pendingReview, value: stats.pending, icon: '⏳', color: '#D97706' },

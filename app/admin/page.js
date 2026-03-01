@@ -134,18 +134,18 @@ export default function AdminDashboard() {
     welcomeSub: { color: '#94a3b8', fontSize: '15px' },
     
     // Navigation
-    nav: { padding: '0 32px', backgroundColor: 'rgba(0,0,0,0.2)' },
-    navInner: { maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '4px' },
-    navBtn: { padding: '16px 24px', background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '14px', fontWeight: '500', cursor: 'pointer', borderBottom: '3px solid transparent', transition: 'all 0.2s' },
+    nav: { backgroundColor: 'rgba(0,0,0,0.2)', overflowX: 'auto', WebkitOverflowScrolling: 'touch' },
+    navInner: { maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '4px', padding: '0 16px', minWidth: 'max-content' },
+    navBtn: { padding: '14px 18px', background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '13px', fontWeight: '500', cursor: 'pointer', borderBottom: '3px solid transparent', transition: 'all 0.2s', whiteSpace: 'nowrap' },
     navBtnActive: { color: '#fff', borderBottomColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)' },
     navCount: { marginLeft: '8px', padding: '2px 8px', borderRadius: '10px', fontSize: '12px', backgroundColor: 'rgba(255,255,255,0.2)' },
     
     // Main Content
-    main: { maxWidth: '1400px', margin: '0 auto', padding: '32px' },
+    main: { maxWidth: '1400px', margin: '0 auto', padding: 'clamp(16px, 4vw, 32px)' },
     
     // Filters
-    filtersBar: { display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap', alignItems: 'center' },
-    searchInput: { padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px', width: '250px', backgroundColor: '#fff' },
+    filtersBar: { display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap', alignItems: 'center' },
+    searchInput: { padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px', minWidth: '180px', flex: 1, maxWidth: '300px', backgroundColor: '#fff' },
     select: { padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px', backgroundColor: '#fff', cursor: 'pointer' },
     dateInput: { padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '14px', backgroundColor: '#fff' },
     exportBtn: { padding: '10px 20px', backgroundColor: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' },
@@ -160,7 +160,8 @@ export default function AdminDashboard() {
     
     // Table
     tableWrap: { backgroundColor: '#fff', borderRadius: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', overflow: 'hidden' },
-    tableHeader: { padding: '20px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+    tableScroll: { overflowX: 'auto', WebkitOverflowScrolling: 'touch' },
+    tableHeader: { padding: '20px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' },
     tableTitle: { fontSize: '18px', fontWeight: '600', margin: 0, color: '#0f172a' },
     table: { width: '100%', borderCollapse: 'collapse' },
     th: { textAlign: 'left', padding: '14px 24px', fontSize: '12px', fontWeight: '600', color: '#64748b', textTransform: 'uppercase', backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' },
@@ -432,7 +433,7 @@ export default function AdminDashboard() {
               <div style={s.tableHeader}>
                 <h3 style={s.tableTitle}>Recent Activity</h3>
               </div>
-              <table style={s.table}>
+              <div style={s.tableScroll}><table style={s.table}>
                 <thead>
                   <tr>
                     <th style={s.th}>Client</th>
@@ -460,7 +461,7 @@ export default function AdminDashboard() {
                     <tr><td colSpan={6} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders yet</td></tr>
                   )}
                 </tbody>
-              </table>
+              </table></div>
             </div>
           </>
         )}
@@ -471,7 +472,7 @@ export default function AdminDashboard() {
             <div style={s.tableHeader}>
               <h3 style={s.tableTitle}>General POA Orders ({filteredPoa.length})</h3>
             </div>
-            <table style={s.table}>
+            <div style={s.tableScroll}><table style={s.table}>
               <thead>
                 <tr>
                   <th style={s.th}>Client</th>
@@ -503,7 +504,7 @@ export default function AdminDashboard() {
                   <tr><td colSpan={8} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
 
@@ -513,7 +514,7 @@ export default function AdminDashboard() {
             <div style={s.tableHeader}>
               <h3 style={s.tableTitle}>Limited POA Orders ({filteredLimited.length})</h3>
             </div>
-            <table style={s.table}>
+            <div style={s.tableScroll}><table style={s.table}>
               <thead>
                 <tr>
                   <th style={s.th}>Client</th>
@@ -543,7 +544,7 @@ export default function AdminDashboard() {
                   <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
 
@@ -553,7 +554,7 @@ export default function AdminDashboard() {
             <div style={s.tableHeader}>
               <h3 style={s.tableTitle}>Living Trust Orders ({filteredTrust.length})</h3>
             </div>
-            <table style={s.table}>
+            <div style={s.tableScroll}><table style={s.table}>
               <thead>
                 <tr>
                   <th style={s.th}>Client</th>
@@ -583,7 +584,7 @@ export default function AdminDashboard() {
                   <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
 
@@ -593,7 +594,7 @@ export default function AdminDashboard() {
             <div style={s.tableHeader}>
               <h3 style={s.tableTitle}>LLC Formation Orders ({filteredLlc.length})</h3>
             </div>
-            <table style={s.table}>
+            <div style={s.tableScroll}><table style={s.table}>
               <thead>
                 <tr>
                   <th style={s.th}>Client</th>
@@ -623,7 +624,7 @@ export default function AdminDashboard() {
                   <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
 
@@ -633,7 +634,7 @@ export default function AdminDashboard() {
             <div style={s.tableHeader}>
               <h3 style={s.tableTitle}>Simple Document Orders ({filteredSimple.length})</h3>
             </div>
-            <table style={s.table}>
+            <div style={s.tableScroll}><table style={s.table}>
               <thead>
                 <tr>
                   <th style={s.th}>Client</th>
@@ -663,7 +664,7 @@ export default function AdminDashboard() {
                   <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
 
@@ -673,7 +674,7 @@ export default function AdminDashboard() {
             <div style={s.tableHeader}>
               <h3 style={s.tableTitle}>Waitlist Signups ({filteredWaitlist.length})</h3>
             </div>
-            <table style={s.table}>
+            <div style={s.tableScroll}><table style={s.table}>
               <thead>
                 <tr>
                   <th style={s.th}>Name</th>
@@ -701,7 +702,7 @@ export default function AdminDashboard() {
                   <tr><td colSpan={6} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No signups found</td></tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
       </main>

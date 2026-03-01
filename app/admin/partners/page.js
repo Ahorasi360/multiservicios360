@@ -334,6 +334,7 @@ export default function AdminPartnersPage() {
 
         {/* Partners Table */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-800">
@@ -454,6 +455,7 @@ export default function AdminPartnersPage() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* Footer */}
