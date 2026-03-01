@@ -44,6 +44,12 @@ export default function sitemap() {
     { url: `${baseUrl}/c-corp-formation`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { es: `${baseUrl}/c-corp-formation`, en: `${baseUrl}/en/c-corp-formation` } } },
     { url: `${baseUrl}/corporate-minutes`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/corporate-minutes`, en: `${baseUrl}/en/corporate-minutes` } } },
     { url: `${baseUrl}/banking-resolution`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/banking-resolution`, en: `${baseUrl}/en/banking-resolution` } } },
+    // Phase 2 — New Services (ES)
+    { url: `${baseUrl}/small-estate-affidavit`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/small-estate-affidavit`, en: `${baseUrl}/en/small-estate-affidavit` } } },
+    { url: `${baseUrl}/quitclaim-deed`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/quitclaim-deed`, en: `${baseUrl}/en/quitclaim-deed` } } },
+    { url: `${baseUrl}/contractor-agreement`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/contractor-agreement`, en: `${baseUrl}/en/contractor-agreement` } } },
+    { url: `${baseUrl}/demand-letter`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/demand-letter`, en: `${baseUrl}/en/demand-letter` } } },
+    { url: `${baseUrl}/apostille-letter`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/apostille-letter`, en: `${baseUrl}/en/apostille-letter` } } },
     // New category pages — English
     { url: `${baseUrl}/en/family-planning`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95, alternates: { languages: { en: `${baseUrl}/en/family-planning`, es: `${baseUrl}/planificacion-familiar` } } },
     { url: `${baseUrl}/en/business`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95, alternates: { languages: { en: `${baseUrl}/en/business`, es: `${baseUrl}/negocios` } } },
@@ -56,6 +62,12 @@ export default function sitemap() {
     { url: `${baseUrl}/en/c-corp-formation`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { en: `${baseUrl}/en/c-corp-formation`, es: `${baseUrl}/c-corp-formation` } } },
     { url: `${baseUrl}/en/corporate-minutes`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/corporate-minutes`, es: `${baseUrl}/corporate-minutes` } } },
     { url: `${baseUrl}/en/banking-resolution`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/banking-resolution`, es: `${baseUrl}/banking-resolution` } } },
+    // Phase 2 — New Services (EN)
+    { url: `${baseUrl}/en/small-estate-affidavit`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/small-estate-affidavit`, es: `${baseUrl}/small-estate-affidavit` } } },
+    { url: `${baseUrl}/en/quitclaim-deed`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/quitclaim-deed`, es: `${baseUrl}/quitclaim-deed` } } },
+    { url: `${baseUrl}/en/contractor-agreement`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/contractor-agreement`, es: `${baseUrl}/contractor-agreement` } } },
+    { url: `${baseUrl}/en/demand-letter`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/demand-letter`, es: `${baseUrl}/demand-letter` } } },
+    { url: `${baseUrl}/en/apostille-letter`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/apostille-letter`, es: `${baseUrl}/apostille-letter` } } },
     // Info pages — Spanish
     { url: `${baseUrl}/mas-servicios`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8, alternates: { languages: { es: `${baseUrl}/mas-servicios`, en: `${baseUrl}/en/more-services` } } },
     { url: `${baseUrl}/nuestra-historia`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7, alternates: { languages: { es: `${baseUrl}/nuestra-historia`, en: `${baseUrl}/en/our-story` } } },
