@@ -225,14 +225,23 @@ const CONTENT = {
 const SERVICES = [
   { name: { es: 'Poder Notarial General', en: 'General Power of Attorney' }, href: '/poa', price: '$149', color: '#1E3A8A', icon: '⚖️' },
   { name: { es: 'Poder Notarial Limitado', en: 'Limited Power of Attorney' }, href: '/limited-poa', price: '$99', color: '#F59E0B', icon: '📋' },
-  { name: { es: 'Fideicomiso en Vida', en: 'Living Trust' }, href: '/trust', price: '$599', color: '#10B981', icon: '🏠' },
-  { name: { es: 'Formación de LLC', en: 'LLC Formation' }, href: '/llc', price: '$799', color: '#8B5CF6', icon: '🏢' },
+  { name: { es: 'Fideicomiso en Vida', en: 'Living Trust' }, href: '/trust', price: '$499', color: '#10B981', icon: '🏠' },
+  { name: { es: 'Formación de LLC', en: 'LLC Formation' }, href: '/llc', price: '$299', color: '#8B5CF6', icon: '🏗️' },
+  { name: { es: 'Testamento Simple', en: 'Simple Will' }, href: '/simple-will', price: '$149', color: '#1E3A8A', icon: '📄' },
+  { name: { es: 'Testamento de Traspaso', en: 'Pour-Over Will' }, href: '/pour-over-will', price: '$199', color: '#7C3AED', icon: '📜' },
+  { name: { es: 'Autorización HIPAA', en: 'HIPAA Authorization' }, href: '/hipaa-authorization', price: '$99', color: '#DC2626', icon: '🏥' },
+  { name: { es: 'Certificación de Fideicomiso', en: 'Certification of Trust' }, href: '/certification-of-trust', price: '$99', color: '#059669', icon: '🔏' },
+  { name: { es: 'Formación S-Corporation', en: 'S-Corp Formation' }, href: '/s-corp-formation', price: '$499', color: '#D97706', icon: '🏢' },
+  { name: { es: 'Formación C-Corporation', en: 'C-Corp Formation' }, href: '/c-corp-formation', price: '$499', color: '#B45309', icon: '🏛️' },
+  { name: { es: 'Actas Corporativas', en: 'Corporate Minutes' }, href: '/corporate-minutes', price: '$149', color: '#0284C7', icon: '📋' },
+  { name: { es: 'Resolución Bancaria', en: 'Banking Resolution' }, href: '/banking-resolution', price: '$99', color: '#065F46', icon: '🏦' },
   { name: { es: 'Carta de Autorización de Viaje', en: 'Travel Authorization' }, href: '/travel-authorization', price: '$49', color: '#EC4899', icon: '✈️' },
-  { name: { es: 'Carta de Venta', en: 'Bill of Sale' }, href: '/bill-of-sale', price: '$49', color: '#2563EB', icon: '🚗' },
-  { name: { es: 'Declaración Jurada', en: 'Affidavit' }, href: '/affidavit', price: '$49', color: '#7C3AED', icon: '📜' },
-  { name: { es: 'Pagaré', en: 'Promissory Note' }, href: '/promissory-note', price: '$49', color: '#D97706', icon: '💵' },
-  { name: { es: 'Designación de Guardián', en: 'Guardianship Designation' }, href: '/guardianship', price: '$99', color: '#BE185D', icon: '👨‍👧' },
-  { name: { es: 'Revocación de Poder', en: 'POA Revocation' }, href: '/revocation-poa', price: '$49', color: '#DC2626', icon: '❌' },
+  { name: { es: 'Carta de Venta', en: 'Bill of Sale' }, href: '/bill-of-sale', price: '$69', color: '#2563EB', icon: '🚗' },
+  { name: { es: 'Declaración Jurada', en: 'Affidavit' }, href: '/affidavit', price: '$89', color: '#7C3AED', icon: '📜' },
+  { name: { es: 'Pagaré', en: 'Promissory Note' }, href: '/promissory-note', price: '$89', color: '#D97706', icon: '💵' },
+  { name: { es: 'Designación de Guardián', en: 'Guardianship Designation' }, href: '/guardianship', price: '$129', color: '#BE185D', icon: '👨‍👧' },
+  { name: { es: 'Revocación de Poder', en: 'POA Revocation' }, href: '/revocation-poa', price: '$59', color: '#DC2626', icon: '❌' },
+  { name: { es: 'Carta de Autorización', en: 'Authorization Letter' }, href: '/authorization-letter', price: '$49', color: '#059669', icon: '✉️' },
 ];
 
 export default function OurStoryClient({ lang: initialLang = 'es' }) {
@@ -361,6 +370,36 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
         </Section>
 
       </div>
+
+      {/* Services CTA */}
+        <div style={{ padding: '60px 0 48px' }}>
+          <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
+          <P center muted>{t.services.intro}</P>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginTop: '24px' }}>
+            {SERVICES.map((svc, i) => (
+              <Link key={i} href={svc.href} style={{ textDecoration: 'none' }}>
+                <div style={{ background: '#fff', borderRadius: '14px', padding: '24px', border: '2px solid #E2E8F0', transition: 'all 0.2s', cursor: 'pointer', textAlign: 'center' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = svc.color; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                  <div style={{ fontSize: '32px', marginBottom: '8px' }}>{svc.icon}</div>
+                  <div style={{ fontWeight: '700', fontSize: '15px', color: '#0F172A', marginBottom: '4px' }}>{svc.name[lang]}</div>
+                  <div style={{ fontSize: '13px', color: '#64748B', marginBottom: '12px' }}>{lang === 'es' ? 'Desde' : 'From'} {svc.price}</div>
+                  <div style={{ display: 'inline-block', padding: '8px 20px', background: svc.color, color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: '700' }}>
+                    {t.services.cta} →
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <p style={{ fontSize: '16px', color: '#475569', margin: '0 0 6px' }}>{t.services.question}</p>
+            <a href="tel:8552467274" style={{ fontSize: '22px', fontWeight: '800', color: '#1E3A8A', textDecoration: 'none' }}>
+              {t.services.callUs} (855) 246-7274
+            </a>
+          </div>
+        </div>
 
       {/* Footer */}
       <footer style={{ background: '#0F172A', padding: '24px 16px', textAlign: 'center' }}>
