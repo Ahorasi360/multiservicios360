@@ -87,6 +87,8 @@ const TRANSLATIONS = {
       promissoryNote: { title: 'Pagaré', desc: 'Formalice préstamos entre personas.', price: '$89', cta: 'Iniciar' },
       guardianship: { title: 'Designación de Guardián', desc: 'Designe guardián para sus hijos menores.', price: '$129', cta: 'Iniciar' },
       moreServices: 'Más Servicios',
+      family: 'Planificación Familiar',
+      business: 'Negocios',
     },
     team: {
       title: 'Red de Profesionales Independientes',
@@ -216,6 +218,8 @@ const TRANSLATIONS = {
       promissoryNote: { title: 'Promissory Note', desc: 'Formalize loans between individuals.', price: '$89', cta: 'Start' },
       guardianship: { title: 'Guardianship Designation', desc: 'Designate a guardian for your minor children.', price: '$129', cta: 'Start' },
       moreServices: 'More Services',
+      family: 'Family Planning',
+      business: 'Business',
     },
     team: {
       title: 'Network of Independent Professionals',
@@ -419,6 +423,12 @@ export default function HomeClient({ lang = 'es' }) {
                 </Link>
                 <Link href="/llc" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: 'rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', border: '2px solid rgba(255,255,255,0.4)', boxShadow: '0 4px 14px rgba(0,0,0,0.1)' }}>
                   {t.hero.ctaLLC} <ArrowRightIcon />
+                </Link>
+                <Link href={language === 'es' ? '/planificacion-familiar' : '/en/family-planning'} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#7C3AED', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(124, 58, 237, 0.4)' }}>
+                  📋 {t.nav.family}
+                </Link>
+                <Link href={language === 'es' ? '/negocios' : '/en/business'} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#1D4ED8', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(29, 78, 216, 0.4)' }}>
+                  🏢 {t.nav.business}
                 </Link>
                 <Link href="/mas-servicios" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#8B5CF6', color: 'white', textDecoration: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', boxShadow: '0 4px 14px rgba(139, 92, 246, 0.4)' }}>
                   {t.hero.ctaMore} <ArrowRightIcon />
@@ -709,6 +719,8 @@ export default function HomeClient({ lang = 'es' }) {
                 <li><Link href="/limited-poa" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Poder Notarial Limitado' : 'Limited Power of Attorney'}</Link></li>
                 <li><Link href="/trust" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Fideicomiso en Vida' : 'California Living Trust'}</Link></li>
                 <li><Link href="/llc" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Formación de LLC' : 'LLC Formation'}</Link></li>
+                <li><Link href={language === 'es' ? '/planificacion-familiar' : '/en/family-planning'} style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Planificación Familiar' : 'Family Planning'}</Link></li>
+                <li><Link href={language === 'es' ? '/negocios' : '/en/business'} style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Negocios' : 'Business'}</Link></li>
                 <li><Link href="/bill-of-sale" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Carta de Venta' : 'Bill of Sale'}</Link></li>
                 <li><Link href="/promissory-note" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Pagaré' : 'Promissory Note'}</Link></li>
                 <li><Link href="/authorization-letter" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px', lineHeight: '2' }}>{language === 'es' ? 'Carta de Autorización' : 'Authorization Letter'}</Link></li>

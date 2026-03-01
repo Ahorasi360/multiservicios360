@@ -32,6 +32,30 @@ export default function sitemap() {
     { url: `${baseUrl}/en/revocation-poa`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8, alternates: { languages: { en: `${baseUrl}/en/revocation-poa`, es: `${baseUrl}/revocation-poa` } } },
     { url: `${baseUrl}/en/authorization-letter`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8, alternates: { languages: { en: `${baseUrl}/en/authorization-letter`, es: `${baseUrl}/authorization-letter` } } },
     { url: `${baseUrl}/en/promissory-note`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8, alternates: { languages: { en: `${baseUrl}/en/promissory-note`, es: `${baseUrl}/promissory-note` } } },
+    // New category pages — Spanish
+    { url: `${baseUrl}/planificacion-familiar`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95, alternates: { languages: { es: `${baseUrl}/planificacion-familiar`, en: `${baseUrl}/en/family-planning` } } },
+    { url: `${baseUrl}/negocios`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95, alternates: { languages: { es: `${baseUrl}/negocios`, en: `${baseUrl}/en/business` } } },
+    // New documents — Spanish
+    { url: `${baseUrl}/pour-over-will`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { es: `${baseUrl}/pour-over-will`, en: `${baseUrl}/en/pour-over-will` } } },
+    { url: `${baseUrl}/simple-will`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { es: `${baseUrl}/simple-will`, en: `${baseUrl}/en/simple-will` } } },
+    { url: `${baseUrl}/hipaa-authorization`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { es: `${baseUrl}/hipaa-authorization`, en: `${baseUrl}/en/hipaa-authorization` } } },
+    { url: `${baseUrl}/certification-of-trust`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { es: `${baseUrl}/certification-of-trust`, en: `${baseUrl}/en/certification-of-trust` } } },
+    { url: `${baseUrl}/s-corp-formation`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { es: `${baseUrl}/s-corp-formation`, en: `${baseUrl}/en/s-corp-formation` } } },
+    { url: `${baseUrl}/c-corp-formation`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { es: `${baseUrl}/c-corp-formation`, en: `${baseUrl}/en/c-corp-formation` } } },
+    { url: `${baseUrl}/corporate-minutes`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/corporate-minutes`, en: `${baseUrl}/en/corporate-minutes` } } },
+    { url: `${baseUrl}/banking-resolution`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { es: `${baseUrl}/banking-resolution`, en: `${baseUrl}/en/banking-resolution` } } },
+    // New category pages — English
+    { url: `${baseUrl}/en/family-planning`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95, alternates: { languages: { en: `${baseUrl}/en/family-planning`, es: `${baseUrl}/planificacion-familiar` } } },
+    { url: `${baseUrl}/en/business`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95, alternates: { languages: { en: `${baseUrl}/en/business`, es: `${baseUrl}/negocios` } } },
+    // New documents — English
+    { url: `${baseUrl}/en/pour-over-will`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { en: `${baseUrl}/en/pour-over-will`, es: `${baseUrl}/pour-over-will` } } },
+    { url: `${baseUrl}/en/simple-will`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { en: `${baseUrl}/en/simple-will`, es: `${baseUrl}/simple-will` } } },
+    { url: `${baseUrl}/en/hipaa-authorization`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { en: `${baseUrl}/en/hipaa-authorization`, es: `${baseUrl}/hipaa-authorization` } } },
+    { url: `${baseUrl}/en/certification-of-trust`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { en: `${baseUrl}/en/certification-of-trust`, es: `${baseUrl}/certification-of-trust` } } },
+    { url: `${baseUrl}/en/s-corp-formation`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { en: `${baseUrl}/en/s-corp-formation`, es: `${baseUrl}/s-corp-formation` } } },
+    { url: `${baseUrl}/en/c-corp-formation`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9, alternates: { languages: { en: `${baseUrl}/en/c-corp-formation`, es: `${baseUrl}/c-corp-formation` } } },
+    { url: `${baseUrl}/en/corporate-minutes`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/corporate-minutes`, es: `${baseUrl}/corporate-minutes` } } },
+    { url: `${baseUrl}/en/banking-resolution`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85, alternates: { languages: { en: `${baseUrl}/en/banking-resolution`, es: `${baseUrl}/banking-resolution` } } },
     // Info pages — Spanish
     { url: `${baseUrl}/mas-servicios`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8, alternates: { languages: { es: `${baseUrl}/mas-servicios`, en: `${baseUrl}/en/more-services` } } },
     { url: `${baseUrl}/nuestra-historia`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7, alternates: { languages: { es: `${baseUrl}/nuestra-historia`, en: `${baseUrl}/en/our-story` } } },
