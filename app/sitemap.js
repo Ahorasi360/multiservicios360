@@ -81,6 +81,16 @@ export default function sitemap() {
     // Blog
     { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8, alternates: { languages: { es: `${baseUrl}/blog`, en: `${baseUrl}/en/blog` } } },
     { url: `${baseUrl}/en/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8, alternates: { languages: { en: `${baseUrl}/en/blog`, es: `${baseUrl}/blog` } } },
+    // Guides / Resources
+    { url: `${baseUrl}/guias`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8, alternates: { languages: { es: `${baseUrl}/guias`, en: `${baseUrl}/en/guias` } } },
+    { url: `${baseUrl}/en/guias`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8, alternates: { languages: { en: `${baseUrl}/en/guias`, es: `${baseUrl}/guias` } } },
+    // Partner recruitment
+    { url: `${baseUrl}/hazte-socio`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
+    // Vault / Document storage
+    { url: `${baseUrl}/vault`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/boveda-premium`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    // Landing pages
+    { url: `${baseUrl}/protege-tu-casa`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
     // Legal
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },

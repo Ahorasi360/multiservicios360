@@ -81,7 +81,8 @@ export default function PartnerDashboard() {
     const partnerName = localStorage.getItem('partner_name');
     if (!partnerId) { router.push('/portal/login'); return; }
     const commissionRate = localStorage.getItem('partner_commission_rate') || '20';
-    setPartner({ id: partnerId, business_name: partnerName, commission_rate: commissionRate });
+    const referralCode = localStorage.getItem('partner_referral_code') || '';
+    setPartner({ id: partnerId, business_name: partnerName, commission_rate: commissionRate, referral_code: referralCode });
     fetchDashboardData(partnerId);
   }, []);
 
@@ -372,6 +373,34 @@ export default function PartnerDashboard() {
                 </div>
                 <p className="text-blue-100 text-xs mt-2">On every completed document</p>
               </div>
+
+              {/* Referral Link */}
+              {partner?.referral_code && (
+                <div className="mt-4 p-4 bg-white border border-slate-200 rounded-xl">
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                    {lang === 'es' ? '🔗 Tu enlace de cliente' : '🔗 Your client link'}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <input
+                      readOnly
+                      value={`https://multiservicios360.net?ref=${partner.referral_code}`}
+                      className="flex-1 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 truncate"
+                    />
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`https://multiservicios360.net?ref=${partner.referral_code}`);
+                        const btn = document.getElementById('copy-ref-btn');
+                        if (btn) { btn.textContent = '✓'; setTimeout(() => { btn.textContent = lang === 'es' ? 'Copiar' : 'Copy'; }, 2000); }
+                      }}
+                      id="copy-ref-btn"
+                      className="px-3 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
+                    >
+                      {lang === 'es' ? 'Copiar' : 'Copy'}
+                    </button>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1">{lang === 'es' ? 'Envía este enlace a tus clientes' : 'Send this link to your clients'}</p>
+                </div>
+              )}
             </div>
           </div>
 

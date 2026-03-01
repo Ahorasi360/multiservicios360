@@ -127,25 +127,25 @@ function NewDocumentContent() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      <nav className="bg-slate-800 border-b border-slate-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <nav className="bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between h-20 items-center">
             <button onClick={() => router.push('/portal/dashboard')} className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl shadow flex items-center justify-center">
                 <span className="text-lg font-bold text-white">MS</span>
               </div>
-              <span className="ml-3 text-xl font-semibold text-white">Partner Portal</span>
+              <span className="ml-3 text-xl font-bold text-slate-800">Multi Servicios 360</span>
             </button>
             <div className="flex items-center space-x-4">
-              <button onClick={() => router.push('/portal/dashboard')} className="text-slate-400 hover:text-white">Dashboard</button>
-              <button onClick={() => { localStorage.removeItem('partner_token'); localStorage.removeItem('partner_id'); router.push('/portal/login'); }} className="text-slate-400 hover:text-white">Logout</button>
+              <button onClick={() => router.push('/portal/dashboard')} className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-blue-50 text-sm font-medium">Dashboard</button>
+              <button onClick={() => { localStorage.removeItem('partner_token'); localStorage.removeItem('partner_id'); router.push('/portal/login'); }} className="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 text-sm font-medium">Logout</button>
             </div>
           </div>
         </div>
@@ -154,11 +154,11 @@ function NewDocumentContent() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Steps */}
         <div className="flex items-center justify-center mb-8">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 1 ? 'bg-blue-500 text-white' : 'bg-slate-700 text-slate-400'}`}>1</div>
-          <span className={`ml-2 ${step >= 1 ? 'text-white' : 'text-slate-400'}`}>Select Client</span>
-          <div className={`w-16 h-1 mx-4 ${step >= 2 ? 'bg-blue-500' : 'bg-slate-700'}`}></div>
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 2 ? 'bg-blue-500 text-white' : 'bg-slate-700 text-slate-400'}`}>2</div>
-          <span className={`ml-2 ${step >= 2 ? 'text-white' : 'text-slate-400'}`}>Choose Document</span>
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 1 ? 'bg-blue-600 text-white shadow' : 'bg-slate-200 text-slate-500'}`}>1</div>
+          <span className={`ml-2 ${step >= 1 ? 'text-slate-800 font-medium' : 'text-slate-400'}`}>Select Client</span>
+          <div className={`w-16 h-1 mx-4 ${step >= 2 ? 'bg-blue-600' : 'bg-slate-200'}`}></div>
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 2 ? 'bg-blue-600 text-white shadow' : 'bg-slate-200 text-slate-500'}`}>2</div>
+          <span className={`ml-2 ${step >= 2 ? 'text-slate-800 font-medium' : 'text-slate-400'}`}>Choose Document</span>
         </div>
 
         {step === 1 && (
@@ -168,7 +168,7 @@ function NewDocumentContent() {
               <p className="text-slate-400 mt-2">Choose which client this document is for</p>
             </div>
             {clients.length === 0 ? (
-              <div className="bg-slate-800 rounded-xl border border-slate-700 p-12 text-center">
+              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-sm">
                 <p className="text-slate-400 mb-4">You need to add a client first</p>
                 <button onClick={() => router.push('/portal/clients')} className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Add a Client</button>
               </div>
@@ -176,23 +176,23 @@ function NewDocumentContent() {
               <div className="grid gap-4">
                 {clients.map(client => (
                   <button key={client.id} onClick={() => { setSelectedClient(client); setStep(2); }}
-                    className="bg-slate-800 hover:bg-slate-700 rounded-xl p-6 border border-slate-700 text-left flex items-center justify-between">
+                    className="bg-white hover:bg-blue-50 hover:border-blue-300 rounded-xl p-5 border border-slate-200 text-left flex items-center justify-between cursor-pointer transition-all">
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0">
                         <span className="text-white font-bold text-lg">{client.client_name?.charAt(0)?.toUpperCase() || '?'}</span>
                       </div>
                       <div className="ml-4">
-                        <p className="text-white font-semibold text-lg">{client.client_name}</p>
-                        <p className="text-slate-400">{client.client_email || client.client_phone || 'No contact info'}</p>
+                        <p className="text-slate-800 font-semibold text-lg">{client.client_name}</p>
+                        <p className="text-slate-500">{client.client_email || client.client_phone || 'No contact info'}</p>
                       </div>
                     </div>
-                    <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                   </button>
                 ))}
               </div>
             )}
             <div className="mt-6 text-center">
-              <button onClick={() => router.push('/portal/clients')} className="text-blue-400 hover:text-blue-300">+ Add a new client</button>
+              <button onClick={() => router.push('/portal/clients')} className="text-blue-600 hover:text-blue-700 font-medium">+ Add a new client</button>
             </div>
           </div>
         )}
@@ -202,7 +202,7 @@ function NewDocumentContent() {
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white">Choose Document Type</h1>
               <p className="text-slate-400 mt-2">For: <span className="text-white font-medium">{selectedClient.client_name}</span></p>
-              <button onClick={() => { setStep(1); setSelectedClient(null); }} className="text-blue-400 hover:text-blue-300 text-sm mt-2">← Change client</button>
+              <button onClick={() => { setStep(1); setSelectedClient(null); }} className="text-blue-600 hover:text-blue-700 text-sm mt-2 font-medium">← Change client</button>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {docTypes.map(doc => {
@@ -210,7 +210,7 @@ function NewDocumentContent() {
                 const [bg, text, border] = colors.split(' ');
                 return (
                   <button key={doc.key} onClick={() => handleStartDocument(doc.key)}
-                    className={`bg-slate-800 hover:bg-slate-700 rounded-xl p-6 border border-slate-700 text-left transition-all hover:border-opacity-100 group`}
+                    className={`bg-white hover:bg-blue-50 hover:border-blue-300 rounded-xl p-5 border border-slate-200 text-left cursor-pointer transition-all`}
                     style={{ '--tw-border-opacity': 0 }}>
                     <div className={`w-12 h-12 ${bg} rounded-xl flex items-center justify-center mb-3`}>
                       <span className={`text-xl`}>📄</span>
@@ -234,7 +234,7 @@ function NewDocumentContent() {
 
 export default function PartnerNewDocument() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-900 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div></div>}>
       <NewDocumentContent />
     </Suspense>
   );

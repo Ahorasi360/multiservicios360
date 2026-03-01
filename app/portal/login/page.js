@@ -45,6 +45,8 @@ export default function PartnerLogin() {
         localStorage.setItem('partner_token', data.token);
         localStorage.setItem('partner_id', data.partner.id);
         localStorage.setItem('partner_name', data.partner.business_name);
+        localStorage.setItem('partner_commission_rate', data.partner.commission_rate || '20');
+        if (data.partner.referral_code) localStorage.setItem('partner_referral_code', data.partner.referral_code);
         router.push('/portal/dashboard');
       } else {
         setError(data.error || 'Invalid credentials');

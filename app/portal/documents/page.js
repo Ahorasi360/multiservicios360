@@ -93,10 +93,10 @@ export default function PartnerDocuments() {
 
   const getStatusBadge = (status) => {
     const styles = {
-      paid: 'bg-emerald-500/20 text-emerald-400',
-      completed: 'bg-emerald-500/20 text-emerald-400',
+      paid: 'bg-emerald-500/20 text-emerald-600',
+      completed: 'bg-emerald-500/20 text-emerald-600',
       pending_payment: 'bg-amber-500/20 text-amber-400',
-      draft: 'bg-slate-500/20 text-slate-400',
+      draft: 'bg-slate-100 text-slate-600',
     };
     const labels = {
       paid: 'Paid',
@@ -113,16 +113,16 @@ export default function PartnerDocuments() {
 
   const getDocTypeBadge = (type) => {
     const styles = {
-      general_poa: 'bg-blue-500/20 text-blue-400',
-      limited_poa: 'bg-green-500/20 text-green-400',
+      general_poa: 'bg-blue-100 text-blue-700',
+      limited_poa: 'bg-green-100 text-green-700',
       living_trust: 'bg-purple-500/20 text-purple-400',
-      llc_formation: 'bg-yellow-500/20 text-yellow-400',
+      llc_formation: 'bg-amber-100 text-amber-700',
       authorization_letter: 'bg-pink-500/20 text-pink-400',
       bill_of_sale: 'bg-orange-500/20 text-orange-400',
       affidavit: 'bg-cyan-500/20 text-cyan-400',
       promissory_note: 'bg-red-500/20 text-red-400',
       guardianship_designation: 'bg-teal-500/20 text-teal-400',
-      revocation_poa: 'bg-slate-500/20 text-slate-400',
+      revocation_poa: 'bg-slate-100 text-slate-600',
     };
     const labels = {
       general_poa: 'General POA',
@@ -137,7 +137,7 @@ export default function PartnerDocuments() {
       revocation_poa: 'POA Revocation',
     };
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[type] || 'bg-slate-500/20 text-slate-400'}`}>
+      <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[type] || 'bg-slate-100 text-slate-600'}`}>
         {labels[type] || type}
       </span>
     );
@@ -156,7 +156,7 @@ export default function PartnerDocuments() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -165,27 +165,43 @@ export default function PartnerDocuments() {
 
   function toggleLang() { const nl=lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('portal_lang',nl); }
   return (
-    <div className="min-h-screen bg-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-800 border-b border-slate-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
               <button onClick={() => router.push('/portal/dashboard')} className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                  <span className="text-lg font-bold text-white">MS</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-xl font-bold text-white">MS</span>
                 </div>
-                <span className="ml-3 text-xl font-semibold text-white">Partner Portal</span>
+                <div className="ml-3">
+                  <h1 className="text-xl font-bold text-slate-800">Multi Servicios 360</h1>
+                  <p className="text-xs text-slate-500">Partner Portal</p>
+                </div>
               </button>
             </div>
             <div className="flex items-center space-x-4">
-              <button onClick={() => router.push('/portal/dashboard')} className="text-slate-400 hover:text-white">
-                Dashboard
-              </button>
-              <button onClick={handleLogout} className="text-slate-400 hover:text-white">
-                Logout
-              </button>
+              <div className="hidden md:flex items-center text-sm text-slate-600">
+                <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                <a href="tel:8552467274" className="hover:text-blue-600 font-medium">(855) 246-7274</a>
+              </div>
+              <button onClick={handleLogout} className="px-4 py-2 text-sm text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">Sign Out</button>
             </div>
+          </div>
+        </div>
+      </header>
+
+
+      {/* Navigation Tabs */}
+      <nav className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-1">
+            <button onClick={() => router.push('/portal/dashboard')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Dashboard</button>
+            <button onClick={() => router.push('/portal/clients')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">My Clients</button>
+            <button onClick={() => router.push('/portal/documents')} className="px-4 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Documents</button>
+            <button onClick={() => router.push('/portal/earnings')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Earnings</button>
+            <button onClick={() => router.push('/portal/resources')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">📦 Resources</button>
           </div>
         </div>
       </nav>
@@ -194,12 +210,12 @@ export default function PartnerDocuments() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Documents</h1>
-            <p className="text-slate-400 mt-1">{documents.length} total documents</p>
+            <h1 className="text-3xl font-bold text-slate-800">Documents</h1>
+            <p className="text-slate-500 mt-1">{documents.length} total documents</p>
           </div>
           <button
             onClick={() => router.push('/portal/new-document')}
-            className="mt-4 sm:mt-0 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all"
+            className="mt-4 sm:mt-0 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all"
           >
             + New Document
           </button>
@@ -207,7 +223,7 @@ export default function PartnerDocuments() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-6">
-          <div className="flex flex-wrap bg-slate-800 rounded-lg p-1 gap-1">
+          <div className="flex flex-wrap bg-white border border-slate-200 rounded-xl p-1 gap-1">
             {[
               { key: 'all', label: 'All Types' },
               { key: 'general_poa', label: 'General POA' },
@@ -221,17 +237,17 @@ export default function PartnerDocuments() {
               { key: 'guardianship_designation', label: 'Guardianship' },
             ].map(t => (
               <button key={t.key} onClick={() => setFilter(t.key)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${filter === t.key ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'}`}>
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${filter === t.key ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'}`}>
                 {t.label}
               </button>
             ))}
           </div>
 
-          <div className="flex bg-slate-800 rounded-lg p-1">
+          <div className="flex bg-white border border-slate-200 rounded-xl p-1">
             <button
               onClick={() => setStatusFilter('all')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                statusFilter === 'all' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                statusFilter === 'all' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               All Status
@@ -239,7 +255,7 @@ export default function PartnerDocuments() {
             <button
               onClick={() => setStatusFilter('paid')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                statusFilter === 'paid' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                statusFilter === 'paid' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               Paid
@@ -247,7 +263,7 @@ export default function PartnerDocuments() {
             <button
               onClick={() => setStatusFilter('pending_payment')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                statusFilter === 'pending_payment' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                statusFilter === 'pending_payment' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               Pending
@@ -257,8 +273,8 @@ export default function PartnerDocuments() {
 
         {/* Documents List */}
         {filteredDocuments.length === 0 ? (
-          <div className="bg-slate-800 rounded-xl border border-slate-700 p-12 text-center">
-            <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -276,10 +292,10 @@ export default function PartnerDocuments() {
             )}
           </div>
         ) : (
-          <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-700/50">
+                <thead className="bg-slate-50">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Client</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Document</th>
@@ -291,7 +307,7 @@ export default function PartnerDocuments() {
                 </thead>
                 <tbody className="divide-y divide-slate-700">
                   {filteredDocuments.map((doc) => (
-                    <tr key={doc.id} className="hover:bg-slate-700/30 transition-colors">
+                    <tr key={doc.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -313,7 +329,7 @@ export default function PartnerDocuments() {
                       </td>
                       <td className="px-6 py-4 hidden md:table-cell">
                         <p className="text-white font-medium">{formatMoney(doc.total_price)}</p>
-                        <p className="text-emerald-400 text-sm">Commission: {formatMoney(doc.total_price * 0.20)}</p>
+                        <p className="text-emerald-600 text-sm">Commission: {formatMoney(doc.total_price * 0.20)}</p>
                       </td>
                       <td className="px-6 py-4 hidden sm:table-cell">
                         {getStatusBadge(doc.status)}
@@ -326,7 +342,7 @@ export default function PartnerDocuments() {
                           {(doc.status === 'paid' || doc.status === 'completed') && (
                             <button
                               onClick={() => handleDownload(doc)}
-                              className="px-3 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition-colors text-sm"
+                              className="px-3 py-2 bg-emerald-500/20 text-emerald-600 rounded-lg hover:bg-emerald-500/30 transition-colors text-sm"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -334,7 +350,7 @@ export default function PartnerDocuments() {
                             </button>
                           )}
                           <button
-                            className="px-3 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm"
+                            className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-500/30 transition-colors text-sm"
                           >
                             View
                           </button>
@@ -351,19 +367,19 @@ export default function PartnerDocuments() {
         {/* Summary Stats */}
         {documents.length > 0 && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 hover:shadow-md transition-shadow">
               <p className="text-slate-400 text-sm">Total Documents</p>
               <p className="text-3xl font-bold text-white mt-1">{documents.length}</p>
             </div>
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 hover:shadow-md transition-shadow">
               <p className="text-slate-400 text-sm">Total Sales</p>
               <p className="text-3xl font-bold text-white mt-1">
                 {formatMoney(documents.filter(d => d.status === 'paid').reduce((sum, d) => sum + (d.total_price || 0), 0))}
               </p>
             </div>
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 hover:shadow-md transition-shadow">
               <p className="text-slate-400 text-sm">Your Earnings (20%)</p>
-              <p className="text-3xl font-bold text-emerald-400 mt-1">
+              <p className="text-3xl font-bold text-emerald-600 mt-1">
                 {formatMoney(documents.filter(d => d.status === 'paid').reduce((sum, d) => sum + ((d.total_price || 0) * 0.20), 0))}
               </p>
             </div>

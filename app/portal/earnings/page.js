@@ -111,8 +111,8 @@ export default function PartnerEarnings() {
 
   const getDocTypeBadge = (type) => {
     const styles = {
-      general_poa: 'bg-blue-500/20 text-blue-400',
-      limited_poa: 'bg-green-500/20 text-green-400',
+      general_poa: 'bg-blue-100 text-blue-700',
+      limited_poa: 'bg-green-100 text-green-700',
       living_trust: 'bg-purple-500/20 text-purple-400',
       llc_formation: 'bg-orange-500/20 text-orange-400',
       authorization_letter: 'bg-pink-500/20 text-pink-400',
@@ -127,7 +127,7 @@ export default function PartnerEarnings() {
     const t2 = T[lang];
     const label = (t2?.type && t2.type[type]) || type?.replace(/_/g, ' ') || type;
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[type] || 'bg-slate-500/20 text-slate-400'}`}>
+      <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[type] || 'bg-slate-100 text-slate-600'}`}>
         {label}
       </span>
     );
@@ -171,7 +171,7 @@ export default function PartnerEarnings() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -180,27 +180,43 @@ export default function PartnerEarnings() {
 
   function toggleLang() { const nl=lang==='es'?'en':'es'; setLang(nl); localStorage.setItem('portal_lang',nl); }
   return (
-    <div className="min-h-screen bg-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-800 border-b border-slate-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
               <button onClick={() => router.push('/portal/dashboard')} className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                  <span className="text-lg font-bold text-white">MS</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-xl font-bold text-white">MS</span>
                 </div>
-                <span className="ml-3 text-xl font-semibold text-white">Partner Portal</span>
+                <div className="ml-3">
+                  <h1 className="text-xl font-bold text-slate-800">Multi Servicios 360</h1>
+                  <p className="text-xs text-slate-500">Partner Portal</p>
+                </div>
               </button>
             </div>
             <div className="flex items-center space-x-4">
-              <button onClick={() => router.push('/portal/dashboard')} className="text-slate-400 hover:text-white">
-                Dashboard
-              </button>
-              <button onClick={handleLogout} className="text-slate-400 hover:text-white">
-                Logout
-              </button>
+              <div className="hidden md:flex items-center text-sm text-slate-600">
+                <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                <a href="tel:8552467274" className="hover:text-blue-600 font-medium">(855) 246-7274</a>
+              </div>
+              <button onClick={handleLogout} className="px-4 py-2 text-sm text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">Sign Out</button>
             </div>
+          </div>
+        </div>
+      </header>
+
+
+      {/* Navigation Tabs */}
+      <nav className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-1">
+            <button onClick={() => router.push('/portal/dashboard')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Dashboard</button>
+            <button onClick={() => router.push('/portal/clients')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">My Clients</button>
+            <button onClick={() => router.push('/portal/documents')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Documents</button>
+            <button onClick={() => router.push('/portal/earnings')} className="px-4 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Earnings</button>
+            <button onClick={() => router.push('/portal/resources')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">📦 Resources</button>
           </div>
         </div>
       </nav>
@@ -208,16 +224,16 @@ export default function PartnerEarnings() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">My Earnings</h1>
-          <p className="text-slate-400 mt-1">Track your commissions and payouts</p>
+          <h1 className="text-3xl font-bold text-slate-800">My Earnings</h1>
+          <p className="text-slate-500 mt-1">Track your commissions and payouts</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Earned</p>
+                <p className="text-slate-500 text-sm">Total Earned</p>
                 <p className="text-3xl font-bold text-white mt-1">{formatMoney(stats?.totalEarned)}</p>
               </div>
               <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
@@ -228,10 +244,10 @@ export default function PartnerEarnings() {
             </div>
           </div>
 
-          <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Pending Payout</p>
+                <p className="text-slate-500 text-sm">Pending Payout</p>
                 <p className="text-3xl font-bold text-amber-400 mt-1">{formatMoney(stats?.pendingPayout)}</p>
               </div>
               <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
@@ -243,10 +259,10 @@ export default function PartnerEarnings() {
             <p className="text-slate-500 text-xs mt-2">Paid out on the 1st of each month</p>
           </div>
 
-          <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Paid Out</p>
+                <p className="text-slate-500 text-sm">Paid Out</p>
                 <p className="text-3xl font-bold text-emerald-400 mt-1">{formatMoney(stats?.totalPaid)}</p>
               </div>
               <div className="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center">
@@ -257,10 +273,10 @@ export default function PartnerEarnings() {
             </div>
           </div>
 
-          <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Commission Rate</p>
+                <p className="text-slate-500 text-sm">Commission Rate</p>
                 <p className="text-3xl font-bold text-white mt-1">20%</p>
               </div>
               <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -293,11 +309,11 @@ export default function PartnerEarnings() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-6">
-          <div className="flex bg-slate-800 rounded-lg p-1">
+          <div className="flex bg-white border border-slate-200 rounded-xl p-1">
             <button
               onClick={() => setPeriodFilter('all')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                periodFilter === 'all' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                periodFilter === 'all' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               All Time
@@ -305,7 +321,7 @@ export default function PartnerEarnings() {
             <button
               onClick={() => setPeriodFilter('this_month')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                periodFilter === 'this_month' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                periodFilter === 'this_month' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               This Month
@@ -313,18 +329,18 @@ export default function PartnerEarnings() {
             <button
               onClick={() => setPeriodFilter('last_month')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                periodFilter === 'last_month' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                periodFilter === 'last_month' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               Last Month
             </button>
           </div>
 
-          <div className="flex bg-slate-800 rounded-lg p-1">
+          <div className="flex bg-white border border-slate-200 rounded-xl p-1">
             <button
               onClick={() => setStatusFilter('all')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                statusFilter === 'all' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                statusFilter === 'all' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               All Status
@@ -332,7 +348,7 @@ export default function PartnerEarnings() {
             <button
               onClick={() => setStatusFilter('pending')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                statusFilter === 'pending' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                statusFilter === 'pending' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               Pending
@@ -340,7 +356,7 @@ export default function PartnerEarnings() {
             <button
               onClick={() => setStatusFilter('paid')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                statusFilter === 'paid' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+                statusFilter === 'paid' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               Paid
@@ -351,12 +367,12 @@ export default function PartnerEarnings() {
         {/* Filtered Summary */}
         {(periodFilter !== 'all' || statusFilter !== 'all') && (
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-              <p className="text-slate-400 text-sm">Filtered Pending</p>
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+              <p className="text-slate-500 text-sm">Filtered Pending</p>
               <p className="text-xl font-bold text-amber-400">{formatMoney(filteredPending)}</p>
             </div>
-            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-              <p className="text-slate-400 text-sm">Filtered Paid</p>
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+              <p className="text-slate-500 text-sm">Filtered Paid</p>
               <p className="text-xl font-bold text-emerald-400">{formatMoney(filteredPaid)}</p>
             </div>
           </div>
@@ -364,8 +380,8 @@ export default function PartnerEarnings() {
 
         {/* Earnings List */}
         {filteredEarnings.length === 0 ? (
-          <div className="bg-slate-800 rounded-xl border border-slate-700 p-12 text-center">
-            <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -383,10 +399,10 @@ export default function PartnerEarnings() {
             )}
           </div>
         ) : (
-          <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-700/50">
+                <thead className="bg-slate-50">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Client</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Document</th>
@@ -396,18 +412,18 @@ export default function PartnerEarnings() {
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300 hidden lg:table-cell">Date</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700">
+                <tbody className="divide-y divide-slate-100">
                   {filteredEarnings.map((earning) => (
-                    <tr key={earning.id} className="hover:bg-slate-700/30 transition-colors">
+                    <tr key={earning.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span className="text-white font-medium">
+                            <span className="text-slate-800 font-medium">
                               {earning.client_name?.charAt(0)?.toUpperCase() || '?'}
                             </span>
                           </div>
                           <div className="ml-4">
-                            <p className="text-white font-medium">{earning.client_name || 'Unknown Client'}</p>
+                            <p className="text-slate-800 font-medium">{earning.client_name || 'Unknown Client'}</p>
                           </div>
                         </div>
                       </td>
@@ -418,7 +434,7 @@ export default function PartnerEarnings() {
                         <p className="text-slate-300">{formatMoney(earning.sale_amount)}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-emerald-400 font-semibold">{formatMoney(earning.commission_amount)}</p>
+                        <p className="text-emerald-600 font-semibold">{formatMoney(earning.commission_amount)}</p>
                       </td>
                       <td className="px-6 py-4 hidden sm:table-cell">
                         {getStatusBadge(earning.status)}

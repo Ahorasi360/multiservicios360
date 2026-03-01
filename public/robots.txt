@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
 
+# Private portals — do not crawl
+Disallow: /portal/
+Disallow: /admin/
+Disallow: /staff/
+Disallow: /sales/
+Disallow: /professional/
+Disallow: /api/
+Disallow: /simple-doc/success
+Disallow: /vault/premium-success
+Disallow: /hazte-socio/success
+Disallow: /waitlist
+
 Sitemap: https://multiservicios360.net/sitemap.xml
