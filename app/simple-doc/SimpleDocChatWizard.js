@@ -163,8 +163,8 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
     'trust', 'poa', 'limited_poa',
   ];
   const showProfessionalUpsell = PROFESSIONAL_UPSELL_DOCS.includes(docType);
-  const PROFESSIONAL_UPSELL_AMOUNT = 15000; // $150
-  const professionalUpsellDisplay = '$150';
+  const PROFESSIONAL_UPSELL_AMOUNT = 19900; // $199
+  const professionalUpsellDisplay = '$199';
 
   const t = WIZARD_TRANSLATIONS[language];
 
@@ -810,13 +810,23 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
                       </div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: '600', fontSize: '14px', color: '#1F2937' }}>
-                          {language === 'es' ? '⚖️ Conexión con Profesional Legal — ' : '⚖️ Professional Legal Review — '}
+                          {language === 'es'
+                            ? (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
+                                ? '⚖️ Revisión por Abogado Corporativo — '
+                                : '⚖️ Revisión por Abogado — ')
+                            : (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
+                                ? '⚖️ Corporate Attorney Review — '
+                                : '⚖️ Attorney Review — ')}
                           <span style={{ color: '#059669' }}>{professionalUpsellDisplay}</span>
                         </div>
                         <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '4px', lineHeight: '1.5' }}>
                           {language === 'es'
-                            ? 'Un abogado o notario de nuestra red revisará su documento y le contactará dentro de 48 horas para verificar y completar la notarización si aplica.'
-                            : 'An attorney or notary from our network will review your document and contact you within 48 hours to verify and complete notarization if applicable.'}
+                            ? (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
+                                ? 'Un abogado corporativo de nuestra red revisará su documento y le contactará dentro de 48 horas con sus recomendaciones.'
+                                : 'Un abogado de nuestra red revisará su documento y le contactará dentro de 48 horas. Incluye recomendaciones de notarización si aplica.')
+                            : (['s_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution'].includes(docType)
+                                ? 'A corporate attorney from our network will review your document and contact you within 48 hours with recommendations.'
+                                : 'An attorney from our network will review your document and contact you within 48 hours. Includes notarization guidance if applicable.')}
                         </div>
                       </div>
                     </div>
