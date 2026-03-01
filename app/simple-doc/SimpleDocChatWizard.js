@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SIMPLE_DOC_TYPES } from '../../lib/simple-doc-config';
 import { useDraftSave } from '../../lib/useDraftSave';
+import Navbar from '../components/Navbar';
 
 const SendIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>);
 const GlobeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>);
@@ -509,6 +510,8 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   const progress = QUESTIONS.length > 0 ? Math.round((answeredCount / QUESTIONS.length) * 100) : 0;
 
   return (
+    <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <Navbar lang={language} currentPath={typeof window !== 'undefined' ? window.location.pathname : ''} />
     <div style={st.container}>
       <div style={st.inner}>
         {/* Header - matches POA exactly */}
@@ -895,6 +898,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
           <p style={{ margin: 0 }}>Multi Servicios 360 | www.multiservicios360.net | 855.246.7274</p>
         </div>
       </div>
+    </div>
     </div>
   );
 }

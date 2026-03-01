@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Navbar from '../components/Navbar';
 
 // ── ICONS ──────────────────────────────────────────────────────────────
 const ScrollIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/></svg>);
@@ -390,22 +391,7 @@ export default function FamiliaClient({ lang = 'es' }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
 
       <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh' }}>
-
-        {/* ── NAV ─────────────────────────────────────────── */}
-        <nav style={{ backgroundColor: '#0F172A', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>
-          <Link href={lang === 'es' ? '/' : '/en'} style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg,#2563EB,#7C3AED)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '13px' }}>M360</div>
-            <span style={{ color: 'white', fontWeight: '700', fontSize: '16px' }}>Multi Servicios 360</span>
-          </Link>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <Link href={lang === 'es' ? '/trust' : '/en/trust'} style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '14px' }}>{t.nav.trust}</Link>
-            <Link href={lang === 'es' ? '/poa' : '/en/poa'} style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '14px' }}>{t.nav.poa}</Link>
-            <Link href={lang === 'es' ? '/negocios' : '/en/business'} style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '14px' }}>{lang === 'es' ? 'Negocios' : 'Business'}</Link>
-            <Link href={t.langSwitchUrl} style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'white', backgroundColor: '#1E3A8A', padding: '6px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', textDecoration: 'none' }}>
-              <GlobeIcon /> {t.langSwitch}
-            </Link>
-          </div>
-        </nav>
+        <Navbar lang={t.lang} currentPath={t.lang === 'es' ? '/planificacion-familiar' : '/en/family-planning'} />
 
         {/* ── HERO ─────────────────────────────────────────── */}
         <section style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 40%, #4338CA 100%)', padding: '72px 24px 80px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>

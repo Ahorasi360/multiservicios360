@@ -447,20 +447,29 @@ export default function HomeClient({ lang = 'es' }) {
               </div>
             </div>
             <div className="hero-preview" style={{ display: 'flex', justifyContent: 'center' }}>
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '32px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  {[
-                    { icon: <ScaleIcon />, label: 'General POA', link: '/poa' },
-                    { icon: <FileTextIcon />, label: 'Limited POA', link: '/limited-poa' },
-                    { icon: <HomeIcon />, label: 'Living Trust', link: '/trust' },
-                    { icon: <BuildingIcon />, label: 'LLC', link: '/llc' },
-                  ].map((item, i) => (
-                    <Link key={i} href={item.link} style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '14px', padding: '20px', textAlign: 'center', textDecoration: 'none', color: 'white', transition: 'background 0.2s' }}>
-                      <div style={{ marginBottom: '8px', opacity: '0.9' }}>{item.icon}</div>
-                      <div style={{ fontWeight: '700', fontSize: '14px' }}>{item.label}</div>
-                    </Link>
-                  ))}
+              <div style={{ backgroundColor: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '32px', border: '1px solid rgba(255,255,255,0.15)', maxWidth: '340px', width: '100%' }}>
+                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '16px' }}>
+                  {language === 'es' ? '✅ Documentos Disponibles' : '✅ Available Documents'}
                 </div>
+                {[
+                  { emoji: '⚖️', label: language === 'es' ? 'Poder Notarial General' : 'General Power of Attorney', url: '/poa', price: '$199' },
+                  { emoji: '🏡', label: language === 'es' ? 'Fideicomiso en Vida' : 'Living Trust', url: '/trust', price: '$499+' },
+                  { emoji: '🏗️', label: language === 'es' ? 'Formación de LLC' : 'LLC Formation', url: '/llc', price: '$299+' },
+                  { emoji: '📋', label: language === 'es' ? 'Testamento Simple' : 'Simple Will', url: '/simple-will', price: '$149' },
+                  { emoji: '🏢', label: language === 'es' ? 'S-Corporation' : 'S-Corporation', url: '/s-corp-formation', price: '$499' },
+                ].map((item, i) => (
+                  <a key={i} href={item.url} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', marginBottom: '8px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '10px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', transition: 'background 0.2s' }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}>
+                    <span style={{ color: 'white', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>{item.emoji}</span> {item.label}
+                    </span>
+                    <span style={{ color: '#FCD34D', fontSize: '13px', fontWeight: '700', flexShrink: 0 }}>{item.price}</span>
+                  </a>
+                ))}
+                <a href={language === 'es' ? '/mas-servicios' : '/en/more-services'} style={{ display: 'block', textAlign: 'center', padding: '10px', color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none', marginTop: '4px' }}>
+                  {language === 'es' ? 'Ver todos los servicios →' : 'View all services →'}
+                </a>
               </div>
             </div>
           </div>
