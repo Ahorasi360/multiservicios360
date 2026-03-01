@@ -6,7 +6,7 @@ excerpt_en: "Costa Rica has tightened its immigration controls for minors. Panam
 category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/carta-viaje-costa-rica-2026.jpg
+image: /blog/carta-viaje-costa-rica-menores-2026.jpg
 ---
 
 Costa Rica, Panamá y Nicaragua son tres países con contextos muy diferentes pero con algo en común: los tres exigen documentación formal cuando un menor de edad viaja sin ambos padres.

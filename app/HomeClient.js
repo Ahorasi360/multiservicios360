@@ -447,27 +447,27 @@ export default function HomeClient({ lang = 'es' }) {
               </div>
             </div>
             <div className="hero-preview" style={{ display: 'flex', justifyContent: 'center' }}>
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '32px', border: '1px solid rgba(255,255,255,0.15)', maxWidth: '340px', width: '100%' }}>
-                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '16px' }}>
-                  {language === 'es' ? '✅ Documentos Disponibles' : '✅ Available Documents'}
+              <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '28px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', fontWeight: '600', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px', textAlign: 'center' }}>
+                  {language === 'es' ? '— Documentos Principales —' : '— Main Documents —'}
                 </div>
-                {[
-                  { emoji: '⚖️', label: language === 'es' ? 'Poder Notarial General' : 'General Power of Attorney', url: '/poa', price: '$199' },
-                  { emoji: '🏡', label: language === 'es' ? 'Fideicomiso en Vida' : 'Living Trust', url: '/trust', price: '$499+' },
-                  { emoji: '🏗️', label: language === 'es' ? 'Formación de LLC' : 'LLC Formation', url: '/llc', price: '$299+' },
-                  { emoji: '📋', label: language === 'es' ? 'Testamento Simple' : 'Simple Will', url: '/simple-will', price: '$149' },
-                  { emoji: '🏢', label: language === 'es' ? 'S-Corporation' : 'S-Corporation', url: '/s-corp-formation', price: '$499' },
-                ].map((item, i) => (
-                  <a key={i} href={item.url} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', marginBottom: '8px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '10px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', transition: 'background 0.2s' }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)'}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}>
-                    <span style={{ color: 'white', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span>{item.emoji}</span> {item.label}
-                    </span>
-                    <span style={{ color: '#FCD34D', fontSize: '13px', fontWeight: '700', flexShrink: 0 }}>{item.price}</span>
-                  </a>
-                ))}
-                <a href={language === 'es' ? '/mas-servicios' : '/en/more-services'} style={{ display: 'block', textAlign: 'center', padding: '10px', color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none', marginTop: '4px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  {[
+                    { icon: '⚖️', label: language === 'es' ? 'Poder Notarial\nGeneral' : 'General Power\nof Attorney', price: '$199', url: '/poa', color: 'rgba(59,130,246,0.25)' },
+                    { icon: '🏡', label: language === 'es' ? 'Fideicomiso\nen Vida' : 'Living\nTrust', price: '$499+', url: '/trust', color: 'rgba(16,185,129,0.25)' },
+                    { icon: '🏗️', label: language === 'es' ? 'Formación\nde LLC' : 'LLC\nFormation', price: '$299+', url: '/llc', color: 'rgba(139,92,246,0.25)' },
+                    { icon: '📄', label: language === 'es' ? 'Testamento\nSimple' : 'Last Will &\nTestament', price: '$149', url: '/simple-will', color: 'rgba(245,158,11,0.25)' },
+                  ].map((item, i) => (
+                    <a key={i} href={item.url} style={{ backgroundColor: item.color, borderRadius: '14px', padding: '18px 14px', textAlign: 'center', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.15)', display: 'block', transition: 'transform 0.15s, background 0.15s' }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.backgroundColor = item.color; }}>
+                      <div style={{ fontSize: '28px', marginBottom: '8px' }}>{item.icon}</div>
+                      <div style={{ color: 'white', fontSize: '12px', fontWeight: '600', lineHeight: '1.3', whiteSpace: 'pre-line', marginBottom: '6px' }}>{item.label}</div>
+                      <div style={{ color: '#FCD34D', fontSize: '13px', fontWeight: '700' }}>{item.price}</div>
+                    </a>
+                  ))}
+                </div>
+                <a href={language === 'es' ? '/mas-servicios' : '/en/more-services'} style={{ display: 'block', textAlign: 'center', padding: '10px', color: 'rgba(255,255,255,0.65)', fontSize: '12px', textDecoration: 'none', marginTop: '12px' }}>
                   {language === 'es' ? 'Ver todos los servicios →' : 'View all services →'}
                 </a>
               </div>

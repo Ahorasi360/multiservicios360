@@ -6,7 +6,7 @@ excerpt_en: "Colombia is one of the strictest countries in Latin America. The IC
 category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/carta-viaje-colombia-2026.jpg
+image: /blog/carta-viaje-colombia-menores-2026.jpg
 ---
 
 Colombia tiene uno de los sistemas de protección de menores más estrictos de toda América Latina. El **Instituto Colombiano de Bienestar Familiar (ICBF)** supervisa activamente las salidas de menores del país, y las autoridades migratorias en el aeropuerto **sí retienen a menores** que no presentan la documentación correcta.

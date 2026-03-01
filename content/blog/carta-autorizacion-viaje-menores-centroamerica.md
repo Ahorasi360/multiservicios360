@@ -6,7 +6,7 @@ excerpt_en: "If your child travels to Central America without both parents, the 
 category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/carta-viaje-guatemala-2026.jpg
+image: /blog/carta-viaje-centroamerica-menores-2026.jpg
 ---
 
 Para millones de familias salvadoreñas, guatemaltecas, y hondureñas que viven en California, los viajes al país de origen son parte fundamental de la vida familiar. Los niños van a ver a los abuelos, a las fiestas del pueblo, a los quinceaños de los primos. Pero cada vez más, las autoridades migratorias en estos países están exigiendo documentación formal cuando un menor viaja sin ambos padres.

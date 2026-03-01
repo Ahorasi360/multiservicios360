@@ -6,7 +6,7 @@ excerpt_en: "All three Andean countries have strict requirements for minors trav
 category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/carta-viaje-peru-2026.jpg
+image: /blog/carta-viaje-peru-menores-2026.jpg
 ---
 
 Los países andinos — Perú, Ecuador, y Bolivia — tienen comunidades grandes en California, especialmente en Los Ángeles, San Francisco, y el Valle Central. Cuando las familias viajan de regreso, o cuando envían a los niños a pasar el verano con los abuelos, la carta de autorización de viaje es un requisito que no puede ignorarse.
