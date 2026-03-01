@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getGuide, ALL_SLUGS } from '../../../lib/guides-config';
-import GuiaClient from './GuiaClient';
+import { getGuide, ALL_SLUGS } from '../../../../lib/guides-config';
+import GuiaClient from '../../../guias/[slug]/GuiaClient';
 
 export async function generateStaticParams() {
   return ALL_SLUGS.map(slug => ({ slug }));
@@ -8,26 +8,26 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const guide = getGuide(slug, 'es');
-  if (!guide) return { title: 'Guía no encontrada' };
+  const guide = getGuide(slug, 'en');
+  if (!guide) return { title: 'Guide not found' };
 
   return {
     title: guide.metaTitle,
     description: guide.metaDesc,
     alternates: {
-      canonical: `https://multiservicios360.net/guias/${slug}`,
+      canonical: `https://multiservicios360.net/en/guias/${slug}`,
       languages: {
-        'es': `https://multiservicios360.net/guias/${slug}`,
         'en': `https://multiservicios360.net/en/guias/${slug}`,
-        'x-default': `https://multiservicios360.net/guias/${slug}`,
+        'es': `https://multiservicios360.net/guias/${slug}`,
+        'x-default': `https://multiservicios360.net/en/guias/${slug}`,
       },
     },
     openGraph: {
       title: guide.metaTitle,
       description: guide.metaDesc,
-      url: `https://multiservicios360.net/guias/${slug}`,
+      url: `https://multiservicios360.net/en/guias/${slug}`,
       siteName: 'Multi Servicios 360',
-      locale: 'es_US',
+      locale: 'en_US',
       type: 'article',
     },
     robots: {
@@ -38,9 +38,9 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function GuiaPage({ params }) {
+export default function GuidePageEn({ params }) {
   const { slug } = params;
-  const guide = getGuide(slug, 'es');
+  const guide = getGuide(slug, 'en');
   if (!guide) notFound();
-  return <GuiaClient guide={guide} slug={slug} lang="es" />;
+  return <GuiaClient guide={guide} slug={slug} lang="en" />;
 }

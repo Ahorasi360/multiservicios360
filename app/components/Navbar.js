@@ -23,6 +23,7 @@ export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = 
     more: isEs ? 'Más' : 'More',
     whyUs: isEs ? '¿Por Qué Nosotros?' : 'Why Us?',
     blog: 'Blog',
+    guides: isEs ? 'Guías' : 'Guides',
     contact: isEs ? 'Contacto' : 'Contact',
     disclosure: isEs
       ? 'Multi Servicios 360 no es un bufete de abogados y no proporciona asesoría legal. Este es un servicio de preparación de documentos de autoayuda.'
@@ -110,6 +111,7 @@ export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = 
 
             <Link href={isEs ? '/por-que-nosotros' : '/en/why-us'} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px', padding: '8px 12px' }}>{t.whyUs}</Link>
             <Link href={isEs ? '/blog' : '/en/blog'} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px', padding: '8px 12px' }}>{t.blog}</Link>
+            <Link href={isEs ? '/guias' : '/en/guias'} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px', padding: '8px 12px' }}>{t.guides}</Link>
             <Link href={isEs ? '/contacto' : '/en/contact'} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px', padding: '8px 12px' }}>{t.contact}</Link>
 
             {/* Language toggle */}
@@ -149,6 +151,7 @@ export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = 
               <div style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '8px 0' }} />
               <Link href={isEs ? '/por-que-nosotros' : '/en/why-us'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.whyUs}</Link>
               <Link href={isEs ? '/blog' : '/en/blog'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.blog}</Link>
+              <Link href={isEs ? '/guias' : '/en/guias'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.guides}</Link>
               <Link href={isEs ? '/contacto' : '/en/contact'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.contact}</Link>
               <Link href={altLangUrl}
                 style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px' }}>
