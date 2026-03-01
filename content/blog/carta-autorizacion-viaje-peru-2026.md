@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-peru-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Perú →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Peru →"
 ---
 
 Perú es un destino muy popular para la comunidad peruana residente en Estados Unidos. Lima, Cusco, Machu Picchu, Arequipa y otras ciudades reciben miles de visitantes cada año. Pero muchos padres no saben que **Migraciones Perú** tiene controles estrictos para la salida e ingreso de menores sin ambos padres.

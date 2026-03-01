@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-17
 author: Multi Servicios 360
 image: /blog/travel-authorization.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta de Autorización de Viaje →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Travel Authorization Letter →"
 ---
 
 Cada verano, miles de familias latinas envían a sus hijos a visitar a los abuelos en México, Guatemala, Honduras, El Salvador, Colombia, Perú, o República Dominicana. A veces viajan con papá, a veces con mamá, a veces con un tío o una abuela. Y cada verano, familias son detenidas en el aeropuerto o en la frontera porque no tienen un documento que demuestre que el padre ausente autorizó el viaje.

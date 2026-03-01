@@ -8,6 +8,10 @@ date: 2026-02-22
 author: Multi Servicios 360
 image: /blog/guardian-hijos-proteger-2026.jpg
 published: true
+cta_url: "/guardianship"
+cta_label: "Designar Guardián para Mis Hijos →"
+cta_url_en: "/en/guardianship"
+cta_label_en: "Designate Guardian for My Children →"
 ---
 
 Hay una pregunta que todo padre debería hacerse hoy: **"¿Quién cuidará a mis hijos si algo me pasa?"**

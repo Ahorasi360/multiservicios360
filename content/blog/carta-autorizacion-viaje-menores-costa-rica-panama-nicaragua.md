@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-costa-rica-menores-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Costa Rica/Panamá →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Costa Rica/Panama →"
 ---
 
 Costa Rica, Panamá y Nicaragua son tres países con contextos muy diferentes pero con algo en común: los tres exigen documentación formal cuando un menor de edad viaja sin ambos padres.

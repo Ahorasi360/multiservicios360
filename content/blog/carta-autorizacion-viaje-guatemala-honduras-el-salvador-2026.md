@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-triangulo-norte-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Centroamérica →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Central America →"
 ---
 
 Las tres naciones del Triángulo Norte de Centroamérica — Guatemala, Honduras y El Salvador — comparten requisitos similares para menores que viajan sin ambos padres. Si su familia tiene raíces en cualquiera de estos países y planea visitar durante las vacaciones de verano, Semana Santa, o Navidad, necesita preparar la documentación con anticipación.

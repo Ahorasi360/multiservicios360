@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-14
 author: Multi Servicios 360
 image: /blog/bill-of-sale.jpg
+cta_url: "/bill-of-sale"
+cta_label: "Preparar Mi Carta de Venta →"
+cta_url_en: "/en/bill-of-sale"
+cta_label_en: "Prepare My Bill of Sale →"
 ---
 
 Una **Carta de Venta** (Bill of Sale) es uno de los documentos legales más comunes y más importantes en California. Ya sea que esté vendiendo un vehículo, equipo de trabajo, muebles, o cualquier bien personal, este documento protege tanto al vendedor como al comprador.

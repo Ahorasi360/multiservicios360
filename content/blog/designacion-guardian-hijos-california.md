@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-14
 author: Multi Servicios 360
 image: /blog/guardianship-designation.jpg
+cta_url: "/guardianship"
+cta_label: "Designar Guardián para Mis Hijos →"
+cta_url_en: "/en/guardianship"
+cta_label_en: "Designate Guardian for My Children →"
 ---
 
 Nadie quiere pensar en lo que pasaría si uno ya no puede cuidar a sus hijos. Pero la realidad es que accidentes, enfermedades, y emergencias pueden ocurrir en cualquier momento. Si usted no ha dejado instrucciones claras sobre quién cuidará a sus hijos, un tribunal tomará esa decisión por usted — y puede no ser la persona que usted habría elegido.

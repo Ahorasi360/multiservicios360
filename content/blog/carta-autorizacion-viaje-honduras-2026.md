@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-honduras-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Honduras →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Honduras →"
 ---
 
 Honduras es un destino muy visitado por la comunidad hondureña residente en Estados Unidos. Cada año, miles de familias viajan con sus hijos a Tegucigalpa, San Pedro Sula, La Ceiba y otras ciudades. Lo que muchos no saben es que Honduras tiene regulaciones específicas para el ingreso de menores sin ambos padres.

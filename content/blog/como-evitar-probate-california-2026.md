@@ -8,6 +8,10 @@ date: 2026-02-23
 author: Multi Servicios 360
 image: /blog/evitar-probate-california-2026.jpg
 published: true
+cta_url: "/trust"
+cta_label: "Evitar Probate con Mi Fideicomiso →"
+cta_url_en: "/en/trust"
+cta_label_en: "Avoid Probate with a Living Trust →"
 ---
 
 El probate puede costarle a tu familia entre **$10,000 y $30,000** y más de 18 meses de trámites. Aquí están las 5 estrategias que los californianos más inteligentes usan para evitarlo completamente.

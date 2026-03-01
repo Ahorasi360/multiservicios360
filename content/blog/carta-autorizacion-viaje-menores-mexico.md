@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-mexico-menores-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para México →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Mexico →"
 ---
 
 Cada año, millones de familias latinas viajan entre California y México. Cancún en verano, Ciudad de México para las fiestas, Jalisco para visitar a los abuelos. Pero si su hijo menor de edad viaja sin ambos padres, la ley mexicana exige un documento específico — y muchas familias lo descubren hasta que ya es demasiado tarde, en el aeropuerto o en la frontera.

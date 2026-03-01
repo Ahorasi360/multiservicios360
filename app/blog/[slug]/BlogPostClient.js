@@ -370,6 +370,30 @@ export default function BlogPostClient({ post, relatedPosts, lang }) {
 
         <div className="prose-custom" dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
 
+        {/* Per-post primary CTA — driven by frontmatter cta_url / cta_label */}
+        {(lang === 'en' ? post.cta_url_en : post.cta_url) && (
+          <div className="my-8 rounded-2xl overflow-hidden border-2 border-blue-700 shadow-lg">
+            <div className="bg-gradient-to-r from-blue-800 to-blue-900 px-6 py-5 flex flex-col sm:flex-row items-center gap-4 justify-between">
+              <div>
+                <p className="text-white font-extrabold text-lg leading-tight mb-1">
+                  {lang === 'en' ? '✅ Ready to prepare your document?' : '✅ ¿Listo para preparar su documento?'}
+                </p>
+                <p className="text-blue-200 text-sm">
+                  {lang === 'en' ? 'Complete the process online in minutes — in English or Spanish.' : 'Complételo en línea en minutos — en español o inglés.'}
+                </p>
+              </div>
+              <Link
+                href={lang === 'en' ? post.cta_url_en : post.cta_url}
+                className="no-underline whitespace-nowrap"
+              >
+                <span className="inline-block bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-extrabold text-sm px-6 py-3 rounded-xl shadow-md transition-colors">
+                  {lang === 'en' ? (post.cta_label_en || 'Prepare My Document →') : (post.cta_label || 'Preparar Mi Documento →')}
+                </span>
+              </Link>
+            </div>
+          </div>
+        )}
+
         <ShareButtons title={title} slug={post.slug} lang={lang} shareLabel={t.share} copyLabel={t.copyLink} copiedLabel={t.copied} />
       </article>
 

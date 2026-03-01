@@ -8,6 +8,10 @@ date: 2026-02-25
 author: Multi Servicios 360
 image: /blog/llc-california-paso-a-paso-2026.jpg
 published: true
+cta_url: "/llc"
+cta_label: "Formar Mi LLC en California →"
+cta_url_en: "/en/llc"
+cta_label_en: "Form My California LLC →"
 ---
 
 ¿Sabías que sin una LLC, si tu negocio enfrenta una demanda, pueden quitarte tu casa, tu auto y tus ahorros? Con una LLC, tu patrimonio personal queda **completamente protegido**.

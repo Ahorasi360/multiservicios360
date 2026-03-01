@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-colombia-menores-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Colombia →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Colombia →"
 ---
 
 Colombia tiene uno de los sistemas de protección de menores más estrictos de toda América Latina. El **Instituto Colombiano de Bienestar Familiar (ICBF)** supervisa activamente las salidas de menores del país, y las autoridades migratorias en el aeropuerto **sí retienen a menores** que no presentan la documentación correcta.

@@ -8,6 +8,10 @@ date: 2026-02-26
 author: Multi Servicios 360
 image: /blog/fideicomiso-vs-testamento-2026.jpg
 published: true
+cta_url: "/trust"
+cta_label: "Crear Mi Fideicomiso en Vida →"
+cta_url_en: "/en/trust"
+cta_label_en: "Create My Living Trust →"
 ---
 
 ¿Testamento o fideicomiso en vida? Esta es la pregunta más importante para tu planificación patrimonial — y la respuesta puede ahorrar a tu familia **$10,000–$30,000** y más de 18 meses de trámites legales.

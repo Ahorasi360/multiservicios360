@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-argentina-region-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Cono Sur →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for South America →"
 ---
 
 Los países del Cono Sur — Argentina, Chile, y Uruguay — son destinos frecuentes para familias latinoamericanas en California que tienen familiares allá o que viajan por turismo. Estos tres países tienen sistemas migratorios modernos y bien organizados que aplican rigurosamente los requisitos de protección de menores.

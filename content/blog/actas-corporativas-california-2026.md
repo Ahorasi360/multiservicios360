@@ -8,6 +8,10 @@ category: "Negocios"
 tags: ["actas corporativas", "corporate minutes", "corporate veil", "S-Corp", "C-Corp", "California", "protección corporativa"]
 author: "Multi Servicios 360"
 readTime: "8 min"
+cta_url: "/corporate-minutes"
+cta_label: "Preparar Mis Actas Corporativas →"
+cta_url_en: "/en/corporate-minutes"
+cta_label_en: "Prepare My Corporate Minutes →"
 ---
 
 # Actas Corporativas en California: Por Qué su S-Corp o C-Corp las Necesita Obligatoriamente

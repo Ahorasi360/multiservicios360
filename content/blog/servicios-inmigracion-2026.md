@@ -7,6 +7,10 @@ category: immigration
 date: 2026-02-10
 author: Multi Servicios 360
 image: /blog/immigration-services.jpg
+cta_url: "/mas-servicios"
+cta_label: "Ver Todos Nuestros Servicios →"
+cta_url_en: "/en/more-services"
+cta_label_en: "See All Our Services →"
 ---
 
 En Multi Servicios 360, sabemos que los servicios de inmigración son una de las necesidades más grandes de nuestra comunidad. Por eso estamos trabajando para lanzar un nuevo módulo de **preparación de documentos de inmigración**.

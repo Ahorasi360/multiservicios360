@@ -8,6 +8,10 @@ category: "Negocios"
 tags: ["resolución bancaria", "banking resolution", "cuenta corporativa", "banco", "S-Corp", "C-Corp", "California"]
 author: "Multi Servicios 360"
 readTime: "6 min"
+cta_url: "/banking-resolution"
+cta_label: "Preparar Mi Resolución Bancaria →"
+cta_url_en: "/en/banking-resolution"
+cta_label_en: "Prepare My Banking Resolution →"
 ---
 
 # Resolución Bancaria: El Documento que Necesita para Abrir su Cuenta Corporativa

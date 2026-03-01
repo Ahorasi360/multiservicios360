@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-panama-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Panamá →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Panama →"
 ---
 
 Panamá es un hub de conexiones para toda América Latina y también un destino turístico popular para familias de origen panameño y centroamericano residentes en Estados Unidos. El **Servicio Nacional de Migración** de Panamá tiene protocolos estrictos para el ingreso y salida de menores de edad.

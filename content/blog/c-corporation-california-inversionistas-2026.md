@@ -8,6 +8,10 @@ category: "Negocios"
 tags: ["C-Corporation", "C-Corp", "inversionistas", "venture capital", "California", "startups", "negocios latinos"]
 author: "Multi Servicios 360"
 readTime: "8 min"
+cta_url: "/c-corp-formation"
+cta_label: "Formar Mi C-Corporation — $499 →"
+cta_url_en: "/en/c-corp-formation"
+cta_label_en: "Form My C-Corporation — $499 →"
 ---
 
 # C-Corporation en California: La Estructura para Crecer, Atraer Inversión e Ir a Bolsa

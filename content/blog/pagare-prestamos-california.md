@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-14
 author: Multi Servicios 360
 image: /blog/promissory-note.jpg
+cta_url: "/promissory-note"
+cta_label: "Preparar Mi Pagaré →"
+cta_url_en: "/en/promissory-note"
+cta_label_en: "Prepare My Promissory Note →"
 ---
 
 En la comunidad latina, es muy común prestar dinero entre familia y amigos. Un hermano necesita capital para su negocio, un primo necesita un adelanto para el depósito de renta, o un compadre necesita ayuda temporal. Es una tradición hermosa de apoyo mutuo — pero cuando no se documenta, puede crear problemas serios.

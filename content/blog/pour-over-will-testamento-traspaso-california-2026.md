@@ -8,6 +8,10 @@ category: "Planificación Patrimonial"
 tags: ["pour-over will", "testamento traspaso", "fideicomiso", "living trust", "California", "planificación patrimonial"]
 author: "Multi Servicios 360"
 readTime: "7 min"
+cta_url: "/pour-over-will"
+cta_label: "Preparar Mi Pour-Over Will →"
+cta_url_en: "/en/pour-over-will"
+cta_label_en: "Prepare My Pour-Over Will →"
 ---
 
 # Pour-Over Will: El Documento que su Fideicomiso Necesita para Estar Completo

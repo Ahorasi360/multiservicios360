@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-panama-region-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Centroamérica →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Central America →"
 ---
 
 Panamá, Costa Rica, Nicaragua y Cuba representan cuatro destinos distintos de Centroamérica y el Caribe, cada uno con sus particularidades para viajeros con menores sin ambos padres. Aquí están los requisitos actualizados para 2026.

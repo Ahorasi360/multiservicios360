@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-centroamerica-menores-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Centroamérica →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Central America →"
 ---
 
 Para millones de familias salvadoreñas, guatemaltecas, y hondureñas que viven en California, los viajes al país de origen son parte fundamental de la vida familiar. Los niños van a ver a los abuelos, a las fiestas del pueblo, a los quinceaños de los primos. Pero cada vez más, las autoridades migratorias en estos países están exigiendo documentación formal cuando un menor viaja sin ambos padres.

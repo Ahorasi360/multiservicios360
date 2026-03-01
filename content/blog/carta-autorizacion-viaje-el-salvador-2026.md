@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-el-salvador-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para El Salvador →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for El Salvador →"
 ---
 
 La comunidad salvadoreña es una de las más grandes en Estados Unidos, especialmente en California, Virginia, Texas y Nueva York. Muchas familias viajan a El Salvador para visitar a sus seres queridos, y es fundamental que preparen correctamente la documentación de sus hijos menores de edad.

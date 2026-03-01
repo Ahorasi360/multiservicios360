@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-chile-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Chile →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Chile →"
 ---
 
 Chile es uno de los países más desarrollados de América del Sur y un destino visitado tanto por turismo como para visitas familiares. La comunidad chilena en Estados Unidos se concentra principalmente en California, Florida, Nueva York y Texas.

@@ -7,6 +7,10 @@ category: community
 date: 2026-02-10
 author: Multi Servicios 360
 image: /blog/family-documents.jpg
+cta_url: "/mas-servicios"
+cta_label: "Ver Todos Nuestros Documentos →"
+cta_url_en: "/en/more-services"
+cta_label_en: "See All Our Documents →"
 ---
 
 Como familia latina en California, usted trabaja duro todos los días para darle un mejor futuro a los suyos. Pero hay algo que muchas familias pasan por alto: **los documentos legales que protegen todo lo que han construido**.

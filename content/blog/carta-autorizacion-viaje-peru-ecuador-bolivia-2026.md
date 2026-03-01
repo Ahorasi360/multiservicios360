@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-peru-region-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Perú/Ecuador/Bolivia →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Peru/Ecuador/Bolivia →"
 ---
 
 Las comunidades peruanas, ecuatorianas y bolivianas en Estados Unidos son grandes y crecientes, especialmente en ciudades como Los Ángeles, Miami, Nueva York y Chicago. Cada verano, miles de familias de estas comunidades viajan con sus hijos a visitar familia en Lima, Guayaquil, Quito, La Paz y otras ciudades. Los tres países tienen requisitos claros para menores que viajan sin ambos padres.

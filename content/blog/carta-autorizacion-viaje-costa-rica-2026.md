@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-costa-rica-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Costa Rica →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Costa Rica →"
 ---
 
 Costa Rica es uno de los destinos más visitados de Centroamérica, conocido por su biodiversidad, sus playas en el Pacífico y el Caribe, y su estabilidad. Muchas familias de origen costarricense residentes en Estados Unidos viajan regularmente a visitar a sus familias. Lo que no todos saben es que Costa Rica tiene uno de los sistemas de protección de menores más estrictos de la región.

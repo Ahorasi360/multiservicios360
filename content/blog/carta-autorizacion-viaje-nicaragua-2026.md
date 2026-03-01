@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-nicaragua-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Nicaragua →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Nicaragua →"
 ---
 
 Nicaragua tiene una de las comunidades de migrantes más grandes en Estados Unidos, con importantes concentraciones en Miami, Los Ángeles y Houston. Muchas familias realizan viajes frecuentes para visitar a parientes en Managua, León, Granada, Matagalpa y otras ciudades.

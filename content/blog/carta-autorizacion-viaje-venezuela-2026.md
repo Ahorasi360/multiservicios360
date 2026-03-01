@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-venezuela-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Venezuela →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Venezuela →"
 ---
 
 La comunidad venezolana en Estados Unidos ha crecido significativamente en los últimos años, con grandes concentraciones en Miami, Houston, Nueva York y otras ciudades. Muchas familias mantienen contacto con sus seres queridos en Venezuela y, aunque los viajes son menos frecuentes por la situación del país, siguen ocurriendo.

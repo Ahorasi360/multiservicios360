@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-mexico-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para México →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Mexico →"
 ---
 
 Cada año, miles de familias latinas en California, Texas, Illinois y Florida envían a sus hijos a visitar abuelos, tíos, y primos en México. A veces viajan con mamá, a veces con papá, a veces con un familiar. Lo que muchas familias no saben es que la ley mexicana exige un documento específico cuando un menor viaja sin ambos padres.

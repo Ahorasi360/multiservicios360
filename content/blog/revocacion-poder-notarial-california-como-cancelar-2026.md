@@ -8,6 +8,10 @@ date: 2026-02-21
 author: Multi Servicios 360
 image: /blog/revocacion-poder-notarial-2026.jpg
 published: true
+cta_url: "/revocation-poa"
+cta_label: "Preparar Mi Revocación de Poder →"
+cta_url_en: "/en/revocation-poa"
+cta_label_en: "Prepare My POA Revocation →"
 ---
 
 Muchas personas crean un poder notarial y luego se olvidan de él. Pero las situaciones cambian — y un poder que no revocas sigue siendo completamente válido, aunque ya no lo quieras.

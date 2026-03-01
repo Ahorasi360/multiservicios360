@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-14
 author: Multi Servicios 360
 image: /blog/revocation-poa.jpg
+cta_url: "/revocation-poa"
+cta_label: "Preparar Mi Revocación de Poder →"
+cta_url_en: "/en/revocation-poa"
+cta_label_en: "Prepare My POA Revocation →"
 ---
 
 ¿Otorgó un poder notarial a alguien y ahora necesita cancelarlo? Tal vez las circunstancias cambiaron, la relación se deterioró, o simplemente ya no necesita que esa persona actúe en su nombre. La buena noticia es que en California, **usted tiene el derecho absoluto de revocar un poder notarial en cualquier momento**, siempre que tenga capacidad mental para hacerlo.

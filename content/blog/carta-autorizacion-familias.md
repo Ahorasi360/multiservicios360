@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-14
 author: Multi Servicios 360
 image: /blog/authorization-letter.jpg
+cta_url: "/authorization-letter"
+cta_label: "Preparar Mi Carta de Autorización →"
+cta_url_en: "/en/authorization-letter"
+cta_label_en: "Prepare My Authorization Letter →"
 ---
 
 En muchas familias latinas, es común que los abuelos, tíos, o hermanos mayores se encarguen de los hijos mientras los padres trabajan. Pero cuando llega el momento de recoger a un niño de la escuela, llevarlo al doctor, o hacer un trámite, la pregunta siempre es la misma: *"¿Y dónde está la autorización?"*

@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-argentina-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Argentina →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Argentina →"
 ---
 
 Argentina tiene una de las legislaciones más protectoras de menores en toda América Latina. Buenos Aires, Córdoba, Rosario, Mendoza y otros destinos reciben a miles de visitantes de la comunidad argentina residente en Estados Unidos cada año.

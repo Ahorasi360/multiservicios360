@@ -8,6 +8,10 @@ date: 2026-02-24
 author: Multi Servicios 360
 image: /blog/poder-limitado-inmobiliario-2026.jpg
 published: true
+cta_url: "/limited-poa"
+cta_label: "Preparar Mi Poder Notarial Limitado →"
+cta_url_en: "/en/limited-poa"
+cta_label_en: "Prepare My Limited Power of Attorney →"
 ---
 
 Estás en México visitando familia y tu casa en California entra en escrow. Necesitas que alguien firme por ti. La solución: un **poder notarial limitado para bienes raíces**.

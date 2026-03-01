@@ -7,6 +7,10 @@ category: immigration
 date: 2026-02-04
 author: Multi Servicios 360
 image: /blog/formularios-inmigracion.jpg
+cta_url: "/mas-servicios"
+cta_label: "Ver Todos Nuestros Servicios →"
+cta_url_en: "/en/more-services"
+cta_label_en: "See All Our Services →"
 ---
 
 El camino hacia la residencia permanente o la ciudadanía estadounidense puede ser complejo, lleno de formularios y requisitos específicos. Para la comunidad hispana, comprender estos documentos es el primer paso para navegar con éxito el sistema de inmigración. En Multiservicios 360, aunque no brindamos asesoría legal, facilitamos la preparación de algunos de los formularios más cruciales. Aquí te explicamos la importancia de los formularios N-400, I-130 e I-485.

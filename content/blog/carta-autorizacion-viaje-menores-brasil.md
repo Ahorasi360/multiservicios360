@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-brasil-menores-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Brasil →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Brazil →"
 ---
 
 Si hay un país donde la carta de autorización de viaje para menores es absolutamente crítica, ese país es **Brasil**. La Policía Federal de Brasil, que controla los puntos de entrada y salida del país, tiene una de las políticas más estrictas del hemisferio cuando se trata de proteger a los menores de la sustracción internacional.

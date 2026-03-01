@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-02
 author: Multi Servicios 360
 image: /blog/poa-general-vs-limitado.jpg
+cta_url: "/poa"
+cta_label: "Preparar Mi Poder Notarial →"
+cta_url_en: "/en/poa"
+cta_label_en: "Prepare My Power of Attorney →"
 ---
 
 En la vida, pueden surgir situaciones inesperadas que nos impidan tomar decisiones importantes sobre nuestras finanzas o nuestra salud. Para estos momentos, contar con un **Poder Notarial** es fundamental. Pero, ¿sabías que existen diferentes tipos? En California, los más comunes son el Poder Notarial General y el Poder Notarial Limitado. Entender sus diferencias es clave para elegir el que mejor se adapte a tus necesidades.

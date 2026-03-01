@@ -7,6 +7,10 @@ category: legal
 date: 2026-01-28
 author: Multi Servicios 360
 image: /blog/llc-formation.jpg
+cta_url: "/llc"
+cta_label: "Formar Mi LLC en California →"
+cta_url_en: "/en/llc"
+cta_label_en: "Form My California LLC →"
 ---
 
 Formar una **LLC (Compañía de Responsabilidad Limitada)** en California es el primer paso para proteger su negocio y sus bienes personales. Aquí le explicamos todo el proceso.

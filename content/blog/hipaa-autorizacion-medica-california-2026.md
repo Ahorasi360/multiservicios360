@@ -8,6 +8,10 @@ category: "Planificación Familiar"
 tags: ["HIPAA", "autorización médica", "información médica", "emergencia", "California", "familias latinas"]
 author: "Multi Servicios 360"
 readTime: "7 min"
+cta_url: "/hipaa-authorization"
+cta_label: "Preparar Mi Autorización HIPAA →"
+cta_url_en: "/en/hipaa-authorization"
+cta_label_en: "Prepare My HIPAA Authorization →"
 ---
 
 # Autorización HIPAA en California: Por qué su Familia No Puede Esperar

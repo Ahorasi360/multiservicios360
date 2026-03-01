@@ -7,6 +7,10 @@ category: legal
 date: 2026-01-30
 author: Multi Servicios 360
 image: /blog/poa-inmobiliario.jpg
+cta_url: "/limited-poa"
+cta_label: "Preparar Mi Poder Notarial Limitado →"
+cta_url_en: "/en/limited-poa"
+cta_label_en: "Prepare My Limited Power of Attorney →"
 ---
 
 Las transacciones inmobiliarias en California pueden ser complejas y requerir la presencia o firma de todas las partes involucradas. Sin embargo, hay situaciones en las que no siempre es posible estar presente o manejar personalmente cada detalle. Aquí es donde un **Poder Notarial Limitado** se convierte en una herramienta excepcionalmente útil, especialmente para la comunidad hispana que busca eficiencia y claridad en sus gestiones de bienes raíces.

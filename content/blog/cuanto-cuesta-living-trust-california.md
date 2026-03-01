@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-12
 author: Multi Servicios 360
 image: /blog/living-trust-cost.jpg
+cta_url: "/trust"
+cta_label: "Crear Mi Fideicomiso — Desde $599 →"
+cta_url_en: "/en/trust"
+cta_label_en: "Create My Trust — From $599 →"
 ---
 
 Si está pensando en proteger a su familia y sus bienes, probablemente se ha preguntado: **¿cuánto cuesta un Living Trust en California?** Es una de las preguntas más comunes que recibimos, y la respuesta puede sorprenderlo.

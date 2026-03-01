@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-03
 author: Multi Servicios 360
 image: /blog/guia-llc.jpg
+cta_url: "/llc"
+cta_label: "Formar Mi LLC en California →"
+cta_url_en: "/en/llc"
+cta_label_en: "Form My California LLC →"
 ---
 
 Si estás pensando en emprender o formalizar tu negocio en California, una **Limited Liability Company (LLC)** o Compañía de Responsabilidad Limitada es una de las estructuras más populares y beneficiosas. Ofrece una combinación única de protección de activos personales y flexibilidad operativa. En esta guía, exploraremos los pasos clave y las ventajas de formar una LLC en el estado dorado.

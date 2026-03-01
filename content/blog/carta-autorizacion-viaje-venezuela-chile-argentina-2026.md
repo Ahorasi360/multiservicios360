@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-sudamerica-sur-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Cono Sur →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for South America →"
 ---
 
 Las comunidades venezolana, chilena y argentina en Estados Unidos han crecido significativamente en los últimos años, especialmente en Miami, Houston, Los Ángeles y Nueva York. Si planea viajar con sus hijos a cualquiera de estos países, conozca los requisitos actuales para menores sin ambos padres.

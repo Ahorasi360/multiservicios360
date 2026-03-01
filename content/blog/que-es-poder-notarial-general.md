@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-01
 author: Multi Servicios 360
 image: /blog/poa-general.jpg
+cta_url: "/poa"
+cta_label: "Preparar Mi Poder Notarial General →"
+cta_url_en: "/en/poa"
+cta_label_en: "Prepare My General Power of Attorney →"
 ---
 
 Un **Poder Notarial General** (General Power of Attorney o POA) es un documento legal que le permite designar a otra persona — llamada su "agente" o "apoderado" — para que actúe en su nombre en asuntos financieros y personales.

@@ -7,6 +7,10 @@ category: community
 date: 2026-02-08
 author: Multi Servicios 360
 image: /blog/community-resources.jpg
+cta_url: "/mas-servicios"
+cta_label: "Ver Todos Nuestros Servicios →"
+cta_url_en: "/en/more-services"
+cta_label_en: "See All Our Services →"
 ---
 
 Navegar el sistema legal en un nuevo país puede ser confuso y costoso. Pero existen muchos recursos disponibles para la comunidad latina en California que pueden ayudarle — muchos de ellos gratuitos.

@@ -8,6 +8,10 @@ date: 2026-02-27
 author: Multi Servicios 360
 image: /blog/poder-notarial-general-2026.jpg
 published: true
+cta_url: "/poa"
+cta_label: "Preparar Mi Poder Notarial General →"
+cta_url_en: "/en/poa"
+cta_label_en: "Prepare My General Power of Attorney →"
 ---
 
 Un poder notarial general es uno de los documentos más importantes que cualquier adulto en California debería tener — y pocos saben que pueden crearlo sin un abogado, en menos de 15 minutos.

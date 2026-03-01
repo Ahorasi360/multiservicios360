@@ -8,6 +8,10 @@ date: 2026-02-20
 author: Multi Servicios 360
 image: /blog/declaracion-jurada-2026.jpg
 published: true
+cta_url: "/affidavit"
+cta_label: "Preparar Mi Declaración Jurada →"
+cta_url_en: "/en/affidavit"
+cta_label_en: "Prepare My Affidavit →"
 ---
 
 Una declaración jurada es uno de los documentos legales más versátiles que existen — y de los más solicitados. Bancos, escuelas, tribunales, agencias de gobierno, empleadores: todos la piden. Aquí te explicamos exactamente qué es y cómo crearla.

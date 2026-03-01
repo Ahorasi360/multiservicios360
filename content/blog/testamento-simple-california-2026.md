@@ -8,6 +8,10 @@ category: "Planificación Patrimonial"
 tags: ["testamento", "last will", "planificación patrimonial", "California", "herencia", "hijos menores"]
 author: "Multi Servicios 360"
 readTime: "8 min"
+cta_url: "/simple-will"
+cta_label: "Preparar Mi Testamento — $149 →"
+cta_url_en: "/en/simple-will"
+cta_label_en: "Prepare My Will — $149 →"
 ---
 
 # Testamento Simple en California 2026: Todo lo que Necesita Saber

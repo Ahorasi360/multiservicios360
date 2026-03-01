@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-14
 author: Multi Servicios 360
 image: /blog/probate-reality.jpg
+cta_url: "/trust"
+cta_label: "Proteger Mi Familia con un Fideicomiso →"
+cta_url_en: "/en/trust"
+cta_label_en: "Protect My Family with a Living Trust →"
 ---
 
 Nadie quiere pensar en lo que pasa después de que ya no estemos. Pero si tiene una casa, ahorros, o cualquier bien en California y **no tiene un Living Trust**, su familia va a enfrentar un proceso largo, costoso y público llamado **probate** (sucesión testamentaria).

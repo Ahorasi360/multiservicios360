@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-ecuador-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Ecuador →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Ecuador →"
 ---
 
 Ecuador tiene una de las comunidades de migrantes más grandes fuera de América del Sur. Las ciudades de origen más comunes son Quito, Guayaquil, Cuenca, y las provincias de Azuay, Cañar y Loja. Muchas familias ecuatorianas en Estados Unidos realizan viajes frecuentes con sus hijos para mantener los lazos familiares.

@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-14
 author: Multi Servicios 360
 image: /blog/affidavit-california.jpg
+cta_url: "/affidavit"
+cta_label: "Preparar Mi Declaración Jurada →"
+cta_url_en: "/en/affidavit"
+cta_label_en: "Prepare My Affidavit →"
 ---
 
 Una **Declaración Jurada** (Affidavit) es uno de los documentos legales más solicitados — y el que más confusión genera. Muchas personas no saben exactamente cuándo la necesitan ni qué implica firmar una. Este artículo aclara todas sus dudas.

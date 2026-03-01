@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-rd-menores-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta de Autorización de Viaje →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Travel Authorization Letter →"
 ---
 
 ## República Dominicana

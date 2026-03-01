@@ -8,6 +8,10 @@ category: "Planificación Patrimonial"
 tags: ["certificación de fideicomiso", "certification of trust", "banco", "fideicomiso", "California", "bienes raíces"]
 author: "Multi Servicios 360"
 readTime: "6 min"
+cta_url: "/certification-of-trust"
+cta_label: "Preparar Mi Certificación de Fideicomiso →"
+cta_url_en: "/en/certification-of-trust"
+cta_label_en: "Prepare My Certification of Trust →"
 ---
 
 # Certificación de Fideicomiso: El Documento que su Banco Siempre le Va a Pedir

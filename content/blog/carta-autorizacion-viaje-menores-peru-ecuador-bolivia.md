@@ -7,6 +7,10 @@ category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-peru-menores-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Perú/Ecuador →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Peru/Ecuador →"
 ---
 
 Los países andinos — Perú, Ecuador, y Bolivia — tienen comunidades grandes en California, especialmente en Los Ángeles, San Francisco, y el Valle Central. Cuando las familias viajan de regreso, o cuando envían a los niños a pasar el verano con los abuelos, la carta de autorización de viaje es un requisito que no puede ignorarse.

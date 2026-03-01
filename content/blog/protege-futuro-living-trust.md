@@ -7,6 +7,10 @@ category: legal
 date: 2026-01-25
 author: Multi Servicios 360
 image: /blog/living-trust-familia.jpg
+cta_url: "/trust"
+cta_label: "Crear Mi Fideicomiso en Vida →"
+cta_url_en: "/en/trust"
+cta_label_en: "Create My Living Trust →"
 ---
 
 En el corazón de California, donde la vida se mueve a un ritmo acelerado, la planificación para el futuro es más que una opción; es una necesidad. Para la comunidad hispana, asegurar el bienestar de la familia y la protección de los bienes es una prioridad. Aquí es donde un **Living Trust** (Fideicomiso en Vida) se convierte en una herramienta legal invaluable.

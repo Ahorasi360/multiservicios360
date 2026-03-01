@@ -8,6 +8,10 @@ date: 2026-02-18
 author: Multi Servicios 360
 image: /blog/carta-autorizacion-2026.jpg
 published: true
+cta_url: "/authorization-letter"
+cta_label: "Preparar Mi Carta de Autorización →"
+cta_url_en: "/en/authorization-letter"
+cta_label_en: "Prepare My Authorization Letter →"
 ---
 
 Tu hijo tiene cita médica pero tú tienes que trabajar. Tu madre necesita recoger documentos importantes en tu nombre. Estás de viaje y alguien necesita acceder a tu información. Para todas estas situaciones existe la **carta de autorización**.

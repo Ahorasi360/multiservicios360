@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-05
 author: Multi Servicios 360
 image: /blog/living-trust.jpg
+cta_url: "/trust"
+cta_label: "Crear Mi Fideicomiso en Vida →"
+cta_url_en: "/en/trust"
+cta_label_en: "Create My Living Trust →"
 ---
 
 Un **fideicomiso en vida** (Living Trust) es una de las herramientas legales más poderosas para proteger sus bienes y asegurar el futuro de su familia. Aquí le explicamos las 5 razones principales por las que debería considerar crear uno.

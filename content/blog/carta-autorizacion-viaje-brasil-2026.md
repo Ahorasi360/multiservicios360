@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-brasil-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Brasil →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Brazil →"
 ---
 
 Brasil tiene los requisitos **más estrictos de toda América Latina** para menores que viajan sin ambos padres. Si su familia tiene raíces brasileñas y planea viajar a São Paulo, Rio de Janeiro, o cualquier otro destino en Brasil, lea esto con atención — los detalles importan.

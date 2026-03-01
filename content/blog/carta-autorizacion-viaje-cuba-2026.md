@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-cuba-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Cuba →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Cuba →"
 ---
 
 Cuba es un caso especial entre los países de América Latina en lo que respecta a los viajes de menores. Las regulaciones migratorias cubanas son diferentes a las de otros países de la región, y los padres deben prepararse con anticipación para evitar contratiempos en el Aeropuerto Internacional José Martí.

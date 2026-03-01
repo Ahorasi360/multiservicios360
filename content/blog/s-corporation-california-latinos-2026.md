@@ -8,6 +8,10 @@ category: "Negocios"
 tags: ["S-Corporation", "S-Corp", "impuestos", "negocios", "California", "empresarios latinos", "LLC vs S-Corp"]
 author: "Multi Servicios 360"
 readTime: "9 min"
+cta_url: "/s-corp-formation"
+cta_label: "Formar Mi S-Corporation — $499 →"
+cta_url_en: "/en/s-corp-formation"
+cta_label_en: "Form My S-Corporation — $499 →"
 ---
 
 # S-Corporation en California: La Estructura que Puede Ahorrarle Miles en Impuestos

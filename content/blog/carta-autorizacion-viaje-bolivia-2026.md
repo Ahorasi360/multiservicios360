@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-bolivia-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Bolivia →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Bolivia →"
 ---
 
 Bolivia es un destino visitado frecuentemente por la comunidad boliviana en Estados Unidos, con mayor concentración en Virginia, Massachusetts, Washington D.C. y California. Los destinos más visitados son La Paz, Cochabamba, Santa Cruz de la Sierra, Sucre y el Lago Titicaca.

@@ -7,6 +7,10 @@ category: news
 date: 2026-01-15
 author: Multi Servicios 360
 image: /blog/llc-launch.jpg
+cta_url: "/llc"
+cta_label: "Formar Mi LLC en California →"
+cta_url_en: "/en/llc"
+cta_label_en: "Form My California LLC →"
 ---
 
 Estamos emocionados de anunciar que **Multi Servicios 360** ahora ofrece servicio de **Formación de LLC en California** — nuestro cuarto servicio disponible en la plataforma.

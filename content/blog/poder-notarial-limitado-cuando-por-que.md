@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-13
 author: Multi Servicios 360
 image: /blog/limited-poa.jpg
+cta_url: "/limited-poa"
+cta_label: "Preparar Mi Poder Notarial Limitado →"
+cta_url_en: "/en/limited-poa"
+cta_label_en: "Prepare My Limited Power of Attorney →"
 ---
 
 A diferencia del poder notarial general, que le da a alguien autoridad amplia sobre sus asuntos, el **Poder Notarial Limitado** le permite designar a una persona para una tarea específica, por un tiempo determinado. Es como darle a alguien la llave de una sola puerta, no de toda la casa.

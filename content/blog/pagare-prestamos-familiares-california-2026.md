@@ -8,6 +8,10 @@ date: 2026-02-19
 author: Multi Servicios 360
 image: /blog/pagare-prestamos-2026.jpg
 published: true
+cta_url: "/promissory-note"
+cta_label: "Preparar Mi Pagaré Familiar →"
+cta_url_en: "/en/promissory-note"
+cta_label_en: "Prepare My Promissory Note →"
 ---
 
 Prestas $5,000 a tu hermano. Promete devolverte en 6 meses. Pasan los 6 meses... y el dinero no aparece. Ahora tienes que elegir entre confrontarlo o perder el dinero. Esta historia se repite miles de veces en familias latinas cada año. La solución es simple: **un pagaré**.

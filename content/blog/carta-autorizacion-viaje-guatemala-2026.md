@@ -7,6 +7,10 @@ category: travel
 date: 2026-02-28
 author: Multi Servicios 360
 image: /blog/carta-viaje-guatemala-2026.jpg
+cta_url: "/travel-authorization"
+cta_label: "Preparar Carta para Guatemala →"
+cta_url_en: "/en/travel-authorization"
+cta_label_en: "Prepare Letter for Guatemala →"
 ---
 
 Guatemala es un destino frecuente para familias hispanas en Estados Unidos que visitan a sus parientes. Pero muchos padres no saben que la **Policía Nacional Civil (PNC)** y la Dirección General de Migración de Guatemala verifican activamente la documentación de menores en el Aeropuerto Internacional La Aurora y en los principales cruces fronterizos.

@@ -7,6 +7,10 @@ category: legal
 date: 2026-02-11
 author: Multi Servicios 360
 image: /blog/llc-costs.jpg
+cta_url: "/llc"
+cta_label: "Formar Mi LLC — Desde $799 →"
+cta_url_en: "/en/llc"
+cta_label_en: "Form My LLC — From $799 →"
 ---
 
 Formar una LLC en California es una de las mejores decisiones que puede tomar para proteger su negocio. Pero antes de comenzar, necesita saber exactamente **cuánto va a costar**. Aquí le damos el desglose real — sin sorpresas.
