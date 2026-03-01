@@ -46,6 +46,12 @@ export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = 
     { label: '👨‍👩‍👧‍👦 Planificación Familiar', url: '/planificacion-familiar' },
     { label: '🏢 Documentos de Negocios', url: '/negocios' },
     { label: '✈️ Carta de Viaje', url: '/travel-authorization' },
+    { label: '─────────────', url: '#', disabled: true },
+    { label: '🏛️ Declaración Sucesión §13100', url: '/small-estate-affidavit' },
+    { label: '🏠 Escritura de Traspaso', url: '/quitclaim-deed' },
+    { label: '🤝 Contrato Contratista', url: '/contractor-agreement' },
+    { label: '📩 Carta de Demanda', url: '/demand-letter' },
+    { label: '🌎 Solicitud de Apostilla', url: '/apostille-letter' },
     { label: '📁 Todos los Servicios', url: '/mas-servicios' },
   ] : [
     { label: '⚖️ General Power of Attorney', url: '/en/poa' },
@@ -63,6 +69,12 @@ export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = 
     { label: '👨‍👩‍👧‍👦 Family Planning', url: '/en/family-planning' },
     { label: '🏢 Business Documents', url: '/en/business' },
     { label: '✈️ Travel Authorization', url: '/en/travel-authorization' },
+    { label: '─────────────', url: '#', disabled: true },
+    { label: '🏛️ Small Estate Affidavit §13100', url: '/en/small-estate-affidavit' },
+    { label: '🏠 Quitclaim Deed', url: '/en/quitclaim-deed' },
+    { label: '🤝 Contractor Agreement', url: '/en/contractor-agreement' },
+    { label: '📩 Demand Letter', url: '/en/demand-letter' },
+    { label: '🌎 Apostille Letter', url: '/en/apostille-letter' },
     { label: '📁 All Services', url: '/en/more-services' },
   ];
 
@@ -99,11 +111,13 @@ export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = 
               {servicesOpen && (
                 <div style={{ position: 'absolute', top: '100%', left: 0, backgroundColor: 'white', border: '1px solid #E5E7EB', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', padding: '8px', minWidth: '240px', zIndex: 100 }}>
                   {serviceLinks.map((link, i) => (
-                    <Link key={i} href={link.url} style={{ display: 'block', padding: '10px 14px', color: '#374151', textDecoration: 'none', fontSize: '14px', borderRadius: '8px', fontWeight: '500' }}
-                      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#F8FAFC'}
-                      onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
-                      {link.label}
-                    </Link>
+                    link.disabled
+                      ? <div key={i} style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '4px 8px' }} />
+                      : <Link key={i} href={link.url} style={{ display: 'block', padding: '10px 14px', color: '#374151', textDecoration: 'none', fontSize: '14px', borderRadius: '8px', fontWeight: '500' }}
+                          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#F8FAFC'}
+                          onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
+                          {link.label}
+                        </Link>
                   ))}
                 </div>
               )}
@@ -143,10 +157,12 @@ export default function Navbar({ lang = 'es', currentPath = '', langSwitchUrl = 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <div style={{ fontSize: '11px', fontWeight: '700', color: '#94A3B8', letterSpacing: '0.05em', padding: '8px 12px 4px', textTransform: 'uppercase' }}>{t.services}</div>
               {serviceLinks.map((link, i) => (
-                <Link key={i} href={link.url} onClick={() => setMenuOpen(false)}
-                  style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px', borderRadius: '8px', backgroundColor: '#F8FAFC' }}>
-                  {link.label}
-                </Link>
+                link.disabled
+                  ? <div key={i} style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '4px 0' }} />
+                  : <Link key={i} href={link.url} onClick={() => setMenuOpen(false)}
+                      style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px', borderRadius: '8px', backgroundColor: '#F8FAFC' }}>
+                      {link.label}
+                    </Link>
               ))}
               <div style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '8px 0' }} />
               <Link href={isEs ? '/por-que-nosotros' : '/en/why-us'} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '15px', padding: '10px 12px' }}>{t.whyUs}</Link>

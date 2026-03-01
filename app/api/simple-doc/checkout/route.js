@@ -20,6 +20,12 @@ const PRICING = {
   c_corp_formation: { amount: 49900, name: 'C-Corporation Formation Package', nameEs: 'Paquete de Formación C-Corporation' },
   corporate_minutes: { amount: 14900, name: 'Corporate Minutes', nameEs: 'Actas Corporativas' },
   banking_resolution: { amount: 9900, name: 'Banking Resolution', nameEs: 'Resolución Bancaria' },
+  // Phase 2
+  small_estate_affidavit: { amount: 14900, name: 'Small Estate Affidavit (§13100)', nameEs: 'Declaración Jurada de Sucesión Simplificada (§13100)' },
+  quitclaim_deed: { amount: 19900, name: 'Quitclaim Deed', nameEs: 'Escritura de Traspaso (Quitclaim Deed)' },
+  contractor_agreement: { amount: 14900, name: 'Independent Contractor Agreement', nameEs: 'Contrato de Contratista Independiente' },
+  demand_letter: { amount: 9900, name: 'Demand Letter', nameEs: 'Carta de Demanda de Pago' },
+  apostille_letter: { amount: 7900, name: 'Apostille Cover Letter', nameEs: 'Carta de Solicitud de Apostilla' },
 };
 
 // Tiered pricing for guardianship
@@ -45,6 +51,12 @@ const SLUG_MAP = {
   c_corp_formation: 'c-corp-formation',
   corporate_minutes: 'corporate-minutes',
   banking_resolution: 'banking-resolution',
+  // Phase 2
+  small_estate_affidavit: 'small-estate-affidavit',
+  quitclaim_deed: 'quitclaim-deed',
+  contractor_agreement: 'contractor-agreement',
+  demand_letter: 'demand-letter',
+  apostille_letter: 'apostille-letter',
 };
 
 export async function POST(request) {

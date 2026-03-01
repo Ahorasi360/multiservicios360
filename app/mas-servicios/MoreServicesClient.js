@@ -138,6 +138,41 @@ const TRANSLATIONS = {
         price: '$99',
         tags: ['Banco', 'Corporación', 'Autorización'],
       },
+      smallEstateAffidavit: {
+        title: 'Declaración Jurada de Sucesión Simplificada',
+        subtitle: 'Small Estate Affidavit — §13100',
+        desc: 'Reclame bienes de una herencia sin abrir proceso de probate. Para estates bajo $184,500 en California. Requiere notarización.',
+        price: '$149',
+        tags: ['Herencia', 'Probate', 'Notarización'],
+      },
+      quitclaimDeed: {
+        title: 'Escritura de Traspaso',
+        subtitle: 'Quitclaim Deed — California Civil Code §1092',
+        desc: 'Transfiera su propiedad a un fideicomiso, cónyuge o familiar. Incluye guía para PCOR y declaración de impuestos de transferencia.',
+        price: '$199',
+        tags: ['Propiedad', 'Fideicomiso', 'Transferencia'],
+      },
+      contractorAgreement: {
+        title: 'Contrato de Contratista Independiente',
+        subtitle: 'Independent Contractor Agreement — AB5',
+        desc: 'Contrato legal entre empresa y contratista. Cumple con la Ley AB5 de California y el ABC Test del Código Laboral §2775.',
+        price: '$149',
+        tags: ['Negocios', 'AB5', 'Contratista'],
+      },
+      demandLetter: {
+        title: 'Carta de Demanda de Pago',
+        subtitle: 'Demand Letter — FDCPA Compliant',
+        desc: 'Carta formal de cobro de deuda. Para servicios impagos, préstamos, renta o contratos incumplidos. Cumple con la Ley FDCPA.',
+        price: '$99',
+        tags: ['Cobro', 'Deuda', 'Legal'],
+      },
+      apostilleLetter: {
+        title: 'Carta de Solicitud de Apostilla',
+        subtitle: 'Apostille Cover Letter — Secretaría de Estado CA',
+        desc: 'Carta formal para solicitar una Apostilla ante la Secretaría de Estado de California. Para documentos que se usarán en el extranjero.',
+        price: '$79',
+        tags: ['Internacional', 'Apostilla', 'Trámites'],
+      },
     },
     moreComing: '¿Necesita otro tipo de documento?',
     moreComingDesc: 'Estamos constantemente agregando nuevos documentos a nuestra plataforma. Contáctenos para consultas.',
@@ -266,6 +301,41 @@ const TRANSLATIONS = {
         price: '$99',
         tags: ['Bank', 'Corporation', 'Authorization'],
       },
+      smallEstateAffidavit: {
+        title: 'Small Estate Affidavit (§13100)',
+        subtitle: 'Declaración Jurada de Sucesión Simplificada',
+        desc: 'Collect a deceased person\'s assets without opening probate. For estates under $184,500 in California. Notarization required.',
+        price: '$149',
+        tags: ['Inheritance', 'Probate', 'Notarization'],
+      },
+      quitclaimDeed: {
+        title: 'Quitclaim Deed',
+        subtitle: 'Escritura de Traspaso — California Civil Code §1092',
+        desc: 'Transfer your property to a trust, spouse, or family member. Includes PCOR guidance and Documentary Transfer Tax statement.',
+        price: '$199',
+        tags: ['Real Property', 'Trust', 'Transfer'],
+      },
+      contractorAgreement: {
+        title: 'Independent Contractor Agreement',
+        subtitle: 'Contrato Contratista Independiente — AB5',
+        desc: 'Legal agreement between company and contractor. Compliant with California\'s AB5 law and the ABC Test under Labor Code §2775.',
+        price: '$149',
+        tags: ['Business', 'AB5', 'Contractor'],
+      },
+      demandLetter: {
+        title: 'Demand Letter',
+        subtitle: 'Carta de Demanda de Pago — FDCPA Compliant',
+        desc: 'Formal debt collection letter. For unpaid services, loans, rent, or breach of contract. Complies with FDCPA regulations.',
+        price: '$99',
+        tags: ['Debt Collection', 'Legal', 'FDCPA'],
+      },
+      apostilleLetter: {
+        title: 'Apostille Cover Letter',
+        subtitle: 'Carta de Solicitud de Apostilla — CA Secretary of State',
+        desc: 'Formal cover letter to request an Apostille from the California Secretary of State for documents to be used abroad.',
+        price: '$79',
+        tags: ['International', 'Apostille', 'Documents'],
+      },
     },
     moreComing: 'Need a different type of document?',
     moreComingDesc: 'We are constantly adding new documents to our platform. Contact us for inquiries.',
@@ -282,9 +352,20 @@ const ClipboardIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" 
 const BankIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>);
 const PourOverIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 13v4M10 15h4"/></svg>);
 const CertIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>);
+const GavelIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m14 13-7.5 7.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L11 10"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/></svg>);
+const HomeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>);
+const HandshakeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/><path d="M12 5.36 8.87 8.5a2.13 2.13 0 0 0 0 3h0a2.13 2.13 0 0 0 3.02 0L12 11l.11.5a2.13 2.13 0 0 0 3.02 0h0a2.13 2.13 0 0 0 0-3z"/></svg>);
+const AlertIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>);
+const GlobeIcon2 = () => (<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>);
 
 const SERVICES = [
-  // Estate Planning — NEW
+  // Phase 2 — High Demand
+  { key: 'smallEstateAffidavit', href: '/small-estate-affidavit', Icon: GavelIcon, color: '#1E3A8A', bgColor: '#EFF6FF' },
+  { key: 'quitclaimDeed', href: '/quitclaim-deed', Icon: HomeIcon, color: '#059669', bgColor: '#ECFDF5' },
+  { key: 'contractorAgreement', href: '/contractor-agreement', Icon: HandshakeIcon, color: '#D97706', bgColor: '#FFFBEB' },
+  { key: 'demandLetter', href: '/demand-letter', Icon: AlertIcon, color: '#DC2626', bgColor: '#FEF2F2' },
+  { key: 'apostilleLetter', href: '/apostille-letter', Icon: GlobeIcon2, color: '#7C3AED', bgColor: '#F5F3FF' },
+  // Estate Planning
   { key: 'pourOverWill', href: '/pour-over-will', Icon: PourOverIcon, color: '#7C3AED', bgColor: '#F5F3FF' },
   { key: 'simpleWill', href: '/simple-will', Icon: WillIcon, color: '#1E3A8A', bgColor: '#EFF6FF' },
   { key: 'hipaaAuthorization', href: '/hipaa-authorization', Icon: HeartPulseIcon, color: '#DC2626', bgColor: '#FEF2F2' },

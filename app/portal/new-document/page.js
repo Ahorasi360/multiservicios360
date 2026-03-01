@@ -91,6 +91,12 @@ function NewDocumentContent() {
     { key: 'c_corp_formation', label: 'C-Corporation Formation', desc: 'Full C-Corp package with preferred stock options.', price: '$499', color: 'sky' },
     { key: 'corporate_minutes', label: 'Corporate Minutes', desc: 'Annual, special, or board of directors meeting minutes.', price: '$149', color: 'lime' },
     { key: 'banking_resolution', label: 'Banking Resolution', desc: 'Required for opening business bank accounts.', price: '$99', color: 'yellow' },
+    // Phase 2
+    { key: 'small_estate_affidavit', label: 'Small Estate Affidavit §13100', desc: 'Collect estate assets under $184,500 without probate.', price: '$149', color: 'stone' },
+    { key: 'quitclaim_deed', label: 'Quitclaim Deed', desc: 'Transfer property to trust, spouse, or family member.', price: '$199', color: 'brown' },
+    { key: 'contractor_agreement', label: 'Contractor Agreement', desc: 'AB5-aware independent contractor agreement (California).', price: '$149', color: 'orange' },
+    { key: 'demand_letter', label: 'Demand Letter', desc: 'Formal debt collection letter — FDCPA compliant.', price: '$99', color: 'red' },
+    { key: 'apostille_letter', label: 'Apostille Cover Letter', desc: 'Request apostille authentication from CA Secretary of State.', price: '$79', color: 'violet' },
   ];
 
   const colorMap = {

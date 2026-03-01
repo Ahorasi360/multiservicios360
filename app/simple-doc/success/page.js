@@ -6,7 +6,7 @@ import { PDFDocument } from 'pdf-lib';
 import { lockPdf } from '../../../lib/lock-pdf';
 import Navbar from '../../components/Navbar';
 
-const NOTARY_DOCS = ['affidavit', 'revocation_poa', 'certification_of_trust'];
+const NOTARY_DOCS = ['affidavit', 'revocation_poa', 'certification_of_trust', 'small_estate_affidavit', 'quitclaim_deed'];
 // Guardianship gets notary for standard+ tiers (handled separately below)
 
 const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
@@ -35,6 +35,12 @@ const DOC_TITLES = {
   c_corp_formation: { en: 'C-CORPORATION FORMATION PACKAGE', es: 'PAQUETE DE FORMACIÓN C-CORPORATION' },
   corporate_minutes: { en: 'CORPORATE MINUTES', es: 'ACTAS CORPORATIVAS' },
   banking_resolution: { en: 'BANKING RESOLUTION', es: 'RESOLUCIÓN BANCARIA' },
+  // Phase 2
+  small_estate_affidavit: { en: 'SMALL ESTATE AFFIDAVIT (§13100)', es: 'DECLARACIÓN JURADA DE SUCESIÓN SIMPLIFICADA (§13100)' },
+  quitclaim_deed: { en: 'QUITCLAIM DEED', es: 'ESCRITURA DE TRASPASO (QUITCLAIM DEED)' },
+  contractor_agreement: { en: 'INDEPENDENT CONTRACTOR AGREEMENT', es: 'CONTRATO DE CONTRATISTA INDEPENDIENTE' },
+  demand_letter: { en: 'DEMAND LETTER', es: 'CARTA DE DEMANDA DE PAGO' },
+  apostille_letter: { en: 'APOSTILLE COVER LETTER', es: 'CARTA DE SOLICITUD DE APOSTILLA' },
 };
 
 // ============================================================
@@ -804,8 +810,8 @@ function SuccessContent() {
   return (
     <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
     <Navbar lang={language} />
-    <div style={{ minHeight: '100vh', backgroundColor: '#F0F9FF', padding: '24px' }}>
-      <div style={{ maxWidth: '600px', margin: '0 auto', backgroundColor: 'white', borderRadius: '12px', padding: '48px 32px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#F0F9FF', padding: 'clamp(12px, 4vw, 24px)' }}>
+      <div style={{ maxWidth: '600px', margin: '0 auto', backgroundColor: 'white', borderRadius: '12px', padding: 'clamp(20px, 5vw, 48px) clamp(16px, 5vw, 32px)', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
           <button onClick={toggleLang} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '6px', border: '1px solid #D1D5DB', background: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: '600', color: '#374151' }}><GlobeIcon /> {t.langToggle}</button>
         </div>
@@ -838,7 +844,7 @@ function SuccessContent() {
           {isFinalized && <p style={{ color: '#059669', fontSize: '14px', marginTop: '12px', margin: '12px 0 0 0', fontWeight: '500' }}>✅ {t.finalized}</p>}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '16px' }}>
           <button onClick={() => generatePDF(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}><DownloadIcon /> {t.downloadSpanish}</button>
           <button onClick={() => generatePDF(false)} disabled={translating} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '16px', backgroundColor: translating ? '#9CA3AF' : '#7C3AED', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: translating ? 'wait' : 'pointer' }}><DownloadIcon /> {translating ? (language === 'es' ? 'Traduciendo...' : 'Translating...') : t.downloadEnglish}</button>
         </div>

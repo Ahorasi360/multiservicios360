@@ -32,6 +32,12 @@ const TABLE_MAP = {
   c_corp_formation: 'simple_doc_matters',
   corporate_minutes: 'simple_doc_matters',
   banking_resolution: 'simple_doc_matters',
+  // Phase 2
+  small_estate_affidavit: 'simple_doc_matters',
+  quitclaim_deed: 'simple_doc_matters',
+  contractor_agreement: 'simple_doc_matters',
+  demand_letter: 'simple_doc_matters',
+  apostille_letter: 'simple_doc_matters',
 };
 
 // Map document types to vault document types
@@ -55,6 +61,12 @@ const VAULT_DOC_MAP = {
   c_corp_formation: 'c_corp_formation',
   corporate_minutes: 'corporate_minutes',
   banking_resolution: 'banking_resolution',
+  // Phase 2
+  small_estate_affidavit: 'small_estate_affidavit',
+  quitclaim_deed: 'quitclaim_deed',
+  contractor_agreement: 'contractor_agreement',
+  demand_letter: 'demand_letter',
+  apostille_letter: 'apostille_letter',
 };
 
 export async function POST(request) {

@@ -164,6 +164,8 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
     'pour_over_will', 'simple_will', 'hipaa_authorization', 'certification_of_trust',
     's_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution',
     'trust', 'poa', 'limited_poa',
+    // Phase 2 — complex docs that benefit from attorney review
+    'quitclaim_deed', 'small_estate_affidavit', 'contractor_agreement',
   ];
   const showProfessionalUpsell = PROFESSIONAL_UPSELL_DOCS.includes(docType);
   const PROFESSIONAL_UPSELL_AMOUNT = 19900; // $199 — cargo de plataforma por coordinación
@@ -511,22 +513,22 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   };
 
   const st = {
-    container: { minHeight: '100vh', backgroundColor: '#F0F9FF', padding: '24px' },
+    container: { minHeight: '100vh', backgroundColor: '#F0F9FF', padding: isMobile ? '12px' : '24px' },
     inner: { maxWidth: '1200px', margin: '0 auto' },
-    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' },
-    logo: { display: 'flex', alignItems: 'center', gap: '12px' },
-    logoIcon: { width: '48px', height: '48px', backgroundColor: '#2563EB', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '20px' },
-    title: { fontSize: '24px', fontWeight: 'bold', color: '#1F2937' },
-    subtitle: { fontSize: '14px', color: '#6B7280' },
-    langToggle: { display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E5E7EB', cursor: 'pointer' },
-    card: { backgroundColor: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
-    input: { width: '100%', padding: '12px 16px', border: '1px solid #E5E7EB', borderRadius: '8px', fontSize: '14px', outline: 'none' },
-    btnPrimary: { width: '100%', padding: '14px', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '600', cursor: 'pointer' },
+    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isMobile ? '16px' : '24px' },
+    logo: { display: 'flex', alignItems: 'center', gap: isMobile ? '8px' : '12px' },
+    logoIcon: { width: isMobile ? '36px' : '48px', height: isMobile ? '36px' : '48px', backgroundColor: '#2563EB', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: isMobile ? '14px' : '20px' },
+    title: { fontSize: isMobile ? '16px' : '24px', fontWeight: 'bold', color: '#1F2937', lineHeight: '1.2' },
+    subtitle: { fontSize: isMobile ? '12px' : '14px', color: '#6B7280' },
+    langToggle: { display: 'flex', alignItems: 'center', gap: '6px', padding: isMobile ? '6px 10px' : '8px 16px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E5E7EB', cursor: 'pointer', fontSize: isMobile ? '12px' : '14px', flexShrink: 0 },
+    card: { backgroundColor: 'white', borderRadius: '12px', padding: isMobile ? '16px' : '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
+    input: { width: '100%', padding: isMobile ? '14px 12px' : '12px 16px', border: '1px solid #E5E7EB', borderRadius: '8px', fontSize: '16px', outline: 'none', boxSizing: 'border-box', WebkitAppearance: 'none' },
+    btnPrimary: { width: '100%', padding: isMobile ? '16px' : '14px', border: 'none', borderRadius: '8px', fontSize: isMobile ? '17px' : '16px', fontWeight: '600', cursor: 'pointer', touchAction: 'manipulation' },
     btnGreen: { backgroundColor: '#059669', color: 'white' },
     btnDisabled: { backgroundColor: '#9CA3AF', cursor: 'not-allowed' },
-    chatContainer: { height: '55vh', minHeight: '260px', overflowY: 'auto', marginBottom: '16px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px' },
-    msgUser: { backgroundColor: '#2563EB', color: 'white', padding: '12px 16px', borderRadius: '16px 16px 4px 16px', maxWidth: '80%', marginLeft: 'auto', marginBottom: '12px' },
-    msgAssistant: { backgroundColor: 'white', color: '#1F2937', padding: '12px 16px', borderRadius: '16px 16px 16px 4px', maxWidth: '80%', marginBottom: '12px', border: '1px solid #E5E7EB', whiteSpace: 'pre-wrap' },
+    chatContainer: { height: isMobile ? '45vh' : '55vh', minHeight: '240px', overflowY: 'auto', marginBottom: '16px', padding: isMobile ? '12px' : '16px', backgroundColor: '#F9FAFB', borderRadius: '8px', WebkitOverflowScrolling: 'touch' },
+    msgUser: { backgroundColor: '#2563EB', color: 'white', padding: isMobile ? '10px 14px' : '12px 16px', borderRadius: '16px 16px 4px 16px', maxWidth: '85%', marginLeft: 'auto', marginBottom: '12px', fontSize: isMobile ? '14px' : '15px' },
+    msgAssistant: { backgroundColor: 'white', color: '#1F2937', padding: isMobile ? '10px 14px' : '12px 16px', borderRadius: '16px 16px 16px 4px', maxWidth: '85%', marginBottom: '12px', border: '1px solid #E5E7EB', whiteSpace: 'pre-wrap', fontSize: isMobile ? '14px' : '15px' },
     badge: { backgroundColor: '#DBEAFE', color: '#1E40AF', padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' },
     progressBar: { height: '8px', backgroundColor: '#E5E7EB', borderRadius: '4px', overflow: 'hidden', marginBottom: '8px' },
     progressFill: { height: '100%', backgroundColor: '#2563EB', borderRadius: '4px', transition: 'width 0.3s ease' },
