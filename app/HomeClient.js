@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Navbar from './components/Navbar';
 
 // Icons
 const ScaleIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>);
@@ -289,7 +290,6 @@ const TRANSLATIONS = {
 export default function HomeClient({ lang = 'es' }) {
   const language = lang;
   const blogPath = lang === 'en' ? '/en/blog' : '/blog';
-  const [menuOpen, setMenuOpen] = useState(false);
   const t = TRANSLATIONS[language];
 
   return (
@@ -323,75 +323,8 @@ export default function HomeClient({ lang = 'es' }) {
         }
       `}</style>
 
-      {/* LEGAL DISCLOSURE BANNER */}
-      <div className="disclosure-banner" style={{
-        backgroundColor: '#FEF3C7',
-        borderBottom: '1px solid #F59E0B',
-        padding: '10px 16px',
-        textAlign: 'center',
-        fontSize: '12px',
-        color: '#92400E',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px'
-      }}>
-        <AlertIcon />
-        <span>{t.disclosure.banner}</span>
-      </div>
-
       {/* Navigation */}
-      <nav style={{ backgroundColor: 'white', borderBottom: '1px solid #E5E7EB', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '64px' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '12px' }}>M360</div>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '16px', color: '#1E3A8A' }}>Multi Servicios 360</div>
-              <div style={{ fontSize: '9px', color: '#64748B', letterSpacing: '0.5px' }}>DOCUMENT PREPARATION</div>
-            </div>
-          </Link>
-
-          <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <a href="#services" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.services}</a>
-            <a href="#team" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.about}</a>
-            <Link href="/por-que-nosotros" style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '14px' }}>{t.nav.whyUs}</Link>
-            <Link href="/nuestra-historia" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.ourStory}</Link>
-           <Link href={blogPath} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>Blog</Link>
-            <Link href="/contacto" style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '14px' }}>{t.nav.contact}</Link>
-            <Link href={language === 'es' ? '/en' : '/'} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '13px', color: '#374151', textDecoration: 'none' }}>
-              <GlobeIcon /> {language === 'es' ? 'EN' : 'ES'}
-            </Link>
-            <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '13px' }}>
-              <PhoneIcon /> 855.246.7274
-            </a>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Link href={language === 'es' ? '/en' : '/'} className="mobile-menu-btn" style={{ display: 'none', alignItems: 'center', padding: '8px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer', textDecoration: 'none', color: '#374151' }}>
-              <GlobeIcon />
-            </Link>
-            <button onClick={() => setMenuOpen(!menuOpen)} className="mobile-menu-btn" style={{ display: 'none', alignItems: 'center', padding: '8px', backgroundColor: '#F3F4F6', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-              {menuOpen ? <CloseIcon /> : <MenuIcon />}
-            </button>
-          </div>
-        </div>
-
-        {menuOpen && (
-          <div style={{ backgroundColor: 'white', borderTop: '1px solid #E5E7EB', padding: '16px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <a href="#services" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.services}</a>
-              <a href="#team" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.about}</a>
-              <Link href="/por-que-nosotros" onClick={() => setMenuOpen(false)} style={{ color: '#1E3A8A', textDecoration: 'none', fontWeight: '600', fontSize: '16px', padding: '8px 0' }}>{t.nav.whyUs}</Link>
-              <Link href="/nuestra-historia" onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>{t.nav.ourStory}</Link>
-              
-              <Link href={blogPath} onClick={() => setMenuOpen(false)} style={{ color: '#374151', textDecoration: 'none', fontWeight: '500', fontSize: '16px', padding: '8px 0' }}>Blog</Link>
-              <a href="tel:8552467274" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', backgroundColor: '#1E3A8A', color: 'white', textDecoration: 'none', borderRadius: '8px', fontWeight: '600' }}>
-                <PhoneIcon /> 855.246.7274
-              </a>
-            </div>
-          </div>
-        )}
-      </nav>
+      <Navbar lang={language} langSwitchUrl={language === 'es' ? '/en' : '/'} />
 
       {/* Hero Section - FOUR CTAs */}
       <section style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #1D4ED8 100%)', color: 'white', padding: '60px 16px', position: 'relative', overflow: 'hidden' }}>
