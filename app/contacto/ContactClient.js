@@ -159,7 +159,7 @@ export default function ContactClient({ lang: initialLang = 'es' }) {
       </div>
 
       {/* Nav */}
-      <Navbar lang={lang} />
+      <Navbar lang={lang} langSwitchUrl={lang === 'es' ? '/en/contact' : '/contacto'} />
 
       {/* Hero */}
       <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)', padding: '64px 24px', textAlign: 'center' }}>

@@ -277,15 +277,8 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAFAFA', fontFamily: "'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" }}>
-      {/* Disclaimer bar */}
-      <div style={{ background: '#FCD34D', padding: '8px 16px', textAlign: 'center' }}>
-        <p style={{ fontSize: '12px', color: '#1E3A8A', margin: 0, fontWeight: '500' }}>
-          {lang === 'es' ? 'Multi Servicios 360 no es un bufete de abogados y no proporciona asesoría legal.' : 'Multi Servicios 360 is not a law firm and does not provide legal advice.'}
-        </p>
-      </div>
-
       {/* Nav */}
-      <Navbar lang={lang} />
+      <Navbar lang={lang} langSwitchUrl={lang === 'es' ? '/en/our-story' : '/nuestra-historia'} />
 
       {/* Hero */}
       <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)', padding: '80px 24px', textAlign: 'center' }}>
@@ -376,16 +369,16 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
           <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
           <P center muted>{t.services.intro}</P>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginTop: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', marginTop: '24px', padding: '0 16px' }}>
             {SERVICES.map((svc, i) => (
               <Link key={i} href={svc.href} style={{ textDecoration: 'none' }}>
-                <div style={{ background: '#fff', borderRadius: '14px', padding: '24px', border: '2px solid #E2E8F0', transition: 'all 0.2s', cursor: 'pointer', textAlign: 'center' }}
+                <div style={{ background: '#fff', borderRadius: '14px', padding: '20px 16px', border: '2px solid #E2E8F0', transition: 'all 0.2s', cursor: 'pointer', textAlign: 'center', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = svc.color; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-                  <div style={{ fontSize: '32px', marginBottom: '8px' }}>{svc.icon}</div>
-                  <div style={{ fontWeight: '700', fontSize: '15px', color: '#0F172A', marginBottom: '4px' }}>{svc.name[lang]}</div>
-                  <div style={{ fontSize: '13px', color: '#64748B', marginBottom: '12px' }}>{lang === 'es' ? 'Desde' : 'From'} {svc.price}</div>
-                  <div style={{ display: 'inline-block', padding: '8px 20px', background: svc.color, color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: '700' }}>
+                  <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: `${svc.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px', fontSize: '26px' }}>{svc.icon}</div>
+                  <div style={{ fontWeight: '700', fontSize: '14px', color: '#0F172A', marginBottom: '4px', lineHeight: '1.3' }}>{svc.name[lang]}</div>
+                  <div style={{ fontSize: '13px', color: '#64748B', marginBottom: '12px' }}>{lang === 'es' ? 'Desde' : 'From'} <strong style={{ color: svc.color }}>{svc.price}</strong></div>
+                  <div style={{ display: 'inline-block', padding: '7px 16px', background: svc.color, color: '#fff', borderRadius: '8px', fontSize: '12px', fontWeight: '700' }}>
                     {t.services.cta} →
                   </div>
                 </div>
@@ -418,7 +411,6 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
       <style>{`
         @media (max-width: 640px) {
           h1 { font-size: 32px !important; }
-          div[style*="grid-template-columns: repeat(2"] { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

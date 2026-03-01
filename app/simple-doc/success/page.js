@@ -863,6 +863,101 @@ function SuccessContent() {
           </div>
         )}
 
+        {/* Required Documents Checklist - Quitclaim Deed */}
+        {docType === 'quitclaim_deed' && (
+          <div style={{ backgroundColor: '#EFF6FF', border: '2px solid #3B82F6', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+              <span style={{ fontSize: '22px' }}>📋</span>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1E40AF', margin: 0 }}>
+                {language === 'es' ? 'Documentos que necesitas para completar este trámite' : 'Documents you need to complete this process'}
+              </h3>
+            </div>
+            <div style={{ display: 'grid', gap: '10px' }}>
+              {[
+                language === 'es'
+                  ? { icon: '🪪', title: 'Identificación con foto', desc: 'Licencia de conducir, pasaporte o ID estatal — para notarización' }
+                  : { icon: '🪪', title: 'Photo ID', desc: "Driver's license, passport or state ID — required for notarization" },
+                language === 'es'
+                  ? { icon: '📄', title: 'Escritura actual de la propiedad', desc: 'La "Grant Deed" o escritura vigente que demuestra que eres el dueño actual' }
+                  : { icon: '📄', title: 'Current property deed', desc: 'The current Grant Deed showing you are the current owner' },
+                language === 'es'
+                  ? { icon: '🏠', title: 'Número de Parcela del Assessor (APN)', desc: 'Aparece en tu estado de cuenta del impuesto predial o en el portal del condado' }
+                  : { icon: '🏠', title: "Assessor's Parcel Number (APN)", desc: 'Found on your property tax bill or county assessor website' },
+                language === 'es'
+                  ? { icon: '📍', title: 'Descripción legal de la propiedad', desc: 'Copiada exactamente de tu escritura actual — inclúyela igual al presentarla' }
+                  : { icon: '📍', title: 'Legal description of the property', desc: 'Copied exactly from your current deed — must match exactly when recorded' },
+                language === 'es'
+                  ? { icon: '💰', title: 'Formulario PCOR (Preliminary Change of Ownership)', desc: 'Requerido por el condado al presentar la escritura. Disponible gratis en la oficina del condado o en línea' }
+                  : { icon: '💰', title: 'PCOR Form (Preliminary Change of Ownership)', desc: 'Required by the county when recording. Available free from the county recorder or online' },
+                language === 'es'
+                  ? { icon: '🏛️', title: 'Tarifa de presentación al condado', desc: 'Aprox. $15–$25 por página — pagada directamente en la oficina del registrador del condado' }
+                  : { icon: '🏛️', title: 'County recording fee', desc: 'Approx. $15–$25 per page — paid directly at the county recorder\'s office' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', background: 'white', borderRadius: '8px', padding: '12px' }}>
+                  <span style={{ fontSize: '20px', flexShrink: 0 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontWeight: '700', fontSize: '14px', color: '#1E3A8A' }}>{item.title}</div>
+                    <div style={{ fontSize: '13px', color: '#475569', marginTop: '2px' }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: '14px', padding: '10px 14px', background: '#DBEAFE', borderRadius: '8px' }}>
+              <p style={{ fontSize: '12px', color: '#1E40AF', margin: 0, fontWeight: '600' }}>
+                {language === 'es'
+                  ? '📌 Paso final: Después de notarizar, lleva la escritura a la oficina del registrador de tu condado para presentarla oficialmente. Este paso es lo que hace que el traspaso sea legal y público.'
+                  : '📌 Final step: After notarization, bring the deed to your county recorder\'s office to officially record it. This step is what makes the transfer legally effective and public record.'}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Required Documents Checklist - Small Estate Affidavit */}
+        {docType === 'small_estate_affidavit' && (
+          <div style={{ backgroundColor: '#F0FDF4', border: '2px solid #10B981', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+              <span style={{ fontSize: '22px' }}>📋</span>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#065F46', margin: 0 }}>
+                {language === 'es' ? 'Documentos que necesitas para completar este trámite' : 'Documents you need to complete this process'}
+              </h3>
+            </div>
+            <div style={{ display: 'grid', gap: '10px' }}>
+              {[
+                language === 'es'
+                  ? { icon: '🪪', title: 'Identificación con foto del solicitante', desc: 'Licencia, pasaporte o ID estatal — para notarización' }
+                  : { icon: '🪪', title: 'Photo ID of the claimant', desc: "Driver's license, passport or state ID — required for notarization" },
+                language === 'es'
+                  ? { icon: '📜', title: 'Certificado de defunción del fallecido', desc: 'Copia certificada emitida por el condado o el estado' }
+                  : { icon: '📜', title: 'Certified death certificate', desc: 'Certified copy issued by the county or state' },
+                language === 'es'
+                  ? { icon: '📋', title: 'Prueba de propiedad del bien', desc: 'Título del vehículo, estado de cuenta bancario, escritura u otro documento que muestre que el bien pertenecía al fallecido' }
+                  : { icon: '📋', title: 'Proof of ownership of the asset', desc: "Vehicle title, bank statement, deed, or other document showing the asset belonged to the deceased" },
+                language === 'es'
+                  ? { icon: '👨‍👩‍👧', title: 'Documentos de parentesco (si aplica)', desc: 'Acta de matrimonio, acta de nacimiento u otro documento que demuestre la relación con el fallecido' }
+                  : { icon: '👨‍👩‍👧', title: 'Proof of relationship (if applicable)', desc: 'Marriage certificate, birth certificate, or other document proving your relationship to the deceased' },
+                language === 'es'
+                  ? { icon: '📝', title: 'Testamento (si existe)', desc: 'Copia del testamento del fallecido, si lo tenía — aunque no es obligatorio para usar esta declaración' }
+                  : { icon: '📝', title: 'Will (if one exists)', desc: "Copy of the deceased's will, if they had one — not required but helpful" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', background: 'white', borderRadius: '8px', padding: '12px' }}>
+                  <span style={{ fontSize: '20px', flexShrink: 0 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontWeight: '700', fontSize: '14px', color: '#065F46' }}>{item.title}</div>
+                    <div style={{ fontSize: '13px', color: '#475569', marginTop: '2px' }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: '14px', padding: '10px 14px', background: '#D1FAE5', borderRadius: '8px' }}>
+              <p style={{ fontSize: '12px', color: '#065F46', margin: 0, fontWeight: '600' }}>
+                {language === 'es'
+                  ? '📌 Este proceso solo aplica si el valor total de los bienes del fallecido en California es menor a $184,500 (sin incluir bienes en fideicomiso o con beneficiario designado). Si el patrimonio es mayor, se requiere proceso de sucesión (probate) formal.'
+                  : '📌 This process only applies if the total value of the deceased\'s California assets is less than $184,500 (excluding trust assets or assets with a designated beneficiary). If the estate is larger, formal probate is required.'}
+              </p>
+            </div>
+          </div>
+        )}
+
         {(NOTARY_DOCS.includes(docType) || docType === 'travel_authorization' || (docType === 'guardianship_designation' && matter?.form_data?.tier && matter.form_data.tier !== 'basic')) && (
           <div style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)', borderRadius: '12px', padding: '20px', marginBottom: '24px', color: 'white' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>

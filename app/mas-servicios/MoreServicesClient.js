@@ -401,7 +401,7 @@ export default function MoreServicesClient({ lang = 'es' }) {
       `}</style>
 
       {/* Nav */}
-      <Navbar lang={language} />
+      <Navbar lang={language} langSwitchUrl={language === 'es' ? '/en/more-services' : '/mas-servicios'} />
 
       {/* Hero */}
       <section style={{ background: 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #2563EB 100%)', padding: '60px 16px', color: 'white', textAlign: 'center' }}>
