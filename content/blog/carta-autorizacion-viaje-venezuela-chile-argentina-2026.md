@@ -6,7 +6,7 @@ excerpt_en: "Venezuela, Chile and Argentina have their own requirements for mino
 category: travel
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/travel-authorization.jpg
+image: /blog/carta-viaje-venezuela-2026.jpg
 ---
 
 Las comunidades venezolana, chilena y argentina en Estados Unidos han crecido significativamente en los últimos años, especialmente en Miami, Houston, Los Ángeles y Nueva York. Si planea viajar con sus hijos a cualquiera de estos países, conozca los requisitos actuales para menores sin ambos padres.

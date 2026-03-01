@@ -6,7 +6,7 @@ excerpt_en: "The Dominican Republic requires notarized authorization for minors 
 category: travel
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/travel-authorization.jpg
+image: /blog/carta-viaje-republica-dominicana-2026.jpg
 ---
 
 La comunidad dominicana en Estados Unidos es una de las más grandes de América Latina, con concentraciones importantes en Nueva York (especialmente el Alto Manhattan y el Bronx), Boston, Providence, Miami y Lawrence, Massachusetts. Cada año, miles de familias dominicanas viajan con sus hijos a visitar familia en Santo Domingo, Santiago de los Caballeros, San Pedro de Macorís, y otras ciudades.

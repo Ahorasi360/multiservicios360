@@ -6,7 +6,7 @@ excerpt_en: "The Dominican Republic requires an official Minor's Permit. Venezue
 category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/rd-venezuela-paraguay-travel.jpg
+image: /blog/carta-viaje-republica-dominicana-2026.jpg
 ---
 
 ## República Dominicana

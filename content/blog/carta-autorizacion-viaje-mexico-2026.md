@@ -6,7 +6,7 @@ excerpt_en: "If your child travels to Mexico without both parents, Mexican law r
 category: travel
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/travel-authorization.jpg
+image: /blog/carta-viaje-mexico-2026.jpg
 ---
 
 Cada año, miles de familias latinas en California, Texas, Illinois y Florida envían a sus hijos a visitar abuelos, tíos, y primos en México. A veces viajan con mamá, a veces con papá, a veces con un familiar. Lo que muchas familias no saben es que la ley mexicana exige un documento específico cuando un menor viaja sin ambos padres.

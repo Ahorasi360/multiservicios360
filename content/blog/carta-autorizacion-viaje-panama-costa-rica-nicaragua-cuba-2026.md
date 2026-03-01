@@ -6,7 +6,7 @@ excerpt_en: "If traveling with minors to Panama, Costa Rica, Nicaragua or Cuba w
 category: travel
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/travel-authorization.jpg
+image: /blog/carta-viaje-panama-2026.jpg
 ---
 
 Panamá, Costa Rica, Nicaragua y Cuba representan cuatro destinos distintos de Centroamérica y el Caribe, cada uno con sus particularidades para viajeros con menores sin ambos padres. Aquí están los requisitos actualizados para 2026.

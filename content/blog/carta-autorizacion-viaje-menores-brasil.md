@@ -6,7 +6,7 @@ excerpt_en: "Brazil requires TWO original notarized letters, one for entry and o
 category: viaje
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/brazil-travel-auth.jpg
+image: /blog/carta-viaje-brasil-2026.jpg
 ---
 
 Si hay un país donde la carta de autorización de viaje para menores es absolutamente crítica, ese país es **Brasil**. La Policía Federal de Brasil, que controla los puntos de entrada y salida del país, tiene una de las políticas más estrictas del hemisferio cuando se trata de proteger a los menores de la sustracción internacional.

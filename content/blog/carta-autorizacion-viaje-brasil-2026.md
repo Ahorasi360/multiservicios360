@@ -6,7 +6,7 @@ excerpt_en: "Brazil requires TWO original letters and documents in Portuguese. I
 category: travel
 date: 2026-02-28
 author: Multi Servicios 360
-image: /blog/travel-authorization.jpg
+image: /blog/carta-viaje-brasil-2026.jpg
 ---
 
 Brasil tiene los requisitos **más estrictos de toda América Latina** para menores que viajan sin ambos padres. Si su familia tiene raíces brasileñas y planea viajar a São Paulo, Rio de Janeiro, o cualquier otro destino en Brasil, lea esto con atención — los detalles importan.
