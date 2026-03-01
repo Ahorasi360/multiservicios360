@@ -158,7 +158,7 @@ export async function GET(request) {
     .select('*')
     .in('status', ['emailed', 'visited', 'applied'])
     .not('email', 'is', null)
-    .or('followup_sent.is.null,followup_sent->>unsubscribed.is.null');
+    .neq('status', 'unsubscribed');
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -169,6 +169,8 @@ export async function GET(request) {
       const appliedAt = new Date(lead.applied_at || lead.visited_at);
       const hoursElapsed = (now - appliedAt) / (1000 * 60 * 60);
       const followup = lead.followup_sent || {};
+      // Skip if unsubscribed
+      if (followup.unsubscribed) { results.skipped.push(lead.ref + ' (unsubscribed)'); continue; }
 
       let emailKey = null;
       if (hoursElapsed >= 168 && !followup.day7) emailKey = 'day7';       // 7 days
