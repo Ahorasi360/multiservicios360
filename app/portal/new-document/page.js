@@ -54,6 +54,12 @@ function NewDocumentContent() {
       promissory_note: '/simple-doc?type=promissory_note&partner_mode=true',
       guardianship: '/simple-doc?type=guardianship_designation&partner_mode=true',
       revocation_poa: '/simple-doc?type=revocation_poa&partner_mode=true',
+      // Phase 2
+      small_estate_affidavit: '/simple-doc?type=small_estate_affidavit&partner_mode=true',
+      quitclaim_deed: '/simple-doc?type=quitclaim_deed&partner_mode=true',
+      contractor_agreement: '/simple-doc?type=contractor_agreement&partner_mode=true',
+      demand_letter: '/simple-doc?type=demand_letter&partner_mode=true',
+      apostille_letter: '/simple-doc?type=apostille_letter&partner_mode=true',
       // Estate Planning
       simple_will: '/simple-will?partner_mode=true',
       pour_over_will: '/pour-over-will?partner_mode=true',

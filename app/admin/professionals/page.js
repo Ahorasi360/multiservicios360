@@ -69,9 +69,19 @@ export default function AdminProfessionalsPage() {
 
   async function fetchMatters() {
     try {
-      const tables = ['poa_matters','limited_poa_matters','trust_matters','llc_matters'];
-      const types = ['general_poa','limited_poa','living_trust','llc_formation'];
-      const typeLabelsMap = { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC Formation' };
+      const tables = ['poa_matters','limited_poa_matters','trust_matters','llc_matters','simple_doc_matters'];
+      const types = ['general_poa','limited_poa','living_trust','llc_formation','simple_doc'];
+      const typeLabelsMap = { 
+        general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC Formation',
+        simple_doc:'Simple Document', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', 
+        authorization_letter:'Travel Authorization', guardianship_designation:'Guardianship',
+        revocation_poa:'POA Revocation', promissory_note:'Promissory Note', travel_authorization:'Travel Letter',
+        pour_over_will:'Pour-Over Will', simple_will:'Simple Will', hipaa_authorization:'HIPAA Authorization',
+        certification_of_trust:'Cert. of Trust', s_corp_formation:'S-Corp Formation', c_corp_formation:'C-Corp Formation',
+        corporate_minutes:'Corporate Minutes', banking_resolution:'Banking Resolution',
+        small_estate_affidavit:'Small Estate Affidavit', quitclaim_deed:'Quitclaim Deed',
+        contractor_agreement:'Contractor Agreement', demand_letter:'Demand Letter', apostille_letter:'Apostille Letter',
+      };
       let all = [];
       for (let i = 0; i < tables.length; i++) {
         const { data } = await supabaseQuery(tables[i]);
@@ -88,7 +98,12 @@ export default function AdminProfessionalsPage() {
   }
 
   async function supabaseQuery(table) {
-    const res = await fetch(`/api/staff/matters?service=${table === 'poa_matters' ? 'general_poa' : table === 'limited_poa_matters' ? 'limited_poa' : table === 'trust_matters' ? 'living_trust' : 'llc_formation'}&status=paid`, {
+    const tableToService = {
+      poa_matters: 'general_poa', limited_poa_matters: 'limited_poa',
+      trust_matters: 'living_trust', llc_matters: 'llc_formation', simple_doc_matters: 'simple_doc',
+    };
+    const service = tableToService[table] || 'general_poa';
+    const res = await fetch(`/api/staff/matters?service=${service}&status=paid`, {
       headers: { 'x-staff-id': 'admin-bypass-for-matters' }
     });
     const data = await res.json();

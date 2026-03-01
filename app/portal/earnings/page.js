@@ -12,7 +12,20 @@ const T = {
     all: 'Todos', thisMonth: 'Este Mes', lastMonth: 'Mes Anterior',
     status: {pending:'Pendiente', paid:'Pagado', cancelled:'Cancelado'},
     filterAll: 'Todos', loading: 'Cargando ganancias...', noEarnings: 'Sin ganancias aún.',
-    type: {general_poa:'Poder Notarial General', limited_poa:'Poder Notarial Limitado', living_trust:'Fideicomiso', llc_formation:'LLC', bill_of_sale:'Carta de Venta', affidavit:'Declaración Jurada', travel_authorization:'Carta de Viaje'},
+    type: {
+      general_poa:'Poder Notarial General', limited_poa:'Poder Notarial Limitado', 
+      living_trust:'Fideicomiso', llc_formation:'LLC', bill_of_sale:'Carta de Venta', 
+      affidavit:'Declaración Jurada', travel_authorization:'Carta de Viaje',
+      authorization_letter:'Carta de Viaje', guardianship_designation:'Designación de Guardián',
+      revocation_poa:'Revocación de Poder', promissory_note:'Pagaré',
+      pour_over_will:'Testamento', simple_will:'Testamento Simple',
+      hipaa_authorization:'Autorización HIPAA', certification_of_trust:'Cert. de Fideicomiso',
+      s_corp_formation:'Formación S-Corp', c_corp_formation:'Formación C-Corp',
+      corporate_minutes:'Actas Corporativas', banking_resolution:'Resolución Bancaria',
+      small_estate_affidavit:'Pequeño Patrimonio §13100', quitclaim_deed:'Escritura Quitclaim',
+      contractor_agreement:'Contrato de Contratista', demand_letter:'Carta de Cobro',
+      apostille_letter:'Carta de Apostilla', simple_doc:'Documento Legal',
+    },
     commission: 'Comisión', date: 'Fecha',
   },
   en: {
@@ -22,7 +35,20 @@ const T = {
     all: 'All', thisMonth: 'This Month', lastMonth: 'Last Month',
     status: {pending:'Pending', paid:'Paid', cancelled:'Cancelled'},
     filterAll: 'All', loading: 'Loading earnings...', noEarnings: 'No earnings yet.',
-    type: {general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC Formation', bill_of_sale:'Bill of Sale', affidavit:'Affidavit', travel_authorization:'Travel Authorization'},
+    type: {
+      general_poa:'General POA', limited_poa:'Limited POA', 
+      living_trust:'Living Trust', llc_formation:'LLC Formation', bill_of_sale:'Bill of Sale', 
+      affidavit:'Affidavit', travel_authorization:'Travel Authorization',
+      authorization_letter:'Travel Authorization', guardianship_designation:'Guardianship',
+      revocation_poa:'POA Revocation', promissory_note:'Promissory Note',
+      pour_over_will:'Pour-Over Will', simple_will:'Simple Will',
+      hipaa_authorization:'HIPAA Authorization', certification_of_trust:'Cert. of Trust',
+      s_corp_formation:'S-Corp Formation', c_corp_formation:'C-Corp Formation',
+      corporate_minutes:'Corporate Minutes', banking_resolution:'Banking Resolution',
+      small_estate_affidavit:'Small Estate Affidavit §13100', quitclaim_deed:'Quitclaim Deed',
+      contractor_agreement:'Contractor Agreement', demand_letter:'Demand Letter',
+      apostille_letter:'Apostille Letter', simple_doc:'Legal Document',
+    },
     commission: 'Commission', date: 'Date',
   }
 };
@@ -87,20 +113,22 @@ export default function PartnerEarnings() {
     const styles = {
       general_poa: 'bg-blue-500/20 text-blue-400',
       limited_poa: 'bg-green-500/20 text-green-400',
-      will: 'bg-purple-500/20 text-purple-400',
-      trust: 'bg-cyan-500/20 text-cyan-400',
-      llc: 'bg-orange-500/20 text-orange-400',
+      living_trust: 'bg-purple-500/20 text-purple-400',
+      llc_formation: 'bg-orange-500/20 text-orange-400',
+      authorization_letter: 'bg-pink-500/20 text-pink-400',
+      travel_authorization: 'bg-pink-500/20 text-pink-400',
+      bill_of_sale: 'bg-amber-500/20 text-amber-400',
+      affidavit: 'bg-cyan-500/20 text-cyan-400',
+      promissory_note: 'bg-red-500/20 text-red-400',
+      guardianship_designation: 'bg-teal-500/20 text-teal-400',
+      s_corp_formation: 'bg-emerald-500/20 text-emerald-400',
+      c_corp_formation: 'bg-sky-500/20 text-sky-400',
     };
-    const labels = {
-      general_poa: 'General POA',
-      limited_poa: 'Limited POA',
-      will: 'Will',
-      trust: 'Trust',
-      llc: 'LLC',
-    };
+    const t2 = T[lang];
+    const label = (t2?.type && t2.type[type]) || type?.replace(/_/g, ' ') || type;
     return (
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[type] || 'bg-slate-500/20 text-slate-400'}`}>
-        {labels[type] || type}
+        {label}
       </span>
     );
   };

@@ -376,6 +376,16 @@ export default function AdminDashboard() {
                 <div style={{ ...s.statNumber, color: '#7c3aed' }}>{stats.waitlistCount}</div>
                 <div style={s.statLabel}>Waitlist Signups</div>
               </div>
+              <div style={s.statCard}>
+                <div style={{ ...s.statIcon, backgroundColor: '#ecfdf5' }}>🤝</div>
+                <div style={{ ...s.statNumber, color: '#059669' }}>{stats.activePartners || 0}</div>
+                <div style={s.statLabel}>Active Partners</div>
+              </div>
+              <div style={s.statCard}>
+                <div style={{ ...s.statIcon, backgroundColor: '#fef9c3' }}>🏢</div>
+                <div style={{ ...s.statNumber, color: '#ca8a04' }}>{formatMoney(stats.partnerRevenue || 0)}</div>
+                <div style={s.statLabel}>Partner Fees Revenue</div>
+              </div>
             </div>
 
             {/* Quick Stats */}
@@ -401,9 +411,17 @@ export default function AdminDashboard() {
                     <span>LLC Formation</span>
                     <strong>{formatMoney(llcMatters.filter(m => m.status === 'paid' || m.status === 'completed').reduce((sum, m) => sum + (m.total_price || 0), 0))}</strong>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
                     <span>Simple Documents</span>
                     <strong>{formatMoney(simpleDocMatters.filter(m => m.status === 'paid' || m.status === 'completed').reduce((sum, m) => sum + (m.total_price || 0), 0))}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <span>Partner Setup Fees</span>
+                    <strong style={{ color: '#059669' }}>{formatMoney(stats.partnerRevenue || 0)}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', fontWeight: 700, fontSize: '16px' }}>
+                    <span>Total Revenue</span>
+                    <strong style={{ color: '#1d4ed8' }}>{formatMoney(stats.totalRevenue)}</strong>
                   </div>
                 </div>
               </div>

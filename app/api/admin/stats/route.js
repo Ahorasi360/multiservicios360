@@ -48,6 +48,18 @@ export async function GET(request) {
       .select('*')
       .order('created_at', { ascending: false });
 
+    // Fetch Partner Setup Fee Revenue
+    const { data: partnerPayments } = await supabase
+      .from('partner_payments')
+      .select('amount, status, payment_type, created_at')
+      .eq('status', 'paid');
+
+    // Fetch active partners count
+    const { count: activePartners } = await supabase
+      .from('partners')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active');
+
     if (poaError || limitedError || waitlistError) {
       console.error('Errors:', { poaError, limitedError, waitlistError, trustError, llcError, simpleDocError });
     }
@@ -67,11 +79,13 @@ export async function GET(request) {
     const simpleDocPaid = simpleDocs.filter(m => m.status === 'paid' || m.status === 'completed');
 
     const totalOrders = poaPaid.length + limitedPaid.length + trustPaid.length + llcPaid.length + simpleDocPaid.length;
-    const totalRevenue = poaPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
+    const documentRevenue = poaPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
                          limitedPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
                          trustPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
                          llcPaid.reduce((sum, m) => sum + (m.total_price || 0), 0) +
                          simpleDocPaid.reduce((sum, m) => sum + (m.total_price || 0), 0);
+    const partnerRevenue = (partnerPayments || []).reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+    const totalRevenue = documentRevenue + partnerRevenue;
     const pendingOrders = poa.filter(m => m.status === 'pending_payment').length +
                           limited.filter(m => m.status === 'draft' || m.status === 'pending_payment').length +
                           trust.filter(m => m.status === 'draft' || m.status === 'pending_payment').length +
@@ -83,8 +97,11 @@ export async function GET(request) {
       stats: {
         totalOrders,
         totalRevenue,
+        documentRevenue,
+        partnerRevenue,
         pendingOrders,
         waitlistCount: wait.length,
+        activePartners: activePartners || 0,
       },
       poaMatters: poa,
       limitedPoaMatters: limited,
