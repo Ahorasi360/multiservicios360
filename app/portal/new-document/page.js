@@ -54,6 +54,16 @@ function NewDocumentContent() {
       promissory_note: '/simple-doc?type=promissory_note&partner_mode=true',
       guardianship: '/simple-doc?type=guardianship_designation&partner_mode=true',
       revocation_poa: '/simple-doc?type=revocation_poa&partner_mode=true',
+      // Estate Planning
+      simple_will: '/simple-will?partner_mode=true',
+      pour_over_will: '/pour-over-will?partner_mode=true',
+      hipaa_authorization: '/hipaa-authorization?partner_mode=true',
+      certification_of_trust: '/certification-of-trust?partner_mode=true',
+      // Corporate
+      s_corp_formation: '/s-corp-formation?partner_mode=true',
+      c_corp_formation: '/c-corp-formation?partner_mode=true',
+      corporate_minutes: '/corporate-minutes?partner_mode=true',
+      banking_resolution: '/banking-resolution?partner_mode=true',
     };
     router.push(routes[docType] || '/portal/dashboard');
   };
@@ -71,6 +81,16 @@ function NewDocumentContent() {
     { key: 'promissory_note', label: 'Promissory Note', desc: 'Loan agreement and repayment terms.', price: '$49', color: 'red' },
     { key: 'guardianship', label: 'Guardianship Designation', desc: 'Designate a guardian for your children.', price: '$99–$299', color: 'teal' },
     { key: 'revocation_poa', label: 'POA Revocation', desc: 'Revoke an existing power of attorney.', price: '$49', color: 'slate' },
+    // Estate Planning
+    { key: 'simple_will', label: 'Simple Will', desc: 'Basic last will and testament with asset distribution.', price: '$149', color: 'violet' },
+    { key: 'pour_over_will', label: 'Pour-Over Will', desc: 'Will that transfers assets into a living trust.', price: '$149', color: 'indigo' },
+    { key: 'hipaa_authorization', label: 'HIPAA Authorization', desc: 'Authorize access to medical records and decisions.', price: '$49', color: 'rose' },
+    { key: 'certification_of_trust', label: 'Certification of Trust', desc: 'Verify trust existence for banks and institutions.', price: '$99', color: 'fuchsia' },
+    // Corporate
+    { key: 's_corp_formation', label: 'S-Corporation Formation', desc: 'Full S-Corp package: Articles, Bylaws, Minutes, Banking Resolution.', price: '$499', color: 'emerald' },
+    { key: 'c_corp_formation', label: 'C-Corporation Formation', desc: 'Full C-Corp package with preferred stock options.', price: '$499', color: 'sky' },
+    { key: 'corporate_minutes', label: 'Corporate Minutes', desc: 'Annual, special, or board of directors meeting minutes.', price: '$149', color: 'lime' },
+    { key: 'banking_resolution', label: 'Banking Resolution', desc: 'Required for opening business bank accounts.', price: '$99', color: 'yellow' },
   ];
 
   const colorMap = {
@@ -84,6 +104,14 @@ function NewDocumentContent() {
     red: 'bg-red-500/20 text-red-400 border-red-500',
     teal: 'bg-teal-500/20 text-teal-400 border-teal-500',
     slate: 'bg-slate-500/20 text-slate-400 border-slate-500',
+    violet: 'bg-violet-500/20 text-violet-400 border-violet-500',
+    indigo: 'bg-indigo-500/20 text-indigo-400 border-indigo-500',
+    rose: 'bg-rose-500/20 text-rose-400 border-rose-500',
+    fuchsia: 'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500',
+    emerald: 'bg-emerald-500/20 text-emerald-400 border-emerald-500',
+    sky: 'bg-sky-500/20 text-sky-400 border-sky-500',
+    lime: 'bg-lime-500/20 text-lime-400 border-lime-500',
+    yellow: 'bg-yellow-500/20 text-yellow-400 border-yellow-500',
   };
 
   if (loading) return (
