@@ -144,6 +144,7 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [selectedTier, setSelectedTier] = useState(null);
+  const [professionalUpsell, setProfessionalUpsell] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [draftRestored, setDraftRestored] = useState(false);
   const messagesEndRef = useRef(null);
@@ -154,6 +155,16 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
     standard: { amount: 19900, display: '$199', label_en: 'Standard', label_es: 'Estándar' },
     premium:  { amount: 29900, display: '$299', label_en: 'Premium', label_es: 'Premium' },
   };
+
+  // Professional upsell — shown for estate planning and corporate docs
+  const PROFESSIONAL_UPSELL_DOCS = [
+    'pour_over_will', 'simple_will', 'hipaa_authorization', 'certification_of_trust',
+    's_corp_formation', 'c_corp_formation', 'corporate_minutes', 'banking_resolution',
+    'trust', 'poa', 'limited_poa',
+  ];
+  const showProfessionalUpsell = PROFESSIONAL_UPSELL_DOCS.includes(docType);
+  const PROFESSIONAL_UPSELL_AMOUNT = 15000; // $150
+  const professionalUpsellDisplay = '$150';
 
   const t = WIZARD_TRANSLATIONS[language];
 
@@ -171,8 +182,12 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
   });
   const docTitle = language === 'es' ? docConfig.translations.es.title : docConfig.translations.en.title;
   const docSubtitle = language === 'es' ? docConfig.translations.es.subtitle : docConfig.translations.en.subtitle;
-  const priceDisplay = isGuardianship && selectedTier ? TIER_PRICING[selectedTier].display : docConfig.priceDisplay;
-  const priceCents = isGuardianship && selectedTier ? TIER_PRICING[selectedTier].amount : docConfig.price;
+  const basePrice = isGuardianship && selectedTier ? TIER_PRICING[selectedTier].amount : docConfig.price;
+  const basePriceDisplay = isGuardianship && selectedTier ? TIER_PRICING[selectedTier].display : docConfig.priceDisplay;
+  const priceCents = basePrice + (professionalUpsell ? PROFESSIONAL_UPSELL_AMOUNT : 0);
+  const priceDisplay = professionalUpsell
+    ? `$${(priceCents / 100).toFixed(0)}`
+    : basePriceDisplay;
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
@@ -769,13 +784,44 @@ export default function SimpleDocChatWizard({ docType, initialLang = 'es' }) {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                   <span>{t.platformAccess}{isGuardianship && selectedTier ? ` — ${TIER_PRICING[selectedTier][language === 'es' ? 'label_es' : 'label_en']}` : ''}</span>
-                  <span>{priceDisplay}</span>
+                  <span>{basePriceDisplay}</span>
                 </div>
+
+                {professionalUpsell && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#2563EB' }}>
+                    <span>{language === 'es' ? '⚖️ Conexión con Profesional' : '⚖️ Professional Review'}</span>
+                    <span>{professionalUpsellDisplay}</span>
+                  </div>
+                )}
 
                 <div style={{ borderTop: '2px solid #1F2937', paddingTop: '12px', marginTop: '12px', display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '20px' }}>
                   <span>{t.total}</span>
                   <span style={{ color: '#2563EB' }}>{priceDisplay}</span>
                 </div>
+
+                {/* Professional Attorney Upsell */}
+                {showProfessionalUpsell && (
+                  <div
+                    onClick={() => setProfessionalUpsell(!professionalUpsell)}
+                    style={{ marginTop: '16px', padding: '14px 16px', backgroundColor: professionalUpsell ? '#EFF6FF' : '#F8FAFC', borderRadius: '8px', border: `2px solid ${professionalUpsell ? '#2563EB' : '#E2E8F0'}`, cursor: 'pointer' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                      <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${professionalUpsell ? '#2563EB' : '#9CA3AF'}`, backgroundColor: professionalUpsell ? '#2563EB' : 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                        {professionalUpsell && <span style={{ color: 'white', fontSize: '13px', fontWeight: 'bold' }}>✓</span>}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: '600', fontSize: '14px', color: '#1F2937' }}>
+                          {language === 'es' ? '⚖️ Conexión con Profesional Legal — ' : '⚖️ Professional Legal Review — '}
+                          <span style={{ color: '#059669' }}>{professionalUpsellDisplay}</span>
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '4px', lineHeight: '1.5' }}>
+                          {language === 'es'
+                            ? 'Un abogado o notario de nuestra red revisará su documento y le contactará dentro de 48 horas para verificar y completar la notarización si aplica.'
+                            : 'An attorney or notary from our network will review your document and contact you within 48 hours to verify and complete notarization if applicable.'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Compliance clarification */}
                 <div style={{ marginTop: '16px', padding: '12px 16px', backgroundColor: '#FEF3C7', borderRadius: '8px', border: '1px solid #F59E0B' }}>

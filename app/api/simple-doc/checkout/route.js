@@ -10,6 +10,16 @@ const PRICING = {
   promissory_note: { amount: 8900, name: 'Promissory Note', nameEs: 'Pagaré' },
   guardianship_designation: { amount: 12900, name: 'Guardianship Designation', nameEs: 'Designación de Guardián' },
   travel_authorization: { amount: 4900, name: 'Travel Authorization Letter', nameEs: 'Carta de Autorización de Viaje' },
+  // Estate Planning
+  pour_over_will: { amount: 19900, name: 'Pour-Over Will', nameEs: 'Testamento con Cláusula de Fideicomiso' },
+  simple_will: { amount: 14900, name: 'Last Will and Testament', nameEs: 'Testamento Simple' },
+  hipaa_authorization: { amount: 9900, name: 'HIPAA Authorization', nameEs: 'Autorización HIPAA' },
+  certification_of_trust: { amount: 9900, name: 'Certification of Trust', nameEs: 'Certificación de Fideicomiso' },
+  // Corporate
+  s_corp_formation: { amount: 49900, name: 'S-Corporation Formation Package', nameEs: 'Paquete de Formación S-Corporation' },
+  c_corp_formation: { amount: 49900, name: 'C-Corporation Formation Package', nameEs: 'Paquete de Formación C-Corporation' },
+  corporate_minutes: { amount: 14900, name: 'Corporate Minutes', nameEs: 'Actas Corporativas' },
+  banking_resolution: { amount: 9900, name: 'Banking Resolution', nameEs: 'Resolución Bancaria' },
 };
 
 // Tiered pricing for guardianship
@@ -27,6 +37,14 @@ const SLUG_MAP = {
   promissory_note: 'promissory-note',
   guardianship_designation: 'guardianship',
   travel_authorization: 'travel-authorization',
+  pour_over_will: 'pour-over-will',
+  simple_will: 'simple-will',
+  hipaa_authorization: 'hipaa-authorization',
+  certification_of_trust: 'certification-of-trust',
+  s_corp_formation: 's-corp-formation',
+  c_corp_formation: 'c-corp-formation',
+  corporate_minutes: 'corporate-minutes',
+  banking_resolution: 'banking-resolution',
 };
 
 export async function POST(request) {

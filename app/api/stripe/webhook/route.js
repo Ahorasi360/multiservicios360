@@ -22,6 +22,16 @@ const TABLE_MAP = {
   promissory_note: 'simple_doc_matters',
   guardianship_designation: 'simple_doc_matters',
   travel_authorization: 'simple_doc_matters',
+  // Estate Planning
+  pour_over_will: 'simple_doc_matters',
+  simple_will: 'simple_doc_matters',
+  hipaa_authorization: 'simple_doc_matters',
+  certification_of_trust: 'simple_doc_matters',
+  // Corporate
+  s_corp_formation: 'simple_doc_matters',
+  c_corp_formation: 'simple_doc_matters',
+  corporate_minutes: 'simple_doc_matters',
+  banking_resolution: 'simple_doc_matters',
 };
 
 // Map document types to vault document types
@@ -37,6 +47,14 @@ const VAULT_DOC_MAP = {
   promissory_note: 'promissory_note',
   guardianship_designation: 'guardianship_designation',
   travel_authorization: 'travel_authorization',
+  pour_over_will: 'pour_over_will',
+  simple_will: 'simple_will',
+  hipaa_authorization: 'hipaa_authorization',
+  certification_of_trust: 'certification_of_trust',
+  s_corp_formation: 's_corp_formation',
+  c_corp_formation: 'c_corp_formation',
+  corporate_minutes: 'corporate_minutes',
+  banking_resolution: 'banking_resolution',
 };
 
 export async function POST(request) {

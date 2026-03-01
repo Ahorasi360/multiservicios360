@@ -5,7 +5,7 @@ import { saveToVault } from '../../../lib/save-to-vault';
 import { PDFDocument } from 'pdf-lib';
 import { lockPdf } from '../../../lib/lock-pdf';
 
-const NOTARY_DOCS = ['affidavit', 'revocation_poa'];
+const NOTARY_DOCS = ['affidavit', 'revocation_poa', 'certification_of_trust'];
 // Guardianship gets notary for standard+ tiers (handled separately below)
 
 const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);

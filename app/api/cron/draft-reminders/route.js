@@ -23,6 +23,14 @@ const DOC_NAMES = {
     promissory_note: 'Pagaré',
     authorization_letter: 'Carta de Autorización',
     revocation_poa: 'Revocación de Poder Notarial',
+    pour_over_will: 'Testamento con Cláusula de Fideicomiso',
+    simple_will: 'Testamento Simple',
+    hipaa_authorization: 'Autorización HIPAA',
+    certification_of_trust: 'Certificación de Fideicomiso',
+    s_corp_formation: 'Paquete S-Corporation',
+    c_corp_formation: 'Paquete C-Corporation',
+    corporate_minutes: 'Actas Corporativas',
+    banking_resolution: 'Resolución Bancaria',
   },
   en: {
     travel_authorization: 'Travel Authorization Letter',
@@ -36,6 +44,14 @@ const DOC_NAMES = {
     promissory_note: 'Promissory Note',
     authorization_letter: 'Authorization Letter',
     revocation_poa: 'POA Revocation',
+    pour_over_will: 'Pour-Over Will',
+    simple_will: 'Last Will & Testament',
+    hipaa_authorization: 'HIPAA Authorization',
+    certification_of_trust: 'Certification of Trust',
+    s_corp_formation: 'S-Corporation Formation Package',
+    c_corp_formation: 'C-Corporation Formation Package',
+    corporate_minutes: 'Corporate Minutes',
+    banking_resolution: 'Banking Resolution',
   }
 };
 
