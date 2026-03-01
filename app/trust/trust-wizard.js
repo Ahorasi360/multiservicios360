@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import { useDraftSave } from '../../lib/useDraftSave';
 import { QUESTIONS } from './trust-questions';
 import { TRANSLATIONS } from './trust-translations';
 import { TIERS, UPSELLS, getUpsellLabel, getUpsellDesc, getUpsellPrice, getUpsellBadge, calculateTotal, STYLES as st, SendIcon, GlobeIcon } from './trust-config';
@@ -83,8 +84,21 @@ export default function TrustIntakeWizard({ initialLang = 'es' }) {
   const [editValue, setEditValue] = useState('');
   const [attorneyFlags, setAttorneyFlags] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
+
+  const { checkForDraft, markCompleted } = useDraftSave({
+    email: clientEmail,
+    docType: 'trust',
+    clientName,
+    language,
+    intakeData,
+    currentQuestionIndex,
+    messages,
+    step: currentStep,
+    enabled: !!clientEmail && !draftRestored,
+  });
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -225,7 +239,7 @@ export default function TrustIntakeWizard({ initialLang = 'es' }) {
       if (result.success && result.matter?.id) {
         const sr = await fetch('/api/stripe/trust-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tier: reviewTier, addons: selectedUpsells, clientName, clientEmail, intakeData, language, matterId: result.matter.id }) });
         const sd = await sr.json();
-        if (sd.url) window.location.href = sd.url;
+        if (sd.url) { await markCompleted(); window.location.href = sd.url; }
         else alert(t.failedSubmit);
       } else alert(result.error || t.failedSubmit);
     } catch { alert(t.failedSubmit); }
@@ -299,7 +313,22 @@ export default function TrustIntakeWizard({ initialLang = 'es' }) {
               <div style={{ marginBottom: '16px' }}><label style={st.label}>{t.clientName} *</label><input type="text" value={clientName} onChange={e => setClientName(e.target.value)} style={st.input} /></div>
               <div style={{ marginBottom: '16px' }}><label style={st.label}>{t.clientEmail} *</label><input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} style={st.input} /></div>
               <div style={{ marginBottom: '24px' }}><label style={st.label}>{t.clientPhone}</label><input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)} style={st.input} /></div>
-              <button onClick={() => { if (clientName && clientEmail) setCurrentStep('intake'); else alert(t.provideNameEmail); }} style={{ ...st.btnPrimary, ...st.btnPurple }}>{t.continue}</button>
+              <button onClick={async () => {
+                if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
+                const draft = await checkForDraft(clientEmail);
+                if (draft && Object.keys(draft.intake_data || {}).length > 0) {
+                  const msg = language === 'en'
+                    ? `We found a saved draft from ${new Date(draft.updated_at).toLocaleDateString('en-US')}. Continue where you left off?`
+                    : `Encontramos un borrador del ${new Date(draft.updated_at).toLocaleDateString('es-US')}. ¿Continuar donde lo dejaste?`;
+                  if (window.confirm(msg)) {
+                    setIntakeData(draft.intake_data || {});
+                    setCurrentQuestionIndex(draft.current_question_index || 0);
+                    if (draft.messages?.length > 0) setMessages(draft.messages);
+                    setDraftRestored(true);
+                  }
+                }
+                setCurrentStep('intake');
+              }} style={{ ...st.btnPrimary, ...st.btnPurple }}>{t.continue}</button>
             </div>
           </div>
         )}

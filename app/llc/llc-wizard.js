@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import { useDraftSave } from '../../lib/useDraftSave';
 import { QUESTIONS, checkTierTrigger } from './llc-questions';
 import { TRANSLATIONS } from './llc-translations';
 import {
@@ -88,8 +89,21 @@ export default function LLCIntakeWizard({ initialLang = 'es' }) {
   const [editValue, setEditValue] = useState('');
   const [attorneyFlags, setAttorneyFlags] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
   const messagesEndRef = useRef(null);
   const t = TRANSLATIONS[language];
+
+  const { checkForDraft, markCompleted } = useDraftSave({
+    email: clientEmail,
+    docType: 'llc',
+    clientName,
+    language,
+    intakeData,
+    currentQuestionIndex,
+    messages,
+    step: currentStep,
+    enabled: !!clientEmail && !draftRestored,
+  });
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -359,7 +373,7 @@ export default function LLCIntakeWizard({ initialLang = 'es' }) {
           })
         });
         const sd = await sr.json();
-        if (sd.url) window.location.href = sd.url;
+        if (sd.url) { await markCompleted(); window.location.href = sd.url; }
         else alert(t.errorTryAgain);
       } else {
         alert(result.error || t.errorTryAgain);
@@ -477,7 +491,22 @@ export default function LLCIntakeWizard({ initialLang = 'es' }) {
                 <label style={st.label}>{t.clientPhone}</label>
                 <input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)} style={st.input} />
               </div>
-              <button onClick={() => { if (clientName && clientEmail) setCurrentStep('intake'); else alert(t.provideNameEmail); }} style={{ ...st.btnPrimary, ...st.btnBlue }}>
+              <button onClick={async () => {
+                if (!clientName || !clientEmail) { alert(t.provideNameEmail); return; }
+                const draft = await checkForDraft(clientEmail);
+                if (draft && Object.keys(draft.intake_data || {}).length > 0) {
+                  const msg = language === 'en'
+                    ? `We found a saved draft from ${new Date(draft.updated_at).toLocaleDateString('en-US')}. Continue where you left off?`
+                    : `Encontramos un borrador del ${new Date(draft.updated_at).toLocaleDateString('es-US')}. ¿Continuar donde lo dejaste?`;
+                  if (window.confirm(msg)) {
+                    setIntakeData(draft.intake_data || {});
+                    setCurrentQuestionIndex(draft.current_question_index || 0);
+                    if (draft.messages?.length > 0) setMessages(draft.messages);
+                    setDraftRestored(true);
+                  }
+                }
+                setCurrentStep('intake');
+              }} style={{ ...st.btnPrimary, ...st.btnBlue }}>
                 {t.continue}
               </button>
             </div>
