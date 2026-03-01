@@ -565,18 +565,52 @@ export default function HomeClient({ lang = 'es' }) {
           </div>
 
           {/* MORE SERVICES BANNER */}
-          <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-            <Link href="/mas-servicios" style={{ textDecoration: 'none', display: 'block', background: 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)', borderRadius: '16px', padding: '32px', textAlign: 'center', color: 'white', boxShadow: '0 4px 12px rgba(30, 58, 138, 0.3)' }}>
-              <h3 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '8px' }}>
-                {language === 'es' ? '¿Necesita Otros Documentos?' : 'Need Other Documents?'}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '24px' }}>
+            {/* PLANIFICACION FAMILIAR */}
+            <Link href={language === 'es' ? '/planificacion-familiar' : '/en/family-planning'} style={{ textDecoration: 'none', display: 'block', background: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)', borderRadius: '16px', padding: '28px', color: 'white', boxShadow: '0 4px 12px rgba(124,58,237,0.3)' }}>
+              <div style={{ fontSize: '36px', marginBottom: '12px' }}>👨‍👩‍👧‍👦</div>
+              <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>
+                {language === 'es' ? 'Planificación Familiar' : 'Family Planning'}
               </h3>
-              <p style={{ fontSize: '14px', color: '#BFDBFE', marginBottom: '16px', maxWidth: '500px', margin: '0 auto 16px' }}>
-                {language === 'es' 
-                  ? 'Carta de Venta, Declaración Jurada, Pagaré, Carta de Autorización, Designación de Guardián y más.' 
-                  : 'Bill of Sale, Affidavit, Promissory Note, Authorization Letter, Guardianship Designation and more.'}
+              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)', marginBottom: '16px', lineHeight: '1.5' }}>
+                {language === 'es'
+                  ? 'Testamentos, HIPAA, Certificación de Fideicomiso y más para proteger a su familia.'
+                  : 'Wills, HIPAA, Certification of Trust and more to protect your family.'}
               </p>
-              <span style={{ display: 'inline-block', padding: '10px 28px', backgroundColor: 'white', color: '#1E3A8A', borderRadius: '8px', fontWeight: '700', fontSize: '14px' }}>
-                {language === 'es' ? 'Ver Más Servicios' : 'View More Services'} →
+              <span style={{ display: 'inline-block', padding: '8px 20px', backgroundColor: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', color: 'white', borderRadius: '8px', fontWeight: '600', fontSize: '13px' }}>
+                {language === 'es' ? 'Ver Documentos →' : 'View Documents →'}
+              </span>
+            </Link>
+
+            {/* NEGOCIOS */}
+            <Link href={language === 'es' ? '/negocios' : '/en/business'} style={{ textDecoration: 'none', display: 'block', background: 'linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 100%)', borderRadius: '16px', padding: '28px', color: 'white', boxShadow: '0 4px 12px rgba(30,58,138,0.3)' }}>
+              <div style={{ fontSize: '36px', marginBottom: '12px' }}>🏢</div>
+              <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>
+                {language === 'es' ? 'Documentos de Negocios' : 'Business Documents'}
+              </h3>
+              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)', marginBottom: '16px', lineHeight: '1.5' }}>
+                {language === 'es'
+                  ? 'S-Corp, C-Corp, Actas Corporativas y Resoluciones Bancarias para su empresa.'
+                  : 'S-Corp, C-Corp, Corporate Minutes and Banking Resolutions for your business.'}
+              </p>
+              <span style={{ display: 'inline-block', padding: '8px 20px', backgroundColor: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', color: 'white', borderRadius: '8px', fontWeight: '600', fontSize: '13px' }}>
+                {language === 'es' ? 'Ver Documentos →' : 'View Documents →'}
+              </span>
+            </Link>
+          </div>
+
+          <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+            <Link href="/mas-servicios" style={{ textDecoration: 'none', display: 'block', background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', borderRadius: '16px', padding: '24px 32px', textAlign: 'center', color: 'white', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '6px' }}>
+                {language === 'es' ? '+ Todos los Documentos' : '+ All Documents'}
+              </h3>
+              <p style={{ fontSize: '13px', color: '#94A3B8', marginBottom: '12px', margin: '0 auto 12px' }}>
+                {language === 'es'
+                  ? 'Carta de Venta, Pagaré, Declaración Jurada, Guardián, Autorización de Viaje y más.'
+                  : 'Bill of Sale, Promissory Note, Affidavit, Guardianship, Travel Authorization and more.'}
+              </p>
+              <span style={{ display: 'inline-block', padding: '8px 24px', backgroundColor: 'white', color: '#0F172A', borderRadius: '8px', fontWeight: '700', fontSize: '13px' }}>
+                {language === 'es' ? 'Ver Todos los Servicios' : 'View All Services'} →
               </span>
             </Link>
           </div>
