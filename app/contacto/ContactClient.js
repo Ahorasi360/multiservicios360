@@ -151,12 +151,6 @@ export default function ContactClient({ lang: initialLang = 'es' }) {
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAFAFA', fontFamily: "'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" }}>
-      {/* Disclaimer */}
-      <div style={{ background: '#FCD34D', padding: '8px 16px', textAlign: 'center' }}>
-        <p style={{ fontSize: '12px', color: '#1E3A8A', margin: 0, fontWeight: '500' }}>
-          {lang === 'es' ? 'Multi Servicios 360 no es un bufete de abogados y no proporciona asesoría legal.' : 'Multi Servicios 360 is not a law firm and does not provide legal advice.'}
-        </p>
-      </div>
 
       {/* Nav */}
       <Navbar lang={lang} langSwitchUrl={lang === 'es' ? '/en/contact' : '/contacto'} />
