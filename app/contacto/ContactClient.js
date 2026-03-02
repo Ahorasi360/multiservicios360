@@ -167,14 +167,10 @@ export default function ContactClient({ lang: initialLang = 'es' }) {
         <div style={{ padding: '40px 0 20px' }}>
           <p style={{ fontSize: '16px', lineHeight: '1.8', color: '#334155', margin: '0 0 14px' }}>{t.intro[0]}</p>
           <p style={{ fontSize: '16px', lineHeight: '1.8', color: '#334155', margin: '0 0 20px' }} dangerouslySetInnerHTML={{ __html: introWithLinks(t.intro[1]) }} />
-          <div style={{ background: '#FEF3C7', border: '2px solid #F59E0B', borderRadius: '12px', padding: '18px 22px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <span style={{ fontSize: '20px', flexShrink: 0 }}>⚠️</span>
-            <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#92400E', fontWeight: '500', margin: 0 }}>{t.warning}</p>
-          </div>
         </div>
 
         {/* Form + Help + Departments - main section */}
-        <div style={{ background: '#FCD34D', borderRadius: '20px', padding: '40px', margin: '20px 0 40px' }}>
+        <div style={{ background: '#F8FAFC', borderRadius: '20px', padding: '40px', margin: '20px 0 40px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }} className="contact-grid">
             
             {/* Left: Form */}
