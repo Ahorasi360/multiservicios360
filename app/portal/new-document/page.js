@@ -134,22 +134,34 @@ function NewDocumentContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <nav className="bg-white border-b border-slate-200 shadow-sm">
+      {/* Professional Header */}
+      <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-20 items-center">
-            <button onClick={() => router.push('/portal/dashboard')} className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl shadow flex items-center justify-center">
-                <span className="text-lg font-bold text-white">MS</span>
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-xl font-bold text-white">MS</span>
               </div>
-              <span className="ml-3 text-xl font-bold text-slate-800">Multi Servicios 360</span>
-            </button>
-            <div className="flex items-center space-x-4">
-              <button onClick={() => router.push('/portal/dashboard')} className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-blue-50 text-sm font-medium">Dashboard</button>
-              <button onClick={() => { localStorage.removeItem('partner_token'); localStorage.removeItem('partner_id'); router.push('/portal/login'); }} className="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 text-sm font-medium">Logout</button>
+              <div className="ml-3">
+                <h1 className="text-xl font-bold text-slate-800">Multi Servicios 360</h1>
+                <p className="text-xs text-slate-500">Partner Portal</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-6">
+              <div className="hidden md:flex items-center text-sm text-slate-600">
+                <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <a href="tel:8552467274" className="hover:text-blue-600 font-medium">(855) 246-7274</a>
+              </div>
+              <div className="flex items-center space-x-3">
+                <button onClick={() => router.push('/portal/dashboard')} className="px-4 py-2 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">← Dashboard</button>
+                <button onClick={() => { localStorage.removeItem('partner_token'); localStorage.removeItem('partner_id'); localStorage.removeItem('partner_name'); localStorage.removeItem('partner_commission_rate'); router.push('/portal/login'); }} className="px-4 py-2 text-sm text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">Sign Out</button>
+              </div>
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Steps */}
@@ -164,7 +176,7 @@ function NewDocumentContent() {
         {step === 1 && (
           <div>
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white">Select a Client</h1>
+              <h1 className="text-3xl font-bold text-slate-800">Select a Client</h1>
               <p className="text-slate-400 mt-2">Choose which client this document is for</p>
             </div>
             {clients.length === 0 ? (
@@ -200,8 +212,8 @@ function NewDocumentContent() {
         {step === 2 && selectedClient && (
           <div>
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white">Choose Document Type</h1>
-              <p className="text-slate-400 mt-2">For: <span className="text-white font-medium">{selectedClient.client_name}</span></p>
+              <h1 className="text-3xl font-bold text-slate-800">Choose Document Type</h1>
+              <p className="text-slate-400 mt-2">For: <span className="text-slate-800 font-medium">{selectedClient.client_name}</span></p>
               <button onClick={() => { setStep(1); setSelectedClient(null); }} className="text-blue-600 hover:text-blue-700 text-sm mt-2 font-medium">← Change client</button>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
@@ -215,10 +227,10 @@ function NewDocumentContent() {
                     <div className={`w-12 h-12 ${bg} rounded-xl flex items-center justify-center mb-3`}>
                       <span className={`text-xl`}>📄</span>
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-1">{doc.label}</h3>
+                    <h3 className="text-lg font-bold text-slate-800 mb-1">{doc.label}</h3>
                     <p className="text-slate-400 text-sm mb-3">{doc.desc}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-white font-bold">{doc.price}</span>
+                      <span className="text-slate-700 font-bold">{doc.price}</span>
                       <span className="text-emerald-400 text-sm font-medium">Your commission: {cr}</span>
                     </div>
                   </button>
