@@ -239,7 +239,7 @@ export default function PartnerEarnings() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800">My Earnings</h1>
+          <h1 className="text-3xl font-bold text-slate-800">{t.heading}</h1>
           <p className="text-slate-500 mt-1">Track your commissions and payouts</p>
         </div>
 
@@ -248,8 +248,8 @@ export default function PartnerEarnings() {
           <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-500 text-sm">Total Earned</p>
-                <p className="text-3xl font-bold text-white mt-1">{formatMoney(stats?.totalEarned)}</p>
+                <p className="text-slate-500 text-sm">{t.totalEarnings}</p>
+                <p className="text-3xl font-bold text-slate-800 mt-1">{formatMoney(stats?.totalEarned)}</p>
               </div>
               <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -292,7 +292,7 @@ export default function PartnerEarnings() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-500 text-sm">Commission Rate</p>
-                <p className="text-3xl font-bold text-white mt-1">20%</p>
+                <p className="text-3xl font-bold text-slate-800 mt-1">20%</p>
               </div>
               <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
