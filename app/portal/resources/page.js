@@ -77,25 +77,6 @@ export default function PortalResourcesPage() {
 
   return (
     <div style={{ minHeight:'100vh', background:'#F8FAFC' }}>
-      <header style={{ background:'#fff', borderBottom:'1px solid #E2E8F0', padding:'0 24px' }}>
-        <div style={{ maxWidth:1100, margin:'0 auto', display:'flex', justifyContent:'space-between', alignItems:'center', height:64 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:14 }}>
-            <div style={{ width:40, height:40, background:'linear-gradient(135deg,#3B82F6,#1E3A8A)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <span style={{ fontWeight:'bold', color:'#fff', fontSize:14 }}>{t.brand}</span>
-            </div>
-            <div>
-              <div style={{ fontWeight:700, fontSize:16, color:'#1E293B' }}>{t.title}</div>
-              <div style={{ fontSize:12, color:'#64748B' }}>{partnerName}</div>
-            </div>
-          </div>
-          <div style={{ display:'flex', gap:8 }}>
-            <button onClick={toggleLang} style={{ padding:'6px 12px', background:'#F1F5F9', border:'1px solid #E2E8F0', borderRadius:20, fontSize:12, fontWeight:600, cursor:'pointer', color:'#475569' }}>
-              {lang==='es'?'English':'Español'}
-            </button>
-            <button onClick={() => router.push('/portal/dashboard')} style={{ padding:'8px 16px', fontSize:13, color:'#64748B', border:'none', background:'transparent', cursor:'pointer' }}>{t.back}</button>
-          </div>
-        </div>
-      </header>
 
       {/* Professional Header */}
       <header className="bg-white shadow-sm border-b border-slate-200">
@@ -209,4 +190,3 @@ export default function PortalResourcesPage() {
     </div>
   );
 }
-
