@@ -374,10 +374,10 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
           <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
           <P center muted>{t.services.intro}</P>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '24px', padding: '0 16px', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '24px', padding: '0', justifyContent: 'center', maxWidth: '1200px', margin: '24px auto 0' }}>
             {SERVICES.map((svc, i) => (
               <Link key={i} href={svc.href} style={{ textDecoration: 'none' }}>
-                <div style={{ background: '#fff', borderRadius: '14px', padding: '20px 16px', border: '2px solid #E2E8F0', transition: 'all 0.2s', cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '180px', flexShrink: 0 }}
+                <div style={{ background: '#fff', borderRadius: '14px', padding: '20px 16px', border: '2px solid #E2E8F0', transition: 'all 0.2s', cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '160px', flexShrink: 0 }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = svc.color; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
                   <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: `${svc.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px', fontSize: '26px' }}>{svc.icon}</div>
