@@ -14,6 +14,7 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [updating, setUpdating] = useState(false);
+  const [docTypeFilter, setDocTypeFilter] = useState('all');
 
   const fetchData = async (pwd) => {
     setLoading(true);
@@ -309,7 +310,7 @@ export default function AdminDashboard() {
             ].map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => { setActiveTab(tab.id); setDocTypeFilter('all'); }}
                 style={{ ...s.navBtn, ...(activeTab === tab.id ? s.navBtnActive : {}) }}
               >
                 {tab.label}
@@ -647,44 +648,92 @@ export default function AdminDashboard() {
         )}
 
         {/* Simple Docs Tab */}
-        {activeTab === 'simple-docs' && (
-          <div style={s.tableWrap}>
-            <div style={s.tableHeader}>
-              <h3 style={s.tableTitle}>Simple Document Orders ({filteredSimple.length})</h3>
-            </div>
-            <div style={s.tableScroll}><table style={s.table}>
-              <thead>
-                <tr>
-                  <th style={s.th}>Client</th>
-                  <th style={s.th}>Email</th>
-                  <th style={s.th}>Document Type</th>
-                  <th style={s.th}>Status</th>
-                  <th style={s.th}>Price</th>
-                  <th style={s.th}>Date</th>
-                  <th style={s.th}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredSimple.map(m => (
-                  <tr key={m.id}>
-                    <td style={s.td}><strong>{m.client_name}</strong></td>
-                    <td style={s.td}>{m.client_email}</td>
-                    <td style={s.td}><span style={{ textTransform: 'capitalize' }}>{(m.document_type || '').replace(/_/g, ' ')}</span></td>
-                    <td style={s.td}><span style={getBadgeStyle(m.status)}>{m.status?.replace('_', ' ')}</span></td>
-                    <td style={s.td}>{formatMoney(m.total_price)}</td>
-                    <td style={s.td}>{formatDate(m.created_at)}</td>
-                    <td style={s.td}>
-                      <button style={s.actionBtn} onClick={() => { setSelectedOrder({...m, table: 'simple_doc_matters'}); setShowModal(true); }}>View</button>
-                    </td>
+        {activeTab === 'simple-docs' && (() => {
+          const docTypeLabels = {
+            all: 'All',
+            travel_authorization: 'Travel Auth',
+            authorization_letter: 'Travel Auth',
+            bill_of_sale: 'Bill of Sale',
+            affidavit: 'Affidavit',
+            promissory_note: 'Promissory Note',
+            guardianship_designation: 'Guardianship',
+            revocation_poa: 'POA Revocation',
+            simple_will: 'Simple Will',
+            pour_over_will: 'Pour-Over Will',
+            hipaa_authorization: 'HIPAA Auth',
+            certification_of_trust: 'Cert. of Trust',
+            s_corp_formation: 'S-Corp',
+            c_corp_formation: 'C-Corp',
+            corporate_minutes: 'Corp. Minutes',
+            banking_resolution: 'Banking Resolution',
+            small_estate_affidavit: 'Small Estate §13100',
+            quitclaim_deed: 'Quitclaim Deed',
+            contractor_agreement: 'Contractor Agmt',
+            demand_letter: 'Demand Letter',
+            apostille_letter: 'Apostille Letter',
+          };
+          // Get unique doc types present in data
+          const presentTypes = [...new Set(filteredSimple.map(m => m.document_type).filter(Boolean))];
+          // Normalize travel_authorization and authorization_letter to same bucket
+          const normalizeType = (t) => t === 'authorization_letter' ? 'travel_authorization' : t;
+          const uniqueTypes = [...new Set(presentTypes.map(normalizeType))];
+          const typeFiltered = docTypeFilter === 'all'
+            ? filteredSimple
+            : filteredSimple.filter(m => normalizeType(m.document_type) === docTypeFilter);
+          return (
+            <div style={s.tableWrap}>
+              <div style={s.tableHeader}>
+                <h3 style={s.tableTitle}>Document Orders ({typeFiltered.length})</h3>
+              </div>
+              {/* Type filter pills */}
+              <div style={{ padding: '12px 20px 0', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {['all', ...uniqueTypes].map(type => {
+                  const label = type === 'all' ? `All (${filteredSimple.length})` : `${docTypeLabels[type] || type.replace(/_/g, ' ')} (${filteredSimple.filter(m => normalizeType(m.document_type) === type).length})`;
+                  const active = docTypeFilter === type;
+                  return (
+                    <button key={type} onClick={() => setDocTypeFilter(type)} style={{
+                      padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', border: 'none',
+                      background: active ? '#3b82f6' : '#f1f5f9',
+                      color: active ? '#fff' : '#475569',
+                      transition: 'all 0.15s',
+                    }}>{label}</button>
+                  );
+                })}
+              </div>
+              <div style={s.tableScroll}><table style={s.table}>
+                <thead>
+                  <tr>
+                    <th style={s.th}>Client</th>
+                    <th style={s.th}>Email</th>
+                    <th style={s.th}>Document Type</th>
+                    <th style={s.th}>Status</th>
+                    <th style={s.th}>Price</th>
+                    <th style={s.th}>Date</th>
+                    <th style={s.th}>Actions</th>
                   </tr>
-                ))}
-                {filteredSimple.length === 0 && (
-                  <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
-                )}
-              </tbody>
-            </table></div>
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {typeFiltered.map(m => (
+                    <tr key={m.id}>
+                      <td style={s.td}><strong>{m.client_name}</strong></td>
+                      <td style={s.td}>{m.client_email}</td>
+                      <td style={s.td}><span style={{ textTransform: 'capitalize' }}>{(m.document_type || '').replace(/_/g, ' ')}</span></td>
+                      <td style={s.td}><span style={getBadgeStyle(m.status)}>{m.status?.replace('_', ' ')}</span></td>
+                      <td style={s.td}>{formatMoney(m.total_price)}</td>
+                      <td style={s.td}>{formatDate(m.created_at)}</td>
+                      <td style={s.td}>
+                        <button style={s.actionBtn} onClick={() => { setSelectedOrder({...m, table: 'simple_doc_matters'}); setShowModal(true); }}>View</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {typeFiltered.length === 0 && (
+                    <tr><td colSpan={7} style={{ ...s.td, textAlign: 'center', color: '#94a3b8' }}>No orders found</td></tr>
+                  )}
+                </tbody>
+              </table></div>
+            </div>
+          );
+        })()}
 
         {/* Waitlist Tab */}
         {activeTab === 'waitlist' && (
