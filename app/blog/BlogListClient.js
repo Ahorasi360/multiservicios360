@@ -98,27 +98,6 @@ export default function BlogListClient({ posts, lang }) {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <div className="bg-amber-400"><div className="max-w-7xl mx-auto px-4 py-2"><p className="text-gray-900 text-xs text-center font-medium">{t.disclaimer}</p></div></div>
-
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 no-underline">
-            <div className="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center shadow-md"><span className="text-white font-extrabold text-xs">M360</span></div>
-            <div className="hidden sm:block"><span className="text-gray-900 font-bold text-sm block leading-tight">Multi Servicios 360</span><span className="text-gray-500 text-[10px] uppercase tracking-widest">Document Preparation</span></div>
-          </Link>
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/#services" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.services}</Link>
-            <Link href="/por-que-nosotros" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.whyUs}</Link>
-            <Link href="/nuestra-historia" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.ourStory}</Link>
-            <Link href={blogBase} className="text-blue-700 font-bold text-sm no-underline border-b-2 border-blue-700 pb-0.5">Blog</Link>
-            <Link href="/contacto" className="text-gray-700 hover:text-blue-700 text-sm font-medium no-underline">{t.contact}</Link>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href={toggleUrl} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors no-underline">🌐 {lang === 'es' ? 'EN' : 'ES'}</Link>
-            <a href="tel:8552467274" className="hidden sm:inline-flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold text-sm px-4 py-2 rounded-full no-underline transition-colors shadow-sm">📞 855.246.7274</a>
-          </div>
-        </div>
-      </nav>
 
       <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 py-14 sm:py-18">
         <div className="max-w-5xl mx-auto px-4 text-center">
