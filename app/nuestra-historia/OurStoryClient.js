@@ -367,11 +367,12 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
       </div>
 
       {/* Services CTA */}
-        <div style={{ padding: '60px 0 48px' }}>
+        <div style={{ padding: '60px 16px 48px', backgroundColor: '#F8FAFC' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
           <P center muted>{t.services.intro}</P>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px', marginTop: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px', marginTop: '24px' }}>
             {SERVICES.map((svc, i) => (
               <a key={i} href={svc.href} style={{ textDecoration: 'none', display: 'block' }}>
                 <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '28px', border: `2px solid ${svc.color}`, boxShadow: `0 4px 12px ${svc.color}26`, height: '100%', boxSizing: 'border-box', transition: 'transform 0.2s', cursor: 'pointer' }}
