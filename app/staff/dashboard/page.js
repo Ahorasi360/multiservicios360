@@ -170,9 +170,40 @@ export default function StaffDashboard() {
   }
 
   const fmt = (d) => d ? new Date(d).toLocaleDateString(lang==='es'?'es':'en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
-  const serviceLabels = { general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC', simple_doc:'Simple Doc' };
-  const serviceColors = { general_poa:'#2563EB', limited_poa:'#7C3AED', living_trust:'#059669', llc_formation:'#D97706', simple_doc:'#0891B2' };
-  const serviceSuccessUrls = { general_poa:'/poa/success', limited_poa:'/limited-poa/success', living_trust:'/trust/success', llc_formation:'/llc/success', simple_doc:'/simple-doc/success' };
+  const serviceLabels = {
+    general_poa:'General POA', limited_poa:'Limited POA', living_trust:'Living Trust', llc_formation:'LLC',
+    simple_doc:'Simple Doc', s_corp:'S-Corp', c_corp:'C-Corp', corporate_minutes:'Actas Corp.',
+    banking_resolution:'Resolución Bancaria', travel_authorization:'Carta de Viaje', authorization_letter:'Carta Autorización',
+    bill_of_sale:'Carta de Venta', affidavit:'Declaración Jurada', promissory_note:'Pagaré',
+    guardianship:'Guardián', revocation_poa:'Revocación POA', simple_will:'Testamento Simple',
+    pour_over_will:'Testamento Traspaso', hipaa_authorization:'HIPAA', certification_of_trust:'Cert. Fideicomiso',
+    small_estate_affidavit:'Suc. §13100', quitclaim_deed:'Escritura Traspaso', contractor_agreement:'Contrato Contratista',
+    demand_letter:'Carta Demanda', apostille_letter:'Apostilla',
+  };
+  const serviceColors = {
+    general_poa:'#2563EB', limited_poa:'#7C3AED', living_trust:'#059669', llc_formation:'#D97706',
+    simple_doc:'#0891B2', s_corp:'#D97706', c_corp:'#B45309', corporate_minutes:'#0284C7',
+    banking_resolution:'#065F46', travel_authorization:'#EC4899', authorization_letter:'#059669',
+    bill_of_sale:'#2563EB', affidavit:'#7C3AED', promissory_note:'#D97706',
+    guardianship:'#BE185D', revocation_poa:'#DC2626', simple_will:'#1E3A8A',
+    pour_over_will:'#7C3AED', hipaa_authorization:'#DC2626', certification_of_trust:'#059669',
+    small_estate_affidavit:'#1E3A8A', quitclaim_deed:'#059669', contractor_agreement:'#D97706',
+    demand_letter:'#DC2626', apostille_letter:'#7C3AED',
+  };
+  const serviceSuccessUrls = {
+    general_poa:'/poa/success', limited_poa:'/limited-poa/success', living_trust:'/trust/success',
+    llc_formation:'/llc/success', simple_doc:'/simple-doc/success', s_corp:'/s-corp-formation/success',
+    c_corp:'/c-corp-formation/success', corporate_minutes:'/corporate-minutes/success',
+    banking_resolution:'/banking-resolution/success', travel_authorization:'/travel-authorization/success',
+    authorization_letter:'/authorization-letter/success', bill_of_sale:'/bill-of-sale/success',
+    affidavit:'/affidavit/success', promissory_note:'/promissory-note/success',
+    guardianship:'/guardianship/success', revocation_poa:'/revocation-poa/success',
+    simple_will:'/simple-will/success', pour_over_will:'/pour-over-will/success',
+    hipaa_authorization:'/hipaa-authorization/success', certification_of_trust:'/certification-of-trust/success',
+    small_estate_affidavit:'/small-estate-affidavit/success', quitclaim_deed:'/quitclaim-deed/success',
+    contractor_agreement:'/contractor-agreement/success', demand_letter:'/demand-letter/success',
+    apostille_letter:'/apostille-letter/success',
+  };
   function regenerateDoc(matter) {
     const base = serviceSuccessUrls[matter.service_type];
     if (!base) return alert('Regenerate not supported for this document type.');
@@ -274,8 +305,38 @@ export default function StaffDashboard() {
               <input value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSearch()} placeholder="Search by name or email..." style={inp2} />
               <select value={serviceFilter} onChange={e=>{setServiceFilter(e.target.value); setTimeout(()=>fetchMatters(staffId),100);}} style={{...inp2, width:160}}>
                 <option value="">All Services</option>
-                <option value="general_poa">General POA</option><option value="limited_poa">Limited POA</option>
-                <option value="living_trust">Living Trust</option><option value="llc_formation">LLC</option>
+                <optgroup label="── Poder Notarial ──">
+                  <option value="general_poa">Poder Notarial General</option>
+                  <option value="limited_poa">Poder Notarial Limitado</option>
+                  <option value="revocation_poa">Revocación de Poder</option>
+                </optgroup>
+                <optgroup label="── Planificación ──">
+                  <option value="living_trust">Fideicomiso en Vida</option>
+                  <option value="certification_of_trust">Cert. Fideicomiso</option>
+                  <option value="simple_will">Testamento Simple</option>
+                  <option value="pour_over_will">Testamento de Traspaso</option>
+                  <option value="guardianship">Designación de Guardián</option>
+                  <option value="hipaa_authorization">Autorización HIPAA</option>
+                  <option value="small_estate_affidavit">Declaración Jurada Sucesión</option>
+                </optgroup>
+                <optgroup label="── Negocios ──">
+                  <option value="llc_formation">Formación LLC</option>
+                  <option value="s_corp">S-Corporation</option>
+                  <option value="c_corp">C-Corporation</option>
+                  <option value="corporate_minutes">Actas Corporativas</option>
+                  <option value="banking_resolution">Resolución Bancaria</option>
+                  <option value="contractor_agreement">Contrato Contratista</option>
+                </optgroup>
+                <optgroup label="── Documentos Simples ──">
+                  <option value="travel_authorization">Carta de Viaje</option>
+                  <option value="authorization_letter">Carta de Autorización</option>
+                  <option value="bill_of_sale">Carta de Venta</option>
+                  <option value="affidavit">Declaración Jurada</option>
+                  <option value="promissory_note">Pagaré</option>
+                  <option value="demand_letter">Carta de Demanda</option>
+                  <option value="apostille_letter">Solicitud de Apostilla</option>
+                  <option value="quitclaim_deed">Escritura de Traspaso</option>
+                </optgroup>
               </select>
               <select value={statusFilter} onChange={e=>{setStatusFilter(e.target.value); setTimeout(()=>fetchMatters(staffId),100);}} style={{...inp2, width:140}}>
                 <option value="">All Status</option>
@@ -433,7 +494,7 @@ export default function StaffDashboard() {
 
       {/* EDIT MATTER MODAL */}
       {editMatter && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:50, padding:16 }}>
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:16 }}>
           <div style={{ background:'#fff', borderRadius:16, padding:28, maxWidth:600, width:'100%', maxHeight:'90vh', overflowY:'auto', boxShadow:'0 20px 60px rgba(0,0,0,0.2)' }}>
             <h2 style={{ fontSize:18, fontWeight:700, color:'#0F172A', marginBottom:4 }}>✏️ Edit Matter</h2>
             <p style={{ fontSize:12, color:'#64748B', marginBottom:4 }}>
