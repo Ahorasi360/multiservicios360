@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 const T = {
   es: {
-    title: 'Recursos de Marketing', brand: 'MS', back: '← Volver al Panel',
+    title: 'Recursos de Marketing', brand: 'Portal de Socios', partnerAccount: 'Cuenta de Socio', membership: '💳 Membresía', signOut: 'Cerrar Sesión', back: '← Volver al Panel',
     nav: { dashboard: 'Panel', clients: 'Mis Clientes', documents: 'Documentos', earnings: 'Ganancias', resources: 'Recursos' },
     heading: '📦 Recursos de Marketing', desc: 'Descarga flyers, posters y materiales de marketing para tu oficina',
     all: 'Todos', loading: 'Cargando recursos...', empty: 'No hay recursos disponibles aún',
@@ -14,7 +14,7 @@ const T = {
     cats: { flyers: 'Flyers', posters: 'Posters', brochures: 'Folletos', social_media: 'Redes Sociales', training: 'Capacitación', general: 'General' },
   },
   en: {
-    title: 'Marketing Resources', brand: 'MS', back: '← Back to Dashboard',
+    title: 'Marketing Resources', brand: 'Partner Portal', partnerAccount: 'Partner Account', membership: '💳 Membership', signOut: 'Sign Out', back: '← Back to Dashboard',
     nav: { dashboard: 'Dashboard', clients: 'My Clients', documents: 'Documents', earnings: 'Earnings', resources: 'Resources' },
     heading: '📦 Marketing Resources', desc: 'Download flyers, posters, and marketing materials for your office',
     all: 'All', loading: 'Loading resources...', empty: 'No resources available yet',
@@ -29,6 +29,7 @@ export default function PortalResourcesPage() {
   const [lang, setLang] = useState('es');
   const [partnerId, setPartnerId] = useState('');
   const [partnerName, setPartnerName] = useState('');
+  const [partner, setPartner] = useState(null);
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
@@ -42,10 +43,13 @@ export default function PortalResourcesPage() {
     const name = localStorage.getItem('partner_name');
     if (!id) { router.push('/portal/login'); return; }
     setPartnerId(id); setPartnerName(name || '');
+    setPartner({ id, business_name: name || '', commission_rate: localStorage.getItem('partner_commission_rate') || '20' });
     fetchResources(id);
   }, []);
 
   function toggleLang() { const nl = lang === 'es' ? 'en' : 'es'; setLang(nl); localStorage.setItem('portal_lang', nl); }
+
+  function handleLogout() { ['partner_token','partner_id','partner_name','partner_commission_rate','partner_referral_code'].forEach(k => localStorage.removeItem(k)); router.push('/portal/login'); }
 
   async function fetchResources(id) {
     try {
@@ -93,13 +97,52 @@ export default function PortalResourcesPage() {
         </div>
       </header>
 
-      <nav style={{ background:'#fff', borderBottom:'1px solid #E2E8F0', padding:'0 24px' }}>
-        <div style={{ maxWidth:1100, margin:'0 auto', display:'flex', gap:0 }}>
-          {[['dashboard','/portal/dashboard'],['clients','/portal/clients'],['documents','/portal/documents'],['earnings','/portal/earnings'],['resources','/portal/resources']].map(([key,path])=>(
-            <button key={key} onClick={() => router.push(path)} style={{ padding:'12px 16px', fontSize:14, fontWeight:500, color: key==='resources'?'#3B82F6':'#64748B', borderBottom: key==='resources'?'2px solid #3B82F6':'2px solid transparent', background:'transparent', border:'none', borderBottom: key==='resources'?'2px solid #3B82F6':'2px solid transparent', cursor:'pointer' }}>
-              {t.nav[key]}
-            </button>
-          ))}
+      {/* Professional Header */}
+      <header className="bg-white shadow-sm border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-xl font-bold text-white">MS</span>
+                </div>
+                <div className="ml-3">
+                  <h1 className="text-xl font-bold text-slate-800">Multi Servicios 360</h1>
+                  <p className="text-xs text-slate-500">{t.brand}</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-6">
+              <div className="hidden md:flex items-center text-sm text-slate-600">
+                <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <a href="tel:8552467274" className="hover:text-blue-600 font-medium">(855) 246-7274</a>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm font-medium text-slate-800">{partner?.business_name}</p>
+                  <p className="text-xs text-slate-500">{t.partnerAccount}</p>
+                </div>
+                <button onClick={() => window.location.href = '/portal/membership'} className="px-4 py-2 text-sm text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">{t.membership}</button>
+                <button onClick={toggleLang} className="px-3 py-2 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">{lang === 'es' ? 'EN' : 'ES'}</button>
+                <button onClick={handleLogout} className="px-4 py-2 text-sm text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">{t.signOut}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Navigation Tabs */}
+      <nav className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-1">
+            <button onClick={() => router.push('/portal/dashboard')} className="px-4 py-3 text-sm font-medium border-b-2 transition-colors text-slate-600 hover:text-slate-800 border-transparent hover:border-slate-300">{t.nav.dashboard}</button>
+            <button onClick={() => router.push('/portal/clients')} className="px-4 py-3 text-sm font-medium border-b-2 transition-colors text-slate-600 hover:text-slate-800 border-transparent hover:border-slate-300">{t.nav.clients}</button>
+            <button onClick={() => router.push('/portal/documents')} className="px-4 py-3 text-sm font-medium border-b-2 transition-colors text-slate-600 hover:text-slate-800 border-transparent hover:border-slate-300">{t.nav.documents}</button>
+            <button onClick={() => router.push('/portal/earnings')} className="px-4 py-3 text-sm font-medium border-b-2 transition-colors text-slate-600 hover:text-slate-800 border-transparent hover:border-slate-300">{t.nav.earnings}</button>
+            <button onClick={() => router.push('/portal/resources')} className="px-4 py-3 text-sm font-medium border-b-2 transition-colors text-blue-600 border-blue-600">{lang === 'es' ? '📦 Recursos' : '📦 Resources'}</button>
+          </div>
         </div>
       </nav>
 
@@ -166,3 +209,4 @@ export default function PortalResourcesPage() {
     </div>
   );
 }
+
