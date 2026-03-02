@@ -223,30 +223,30 @@ const CONTENT = {
 };
 
 const SERVICES = [
-  { name: { es: 'Poder Notarial General', en: 'General Power of Attorney' }, href: '/poa', price: '$149', color: '#1E3A8A', icon: '⚖️' },
-  { name: { es: 'Poder Notarial Limitado', en: 'Limited Power of Attorney' }, href: '/limited-poa', price: '$99', color: '#F59E0B', icon: '📋' },
-  { name: { es: 'Fideicomiso en Vida', en: 'Living Trust' }, href: '/trust', price: '$499', color: '#10B981', icon: '🏠' },
-  { name: { es: 'Formación de LLC', en: 'LLC Formation' }, href: '/llc', price: '$299', color: '#8B5CF6', icon: '🏗️' },
-  { name: { es: 'Testamento Simple', en: 'Simple Will' }, href: '/simple-will', price: '$149', color: '#1E3A8A', icon: '📄' },
-  { name: { es: 'Testamento de Traspaso', en: 'Pour-Over Will' }, href: '/pour-over-will', price: '$199', color: '#7C3AED', icon: '📜' },
-  { name: { es: 'Autorización HIPAA', en: 'HIPAA Authorization' }, href: '/hipaa-authorization', price: '$99', color: '#DC2626', icon: '🏥' },
-  { name: { es: 'Certificación de Fideicomiso', en: 'Certification of Trust' }, href: '/certification-of-trust', price: '$99', color: '#059669', icon: '🔏' },
-  { name: { es: 'Formación S-Corporation', en: 'S-Corp Formation' }, href: '/s-corp-formation', price: '$499', color: '#D97706', icon: '🏢' },
-  { name: { es: 'Formación C-Corporation', en: 'C-Corp Formation' }, href: '/c-corp-formation', price: '$499', color: '#B45309', icon: '🏛️' },
-  { name: { es: 'Actas Corporativas', en: 'Corporate Minutes' }, href: '/corporate-minutes', price: '$149', color: '#0284C7', icon: '📋' },
-  { name: { es: 'Resolución Bancaria', en: 'Banking Resolution' }, href: '/banking-resolution', price: '$99', color: '#065F46', icon: '🏦' },
-  { name: { es: 'Carta de Autorización de Viaje', en: 'Travel Authorization' }, href: '/travel-authorization', price: '$49', color: '#EC4899', icon: '✈️' },
-  { name: { es: 'Carta de Venta', en: 'Bill of Sale' }, href: '/bill-of-sale', price: '$69', color: '#2563EB', icon: '🚗' },
-  { name: { es: 'Declaración Jurada', en: 'Affidavit' }, href: '/affidavit', price: '$89', color: '#7C3AED', icon: '📜' },
-  { name: { es: 'Pagaré', en: 'Promissory Note' }, href: '/promissory-note', price: '$89', color: '#D97706', icon: '💵' },
-  { name: { es: 'Designación de Guardián', en: 'Guardianship Designation' }, href: '/guardianship', price: '$129', color: '#BE185D', icon: '👨‍👧' },
-  { name: { es: 'Revocación de Poder', en: 'POA Revocation' }, href: '/revocation-poa', price: '$59', color: '#DC2626', icon: '❌' },
-  { name: { es: 'Declaración Jurada de Sucesión', en: 'Small Estate Affidavit' }, href: '/small-estate-affidavit', price: '$149', color: '#1E3A8A', icon: '🏛️' },
-  { name: { es: 'Escritura de Traspaso', en: 'Quitclaim Deed' }, href: '/quitclaim-deed', price: '$199', color: '#059669', icon: '🔑' },
-  { name: { es: 'Contrato de Contratista', en: 'Contractor Agreement' }, href: '/contractor-agreement', price: '$149', color: '#D97706', icon: '🤝' },
-  { name: { es: 'Carta de Demanda', en: 'Demand Letter' }, href: '/demand-letter', price: '$99', color: '#DC2626', icon: '📩' },
-  { name: { es: 'Solicitud de Apostilla', en: 'Apostille Request' }, href: '/apostille-letter', price: '$79', color: '#7C3AED', icon: '🌍' },
-  { name: { es: 'Carta de Autorización', en: 'Authorization Letter' }, href: '/authorization-letter', price: '$49', color: '#059669', icon: '✉️' },
+  { name: { es: 'Poder Notarial General', en: 'General Power of Attorney' }, href: '/poa', price: '$149', color: '#1E3A8A', icon: '⚖️', desc: { es: 'Poder amplio para asuntos financieros y personales.', en: 'Broad power for financial and personal matters.' }, tags: { es: ['Finanzas', 'Salud', 'Bienes'], en: ['Finance', 'Health', 'Property'] } },
+  { name: { es: 'Poder Notarial Limitado', en: 'Limited Power of Attorney' }, href: '/limited-poa', price: '$99', color: '#F59E0B', icon: '📋', desc: { es: 'Poder específico para situaciones concretas.', en: 'Specific power for concrete situations.' }, tags: { es: ['Bienes Raíces', 'Banco', 'Impuestos'], en: ['Real Estate', 'Bank', 'Taxes'] } },
+  { name: { es: 'Fideicomiso en Vida', en: 'Living Trust' }, href: '/trust', price: '$499', color: '#10B981', icon: '🏠', desc: { es: 'Proteja sus bienes y evite el proceso de sucesión.', en: 'Protect your assets and avoid probate.' }, tags: { es: ['Evita Probate', 'Privacidad', 'Control Total'], en: ['Avoids Probate', 'Privacy', 'Full Control'] } },
+  { name: { es: 'Formación de LLC', en: 'LLC Formation' }, href: '/llc', price: '$299', color: '#8B5CF6', icon: '🏗️', desc: { es: 'Crea tu LLC con documentos completos conforme a California.', en: 'Create your LLC with complete California documents.' }, tags: { es: ['Protección', 'Estructura Básica', 'Bilingüe'], en: ['Protection', 'Basic Structure', 'Bilingual'] } },
+  { name: { es: 'Testamento Simple', en: 'Simple Will' }, href: '/simple-will', price: '$149', color: '#1E3A8A', icon: '📄', desc: { es: 'Indique cómo distribuir sus bienes al fallecer.', en: 'Specify how to distribute your assets upon death.' }, tags: { es: ['Bienes', 'Familia', 'Herencia'], en: ['Assets', 'Family', 'Inheritance'] } },
+  { name: { es: 'Testamento de Traspaso', en: 'Pour-Over Will' }, href: '/pour-over-will', price: '$199', color: '#7C3AED', icon: '📜', desc: { es: 'Complemento del fideicomiso para bienes no incluidos.', en: 'Trust complement for assets not included.' }, tags: { es: ['Fideicomiso', 'Bienes', 'Protección'], en: ['Trust', 'Assets', 'Protection'] } },
+  { name: { es: 'Autorización HIPAA', en: 'HIPAA Authorization' }, href: '/hipaa-authorization', price: '$99', color: '#DC2626', icon: '🏥', desc: { es: 'Autorice a personas de confianza acceder a su información médica.', en: 'Authorize trusted people to access your medical info.' }, tags: { es: ['Médico', 'Emergencia', 'Privacidad'], en: ['Medical', 'Emergency', 'Privacy'] } },
+  { name: { es: 'Certificación de Fideicomiso', en: 'Certification of Trust' }, href: '/certification-of-trust', price: '$99', color: '#059669', icon: '🔏', desc: { es: 'Documento que certifica la existencia de su fideicomiso.', en: 'Document certifying the existence of your trust.' }, tags: { es: ['Banco', 'Bienes Raíces', 'Legal'], en: ['Bank', 'Real Estate', 'Legal'] } },
+  { name: { es: 'Formación S-Corporation', en: 'S-Corp Formation' }, href: '/s-corp-formation', price: '$499', color: '#D97706', icon: '🏢', desc: { es: 'Estructura corporativa con beneficios fiscales para su negocio.', en: 'Corporate structure with tax benefits for your business.' }, tags: { es: ['Impuestos', 'Corporación', 'Negocio'], en: ['Taxes', 'Corporation', 'Business'] } },
+  { name: { es: 'Formación C-Corporation', en: 'C-Corp Formation' }, href: '/c-corp-formation', price: '$499', color: '#B45309', icon: '🏛️', desc: { es: 'Estructura corporativa completa para negocios en crecimiento.', en: 'Full corporate structure for growing businesses.' }, tags: { es: ['Inversores', 'Acciones', 'Corporación'], en: ['Investors', 'Shares', 'Corporation'] } },
+  { name: { es: 'Actas Corporativas', en: 'Corporate Minutes' }, href: '/corporate-minutes', price: '$149', color: '#0284C7', icon: '📋', desc: { es: 'Registro oficial de las decisiones de su empresa.', en: 'Official record of your company decisions.' }, tags: { es: ['Cumplimiento', 'Anual', 'Corporación'], en: ['Compliance', 'Annual', 'Corporation'] } },
+  { name: { es: 'Resolución Bancaria', en: 'Banking Resolution' }, href: '/banking-resolution', price: '$99', color: '#065F46', icon: '🏦', desc: { es: 'Autorice a representantes para manejar cuentas bancarias.', en: 'Authorize representatives to manage bank accounts.' }, tags: { es: ['Banco', 'Corporación', 'Firma'], en: ['Bank', 'Corporation', 'Signature'] } },
+  { name: { es: 'Carta de Autorización de Viaje', en: 'Travel Authorization' }, href: '/travel-authorization', price: '$49', color: '#EC4899', icon: '✈️', desc: { es: 'Autorización para menores que viajan sin sus padres.', en: 'Authorization for minors traveling without parents.' }, tags: { es: ['Menores', 'Viaje', 'Internacional'], en: ['Minors', 'Travel', 'International'] } },
+  { name: { es: 'Carta de Venta', en: 'Bill of Sale' }, href: '/bill-of-sale', price: '$69', color: '#2563EB', icon: '🚗', desc: { es: 'Documento oficial para compraventa de bienes o vehículos.', en: 'Official document for sale of goods or vehicles.' }, tags: { es: ['Vehículo', 'Bienes', 'Contrato'], en: ['Vehicle', 'Property', 'Contract'] } },
+  { name: { es: 'Declaración Jurada', en: 'Affidavit' }, href: '/affidavit', price: '$89', color: '#7C3AED', icon: '📜', desc: { es: 'Declaración legal firmada bajo juramento.', en: 'Legal statement signed under oath.' }, tags: { es: ['Legal', 'Declaración', 'Oficial'], en: ['Legal', 'Statement', 'Official'] } },
+  { name: { es: 'Pagaré', en: 'Promissory Note' }, href: '/promissory-note', price: '$89', color: '#D97706', icon: '💵', desc: { es: 'Compromiso de pago entre dos partes por escrito.', en: 'Written payment commitment between two parties.' }, tags: { es: ['Préstamo', 'Pago', 'Contrato'], en: ['Loan', 'Payment', 'Contract'] } },
+  { name: { es: 'Designación de Guardián', en: 'Guardianship Designation' }, href: '/guardianship', price: '$129', color: '#BE185D', icon: '👨‍👧', desc: { es: 'Nombre a un guardián para sus hijos en caso de emergencia.', en: 'Name a guardian for your children in emergencies.' }, tags: { es: ['Hijos', 'Emergencia', 'Familia'], en: ['Children', 'Emergency', 'Family'] } },
+  { name: { es: 'Revocación de Poder', en: 'POA Revocation' }, href: '/revocation-poa', price: '$59', color: '#DC2626', icon: '❌', desc: { es: 'Cancele un poder notarial previamente otorgado.', en: 'Cancel a previously granted power of attorney.' }, tags: { es: ['Cancelación', 'Legal', 'Protección'], en: ['Cancellation', 'Legal', 'Protection'] } },
+  { name: { es: 'Declaración Jurada de Sucesión', en: 'Small Estate Affidavit' }, href: '/small-estate-affidavit', price: '$149', color: '#1E3A8A', icon: '🏛️', desc: { es: 'Transfiera bienes de un familiar fallecido sin ir a corte.', en: 'Transfer assets from a deceased relative without court.' }, tags: { es: ['Sucesión', 'Sin Corte', 'Herencia'], en: ['Estate', 'No Court', 'Inheritance'] } },
+  { name: { es: 'Escritura de Traspaso', en: 'Quitclaim Deed' }, href: '/quitclaim-deed', price: '$199', color: '#059669', icon: '🔑', desc: { es: 'Transfiera propiedad inmueble entre personas de confianza.', en: 'Transfer real property between trusted people.' }, tags: { es: ['Propiedad', 'Familia', 'Transferencia'], en: ['Property', 'Family', 'Transfer'] } },
+  { name: { es: 'Contrato de Contratista', en: 'Contractor Agreement' }, href: '/contractor-agreement', price: '$149', color: '#D97706', icon: '🤝', desc: { es: 'Contrato profesional para servicios de contratistas.', en: 'Professional contract for contractor services.' }, tags: { es: ['Construcción', 'Servicios', 'Contrato'], en: ['Construction', 'Services', 'Contract'] } },
+  { name: { es: 'Carta de Demanda', en: 'Demand Letter' }, href: '/demand-letter', price: '$99', color: '#DC2626', icon: '📩', desc: { es: 'Carta formal exigiendo pago o acción a otra persona.', en: 'Formal letter demanding payment or action.' }, tags: { es: ['Deuda', 'Disputa', 'Legal'], en: ['Debt', 'Dispute', 'Legal'] } },
+  { name: { es: 'Solicitud de Apostilla', en: 'Apostille Request' }, href: '/apostille-letter', price: '$79', color: '#7C3AED', icon: '🌍', desc: { es: 'Certifique documentos para uso en el extranjero.', en: 'Certify documents for use abroad.' }, tags: { es: ['Internacional', 'Certificación', 'Extranjero'], en: ['International', 'Certification', 'Abroad'] } },
+  { name: { es: 'Carta de Autorización', en: 'Authorization Letter' }, href: '/authorization-letter', price: '$49', color: '#059669', icon: '✉️', desc: { es: 'Autorice a una persona para actuar en su nombre.', en: 'Authorize a person to act on your behalf.' }, tags: { es: ['Autorización', 'Representación', 'Oficial'], en: ['Authorization', 'Representation', 'Official'] } },
 ];
 
 export default function OurStoryClient({ lang: initialLang = 'es' }) {
@@ -374,22 +374,28 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
           <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
           <P center muted>{t.services.intro}</P>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px', marginTop: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px', marginTop: '24px' }}>
             {SERVICES.map((svc, i) => (
               <a key={i} href={svc.href} style={{ textDecoration: 'none', display: 'block' }}>
-                <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '24px', border: `2px solid ${svc.color}`, boxShadow: `0 4px 12px ${svc.color}26`, height: '100%', boxSizing: 'border-box', transition: 'transform 0.2s', cursor: 'pointer' }}
+                <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '28px', border: `2px solid ${svc.color}`, boxShadow: `0 4px 12px ${svc.color}26`, height: '100%', boxSizing: 'border-box', transition: 'transform 0.2s', cursor: 'pointer' }}
                   onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
                   onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                    <div style={{ width: '56px', height: '56px', backgroundColor: `${svc.color}18`, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>{svc.icon}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                    <div style={{ width: '56px', height: '56px', backgroundColor: `${svc.color}18`, borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', flexShrink: 0 }}>{svc.icon}</div>
                     <div>
                       <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', marginBottom: '4px', display: 'inline-block' }}>✓ DISPONIBLE</div>
-                      <div style={{ fontSize: '14px', fontWeight: '700', color: '#1F2937', lineHeight: '1.3' }}>{svc.name[lang]}</div>
+                      <div style={{ fontSize: '16px', fontWeight: '700', color: '#1F2937', lineHeight: '1.3' }}>{svc.name[lang]}</div>
                     </div>
                   </div>
-                  <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '18px', fontWeight: '800', color: svc.color }}>{svc.price}</span>
-                    <span style={{ padding: '6px 14px', backgroundColor: svc.color, color: 'white', borderRadius: '8px', fontWeight: '600', fontSize: '12px' }}>
+                  <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '12px', lineHeight: '1.5' }}>{svc.desc[lang]}</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '16px' }}>
+                    {svc.tags[lang].map((tag, j) => (
+                      <span key={j} style={{ backgroundColor: `${svc.color}18`, color: svc.color, padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: '500' }}>{tag}</span>
+                    ))}
+                  </div>
+                  <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '22px', fontWeight: '800', color: svc.color }}>{svc.price}</span>
+                    <span style={{ padding: '8px 18px', backgroundColor: svc.color, color: 'white', borderRadius: '8px', fontWeight: '600', fontSize: '13px' }}>
                       {t.services.cta} →
                     </span>
                   </div>
