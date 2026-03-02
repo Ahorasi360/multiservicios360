@@ -409,6 +409,7 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
             </a>
           </div>
         </div>
+      </div>
 
       <footer style={{ background: '#0F172A', color: '#fff', padding: '32px 24px', textAlign: 'center', marginTop: '40px' }}>
         <p style={{ fontWeight: '700', fontSize: '16px', marginBottom: '8px' }}>Multi Servicios 360</p>
