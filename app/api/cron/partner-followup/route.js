@@ -128,7 +128,8 @@ const EMAILS = {
         </div>
         <div style="padding:24px;background:white;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;">
           <p style="font-size:15px;color:#374151;line-height:1.7;">Hola ${lead.contact_name?.split(' ')[0] || ''},</p>
-          <p style="font-size:15px;color:#374151;line-height:1.7;">Este es mi último email para no molestarle. Entiendo que todos estamos ocupados y que el momento tiene que ser el correcto.</p>
+          <p style="font-size:14px;color:#6b7280;line-height:1.7;font-style:italic;">Le pido disculpas si recibió mensajes repetidos esta semana — tuvimos un problema técnico con nuestro sistema de envíos. Lamentamos cualquier molestia.</p>
+          <p style="font-size:15px;color:#374151;line-height:1.7;">Este es mi último mensaje. Entiendo que todos estamos ocupados y que el momento tiene que ser el correcto.</p>
           <p style="font-size:15px;color:#374151;line-height:1.7;">Cuando esté listo para agregar un flujo de ingresos adicional a su negocio ayudando a su comunidad con documentos legales — aquí estaremos.</p>
           <a href="${SITE_URL}/hazte-socio?ref=${lead.ref}" style="display:inline-block;margin-top:8px;padding:14px 28px;background:#1E3A8A;color:white;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none;">Ver la oportunidad →</a>
           <p style="font-size:14px;color:#6b7280;margin-top:16px;">📞 855.246.7274 &nbsp;|&nbsp; info@multiservicios360.net</p>
