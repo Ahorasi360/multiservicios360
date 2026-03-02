@@ -400,3 +400,20 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
               </a>
             ))}
           </div>
+
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <p style={{ fontSize: '16px', color: '#64748B', marginBottom: '16px' }}>¿Tienes preguntas?</p>
+            <a href="tel:8552467274" style={{ display: 'inline-block', background: '#1E3A8A', color: '#fff', padding: '14px 32px', borderRadius: '10px', fontWeight: '700', fontSize: '16px', textDecoration: 'none' }}>
+              📞 Llámanos al (855) 246-7274
+            </a>
+          </div>
+        </div>
+
+      <footer style={{ background: '#0F172A', color: '#fff', padding: '32px 24px', textAlign: 'center', marginTop: '40px' }}>
+        <p style={{ fontWeight: '700', fontSize: '16px', marginBottom: '8px' }}>Multi Servicios 360</p>
+        <p style={{ fontSize: '13px', color: '#94A3B8', marginBottom: '4px' }}>multiservicios360.net  |  (855) 246-7274</p>
+        <p style={{ fontSize: '11px', color: '#64748B', margin: 0 }}>Multi Servicios 360 no es un bufete de abogados. Este es un servicio de preparación de documentos de autoayuda.</p>
+      </footer>
+    </div>
+  );
+}
