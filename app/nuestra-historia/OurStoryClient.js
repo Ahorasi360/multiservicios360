@@ -374,14 +374,14 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
           <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
           <P center muted>{t.services.intro}</P>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px', marginTop: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px', marginTop: '24px' }}>
             {SERVICES.map((svc, i) => (
               <a key={i} href={svc.href} style={{ textDecoration: 'none', display: 'block' }}>
-                <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '20px', border: `2px solid ${svc.color}`, boxShadow: `0 4px 12px ${svc.color}26`, height: '100%', boxSizing: 'border-box', transition: 'transform 0.2s', cursor: 'pointer' }}
+                <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '24px', border: `2px solid ${svc.color}`, boxShadow: `0 4px 12px ${svc.color}26`, height: '100%', boxSizing: 'border-box', transition: 'transform 0.2s', cursor: 'pointer' }}
                   onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
                   onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                    <div style={{ width: '48px', height: '48px', backgroundColor: `${svc.color}18`, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>{svc.icon}</div>
+                    <div style={{ width: '56px', height: '56px', backgroundColor: `${svc.color}18`, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>{svc.icon}</div>
                     <div>
                       <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', marginBottom: '4px', display: 'inline-block' }}>✓ DISPONIBLE</div>
                       <div style={{ fontSize: '14px', fontWeight: '700', color: '#1F2937', lineHeight: '1.3' }}>{svc.name[lang]}</div>
