@@ -167,18 +167,7 @@ export default function PartnerClients() {
         </div>
       </nav>
 
-      {/* Navigation Tabs */}
-      <nav className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-1">
-            <button onClick={() => router.push('/portal/dashboard')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Dashboard</button>
-            <button onClick={() => router.push('/portal/clients')} className="px-4 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600">My Clients</button>
-            <button onClick={() => router.push('/portal/documents')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Documents</button>
-            <button onClick={() => router.push('/portal/earnings')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">Earnings</button>
-            <button onClick={() => router.push('/portal/resources')} className="px-4 py-3 text-sm font-medium text-slate-600 hover:text-slate-800 border-b-2 border-transparent hover:border-slate-300">📦 Resources</button>
-          </div>
-        </div>
-      </nav>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
