@@ -328,9 +328,6 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
           <P bold>{t.whatIs.listIntro}</P>
           <BulletList items={t.whatIs.items} />
           <P>{t.whatIs.text2}</P>
-          <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: '10px', padding: '16px 20px', margin: '16px 0' }}>
-            <p style={{ color: '#92400E', fontSize: '14px', fontWeight: '600', margin: 0 }}>{t.whatIs.disclaimer}</p>
-          </div>
           <P>{t.whatIs.closing}</P>
         </Section>
 
