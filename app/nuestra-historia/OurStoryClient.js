@@ -374,50 +374,26 @@ export default function OurStoryClient({ lang: initialLang = 'es' }) {
           <h2 style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginBottom: '8px', textAlign: 'center' }}>{t.services.title}</h2>
           <P center muted>{t.services.intro}</P>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '24px', padding: '0', justifyContent: 'center', maxWidth: '1200px', margin: '24px auto 0' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px', marginTop: '24px' }}>
             {SERVICES.map((svc, i) => (
-              <Link key={i} href={svc.href} style={{ textDecoration: 'none' }}>
-                <div style={{ background: '#fff', borderRadius: '14px', padding: '20px 16px', border: '2px solid #E2E8F0', transition: 'all 0.2s', cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '160px', flexShrink: 0 }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = svc.color; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-                  <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: `${svc.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px', fontSize: '26px' }}>{svc.icon}</div>
-                  <div style={{ fontWeight: '700', fontSize: '14px', color: '#0F172A', marginBottom: '4px', lineHeight: '1.3' }}>{svc.name[lang]}</div>
-                  <div style={{ fontSize: '13px', color: '#64748B', marginBottom: '12px' }}>{lang === 'es' ? 'Desde' : 'From'} <strong style={{ color: svc.color }}>{svc.price}</strong></div>
-                  <div style={{ display: 'inline-block', padding: '7px 16px', background: svc.color, color: '#fff', borderRadius: '8px', fontSize: '12px', fontWeight: '700' }}>
-                    {t.services.cta} →
+              <a key={i} href={svc.href} style={{ textDecoration: 'none', display: 'block' }}>
+                <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '20px', border: `2px solid ${svc.color}`, boxShadow: `0 4px 12px ${svc.color}26`, height: '100%', boxSizing: 'border-box', transition: 'transform 0.2s', cursor: 'pointer' }}
+                  onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                    <div style={{ width: '48px', height: '48px', backgroundColor: `${svc.color}18`, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>{svc.icon}</div>
+                    <div>
+                      <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', marginBottom: '4px', display: 'inline-block' }}>✓ DISPONIBLE</div>
+                      <div style={{ fontSize: '14px', fontWeight: '700', color: '#1F2937', lineHeight: '1.3' }}>{svc.name[lang]}</div>
+                    </div>
+                  </div>
+                  <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '18px', fontWeight: '800', color: svc.color }}>{svc.price}</span>
+                    <span style={{ padding: '6px 14px', backgroundColor: svc.color, color: 'white', borderRadius: '8px', fontWeight: '600', fontSize: '12px' }}>
+                      {t.services.cta} →
+                    </span>
                   </div>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
-
-          <div style={{ textAlign: 'center', marginTop: '32px' }}>
-            <p style={{ fontSize: '16px', color: '#475569', margin: '0 0 6px' }}>{t.services.question}</p>
-            <a href="tel:8552467274" style={{ fontSize: '22px', fontWeight: '800', color: '#1E3A8A', textDecoration: 'none' }}>
-              {t.services.callUs} (855) 246-7274
-            </a>
-          </div>
-        </div>
-
-      {/* Footer */}
-      <footer style={{ background: '#0F172A', padding: '24px 16px', textAlign: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '12px', flexWrap: 'wrap' }}>
-          <Link href="/" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>{t.footer.home}</Link>
-          <Link href="/blog" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>Blog</Link>
-          <Link href="/contacto" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>{lang === 'es' ? 'Contacto' : 'Contact'}</Link>
-          <Link href="/nuestra-historia" style={{ color: '#3B82F6', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>{lang === 'es' ? 'Nuestra Historia' : 'Our Story'}</Link>
-          <Link href="/terms" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>{t.footer.terms}</Link>
-          <Link href="/privacy" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>{t.footer.privacy}</Link>
-          <Link href="/accessibility" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '13px' }}>{lang === 'es' ? 'Accesibilidad' : 'Accessibility'}</Link>
-        </div>
-        <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>© 2026 Multi Servicios 360. {t.footer.rights}</p>
-      </footer>
-
-      <style>{`
-        @media (max-width: 640px) {
-          h1 { font-size: 32px !important; }
-        }
-      `}</style>
-    </div>
-  );
-}
